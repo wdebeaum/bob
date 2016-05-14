@@ -168,10 +168,10 @@
 
 ;; Here are the BOB specific files for the Basic Dialogue Agent
 
-(load "cps-states.lisp")
+(load "cps-states.lisp")t
 ;;(load "CPS-actions.lisp")
 
-(im::trace-on 3)
+(im::trace-on 1)
 
 (load "DRUMtermRules.lisp")
 (load "DRUMtermRules_add.lisp")
@@ -182,7 +182,7 @@
 (setq im::*substitute-terms-in-extraction* t)
 
 
-(dagent::trace-on 4)
+(dagent::trace-on 1)
 (setq dagent::*silent-failures* nil)
 (setq dagent::*disabled-wizard* t)     ;; no wizard
 (setq dagent::*using-alarms* nil) 

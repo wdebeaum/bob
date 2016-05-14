@@ -42,7 +42,7 @@
 		      (transition
 		       :description "Kras activates Raf -- as performing steps in elaborating a model"
 		       :pattern '((ONT::SPEECHACT ?!sa ONT::TELL :what ?!root)  ;; we allow intermediate verbs between SA and activate (e.g., KNOW)
-				  (ONT::EVENT ?!what ONT::ACTIVATE :agent ?!agent :affected ?!affected)
+				  ;;(ONT::EVENT ?!what ONT::ACTIVATE :agent ?!agent :affected ?!affected)
 				  (ont::eval (generate-AKRL-context :what ?!root :result ?akrl-context))
 				  (ont::eval (QUERY-CPS :sa ASSERTION :what ?!what :context ?akrl-context
 					      :result ?best-interp :new-akrl-context ?new-context))
@@ -67,14 +67,14 @@
 					    -goal-response1>
 					    (UPDATE-CPS (ACCEPTED :content ?!psgoal :context ?!context))
 					    (notify-BA :msg (COMMIT
-							     :content ?!psgoal :context ?!context))
+							     :content ?!psgoal)) ;; :context ?!context))  SIFT doesn't want the context
 							     
 					    (generate :content (ONT::ACCEPT)))
 				 
 				 :destination 'what-next-initiative)
 				(transition
 				 :description "rejectance"
-				 :pattern '((REJECT ?!psobj :context ?!context )
+				 :pattern '((BA-RESPONSE (? x REJECT UNACCEPTABLE) ?!psobj :context ?!context )
 					    ;;(ont::eval (find-attr ?goal  GOAL))
 					    -goal-response2>
 					    (RECORD REJECTED ?!psobj :context ?context)
@@ -117,7 +117,7 @@
 					    -failed1>
 					    (UPDATE-CPS (FAILED-ON :what ?!target))
 					    (GENERATE 
-					     :content (ONT::TELL :content ?!F1)
+					     :content (ONT::TELL :content ?!F1)  ;; this really should say the action failed
 					     :context ?context
 					     )
 					    )
