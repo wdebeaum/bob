@@ -168,7 +168,7 @@
 
 ;; Here are the BOB specific files for the Basic Dialogue Agent
 
-(load "cps-states.lisp")t
+(load "cps-states.lisp")
 ;;(load "CPS-actions.lisp")
 
 (im::trace-on 1)
