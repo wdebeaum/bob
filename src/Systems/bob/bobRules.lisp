@@ -89,11 +89,14 @@
 
 	  ; pancreatic cancer
 	  (((? reln ONT::QUANTIFIER ONT::KIND ONT::A ONT::INDEF-PLURAL ONT::THE ONT::THE-SET ONT::INDEF-SET ONT::BARE ONT::SM ONT::PRO ONT::PRO-SET) ?!obj 
-	    (:* (? t1 ONT::medical-disorders-and-conditions) ?!w) :SEQUENCE - :DRUM ?code)
-           (ONT::EVAL (symbolmap (:* ?t1 ?!w) ?!t1_new))
+	    (:* (? t1 ONT::medical-disorders-and-conditions) ?!w) :SEQUENCE - :DRUM ?code :MODS (?!m))
+	   (ONT::F ?!m (:* (? t2 ONT::BODY-PART-VAL) ?!w2))
+;           (ONT::EVAL (symbolmap (:* ?t1 ?!w) ?!t1_new))
+;           (ONT::EVAL (symbolmap (:* ?t1 ?!w2) ?!t1_new))  ; note: ?!w2, not ?!w
 	   -rule3>
 	   90
-	   (ONT::TERM ?!obj ?!t1_new
+	   (ONT::TERM ?!obj ?t1 ; ?!t1_new
+	    :name (?!w2 ?!w)
 	    :drum ?code
 	    :rule -rule3
 	    ))

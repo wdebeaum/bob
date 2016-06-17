@@ -37,7 +37,10 @@ SPEECH_PROGRAMS = \
 JAVA_PROGRAMS = \
 	Facilitator \
 	KeyboardManager \
-	SpeechOutNot
+	SpeechOutNot \
+	JavaWrapper \
+	CollaborativeStateManager \
+	Conceptualizer
 
 OTHER_PROGRAMS = \
 	Graphviz \

@@ -12,11 +12,13 @@
 		       :pattern '((ONT::SPEECHACT ?!sa (? x ONT::PROPOSE ONT::REQUEST) :what ?!what)
 				  (ONT::EVENT ?!what ONT::EVENT-OF-CHANGE)
 				  (ont::eval (generate-AKRL-context :what ?!what :result ?akrl-context))
-				  (ont::eval (QUERY-CPS :sa PROPOSE :what ?!what :context ?akrl-context
-					      :result ?best-interp :new-akrl-context ?new-akrl))
+				  (ont::eval (find-attr :result ?goal :feature ACTIVE-GOAL))
+				  (ont::eval (FIND-CSM-INTERPS :sa PROPOSE :what ?!what :context ?akrl-context
+					      :result ?best-interp :new-akrl-context ?new-akrl :active-goal ?goal))
 				  
 				  -propose-goal>
-				  (UPDATE-CPS (PROPOSED :content ?best-interp :what ?new-what :context ?new-akrl))
+				  (UPDATE-CSM (PROPOSED :content ?best-interp :context ?new-akrl))
+				  (RECORD PROPOSAL-ON-TABLE (ONT::PROPOSE-GOAL :Content ?best-interp :context ?new-akrl))
 				  (INVOKE-BA :msg (EVALUATE 
 						   :content ?best-interp 
 						   :context ?new-akrl))
@@ -25,14 +27,33 @@
 		       :trigger t)
 		      (transition
 		       :description "what drug should we use?"
-		       :pattern '((ONT::SPEECHACT ?!sa ONT::ASK-WHAT-IS :what ?!what)
+		       :pattern '((ONT::SPEECHACT ?!sa (? s-act ONT::ASK-WHAT-IS ONT::ASK-IF) :what ?!what)
 				  (ONT::TERM ?!what ?object-type)
-				  (ont::eval (generate-AKRL-context :what ?!what :result ?akrl-context))
-				  (ont::eval (QUERY-CPS :sa QUERY :what ?!what :context ?akrl-context
-					      :result ?best-interp :new-akrl-context ?new-context))
+				  (ont::eval (generate-AKRL-context :what ?!what :result ?akrl-context))  
+				  (ont::eval (find-attr :result ?goal :feature ACTIVE-GOAL))
+				  (ont::eval (FIND-CSM-INTERPS :sa ONT::ASK-WHAT-IS :what ?!what :context ?akrl-context
+					      :result ?best-interp :new-akrl-context ?new-context :active-goal ?goal))
 				  
 				  -propose-goal-via-question>
-				  (UPDATE-CPS (PROPOSED :content ?best-interp :what ?!what :context ?new-context))
+				  (UPDATE-CSM (PROPOSED :content ?best-interp :what ?!what :context ?new-context))
+				  (INVOKE-BA :msg (EVALUATE 
+						   :content ?best-interp 
+						   :context ?new-context))
+				  )
+		       :destination 'propose-cps-act-response
+		       :trigger t)
+		      (transition
+		       :description "is ERK activated if we add X"
+		       :pattern '((ONT::SPEECHACT ?!sa ONT::ASK-CONDITIONAL-IF :what ?!what :condition ?!test)
+				  (ONT::EVENT ?!what ONT::SITUATION-ROOT)
+				  (ONT::EVENT ?!test ONT::EVENT-OF-CAUSATION) 
+				  (ont::eval (generate-AKRL-context :what ?!what :result ?akrl-context))
+				  (ont::eval (find-attr :result ?goal :feature ACTIVE-GOAL))
+				  (ont::eval (FIND-CSM-INTERPS :sa ONT::EVALUATE-RESULT :what ?!what :test ?!test :context ?akrl-context
+					      :result ?best-interp :new-akrl-context ?new-context :active-goal ?goal))
+				  
+				  -propose-test>
+				  (UPDATE-CSM (PROPOSED :content ?best-interp :what ?!what :context ?new-context))
 				  (INVOKE-BA :msg (EVALUATE 
 						   :content ?best-interp 
 						   :context ?new-context))
@@ -44,11 +65,12 @@
 		       :pattern '((ONT::SPEECHACT ?!sa ONT::TELL :what ?!root)  ;; we allow intermediate verbs between SA and activate (e.g., KNOW)
 				  ;;(ONT::EVENT ?!what ONT::ACTIVATE :agent ?!agent :affected ?!affected)
 				  (ont::eval (generate-AKRL-context :what ?!root :result ?akrl-context))
-				  (ont::eval (QUERY-CPS :sa ASSERTION :what ?!what :context ?akrl-context
-					      :result ?best-interp :new-akrl-context ?new-context))
+				  (ont::eval (find-attr :result ?goal :feature ACTIVE-GOAL))
+				  (ont::eval (FIND-CSM-INTERPS :sa ASSERTION :what ?!root :context ?akrl-context
+					      :result ?best-interp :new-akrl-context ?new-context :active-goal ?goal))
 				  
 				  -refine-goal-with-assertion>
-				  (UPDATE-CPS (PROPOSED :content ?best-interp :what ?!what :context ?new-context))
+				  (UPDATE-CSM (PROPOSED :content ?best-interp :what ?!root :context ?new-context))
 				  (INVOKE-BA :msg (EVALUATE 
 						   :content ?best-interp 
 						   :context ?new-context))
@@ -65,10 +87,12 @@
 				 :description "acceptance"
 				 :pattern '((BA-RESPONSE X ACCEPTABLE :what ?!psgoal :context ?!context)
 					    -goal-response1>
-					    (UPDATE-CPS (ACCEPTED :content ?!psgoal :context ?!context))
+					    (UPDATE-CSM (ACCEPTED :content ?!psgoal :context ?!context))
+					    
 					    (notify-BA :msg (COMMIT
 							     :content ?!psgoal)) ;; :context ?!context))  SIFT doesn't want the context
-							     
+					    (RECORD ACTIVE-GOAL ?!psgoal)
+					    (RECORD ACTIVE-CONTEXT ?!context)
 					    (generate :content (ONT::ACCEPT)))
 				 
 				 :destination 'what-next-initiative)
@@ -87,13 +111,13 @@
 ;;  initiative or not
 
 (add-state 'what-next-initiative
-	   (state :action '(take-initiative?)
+	   (state :action '(take-initiative? :goal (V active-goal) :context (V active-context))
 		  :transitions (list
 				(transition
 				 :description "decided on taking initiative"
 				 :pattern '((TAKE-INITIATIVE :result YES :goal ?!result :context ?context)
 					    -take-init1>
-					    (UPDATE-CPS (INITIATIVE-TAKEN-ON-GOAL :what ?!result :context ?context))
+					    (UPDATE-CSM (INITIATIVE-TAKEN-ON-GOAL :what ?!result :context ?context))
 					    (invoke-BA :msg (WHAT-NEXT :active-goal ?!result :context ?context))
 					    )
 				 :destination 'perform-BA-request)
@@ -102,7 +126,7 @@
 				 :description "no initiative"
 				 :pattern '((TAKE-INITIATIVE :result NO)
 					    -take-init2>
-					    (UPDATE-CPS (NO-INITIATIVE-TAKEN)))
+					    (UPDATE-CSM (NO-INITIATIVE-TAKEN)))
 				 :destination 'segmentend)
 				)
 		  ))
@@ -115,9 +139,9 @@
 				 :pattern '((BA-RESPONSE X FAILURE :what ?!F1 :as (SUBGOAL :of ?!target) :context ?context)
 					    ;;(A F1 :instance-of ONT::LOOK-UP :neutral ?!target)
 					    -failed1>
-					    (UPDATE-CPS (FAILED-ON :what ?!target))
+					    (UPDATE-CSM (FAILED-ON  :what ?!F1 :as (SUBGOAL :of ?!target) :context ?context))
 					    (GENERATE 
-					     :content (ONT::TELL :content ?!F1)  ;; this really should say the action failed
+					     :content (ONT::TELL :content (ONT::FAIL :formal ?!F1 :tense PAST))
 					     :context ?context
 					     )
 					    )
@@ -127,7 +151,7 @@
 				 :pattern '((BA-RESPONSE X SOLUTION :what ?!what :goal ?goal :context ?akrl-context)
 					    ;;(ont::eval (generate-AKRL-context :what ?!what :result ?akrl-context))
 					    -soln1>
-					    (UPDATE-CPS (SOLVED :what ?!what :goal ?goal :context ?akrl-context))
+					    (UPDATE-CSM (SOLVED :what ?!what :goal ?goal :context ?akrl-context))
 					    (GENERATE 
 					     :content (ONT::TELL :content ?!what)
 					     :context ?akrl-context
@@ -140,7 +164,7 @@
 				 :description "BA has nothing to do"
 				 :pattern '((BA_RESPONSE ?!x WAIT)
 					    -take-init2>
-					    (UPDATE-CPS (BA-WAITING)))
+					    (UPDATE-CSM (BA-WAITING)))
 				 :destination 'segmentend)
 				)
 		  ))
