@@ -100,91 +100,7 @@ public class Conceptualizer extends StandardTripsModule  {
 	}
 	try {
 	    KQMLPerformative perf =
-		KQMLPerformative.fromString("(subscribe :content (tell &key :content (mentioned . *)))");
-	    send(perf);
-	} catch (IOException ex) {
-	    error("Yow! Subscription failed: " + ex);
-	}
-	try {
-	    KQMLPerformative perf =
-		KQMLPerformative.fromString("(subscribe :content (tell &key :content (demonstrated . *)))");
-	    send(perf);
-	} catch (IOException ex) {
-	    error("Yow! Subscription failed: " + ex);
-	}
-	try {
-	    KQMLPerformative perf =
-		KQMLPerformative.fromString("(subscribe :content (tell &key :content (relate . *)))");
-	    send(perf);
-	} catch (IOException ex) {
-	    error("Yow! Subscription failed: " + ex);
-	}
-	try {
-	    KQMLPerformative perf =
-		KQMLPerformative.fromString("(subscribe :content (tell &key :content (described . *)))");
-	    send(perf);
-	} catch (IOException ex) {
-	    error("Yow! Subscription failed: " + ex);
-	}
-	try {
-	    KQMLPerformative perf =
-		KQMLPerformative.fromString("(subscribe :content (tell &key :content (word . *)))");
-	    send(perf);
-	} catch (IOException ex) {
-	    error("Yow! Subscription failed: " + ex);
-	}
-	try {
-	    KQMLPerformative perf =
-		KQMLPerformative.fromString("(subscribe :content (tell &key :content (utterance . *)))");
-	    send(perf);
-	} catch (IOException ex) {
-	    error("Yow! Subscription failed: " + ex);
-	}
-	try {
-	    KQMLPerformative perf =
-		KQMLPerformative.fromString("(subscribe :content (tell &key :content (TURN-FINISHED . *)))");
-	    send(perf);
-	} catch (IOException ex) {
-	    error("Yow! Subscription failed: " + ex);
-	}
-	try {
-	    KQMLPerformative perf =
-		KQMLPerformative.fromString("(subscribe :content (tell &key :content (START-CONVERSATION . *)))");
-	    send(perf);
-	} catch (IOException ex) {
-	    error("Yow! Subscription failed: " + ex);
-	}
-	try {
-	    KQMLPerformative perf =
-		KQMLPerformative.fromString("(subscribe :content (tell &key :content (STARTED-SPEAKING . *)))");
-	    send(perf);
-	} catch (IOException ex) {
-	    error("Yow! Subscription failed: " + ex);
-	}
-	try {
-	    KQMLPerformative perf =
-		KQMLPerformative.fromString("(subscribe :content (tell &key :content (STOPPED-SPEAKING . *)))");
-	    send(perf);
-	} catch (IOException ex) {
-	    error("Yow! Subscription failed: " + ex);
-	}
-	try {
-	    KQMLPerformative perf =
-		KQMLPerformative.fromString("(subscribe :content (request &key :content (read-transcript . *)))");
-	    send(perf);
-	} catch (IOException ex) {
-	    error("Yow! Subscription failed: " + ex);
-	}
-	try {
-	    KQMLPerformative perf =
 		KQMLPerformative.fromString("(subscribe :content (request &key :content (set-parameters . *)))");
-	    send(perf);
-	} catch (IOException ex) {
-	    error("Yow! Subscription failed: " + ex);
-	}
-	try {
-	    KQMLPerformative perf =
-		KQMLPerformative.fromString("(subscribe :content (request &key :content (init-speech . *)))");
 	    send(perf);
 	} catch (IOException ex) {
 	    error("Yow! Subscription failed: " + ex);
@@ -198,30 +114,7 @@ public class Conceptualizer extends StandardTripsModule  {
 	}
 	try {
 	    KQMLPerformative perf =
-		KQMLPerformative.fromString("(subscribe :content (request &key :content (shutdown-speech . *)))");
-	    send(perf);
-	} catch (IOException ex) {
-	    error("Yow! Subscription failed: " + ex);
-	}
-	try {
-	    KQMLPerformative perf =
-		KQMLPerformative.fromString("(subscribe :content (request &key :content (write-assoc-files . *)))");
-	    send(perf);
-	} catch (IOException ex) {
-	    error("Yow! Subscription failed: " + ex);
-	}
-	
-	try {
-	    KQMLPerformative perf =
 		KQMLPerformative.fromString("(subscribe :content (request &key :content (load-properties-file . *)))");
-	    send(perf);		
-	} catch (IOException ex) {
-	    error("Yow! Subscription failed: " + ex);
-	}
-	
-	try {
-	    KQMLPerformative perf =
-		KQMLPerformative.fromString("(subscribe :content (tell &key :content (SPOKEN . *)))");
 	    send(perf);		
 	} catch (IOException ex) {
 	    error("Yow! Subscription failed: " + ex);
@@ -263,69 +156,6 @@ public class Conceptualizer extends StandardTripsModule  {
 				return;
 			}
 			callingProcess = Integer.parseInt(pid);
-		}
-		else if (content0.equalsIgnoreCase("started-speaking") && speechEnabled)
-		{
-			KQMLObject uttNum = content.getKeywordArg(":uttnum");
-			if (uttNum == null)
-			{
-				errorReply(msg, "no uttnum in started-speaking message");
-				return;
-			}
-			int uttNumValue = Integer.parseInt(uttNum.stringValue());
-			
-			
-		}
-		else if (content0.equalsIgnoreCase("stopped-speaking") && speechEnabled)
-		{
-			KQMLObject uttNum = content.getKeywordArg(":uttnum");
-			if (uttNum == null)
-			{
-				errorReply(msg, "no uttnum in started-speaking message");
-				return;
-			}
-			int uttNumValue = Integer.parseInt(uttNum.stringValue());
-			
-		}
-		else if (content0.equalsIgnoreCase("utterance")) {
-		    KQMLObject text = content.getKeywordArg(":text");
-		    KQMLObject startTime = content.getKeywordArg(":start-time");
-		    KQMLObject endTime = content.getKeywordArg(":end-time");
-		    KQMLObject uttNum = content.getKeywordArg(":uttnum");
-		    
-		    if (text == null || uttNum == null) {
-		    	errorReply(msg, "malformed UTTERANCE message");
-		    } 
-		    else if (startTime == null || endTime == null)
-		    {
-		    	// Speech utterance
-		    	int uttNumValue = Integer.parseInt(uttNum.stringValue());
-		    }
-		    else {
-		    	// Store the utterance to be referenced later and matched with the demonstration
-		    	String [] words = text.stringValue().split(" ");
-		    	
-		    	long startTimeValue = 
-		    			(long)(Double.parseDouble(startTime.stringValue()) * 100);
-		    	long endTimeValue = 
-		    			(long)(Double.parseDouble(endTime.stringValue()) * 100);
-		    	int uttNumValue = Integer.parseInt(uttNum.stringValue());
-		    }
-		}
-		else if (content0.equalsIgnoreCase("start-conversation")) {
-	    	speechEnabled = true;
-
-		}
-		else if (content0.equalsIgnoreCase("stop-conversation")) {
-	    	speechEnabled = false;
-
-		
-		}
-		else if (content0.equalsIgnoreCase("TURN-FINISHED"))
-		{
-			KQMLObject sender = msg.getParameter(":sender");
-			KQMLObject uttnum = content.getKeywordArg(":uttnum");
-			
 		}
 		else {
 		    errorReply(msg, "bad tell: " + content0);

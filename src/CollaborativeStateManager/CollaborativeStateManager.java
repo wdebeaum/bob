@@ -12,6 +12,10 @@
 //
 package TRIPS.CollaborativeStateManager;
 
+import handlers.IDHandler;
+import handlers.InterpretSpeechActHandler;
+import handlers.TakeInitiativeHandler;
+
 import java.io.BufferedReader;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
@@ -21,7 +25,7 @@ import java.io.InputStreamReader;
 import java.util.*;
 import java.math.*;
 
-
+import extractors.EventExtractor;
 import TRIPS.KQML.*;
 import TRIPS.TripsModule.StandardTripsModule;
 
@@ -121,13 +125,6 @@ public class CollaborativeStateManager extends StandardTripsModule  {
 	} catch (IOException ex) {
 	    error("Yow! Subscription failed: " + ex);
 	}
-	try {
-	    KQMLPerformative perf =
-		KQMLPerformative.fromString("(subscribe :content (request &key :content (shutdown-speech . *)))");
-	    send(perf);
-	} catch (IOException ex) {
-	    error("Yow! Subscription failed: " + ex);
-	}
 
 	try {
 	    KQMLPerformative perf =
@@ -175,61 +172,6 @@ public class CollaborativeStateManager extends StandardTripsModule  {
 			}
 			callingProcess = Integer.parseInt(pid);
 		}
-		else if (content0.equalsIgnoreCase("started-speaking") && speechEnabled)
-		{
-			KQMLObject uttNum = content.getKeywordArg(":uttnum");
-			if (uttNum == null)
-			{
-				errorReply(msg, "no uttnum in started-speaking message");
-				return;
-			}
-			int uttNumValue = Integer.parseInt(uttNum.stringValue());
-			
-			
-		}
-		else if (content0.equalsIgnoreCase("stopped-speaking") && speechEnabled)
-		{
-			KQMLObject uttNum = content.getKeywordArg(":uttnum");
-			if (uttNum == null)
-			{
-				errorReply(msg, "no uttnum in started-speaking message");
-				return;
-			}
-			int uttNumValue = Integer.parseInt(uttNum.stringValue());
-			
-		}
-		else if (content0.equalsIgnoreCase("utterance")) {
-		    KQMLObject text = content.getKeywordArg(":text");
-		    KQMLObject startTime = content.getKeywordArg(":start-time");
-		    KQMLObject endTime = content.getKeywordArg(":end-time");
-		    KQMLObject uttNum = content.getKeywordArg(":uttnum");
-		    
-		    if (text == null || uttNum == null) {
-		    	errorReply(msg, "malformed UTTERANCE message");
-		    } 
-		    else if (startTime == null || endTime == null)
-		    {
-		    	// Speech utterance
-		    	int uttNumValue = Integer.parseInt(uttNum.stringValue());
-		    }
-		    else {
-		    	// Store the utterance to be referenced later and matched with the demonstration
-		    	String [] words = text.stringValue().split(" ");
-		    	
-		    	long startTimeValue = 
-		    			(long)(Double.parseDouble(startTime.stringValue()) * 100);
-		    	long endTimeValue = 
-		    			(long)(Double.parseDouble(endTime.stringValue()) * 100);
-		    	int uttNumValue = Integer.parseInt(uttNum.stringValue());
-		    }
-		}
-		else if (content0.equalsIgnoreCase("TURN-FINISHED"))
-		{
-			KQMLObject sender = msg.getParameter(":sender");
-			KQMLObject uttnum = content.getKeywordArg(":uttnum");
-			
-		}
-		
 		else {
 		    errorReply(msg, "bad tell: " + content0);
 		}		
@@ -271,44 +213,23 @@ public class CollaborativeStateManager extends StandardTripsModule  {
 		}
 		else if (content0.equalsIgnoreCase("interpret-speech-act"))
 		{
-			
-			KQMLObject innerContentObj = content.getKeywordArg(":content");
-			KQMLList innerContent = null;
-			if (innerContentObj instanceof KQMLList)
-				innerContent = (KQMLList)innerContentObj;
-			String speechAct = innerContent.get(0).stringValue();
-			String what = innerContent.getKeywordArg(":content").stringValue();
-			
-			KQMLObject context = innerContent.getKeywordArg(":context");
 			KQMLObject replyWith = msg.getParameter(":REPLY-WITH");
-			KQMLObject whatLF = null;
-			System.out.println("Recieved interpret-speech-act " + speechAct);
-			
-			for (KQMLObject lfTerm : (KQMLList)context)
-			{
-				if (((KQMLList)lfTerm).get(1).stringValue().equalsIgnoreCase(what))
-					whatLF = lfTerm;
-			}
-			
-			switch (speechAct)
-			{
-			case "PROPOSE":
-				System.out.println("PROPOSE");
-				KQMLPerformative adoptPerformative = new KQMLPerformative("TELL");
-				adoptPerformative.setParameter(":RECEIVER", "DAGENT");
-				KQMLList adoptContent = adoptContent(what,"GOAL",null);
-				KQMLList reportContent = reportContent(adoptContent, context);
-				adoptPerformative.setParameter(":CONTENT", reportContent);
-				adoptPerformative.setParameter(":IN-REPLY-TO", replyWith);
-				send(adoptPerformative);
-					
-			}
+			InterpretSpeechActHandler isah = new InterpretSpeechActHandler(msg, content);
+
+			KQMLList responseContent = isah.process();
+			if (responseContent != null)
+				sendContentViaPerformative("TELL", "DAGENT", responseContent, replyWith.stringValue());
 			
 		}
 		else if (content0.equalsIgnoreCase("take-initiative?"))
 		{
-			String filename = content.getKeywordArg(":file").stringValue();
-			readPropertiesFile(filename);
+			KQMLObject replyWith = msg.getParameter(":REPLY-WITH");
+			TakeInitiativeHandler tih = new TakeInitiativeHandler(msg, content);
+			KQMLList responseContent = tih.process();
+			if (responseContent != null)
+				sendContentViaPerformative("TELL", "DAGENT", responseContent, replyWith.stringValue());
+			
+			
 		}
 		else {
 		    errorReply(msg, "bad request: " + content0);
@@ -317,38 +238,19 @@ public class CollaborativeStateManager extends StandardTripsModule  {
 		
     }
     
-    private KQMLList reportContent(KQMLObject content, KQMLObject context)
+
+    
+    private void sendContentViaPerformative(String performativeType, String receiver,
+    										KQMLObject content, String replyWith)
     {
-    	KQMLList reportContent = new KQMLList();
-    	reportContent.add("REPORT");
-    	reportContent.add(":content");
-    	reportContent.add(content);
-    	reportContent.add(":context");
-    	reportContent.add(context);
-    	
-    	return reportContent;
+		KQMLPerformative performative = new KQMLPerformative(performativeType);
+		performative.setParameter(":RECEIVER", receiver);
+		performative.setParameter(":CONTENT", content);
+		performative.setParameter(":IN-REPLY-TO", replyWith);
+		send(performative);
     }
     
-    private KQMLList adoptContent(String what, String goalType, String subgoalOf)
-    {
-    	KQMLList adopt = new KQMLList();
-    	
-    	adopt.add("ADOPT");
-    	adopt.add(":what");
-    	adopt.add(what);
-    	adopt.add(":as");
-    	
-    	KQMLList goal = new KQMLList();
-    	goal.add(goalType);
-    	if (goalType.equalsIgnoreCase("SUBGOAL"))
-    	{
-    		goal.add(":of");
-    		goal.add(subgoalOf);
-    	}
-    	adopt.add(goal);
-    	
-    	return adopt;
-    }
+
     
     private KQMLList takeInitiativeContent(String result, KQMLObject goal, KQMLObject context)
     {

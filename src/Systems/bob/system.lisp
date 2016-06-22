@@ -193,4 +193,4 @@
 ;; the :dummy component is used to fake certain message interactions during
 ;; system development. If not wanted, comment out the following line
 ;(load  #!TRIPS"src;Systems;bob;dummymessages")
-(load  #!TRIPS"src;Systems;bob;dummy-for-CSM")
+;(load  #!TRIPS"src;Systems;bob;dummy-for-CSM")
