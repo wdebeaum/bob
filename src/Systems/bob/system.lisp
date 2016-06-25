@@ -122,10 +122,10 @@
 ;; we want to emit all events
 (setq im::*eliminate-subevents* nil)
 
-(setq im::*allow-optional-lfs* nil) ;; set to t for optional term matching
-(setq im::*substitute-terms-in-extraction* nil)
+(setq im::*allow-optional-lfs* t) ;; set to t for optional term matching
 (setq im::*output-format* 'im::lf-term)
 
+(setq im::*symbol-map* nil)
 
 ;; this looks obsolete
 ;(setq ex::*extraction-ids* '(ex::drum-extraction))
@@ -154,10 +154,6 @@
 (setq logging::*logging-enabled* nil)
 (setq logging2::*logging-enabled* nil)
 
-;;;; extractor rules
-;;(load "DRUMRules.lisp")
-;;(load "DRUMtermRules.lisp")
-(load "symbolmapping.lisp")
 
 ;; domain preferences
 (load "domain-sense-preferences")
@@ -173,11 +169,18 @@
 
 (im::trace-on 1)
 
+;;;; extractor rules
 (load "DRUMtermRules.lisp")
 (load "DRUMtermRules_add.lisp")
+;(load "DRUMRules_ev.lisp")
+;(load "DRUMRules_mod.lisp")
+;(load "DRUMRules_CC.lisp")
 (load "bobRules.lisp")
 (load "emptyRules.lisp")  ; an empty rules file just so I can check the results of the LF substitution
 
+(load "symbolmapping.lisp")
+
+;(setq im::*extraction-sequence* '((im::drumterms) (im::drumtermsAdd) (im::drum) (im::drummod) (im::drumCC) (im::bobRules) (im::emptyRules)))
 (setq im::*extraction-sequence* '((im::drumterms) (im::drumtermsAdd) (im::bobRules) (im::emptyRules)))
 (setq im::*substitute-terms-in-extraction* t)
 

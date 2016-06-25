@@ -23,6 +23,7 @@
 	 (context (find-arg-in-act act :context))
 	 (what-lf (find-lf-in-context context what))
 	 (active-goal (find-arg-in-act act :active-goal)))
+    (if (eq active-goal '-)  (setq active-goal nil))
   ;;(format t "QUERY CPS on ~S" sa)
   (case sa
     ((propose ont::propose)
@@ -33,7 +34,7 @@
     
     (ont::ask-what-is
      
-     (let ((id (gentemp "I"))
+     (let ((id (gentemp "I" om::*ont-package*))
 	   (type (find-arg what-lf :instance-of)))
        (cond ((eq type 'ONT::MEDICATION)
 	      (list 'REPORT :content `(ADOPT :what ,id :as (SUBGOAL :OF ,(find-arg-in-act active-goal :what)))
@@ -49,8 +50,8 @@
        ))
 	  
     (ont::evaluate-result
-     (let ((id (gentemp "I"))
-	   (id1 (gentemp "I"))
+     (let ((id (gentemp "I" om::*ont-package*))
+	   (id1 (gentemp "I" om::*ont-package*))
 	   (test (find-arg-in-act act :test))
 	   (type (find-arg what-lf :instance-of)))
        (list 'REPORT :content `(ADOPT :what ,id :as (SUBGOAL :of ,(find-arg-in-act active-goal :what)))
@@ -95,9 +96,9 @@
 
 (defun find-events-in-context (context)
   "This returns the ids of all events in the context"
-  (let ((id (gentemp "I"))
+  (let ((id (gentemp "I" om::*ont-package*))
 	(event-ids (mapcar #'cadr (remove-if-not #'(lambda (x) (and (member (car x) '(ont::RELN RELN))
-								    (member (fourth x) '(ont::ACTIVATE ACTIVATE)))) context))))
+								    (member (fourth x) '(ont::ACTIVATE ACTIVATE ONT::BIND)))) context))))
     (format t "~%EVENTS extracted are ~S" event-ids)
     (values id 
 	    (cons `(ONT::RELN ,id :instance-of ONT::EVENTS-IN-MODEL :events ,event-ids)
