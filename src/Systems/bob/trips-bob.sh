@@ -41,6 +41,8 @@ debug=false
 port=''
 display=''
 nolisp=''
+nocsm=''
+nochat=''
 graphviz_display=false
 batch=''
 tt_mode=$TRIPS_SYSNAME
@@ -62,6 +64,8 @@ while test ! -z "$1"; do
         -nobeep)        nobeep=t;;
         -nogen)         nogen=t;;
 	-nolisp)	nolisp=t;;
+	-nocsm)		nocsm=t;;
+	-nochat)	nochat=t;;
 	-graphviz-display)	graphviz_display="$2";	shift;;
 	-batch)		batch="$2";	shift;;
 	-help|-h|-\?)
@@ -142,7 +146,7 @@ cat - <<_EOF_ >/tmp/trips$$
 (register :name init)
 (tell :content (status ready))
 _EOF_
-if test "$display" != "tty" -a -z "$nouser"; then
+if test "$display" != "tty" -a -z "$nouser" -a -z "$nochat"; then
 cat - <<_EOF_ >>/tmp/trips$$
 (request
  :receiver facilitator
@@ -161,14 +165,26 @@ cat - <<_EOF_ >>/tmp/trips$$
                   -beep $beep_kbd
 		  -showGenerate $nogen
 		  $port_opt)))
-
-
-
 _EOF_
 fi
 
 # SpeechOut
 # We don't use speech-out at all (run SpeechOutNot for transcript)
+cat - <<_EOF_ >>/tmp/trips$$
+(request
+ :receiver facilitator
+ :content (start-module
+           :name speech-out
+           :class TRIPS.SpeechOutNot.SpeechOutNot
+           :urlclasspath ("$TRIPS_BASE/etc/java/TRIPS.SpeechOutNot.jar"
+                          "$TRIPS_BASE/etc/java/TRIPS.TripsModule.jar"
+                          "$TRIPS_BASE/etc/java/TRIPS.KQML.jar"
+                          "$TRIPS_BASE/etc/java/TRIPS.util.jar")
+	   :argv ($port_opt)
+))
+_EOF_
+
+# Conceptualizer
 cat - <<_EOF_ >>/tmp/trips$$
 (request
     :receiver facilitator
@@ -183,6 +199,11 @@ cat - <<_EOF_ >>/tmp/trips$$
                 "$TRIPS_BASE/etc/java/jblas-1.2.3.jar"
                 "$TRIPS_BASE/src/Conceptualizer/src")
     :argv ($port_opt)))
+_EOF_
+
+# CSM
+if test -z "$nocsm"; then
+cat - <<_EOF_ >>/tmp/trips$$
 (request
     :receiver facilitator
     :content (start-module
@@ -194,18 +215,8 @@ cat - <<_EOF_ >>/tmp/trips$$
                 "$TRIPS_BASE/etc/java/TRIPS.util.jar"
                 "$TRIPS_BASE/src/CollaborativeStateManager/src")
     :argv ($port_opt)))
-(request
- :receiver facilitator
- :content (start-module
-           :name speech-out
-           :class TRIPS.SpeechOutNot.SpeechOutNot
-           :urlclasspath ("$TRIPS_BASE/etc/java/TRIPS.SpeechOutNot.jar"
-                          "$TRIPS_BASE/etc/java/TRIPS.TripsModule.jar"
-                          "$TRIPS_BASE/etc/java/TRIPS.KQML.jar"
-                          "$TRIPS_BASE/etc/java/TRIPS.util.jar")
-	   :argv ($port_opt)
-))
 _EOF_
+fi
 
 # Modules not started by the java process have to start *after* the
 # Facilitator so they can connect, so we use the form (sleep 5; foo) &

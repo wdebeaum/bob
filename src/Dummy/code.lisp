@@ -37,7 +37,8 @@
 	(context (find-arg args :context)))
     (format t "~%DUMMY: WHAT-NEXT active goal is ~S" active-goal )
     (let* 
-	((target (find-arg-in-act active-goal :what))
+	(;(target (find-arg-in-act active-goal :what))
+	 (target active-goal)
 	 (act (find-lf-in-context context target))
 	 (condition-id (find-arg act :content))
 	 (condition (find-lf-in-context context condition-id))

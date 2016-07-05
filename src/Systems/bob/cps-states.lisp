@@ -10,7 +10,7 @@
 		      (transition
 		       :description "Let's build a model/I need to find a treatment for cancer"
 		       :pattern '((ONT::SPEECHACT ?!sa (? x ONT::PROPOSE ONT::REQUEST) :what ?!what)
-				  (ONT::EVENT ?!what ONT::EVENT-OF-CHANGE)
+				  ((? spec ONT::EVENT ONT::EPI) ?!what ?!t)
 				  (ont::eval (generate-AKRL-context :what ?!what :result ?akrl-context))
 				  (ont::eval (find-attr :result ?goal :feature ACTIVE-GOAL))
 				  (ont::eval (FIND-CSM-INTERPS :sa PROPOSE :what ?!what :context ?akrl-context
@@ -163,7 +163,7 @@
 				(transition
 				 :description "BA has nothing to do"
 				 :pattern '((BA_RESPONSE ?!x WAIT)
-					    -take-init2>
+					    -wait>
 					    (UPDATE-CSM (BA-WAITING)))
 				 :destination 'segmentend)
 				)

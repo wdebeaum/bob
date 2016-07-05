@@ -1,5 +1,6 @@
 (in-package "IM")
 
+#|
 (setq *extractor-oblig-features* '(:tense :negation
 ; :modality
 ; :degree :frequency 
@@ -26,15 +27,42 @@
 ;;;;; for BOB
 :suchthat ; What proteins might lead to the development of pancreatic cancer?
 ))
+|#
+
+; BOB-specific roles
+(setq *roles-to-emit* (append *roles-to-emit* '(			    
+;    :DISEASE
+    :SUCHTHAT
+    :TOPIC
+    :EXT
+    :OPERATOR
+    :SEQ
+    ))
+)
 
 
-(setq *extraction-rules* '(bobRules))
+;(setq *extraction-rules* '(bobRules))
 
 (reset-im-rules 'bobRules)  ;; this allows you to edit this file and reload it without having to reload the entire system
 
 (mapcar #'(lambda (x) (add-im-rule x 'bobRules))  ;; sets of rules are tagged so they can be managed independently 
 	'(
 
+	  ; X activates Y, Y activates Z, Z activates W
+	  ; this rule is to rename :SEQUENCE to :SEQ so we don't have to extract all :SEQUENCE slots
+          ((ONT::F ?ev
+	    ONT::S-CONJOINED :OPERATOR ?!op :SEQUENCE ?!seq :DRUM ?code)
+           -rule-seq>
+           60
+           (ONT::F ?ev ONT::S-CONJOINED
+            :rule -rule-seq
+	    :OPERATOR ?!op
+	    :SEQ ?!seq
+            :DRUM ?code
+            )
+           )
+
+#|	  
 	  ; find 
           (((? reln0 ONT::F ONT::QUANTIFIER ONT::KIND ONT::A ONT::INDEF-PLURAL ONT::THE ONT::THE-SET ONT::INDEF-SET ONT::BARE ONT::SM ONT::PRO ONT::PRO-SET) ?ev
             (:* (? type ONT::DETERMINE) ?!w) :AGENT ?!ag :NEUTRAL ?!obj :DRUM ?code)
@@ -43,10 +71,12 @@
            60
            (ONT::EVENT ?ev ?type
             :rule -rule1
+	    :AGENT -
             :NEUTRAL ?!obj
             :DRUM ?code
             )
            )
+|#
 
 	  ; use 
           (((? reln0 ONT::F ONT::QUANTIFIER ONT::KIND ONT::A ONT::INDEF-PLURAL ONT::THE ONT::THE-SET ONT::INDEF-SET ONT::BARE ONT::SM ONT::PRO ONT::PRO-SET) ?ev
@@ -56,6 +86,7 @@
            60
            (ONT::EVENT ?ev ?type
             :rule -rule1b
+	    :AGENT -
             :AFFECTED ?!obj
             :DRUM ?code
             )
@@ -69,24 +100,32 @@
            60
            (ONT::EVENT ?ev ?type
             :rule -rule1c
+	    :AGENT -
             :AFFECTED-RESULT ?!obj
             :DRUM ?code
             )
            )
 
+	  
 	  ; treatment
           (((? reln0 ONT::F ONT::QUANTIFIER ONT::KIND ONT::A ONT::INDEF-PLURAL ONT::THE ONT::THE-SET ONT::INDEF-SET ONT::BARE ONT::SM ONT::PRO ONT::PRO-SET) ?ev
-            (:* ONT::CONTROL-MANAGE W::TREATMENT) :AFFECTED ?!obj :DRUM ?code)
+;            (:* ONT::CONTROL-MANAGE W::TREATMENT)
+            (? type ONT::CONTROL-MANAGE ONT::TREATMENT)
+	    :AFFECTED ?!obj :DRUM ?code)
            ((? reln2 ONT::F ONT::QUANTIFIER ONT::KIND ONT::A ONT::INDEF-PLURAL ONT::THE ONT::THE-SET ONT::INDEF-SET ONT::BARE ONT::SM ONT::PRO ONT::PRO-SET ONT::TERM) ?!obj (? t2 ONT::medical-disorders-and-conditions))
            -rule2>
            60
            (ONT::EVENT ?ev ONT::TREATMENT
             :rule -rule2
-            :DISEASE ?!obj
+;	    :AFFECTED -
+;            :DISEASE ?!obj
+            :AFFECTED ?!obj
             :DRUM ?code
             )
            )
 
+
+	  ; This is not used any more
 	  ; pancreatic cancer
 	  (((? reln ONT::QUANTIFIER ONT::KIND ONT::A ONT::INDEF-PLURAL ONT::THE ONT::THE-SET ONT::INDEF-SET ONT::BARE ONT::SM ONT::PRO ONT::PRO-SET) ?!obj 
 	    (:* (? t1 ONT::medical-disorders-and-conditions) ?!w) :SEQUENCE - :DRUM ?code :MODS (?!m))
@@ -103,20 +142,24 @@
 
 	  ; model
           (((? reln0 ONT::F ONT::QUANTIFIER ONT::KIND ONT::A ONT::INDEF-PLURAL ONT::THE ONT::THE-SET ONT::INDEF-SET ONT::BARE ONT::SM ONT::PRO ONT::PRO-SET) ?ev
-            (:* ONT::REPRESENTATION W::MODEL) :OF ?!obj :DRUM ?code)
+            (:* ONT::REPRESENTATION W::MODEL) :FIGURE ?!obj :DRUM ?code)
            ((? reln2 ONT::F ONT::QUANTIFIER ONT::KIND ONT::A ONT::INDEF-PLURAL ONT::THE ONT::THE-SET ONT::INDEF-SET ONT::BARE ONT::SM ONT::PRO ONT::PRO-SET ONT::TERM) ?!obj (? t2 ONT::DISTRICT W::NEIGHBORHOOD) :ASSOC-WITHS (?!v3))
-	   (ONT::TERM ?!v3 ?t3)
+	   ((? spec3 ONT::F ONT::QUANTIFIER ONT::KIND ONT::A ONT::INDEF-PLURAL ONT::THE ONT::THE-SET ONT::INDEF-SET ONT::BARE ONT::SM ONT::PRO ONT::PRO-SET ONT::TERM) ?!v3 ?t3)  ; adding the specifiers (in addition to ONT::TERM) would match "model of a staircase"
            -rule2b>
            60
            (ONT::TERM ?ev ONT::MODEL
             :rule -rule2b
-            :OF ?!v3
-	    :EXTENT ONT::SMALL
+            :TOPIC ?!v3
+;	    :EXT ONT::SMALL
             :DRUM ?code
             )
            )
-	  
+
+#|
+; now we have the full set of DRUMRules
+
           ;; growth
+	  ;; added  ONT::medical-disorders-and-conditions to ?!obj
           (((? reln0  ONT::F ONT::QUANTIFIER ONT::KIND ONT::A ONT::INDEF-PLURAL ONT::THE ONT::THE-SET ONT::INDEF-SET ONT::BARE ONT::SM ONT::PRO ONT::PRO-SET) ?ev
             (:* (? type ONT::INCREASE ONT::ADD-INCLUDE ONT::ACQUIRE ONT::FILLING ONT::GROW ONT::PROGRESS ONT::DECREASE ONT::PARTS-REMOVED ONT::REMOVE-PARTS ) ?!w) :AFFECTED ?!obj :DRUM ?code )
 ;           ((? reln1 ONT::F ONT::QUANTIFIER ONT::KIND ONT::A ONT::INDEF-PLURAL ONT::THE ONT::THE-SET ONT::INDEF-SET ONT::BARE ONT::SM ONT::PRO ONT::PRO-SET TERM) ?!ag  (? t1 ONT::EVENT-OF-CHANGE ONT::CHEMICAL ONT::MOLECULAR-PART ONT::CELL-PART ONT::BODY-PART ONT::SIGNALING-PATHWAY ONT::MUTANT-OBJ ONT::WILDTYPE-OBJ ONT::SEQUENCE))
@@ -195,6 +238,8 @@
             :DRUM ?code
             )
            )
+
+|#
 
 	  
 ;;;;;;;;;;;;;;;

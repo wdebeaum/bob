@@ -110,6 +110,8 @@
 (setq im::*current-dialog-manager* #'im::SequentialLFTransformIM)   ;;#'im::simpleIM)
 (setq im::*CPS-control* t) ;; the CPS agent will control the sending of additional speech acts from an utterance
 ;; how fragmented do we allow the input to be before giving up
+(setq im::*substitute-types-in-pros* t)
+(setq im::*compute-force-from-tmas* t)
 (setq im::*max-allowed-utts-in-turn* 3)
 ;; no domain-specific reasoner
 (setq im::*external-name-resolution* nil)
@@ -172,16 +174,17 @@
 ;;;; extractor rules
 (load "DRUMtermRules.lisp")
 (load "DRUMtermRules_add.lisp")
-;(load "DRUMRules_ev.lisp")
-;(load "DRUMRules_mod.lisp")
-;(load "DRUMRules_CC.lisp")
+(load "DRUMRules_ev.lisp")
+(load "DRUMRules_mod.lisp")
+(load "DRUMRules_CC.lisp")
 (load "bobRules.lisp")
+(load "DRUMRules_misc.lisp")
 (load "emptyRules.lisp")  ; an empty rules file just so I can check the results of the LF substitution
 
 (load "symbolmapping.lisp")
 
-;(setq im::*extraction-sequence* '((im::drumterms) (im::drumtermsAdd) (im::drum) (im::drummod) (im::drumCC) (im::bobRules) (im::emptyRules)))
-(setq im::*extraction-sequence* '((im::drumterms) (im::drumtermsAdd) (im::bobRules) (im::emptyRules)))
+; bobRules is before drum so that the domain specific EVENT rules take precedence (and also because bobRules also contains TERM extractions)
+(setq im::*extraction-sequence* '((im::drumterms) (im::drumtermsAdd) (im::bobRules) (im::drum) (im::drummod) (im::drumCC) (im::drumMisc) (im::emptyRules)))
 (setq im::*substitute-terms-in-extraction* t)
 
 

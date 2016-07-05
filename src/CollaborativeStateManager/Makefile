@@ -12,6 +12,8 @@ JFLAGS	= -cp .:src
 SRCS = 	CollaborativeStateManager.java \
 	src/extractors/EventExtractor.java \
 	src/handlers/IDHandler.java \
+	src/handlers/MessageHandler.java \
+	src/handlers/UpdateCSMHandler.java \
 	src/handlers/InterpretSpeechActHandler.java \
 	src/handlers/TakeInitiativeHandler.java 
 

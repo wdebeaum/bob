@@ -4,28 +4,25 @@ import extractors.EventExtractor;
 import handlers.IDHandler;
 import TRIPS.KQML.*;
 
-public class InterpretSpeechActHandler {
+public class InterpretSpeechActHandler extends MessageHandler{
 
 	
 	KQMLList innerContent = null;
 	
 	String speechAct;
 	String what;
-	KQMLPerformative msg;
-	KQMLList content;
 	
 	KQMLObject context;
 
 	KQMLObject whatLF = null;
-	KQMLObject activeGoal;
-	KQMLObject activeGoalWhat = null;
+	String activeGoal = null;
+
 
 
 
 	public InterpretSpeechActHandler(KQMLPerformative msg, KQMLList content)
 	{
-		this.msg = msg;
-		this.content = content;
+		super(msg,content);
 	}
 	
 	public KQMLList process()
@@ -40,11 +37,14 @@ public class InterpretSpeechActHandler {
 		what = innerContent.getKeywordArg(":content").stringValue();
 		context = innerContent.getKeywordArg(":context");	
 		
-		activeGoal = innerContent.getKeywordArg(":active-goal");
-		if (!activeGoal.stringValue().equalsIgnoreCase("nil") &&
-				!activeGoal.stringValue().equals("-"))
-			activeGoalWhat = ((KQMLList)activeGoal).getKeywordArg(":WHAT");
+		KQMLObject activeGoalObject = innerContent.getKeywordArg(":active-goal");
 		
+		if ((activeGoalObject != null) &&
+		    !activeGoalObject.stringValue().equalsIgnoreCase("nil") &&
+		    !activeGoalObject.stringValue().equals("-"))
+		    {
+			activeGoal = activeGoalObject.stringValue();
+		    }
 		for (KQMLObject lfTerm : (KQMLList)context)
 		{
 			if (((KQMLList)lfTerm).get(1).stringValue().equalsIgnoreCase(what))
@@ -91,7 +91,7 @@ public class InterpretSpeechActHandler {
 		KQMLList contributesList = new KQMLList();
 		contributesList.add("CONTRIBUTES-TO");
 		contributesList.add(":goal");
-		contributesList.add(activeGoalWhat);
+		contributesList.add(activeGoal);
 		assertionContent.add(contributesList);
 		
 		return reportContent(assertionContent, assertionEventContent);
@@ -102,7 +102,7 @@ public class InterpretSpeechActHandler {
 	{
 		String evaluateId = IDHandler.getNewID();
 		String causeEffectId = IDHandler.getNewID();
-		KQMLList evaAdoptContent = adoptContent(evaluateId,"SUBGOAL",activeGoalWhat);
+		KQMLList evaAdoptContent = adoptContent(evaluateId,"SUBGOAL",activeGoal);
 		KQMLList evaReln = new KQMLList();
 		evaReln.add("ont::RELN");
 		evaReln.add(evaluateId);
@@ -133,10 +133,10 @@ public class InterpretSpeechActHandler {
 	private KQMLList handlePropose()
 	{
 		KQMLList proposeAdoptContent;
-		if (activeGoalWhat == null)
+		if (activeGoal == null)
 			proposeAdoptContent = adoptContent(what,"GOAL",null);
 		else
-			proposeAdoptContent = adoptContent(what,"SUBGOAL",activeGoalWhat);
+			proposeAdoptContent = adoptContent(what,"SUBGOAL",activeGoal);
 		return reportContent(proposeAdoptContent, context);
 	}
 	
@@ -146,9 +146,9 @@ public class InterpretSpeechActHandler {
 		KQMLList askAdoptContent;
 		if (((KQMLList)whatLF).getKeywordArg(":instance-of").stringValue().
 				equalsIgnoreCase("ONT:MEDICATION"))
-			askAdoptContent = adoptContent(newId,"SUBGOAL",activeGoalWhat);
+			askAdoptContent = adoptContent(newId,"SUBGOAL",activeGoal);
 		else
-			askAdoptContent = adoptContent(newId, "SUBGOAL", activeGoalWhat);
+			askAdoptContent = adoptContent(newId, "SUBGOAL", activeGoal);
 		
     	KQMLList askRelnContent = new KQMLList();
     	askRelnContent.add("ont::RELN");
@@ -178,19 +178,9 @@ public class InterpretSpeechActHandler {
     
 
     
-    private KQMLList reportContent(KQMLObject content, KQMLObject context)
-    {
-    	KQMLList reportContent = new KQMLList();
-    	reportContent.add("REPORT");
-    	reportContent.add(":content");
-    	reportContent.add(content);
-    	reportContent.add(":context");
-    	reportContent.add(context);
-    	
-    	return reportContent;
-    }
+
     
-    private KQMLList adoptContent(String what, String goalType, KQMLObject subgoalOf)
+    private KQMLList adoptContent(String what, String goalType, String subgoalOf)
     {
     	KQMLList adopt = new KQMLList();
     	

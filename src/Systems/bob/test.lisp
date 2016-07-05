@@ -28,7 +28,26 @@
 ;;; Sample dialogues
 ;;;
 (defvar *sample-dialogues*
-  '((Nov-demo .
+  '((ben-model-test .
+     ("Let's build a model of the RAS neighborhood."
+      "The receptor tyrosine kinase EGFR binds the growth factor ligand EGF."
+      "The EGFR-EGF complex binds another EGFR-EGF complex."
+      "The EGFR-EGFR complex binds GRB2."
+      "GRB2 bound to EGFR binds SOS1 that is not phosphorylated."
+      "GRB2-bound SOS1 that is not phosphorylated binds NRAS that is not bound to BRAF."
+      "SOS1-bound NRAS binds GTP."
+      "GTP-bound NRAS that is not bound to SOS1 binds BRAF."
+      "BRAF binds BRAF."
+      "Vemurafenib binds BRAF."
+      "Phosphorylated MAP2K1 is activated."
+      "PP2A-alpha dephosphorylates MAP2K1 that is not bound to ERK2."
+      "Active MAP2K1 that is not bound to PP2A-alpha phosphorylates ERK2."
+      "Phosphorylated ERK2 is activated."
+      "DUSP6 dephosphorylates ERK2 that is not bound to SOS1."
+      "Phosphatases dephosphorylate SOS1."
+      "BRAF V600E that is not bound to Vemurafenib phosphorylates MAP2K1."
+      ))
+    (Nov-demo .
      ("I have a patient with pancreatic cancer. What drug should I use?"
       ;; SYS: 88% of cancer patient have a mutation in KRAS that makes it constitutively activated
       ;; SYS: But I don't know any drugs targeting KRAS

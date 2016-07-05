@@ -1,12 +1,13 @@
 (in-package "IM")
 
-(setq *term-extraction-rules* '(drumtermsAdd))
+;(setq *term-extraction-rules* '(drumtermsAdd))
 (reset-im-rules 'drumtermsAdd)
 
 (mapcar #'(lambda (x) (add-im-rule x 'drumtermsAdd))  ;; sets of rules are tagged so they can be managed independently 
 	'(
 
-
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+	  
 #|
 	  ;; basic terms (not conjunctions) with selected mod (e.g., prefixes auto-, mono-, trans-)
 	  (((? reln ONT::QUANTIFIER ONT::KIND ONT::A ONT::INDEF-PLURAL ONT::THE ONT::THE-SET ONT::INDEF-SET ONT::BARE ONT::SM ONT::PRO ONT::PRO-SET) ?!obj 
@@ -272,7 +273,7 @@ ONT::INHIBIT-EFFECT ONT::CAUSE-COME-FROM ONT::REMOVE-FROM ONT::RENDER-INEFFECTIV
 	  ;; *maybe this doesn't work any more either* :LOC has changed to :LOCATION (see -simple-ref-modBP4)  *** seem to have changed back to :LOC! ***
 	  ((ONT::TERM ?!obj 
 	    (? t1 ONT::MUTATION ONT::BIOLOGICAL-PROCESS ONT::CHEMICAL ONT::MOLECULAR-PART ONT::CELL-PART ONT::BODY-PART ONT::SIGNALING-PATHWAY) :SEQUENCE - :LOC ?!modL )
-	   (ONT::F ?!modL (? tmp ONT::IN-LOC ONT::AT-LOC ONT::ON) :VAL ?!modBP)	   
+	   (ONT::F ?!modL (? tmp ONT::IN-LOC ONT::AT-LOC ONT::ON) :GROUND ?!modBP)	   
             (ONT::TERM ?!modBP (? tmp2 ONT::BODY-PART))
 	   -simple-ref-modBP3>
 	   100
@@ -281,10 +282,21 @@ ONT::INHIBIT-EFFECT ONT::CAUSE-COME-FROM ONT::REMOVE-FROM ONT::RENDER-INEFFECTIV
 	    :rule -simple-ref-modBP3
 	    ))
 
+	  ((ONT::TERM ?!obj 
+	    (? t1 ONT::MUTATION ONT::BIOLOGICAL-PROCESS ONT::CHEMICAL ONT::MOLECULAR-PART ONT::CELL-PART ONT::BODY-PART ONT::SIGNALING-PATHWAY) :SEQUENCE - :LOC ?!modL )
+	   (ONT::F ?!modL (? tmp ONT::IN-LOC ONT::AT-LOC ONT::ON) :GROUND ?!modBP)	   
+            (ONT::TERM ?!modBP (? tmp2 ONT::BODY-PART))
+	   -simple-ref-modBP3-gd>
+	   100
+	   (ONT::TERM ?!obj ?t1
+	    :LOC ?!modBP
+	    :rule -simple-ref-modBP3-gd
+	    ))
+
 	  ;; basic terms (not conjunctions) for BODY-PART (e.g., in the nucleus)
 	  ((ONT::TERM ?!obj 
 	    (? t1 ONT::MUTATION ONT::BIOLOGICAL-PROCESS ONT::CHEMICAL ONT::MOLECULAR-PART ONT::CELL-PART ONT::BODY-PART ONT::SIGNALING-PATHWAY) :SEQUENCE - :LOCATION ?!modL )
-	   (ONT::F ?!modL (? tmp ONT::IN-LOC ONT::AT-LOC ONT::ON) :VAL ?!modBP)	   
+	   (ONT::F ?!modL (? tmp ONT::IN-LOC ONT::AT-LOC ONT::ON) :GROUND ?!modBP)	   
             (ONT::TERM ?!modBP (? tmp2 ONT::BODY-PART))
 	   -simple-ref-modBP4>
 	   100
@@ -293,19 +305,355 @@ ONT::INHIBIT-EFFECT ONT::CAUSE-COME-FROM ONT::REMOVE-FROM ONT::RENDER-INEFFECTIV
 	    :rule -simple-ref-modBP4
 	    ))
 
+	  ((ONT::TERM ?!obj 
+	    (? t1 ONT::MUTATION ONT::BIOLOGICAL-PROCESS ONT::CHEMICAL ONT::MOLECULAR-PART ONT::CELL-PART ONT::BODY-PART ONT::SIGNALING-PATHWAY) :SEQUENCE - :LOCATION ?!modL )
+	   (ONT::F ?!modL (? tmp ONT::IN-LOC ONT::AT-LOC ONT::ON) :GROUND ?!modBP)	   
+            (ONT::TERM ?!modBP (? tmp2 ONT::BODY-PART))
+	   -simple-ref-modBP4-gd>
+	   100
+	   (ONT::TERM ?!obj ?t1
+	    :LOC ?!modBP
+	    :rule -simple-ref-modBP4-gd
+	    ))
+
 	  ;; basic terms (not conjunctions) for cell lines
 	  ((ONT::TERM ?!obj 
 	    (? t1 ONT::MUTATION ONT::BIOLOGICAL-PROCESS ONT::CHEMICAL ONT::MOLECULAR-PART ONT::CELL-PART ONT::BODY-PART ONT::SIGNALING-PATHWAY) :SEQUENCE - :LOC ?!modL )
-	   (ONT::F ?!modL (? tmp ONT::IN-LOC ONT::AT-LOC ONT::ON) :VAL ?!modBP)	   
+	   (ONT::F ?!modL (? tmp ONT::IN-LOC ONT::AT-LOC ONT::ON) :GROUND ?!modBP)	   
             (ONT::TERM ?!modBP (? tmp2 ONT::CELL-LINE))
 	   -simple-ref-modCL>
 	   100
 	   (ONT::TERM ?!obj ?t1
 	    :CELL-LINE ?!modBP
+	    :LOC -   ; zero out :LOC so it wouldn't be emitted
 	    :rule -simple-ref-modCL
 	    ))
 
+	  ((ONT::TERM ?!obj 
+	    (? t1 ONT::MUTATION ONT::BIOLOGICAL-PROCESS ONT::CHEMICAL ONT::MOLECULAR-PART ONT::CELL-PART ONT::BODY-PART ONT::SIGNALING-PATHWAY) :SEQUENCE - :LOC ?!modL )
+	   (ONT::F ?!modL (? tmp ONT::IN-LOC ONT::AT-LOC ONT::ON) :GROUND ?!modBP)	   
+            (ONT::TERM ?!modBP (? tmp2 ONT::CELL-LINE))
+	   -simple-ref-modCL-gd>
+	   100
+	   (ONT::TERM ?!obj ?t1
+	    :CELL-LINE ?!modBP
+	    :LOC -   ; zero out :LOC so it wouldn't be emitted
+	    :rule -simple-ref-modCL-gd
+	    ))
+	  
+	  ; Ras localizes to/in the nucleus
+          (((? reln0  ONT::F ONT::QUANTIFIER ONT::KIND ONT::A ONT::INDEF-PLURAL ONT::THE ONT::THE-SET ONT::INDEF-SET ONT::BARE ONT::SM ONT::PRO ONT::PRO-SET) ?ev
+            (:* (? type ONT::BE-AT-LOC) ?!w) :NEUTRAL ?!obj :DRUM ?code :LOCATION ?!modL)
+;           ((? reln1 ONT::F ONT::QUANTIFIER ONT::KIND ONT::A ONT::INDEF-PLURAL ONT::THE ONT::THE-SET ONT::INDEF-SET ONT::BARE ONT::SM ONT::PRO ONT::PRO-SET) ?!ag  (? t1 ONT::EVENT-OF-CHANGE ONT::CHEMICAL ONT::MOLECULAR-PART ONT::CELL-PART ONT::BODY-PART ONT::SIGNALING-PATHWAY ONT::MUTANT-OBJ ONT::WILDTYPE-OBJ ONT::SEQUENCE))
+           (ONT::TERM ?!obj ?t1)
+           (ONT::TERM ?!modL (? tmp ONT::BODY-PART))
+           -location1>
+	   100
+	   (ONT::TERM ?!obj ?t1
+	    :LOC ?!modL
+	    :rule -location1
+	    ))
 
+	  ; Ras is localized to/in the nucleus  (Can you say this?)
+	  ; Ras and Raf are colocalized in the nucleus
+          (((? reln0  ONT::F ONT::QUANTIFIER ONT::KIND ONT::A ONT::INDEF-PLURAL ONT::THE ONT::THE-SET ONT::INDEF-SET ONT::BARE ONT::SM ONT::PRO ONT::PRO-SET) ?ev
+            (:* (? type ONT::BE-AT-LOC) ?!w) :NEUTRAL1 ?!obj :DRUM ?code :LOCATION ?!modL)
+;           ((? reln1 ONT::F ONT::QUANTIFIER ONT::KIND ONT::A ONT::INDEF-PLURAL ONT::THE ONT::THE-SET ONT::INDEF-SET ONT::BARE ONT::SM ONT::PRO ONT::PRO-SET) ?!ag  (? t1 ONT::EVENT-OF-CHANGE ONT::CHEMICAL ONT::MOLECULAR-PART ONT::CELL-PART ONT::BODY-PART ONT::SIGNALING-PATHWAY ONT::MUTANT-OBJ ONT::WILDTYPE-OBJ ONT::SEQUENCE))
+           (ONT::TERM ?!obj ?t1)
+           (ONT::TERM ?!modL (? tmp ONT::BODY-PART))
+           -location1b>
+	   100
+	   (ONT::TERM ?!obj ?t1
+	    :LOC ?!modL
+	    :rule -location1b
+	    ))
+	  
+	  ; Ras is located in the nucleus
+          (((? reln0  ONT::F ONT::QUANTIFIER ONT::KIND ONT::A ONT::INDEF-PLURAL ONT::THE ONT::THE-SET ONT::INDEF-SET ONT::BARE ONT::SM ONT::PRO ONT::PRO-SET) ?ev
+            (:* (? type ONT::EXISTS) ?!w) :NEUTRAL ?!obj :DRUM ?code :LOCATION ?!modL)
+;           ((? reln1 ONT::F ONT::QUANTIFIER ONT::KIND ONT::A ONT::INDEF-PLURAL ONT::THE ONT::THE-SET ONT::INDEF-SET ONT::BARE ONT::SM ONT::PRO ONT::PRO-SET) ?!ag  (? t1 ONT::EVENT-OF-CHANGE ONT::CHEMICAL ONT::MOLECULAR-PART ONT::CELL-PART ONT::BODY-PART ONT::SIGNALING-PATHWAY ONT::MUTANT-OBJ ONT::WILDTYPE-OBJ ONT::SEQUENCE))
+           (ONT::TERM ?!obj ?t1)
+	   (ONT::F ?!modL (? tmp ONT::IN-LOC ONT::AT-LOC ONT::ON) :GROUND ?!modBP)	   
+           (ONT::TERM ?!modBP (? tmp2 ONT::BODY-PART))
+           -location2>
+	   100
+	   (ONT::TERM ?!obj ?t1
+	    :LOC ?!modBP
+	    :rule -location2
+	    ))
+
+          (((? reln0  ONT::F ONT::QUANTIFIER ONT::KIND ONT::A ONT::INDEF-PLURAL ONT::THE ONT::THE-SET ONT::INDEF-SET ONT::BARE ONT::SM ONT::PRO ONT::PRO-SET) ?ev
+            (:* (? type ONT::EXISTS) ?!w) :NEUTRAL ?!obj :DRUM ?code :LOCATION ?!modL)
+;           ((? reln1 ONT::F ONT::QUANTIFIER ONT::KIND ONT::A ONT::INDEF-PLURAL ONT::THE ONT::THE-SET ONT::INDEF-SET ONT::BARE ONT::SM ONT::PRO ONT::PRO-SET) ?!ag  (? t1 ONT::EVENT-OF-CHANGE ONT::CHEMICAL ONT::MOLECULAR-PART ONT::CELL-PART ONT::BODY-PART ONT::SIGNALING-PATHWAY ONT::MUTANT-OBJ ONT::WILDTYPE-OBJ ONT::SEQUENCE))
+           (ONT::TERM ?!obj ?t1)
+	   (ONT::F ?!modL (? tmp ONT::IN-LOC ONT::AT-LOC ONT::ON) :GROUND ?!modBP)	   
+           (ONT::TERM ?!modBP (? tmp2 ONT::BODY-PART))
+           -location2-gd>
+	   100
+	   (ONT::TERM ?!obj ?t1
+	    :LOC ?!modBP
+	    :rule -location2-gd
+	    ))
+
+	  ; Ras is in the nucleus
+          (((? reln0  ONT::F ONT::QUANTIFIER ONT::KIND ONT::A ONT::INDEF-PLURAL ONT::THE ONT::THE-SET ONT::INDEF-SET ONT::BARE ONT::SM ONT::PRO ONT::PRO-SET) ?ev
+            (:* (? type ONT::HAVE-PROPERTY) ?!w) :NEUTRAL ?!obj :DRUM ?code :FORMAL ?!modL)
+;           ((? reln1 ONT::F ONT::QUANTIFIER ONT::KIND ONT::A ONT::INDEF-PLURAL ONT::THE ONT::THE-SET ONT::INDEF-SET ONT::BARE ONT::SM ONT::PRO ONT::PRO-SET) ?!ag  (? t1 ONT::EVENT-OF-CHANGE ONT::CHEMICAL ONT::MOLECULAR-PART ONT::CELL-PART ONT::BODY-PART ONT::SIGNALING-PATHWAY ONT::MUTANT-OBJ ONT::WILDTYPE-OBJ ONT::SEQUENCE))
+           (ONT::TERM ?!obj ?t1)
+	   (ONT::F ?!modL (? tmp ONT::IN-LOC ONT::AT-LOC ONT::ON) :GROUND ?!modBP)	   
+           (ONT::TERM ?!modBP (? tmp2 ONT::BODY-PART))
+           -location3>
+	   100
+	   (ONT::TERM ?!obj ?t1
+	    :LOC ?!modBP
+	    :rule -location3
+	    ))
+
+          (((? reln0  ONT::F ONT::QUANTIFIER ONT::KIND ONT::A ONT::INDEF-PLURAL ONT::THE ONT::THE-SET ONT::INDEF-SET ONT::BARE ONT::SM ONT::PRO ONT::PRO-SET) ?ev
+            (:* (? type ONT::HAVE-PROPERTY) ?!w) :NEUTRAL ?!obj :DRUM ?code :FORMAL ?!modL)
+;           ((? reln1 ONT::F ONT::QUANTIFIER ONT::KIND ONT::A ONT::INDEF-PLURAL ONT::THE ONT::THE-SET ONT::INDEF-SET ONT::BARE ONT::SM ONT::PRO ONT::PRO-SET) ?!ag  (? t1 ONT::EVENT-OF-CHANGE ONT::CHEMICAL ONT::MOLECULAR-PART ONT::CELL-PART ONT::BODY-PART ONT::SIGNALING-PATHWAY ONT::MUTANT-OBJ ONT::WILDTYPE-OBJ ONT::SEQUENCE))
+           (ONT::TERM ?!obj ?t1)
+	   (ONT::F ?!modL (? tmp ONT::IN-LOC ONT::AT-LOC ONT::ON) :GROUND ?!modBP)	   
+           (ONT::TERM ?!modBP (? tmp2 ONT::BODY-PART))
+           -location3-gd>
+	   100
+	   (ONT::TERM ?!obj ?t1
+	    :LOC ?!modBP
+	    :rule -location3-gd
+	    ))
+	  
+	  ; Ras resides/hangs out in the nucleus
+	  ; Ras residency in the nucleus
+          (((? reln0  ONT::F ONT::QUANTIFIER ONT::KIND ONT::A ONT::INDEF-PLURAL ONT::THE ONT::THE-SET ONT::INDEF-SET ONT::BARE ONT::SM ONT::PRO ONT::PRO-SET) ?ev
+            (:* (? type ONT::APPEAR ONT::STAY ONT::STOP-MOVE ONT::WAIT) ?!w) :AGENT ?!obj :DRUM ?code :LOCATION ?!modL)
+;           ((? reln1 ONT::F ONT::QUANTIFIER ONT::KIND ONT::A ONT::INDEF-PLURAL ONT::THE ONT::THE-SET ONT::INDEF-SET ONT::BARE ONT::SM ONT::PRO ONT::PRO-SET) ?!ag  (? t1 ONT::EVENT-OF-CHANGE ONT::CHEMICAL ONT::MOLECULAR-PART ONT::CELL-PART ONT::BODY-PART ONT::SIGNALING-PATHWAY ONT::MUTANT-OBJ ONT::WILDTYPE-OBJ ONT::SEQUENCE))
+           (ONT::TERM ?!obj ?t1)
+	   (ONT::F ?!modL (? tmp ONT::IN-LOC ONT::AT-LOC ONT::ON) :GROUND ?!modBP)	   
+           (ONT::TERM ?!modBP (? tmp2 ONT::BODY-PART))
+           -location4>
+	   100
+	   (ONT::TERM ?!obj ?t1
+	    :LOC ?!modBP
+	    :rule -location4
+	    ))
+
+          (((? reln0  ONT::F ONT::QUANTIFIER ONT::KIND ONT::A ONT::INDEF-PLURAL ONT::THE ONT::THE-SET ONT::INDEF-SET ONT::BARE ONT::SM ONT::PRO ONT::PRO-SET) ?ev
+            (:* (? type ONT::APPEAR ONT::STAY ONT::STOP-MOVE ONT::WAIT) ?!w) :AGENT ?!obj :DRUM ?code :LOCATION ?!modL)
+;           ((? reln1 ONT::F ONT::QUANTIFIER ONT::KIND ONT::A ONT::INDEF-PLURAL ONT::THE ONT::THE-SET ONT::INDEF-SET ONT::BARE ONT::SM ONT::PRO ONT::PRO-SET) ?!ag  (? t1 ONT::EVENT-OF-CHANGE ONT::CHEMICAL ONT::MOLECULAR-PART ONT::CELL-PART ONT::BODY-PART ONT::SIGNALING-PATHWAY ONT::MUTANT-OBJ ONT::WILDTYPE-OBJ ONT::SEQUENCE))
+           (ONT::TERM ?!obj ?t1)
+	   (ONT::F ?!modL (? tmp ONT::IN-LOC ONT::AT-LOC ONT::ON) :GROUND ?!modBP)	   
+           (ONT::TERM ?!modBP (? tmp2 ONT::BODY-PART))
+           -location4-gd>
+	   100
+	   (ONT::TERM ?!obj ?t1
+	    :LOC ?!modBP
+	    :rule -location4-gd
+	    ))
+	  
+	  ; Ras lives in the nucleus
+          (((? reln0  ONT::F ONT::QUANTIFIER ONT::KIND ONT::A ONT::INDEF-PLURAL ONT::THE ONT::THE-SET ONT::INDEF-SET ONT::BARE ONT::SM ONT::PRO ONT::PRO-SET) ?ev
+            (:* (? type ONT::LIVE) ?!w) :AFFECTED ?!obj :DRUM ?code :LOCATION ?!modL)
+;           ((? reln1 ONT::F ONT::QUANTIFIER ONT::KIND ONT::A ONT::INDEF-PLURAL ONT::THE ONT::THE-SET ONT::INDEF-SET ONT::BARE ONT::SM ONT::PRO ONT::PRO-SET) ?!ag  (? t1 ONT::EVENT-OF-CHANGE ONT::CHEMICAL ONT::MOLECULAR-PART ONT::CELL-PART ONT::BODY-PART ONT::SIGNALING-PATHWAY ONT::MUTANT-OBJ ONT::WILDTYPE-OBJ ONT::SEQUENCE))
+           (ONT::TERM ?!obj ?t1)
+	   (ONT::F ?!modL (? tmp ONT::IN-LOC ONT::AT-LOC ONT::ON) :GROUND ?!modBP)	   
+           (ONT::TERM ?!modBP (? tmp2 ONT::BODY-PART))
+           -location5>
+	   100
+	   (ONT::TERM ?!obj ?t1
+	    :LOC ?!modBP
+	    :rule -location5
+	    ))
+
+          (((? reln0  ONT::F ONT::QUANTIFIER ONT::KIND ONT::A ONT::INDEF-PLURAL ONT::THE ONT::THE-SET ONT::INDEF-SET ONT::BARE ONT::SM ONT::PRO ONT::PRO-SET) ?ev
+            (:* (? type ONT::LIVE) ?!w) :AFFECTED ?!obj :DRUM ?code :LOCATION ?!modL)
+;           ((? reln1 ONT::F ONT::QUANTIFIER ONT::KIND ONT::A ONT::INDEF-PLURAL ONT::THE ONT::THE-SET ONT::INDEF-SET ONT::BARE ONT::SM ONT::PRO ONT::PRO-SET) ?!ag  (? t1 ONT::EVENT-OF-CHANGE ONT::CHEMICAL ONT::MOLECULAR-PART ONT::CELL-PART ONT::BODY-PART ONT::SIGNALING-PATHWAY ONT::MUTANT-OBJ ONT::WILDTYPE-OBJ ONT::SEQUENCE))
+           (ONT::TERM ?!obj ?t1)
+	   (ONT::F ?!modL (? tmp ONT::IN-LOC ONT::AT-LOC ONT::ON) :GROUND ?!modBP)	   
+           (ONT::TERM ?!modBP (? tmp2 ONT::BODY-PART))
+           -location5-gd>
+	   100
+	   (ONT::TERM ?!obj ?t1
+	    :LOC ?!modBP
+	    :rule -location5-gd
+	    ))
+	  
+	  ; Ras lives in the nucleus
+          ((ONT::TERM ?ev
+            (? type ONT::LOCATION) :FIGURE ?!obj :DRUM ?code :LOC ?!modL)
+;           ((? reln1 ONT::F ONT::QUANTIFIER ONT::KIND ONT::A ONT::INDEF-PLURAL ONT::THE ONT::THE-SET ONT::INDEF-SET ONT::BARE ONT::SM ONT::PRO ONT::PRO-SET) ?!ag  (? t1 ONT::EVENT-OF-CHANGE ONT::CHEMICAL ONT::MOLECULAR-PART ONT::CELL-PART ONT::BODY-PART ONT::SIGNALING-PATHWAY ONT::MUTANT-OBJ ONT::WILDTYPE-OBJ ONT::SEQUENCE))
+           (ONT::TERM ?!obj ?t1)
+	   (ONT::F ?!modL (? tmp ONT::IN-LOC ONT::AT-LOC ONT::ON) :GROUND ?!modBP)	   
+           (ONT::TERM ?!modBP (? tmp2 ONT::BODY-PART))
+           -location6>
+	   100
+	   (ONT::TERM ?!obj ?t1
+	    :LOC ?!modBP
+	    :rule -location6
+	    ))
+
+          ((ONT::TERM ?ev
+            (? type ONT::LOCATION) :FIGURE ?!obj :DRUM ?code :LOC ?!modL)
+;           ((? reln1 ONT::F ONT::QUANTIFIER ONT::KIND ONT::A ONT::INDEF-PLURAL ONT::THE ONT::THE-SET ONT::INDEF-SET ONT::BARE ONT::SM ONT::PRO ONT::PRO-SET) ?!ag  (? t1 ONT::EVENT-OF-CHANGE ONT::CHEMICAL ONT::MOLECULAR-PART ONT::CELL-PART ONT::BODY-PART ONT::SIGNALING-PATHWAY ONT::MUTANT-OBJ ONT::WILDTYPE-OBJ ONT::SEQUENCE))
+           (ONT::TERM ?!obj ?t1)
+	   (ONT::F ?!modL (? tmp ONT::IN-LOC ONT::AT-LOC ONT::ON) :GROUND ?!modBP)	   
+           (ONT::TERM ?!modBP (? tmp2 ONT::BODY-PART))
+           -location6-gd>
+	   100
+	   (ONT::TERM ?!obj ?t1
+	    :LOC ?!modBP
+	    :rule -location6-gd
+	    ))
+	  
+	  ; Ras is active
+          (((? reln0  ONT::F ONT::QUANTIFIER ONT::KIND ONT::A ONT::INDEF-PLURAL ONT::THE ONT::THE-SET ONT::INDEF-SET ONT::BARE ONT::SM ONT::PRO ONT::PRO-SET) ?ev
+            (:* (? type ONT::HAVE-PROPERTY) ?!w) :NEUTRAL ?!obj :DRUM ?code :FORMAL ?!modActive)
+;           ((? reln1 ONT::F ONT::QUANTIFIER ONT::KIND ONT::A ONT::INDEF-PLURAL ONT::THE ONT::THE-SET ONT::INDEF-SET ONT::BARE ONT::SM ONT::PRO ONT::PRO-SET) ?!ag  (? t1 ONT::EVENT-OF-CHANGE ONT::CHEMICAL ONT::MOLECULAR-PART ONT::CELL-PART ONT::BODY-PART ONT::SIGNALING-PATHWAY ONT::MUTANT-OBJ ONT::WILDTYPE-OBJ ONT::SEQUENCE))
+           (ONT::TERM ?!obj ?t1)
+           (ONT::F ?!modActive (? tmp2 ONT::ACTIVE))
+           -active3>
+	   100
+	   (ONT::TERM ?!obj ?t1
+	    :active ONT::TRUE
+	    :rule -active3
+	    ))
+
+	  ; Ras is inactive
+          (((? reln0  ONT::F ONT::QUANTIFIER ONT::KIND ONT::A ONT::INDEF-PLURAL ONT::THE ONT::THE-SET ONT::INDEF-SET ONT::BARE ONT::SM ONT::PRO ONT::PRO-SET) ?ev
+            (:* (? type ONT::HAVE-PROPERTY) ?!w) :NEUTRAL ?!obj :DRUM ?code :FORMAL ?!modActive)
+;           ((? reln1 ONT::F ONT::QUANTIFIER ONT::KIND ONT::A ONT::INDEF-PLURAL ONT::THE ONT::THE-SET ONT::INDEF-SET ONT::BARE ONT::SM ONT::PRO ONT::PRO-SET) ?!ag  (? t1 ONT::EVENT-OF-CHANGE ONT::CHEMICAL ONT::MOLECULAR-PART ONT::CELL-PART ONT::BODY-PART ONT::SIGNALING-PATHWAY ONT::MUTANT-OBJ ONT::WILDTYPE-OBJ ONT::SEQUENCE))
+           (ONT::TERM ?!obj ?t1)
+           (ONT::F ?!modActive (? tmp2 ONT::INACTIVE))
+           -active4>
+	   100
+	   (ONT::TERM ?!obj ?t1
+	    :active ONT::FALSE
+	    :rule -active4
+	    ))
+
+	  #|
+	  ; conserved domain
+	  ;; basic terms (not conjunctions) with selected mod (only ONT::ACTIVE)
+	  ((ONT::TERM ?!obj 
+	    (? t1 ONT::MUTATION ONT::BIOLOGICAL-PROCESS ONT::CHEMICAL ONT::MOLECULAR-PART ONT::CELL-PART ONT::BODY-PART ONT::SIGNALING-PATHWAY ONT::PHYS-OBJECT ONT::MENTAL-CONSTRUCTION ONT::AWARENESS ONT::INFORMATION-FUNCTION-OBJECT) :SEQUENCE - :MODS (?!modC) )
+            (ONT::F ?!modC (:* ONT::RETAIN W::CONSERVE) :AFFECTED ?!obj)
+	   -simple-ref-modConserved>
+	   100
+	   (ONT::TERM ?!obj ?t1
+	    :conserved ONT::TRUE
+	    :rule -simple-ref-modConserved
+	    ))
+	  |#
+
+	  ;;;;;;;;;;;;;; phosphorylation ;;;;;;;;;;;;;;
+
+	  ; phosphoRaf; pAck1
+	  ((ONT::TERM ?!name (? t ONT::CHEMICAL ONT::MOLECULAR-PART ONT::CELL-PART ONT::BODY-PART ONT::SIGNALING-PATHWAY ONT::MUTANT-OBJ ONT::WILDTYPE-OBJ) :MODS (?!m)) 
+	   (ONT::F ?!m ONT::PHOSPHORILATED)
+	   -phospho1>
+	   100
+	   (ONT::event ?!m ONT::PHOSPHORYLATION
+	    :rule -phospho1
+	    :AFFECTED ?!name
+	    :type ONT::PHOSPHORILATED
+;	    :drum ?code    
+	    )
+	   )
+
+	  ; pAck1-Tyr176; pAck1-Tyr
+	  ((ONT::TERM ?!name (? t ONT::CHEMICAL ONT::MOLECULAR-PART ONT::CELL-PART ONT::BODY-PART ONT::SIGNALING-PATHWAY ONT::MUTANT-OBJ ONT::WILDTYPE-OBJ) :MODS (?!m)) 
+	   (ONT::F ?!m ONT::PHOSPHORILATED)
+	   (ONT::TERM ?!loc (? locType ONT::MOLECULAR-SITE ONT::MOLECULAR-DOMAIN ONT::AMINO-ACID ONT::RESIDUE ONT::TERMINUS ONT::MUTATION) :ASSOC-WITHS (?!name)) ; note: it doesn't work to make ?name and ?loc optional, probably because ?name gets instantiated
+	   -phospho1b>
+	   100
+	   (ONT::event ?!m ONT::PHOSPHORYLATION
+	    :rule -phospho1b
+	    :AFFECTED ?!name
+	    :SITE ?!loc
+	    :type ONT::PHOSPHORILATED
+;	    :drum ?code    
+	    )
+	   )
+
+	  ; pTyr; pTyr176
+	  ((ONT::TERM ?!name (? locType ONT::MOLECULAR-SITE ONT::MOLECULAR-DOMAIN ONT::AMINO-ACID ONT::RESIDUE ONT::TERMINUS ONT::MUTATION) :MODS (?!m)) 
+	   (ONT::F ?!m ONT::PHOSPHORILATED)
+	   -phospho2>
+	   101  ; higher priority than -phospho1> because MOLECULAR-SITE would also match MOLECULAR-PART
+	   (ONT::event ?!m ONT::PHOSPHORYLATION
+	    :rule -phospho2
+	    :SITE ?!name
+	    :type ONT::PHOSPHORILATED
+;	    :drum ?code    
+	    )
+	   )
+
+	  ; pTyr176-AKT
+	  ((ONT::TERM ?!loc (? locType ONT::MOLECULAR-SITE ONT::MOLECULAR-DOMAIN ONT::AMINO-ACID ONT::RESIDUE ONT::TERMINUS ONT::MUTATION) :MODS (?!m)) 
+	   (ONT::F ?!m ONT::PHOSPHORILATED)
+	   (ONT::TERM ?!name (? t ONT::CHEMICAL ONT::MOLECULAR-PART ONT::CELL-PART ONT::BODY-PART ONT::SIGNALING-PATHWAY ONT::MUTANT-OBJ ONT::WILDTYPE-OBJ) :ASSOC-WITHS (?!loc))
+	   -phospho2b>
+	   100
+	   (ONT::event ?!m ONT::PHOSPHORYLATION
+	    :rule -phospho2b
+	    :AFFECTED ?!name
+	    :SITE ?!loc
+	    :type ONT::PHOSPHORILATED
+;	    :drum ?code    
+	    )
+	   (ONT::TERM ?!name ?t
+	    :rule -phospho2b-term
+	    :INEVENT ?!m
+	    )
+	   )
+
+	  ; pAck1(Tyr); pAck1(Tyr176)
+	  ((ONT::TERM ?!name (? t ONT::CHEMICAL ONT::MOLECULAR-PART ONT::CELL-PART ONT::BODY-PART ONT::SIGNALING-PATHWAY ONT::MUTANT-OBJ ONT::WILDTYPE-OBJ) :MODS (?!m) :PARENTHETICAL ?!loc) 
+	   (ONT::F ?!m ONT::PHOSPHORILATED)
+	   (ONT::TERM ?!loc (? locType ONT::MOLECULAR-SITE ONT::MOLECULAR-DOMAIN ONT::AMINO-ACID ONT::RESIDUE ONT::TERMINUS ONT::MUTATION)) 
+	   -phospho3>
+	   100
+	   (ONT::event ?!m ONT::PHOSPHORYLATION
+	    :rule -phospho3
+	    :AFFECTED ?!name
+	    :SITE ?!loc
+	    :type ONT::PHOSPHORILATED
+;	    :drum ?code    
+	    )
+	   )
+
+	  ; pTyr(Ack1)   ; this notation might not happen but is here just in case
+	  ((ONT::TERM ?!name (? t ONT::CHEMICAL ONT::MOLECULAR-PART ONT::CELL-PART ONT::BODY-PART ONT::SIGNALING-PATHWAY ONT::MUTANT-OBJ ONT::WILDTYPE-OBJ)) 
+	   (ONT::F ?!m ONT::PHOSPHORILATED)
+	   (ONT::TERM ?!loc (? locType ONT::MOLECULAR-SITE ONT::MOLECULAR-DOMAIN ONT::AMINO-ACID ONT::RESIDUE ONT::TERMINUS ONT::MUTATION) :MODS (?!m) :PARENTHETICAL ?!name) 
+	   -phospho3b>
+	   100
+	   (ONT::event ?!m ONT::PHOSPHORYLATION
+	    :rule -phospho3b
+	    :AFFECTED ?!name
+	    :SITE ?!loc
+	    :type ONT::PHOSPHORILATED
+;	    :drum ?code    
+	    )
+	   )
+
+	  ; pRasV12
+	  ((ONT::TERM ?!name (? t ONT::CHEMICAL ONT::MOLECULAR-PART ONT::CELL-PART ONT::BODY-PART ONT::SIGNALING-PATHWAY ONT::MUTANT-OBJ ONT::WILDTYPE-OBJ) :MODS (?!m) :ASSOC-WITHS (?!loc)) 
+	   (ONT::F ?!m ONT::PHOSPHORILATED)
+	   (ONT::TERM ?!loc (? locType ONT::MOLECULAR-SITE ONT::MOLECULAR-DOMAIN ONT::AMINO-ACID ONT::RESIDUE ONT::TERMINUS ONT::MUTATION)) 
+	   -phospho4>
+	   100
+	   (ONT::event ?!m ONT::PHOSPHORYLATION
+	    :rule -phospho4
+	    :AFFECTED ?!name
+	    :SITE ?!loc
+	    :type ONT::PHOSPHORILATED
+;	    :drum ?code    
+	    )
+	   )
+	  
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+	  
 	  )
 	)
-	  
+
+

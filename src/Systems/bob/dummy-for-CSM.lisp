@@ -29,7 +29,8 @@
     ((propose ont::propose)
      (list 'REPORT :content (list 'ADOPT :what what :as (if (or (null active-goal) (eq active-goal '-))
 							    '(GOAL)
-							    (list 'SUBGOAL :of (find-arg-in-act active-goal :what))))
+;							    (list 'SUBGOAL :of (find-arg-in-act active-goal :what))))
+							    (list 'SUBGOAL :of active-goal)))
 	   :context context))
     
     (ont::ask-what-is
@@ -37,13 +38,15 @@
      (let ((id (gentemp "I" om::*ont-package*))
 	   (type (find-arg what-lf :instance-of)))
        (cond ((eq type 'ONT::MEDICATION)
-	      (list 'REPORT :content `(ADOPT :what ,id :as (SUBGOAL :OF ,(find-arg-in-act active-goal :what)))
+;	      (list 'REPORT :content `(ADOPT :what ,id :as (SUBGOAL :OF ,(find-arg-in-act active-goal :what)))
+	      (list 'REPORT :content `(ADOPT :what ,id :as (SUBGOAL :OF ,active-goal))
 		    :context 
 		    (cons `(ont::RELN ,id :instance-of ONT::IDENTIFY :affected ,what)
 			  context)))
 	     (T
 	      
-	      (list 'REPORT :content `(ADOPT :what ,id :as (SUBGOAL :of ,(find-arg-in-act active-goal :what)))
+;	      (list 'REPORT :content `(ADOPT :what ,id :as (SUBGOAL :of ,(find-arg-in-act active-goal :what)))
+	      (list 'REPORT :content `(ADOPT :what ,id :as (SUBGOAL :of ,active-goal))
 	      
 		    :context (cons `(ont::RELN ,id :instance-of ONT::IDENTIFY :affected ,what)
 					    context))))
@@ -54,7 +57,8 @@
 	   (id1 (gentemp "I" om::*ont-package*))
 	   (test (find-arg-in-act act :test))
 	   (type (find-arg what-lf :instance-of)))
-       (list 'REPORT :content `(ADOPT :what ,id :as (SUBGOAL :of ,(find-arg-in-act active-goal :what)))
+;       (list 'REPORT :content `(ADOPT :what ,id :as (SUBGOAL :of ,(find-arg-in-act active-goal :what)))
+       (list 'REPORT :content `(ADOPT :what ,id :as (SUBGOAL :of ,active-goal))
 	      
 	     :context (list* `(ont::RELN ,id :instance-of ONT::EVALUATE :content ,id1)
 			     `(ont::reln ,id1 :instance-of ONT::CAUSE-EFFECT :action ,test :result ,what)
@@ -66,7 +70,8 @@
 	   (newwhat newcontext)
 	 (find-events-in-context context)
        (list 'REPORT :content
-	     `(ASSERTION :what ,newwhat :as (CONTRIBUTES-TO :goal ,(find-arg-in-act active-goal :what)))
+;	     `(ASSERTION :what ,newwhat :as (CONTRIBUTES-TO :goal ,(find-arg-in-act active-goal :what)))
+	     `(ASSERTION :what ,newwhat :as (CONTRIBUTES-TO :goal ,active-goal))
 	     
 	     :context newcontext
 	       )))
@@ -80,7 +85,8 @@
   :subscribe t)
 
 (defun take-initiative? (&key result goal context)
-  (let* ((goal-id (find-arg-in-act goal :what))
+  (let* (;(goal-id (find-arg-in-act goal :what))
+	 (goal-id goal)
 	 (goal-lf (find-lf-in-context context goal-id))
 	 (goal-type (find-arg goal-lf :instance-of)))
     ;;(format t "~%Checking intitiative: current goal is ~S, goal type is ~S" goal goal-type)
