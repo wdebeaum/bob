@@ -978,7 +978,7 @@
 
       (AGENT-THEME-SUBJCONTROL-TEMPL
        (ARGUMENTS
-	(LSUBJ (% W::NP (W::lex ?lsubjlex) (W::var ?lsubjvar)) ONT::AGENT)
+	(LSUBJ (% W::NP (W::lex ?lsubjlex) (W::sem ?lsubjsem) (W::var ?lsubjvar)) ONT::AGENT)
 	(LCOMP (:parameter xp (:default (% W::cp (W::ctype W::s-to))) (:required(W::subj (% W::np (W::sem ?lsubjsem) 
 											    (W::lex ?lsubjlex) (W::var ?lsubjvar))))) ONT::FORMAL)
 	))
@@ -987,7 +987,7 @@
       (AGENT-Affected-theme-SUBJCONTROL-TEMPL
        (ARGUMENTS
     ;;;;; (LSUBJ (% NP) AGENT)
-	(LSUBJ (% W::NP (W::lex ?lsubjlex) (W::var ?lsubjvar)) ONT::AGENT)
+	(LSUBJ (% W::NP (W::lex ?lsubjlex) (W::sem ?lsubjsem) (W::var ?lsubjvar)) ONT::AGENT)
     ;;;;; (LCOMP (:parameter xp (:default (% cp (ctype s-to))) (:required (subj ?lsubj))) THEME)
 	(LOBJ (% W::NP) ONT::affected)
 	(LCOMP (:parameter xp (:default (% W::cp (W::ctype W::s-to))) 
@@ -998,24 +998,27 @@
 ; He gave her a kiss (give as a light verb)
       (AGENT-AFFECTED-FORMAL-SUBJCONTROL-OBJ-TEMPL
        (ARGUMENTS
-	(LSUBJ (% W::NP (W::lex ?subjlex) (W::var ?subjvar)) ONT::AGENT)
-	(LOBJ (% W::NP (W::lex ?dobjlex) (W::var ?dobjvar)) ONT::AFFECTED)
+	(LSUBJ (% W::NP (W::lex ?subjlex) (W::sem ?lsubjsem) (W::var ?subjvar)) ONT::AGENT)
+	(LOBJ (% W::NP (W::lex ?dobjlex) (W::sem ?lobjsem) (W::var ?dobjvar)) ONT::AFFECTED)
 	(LCOMP (:parameter xp (:default (% W::NP (W::lf (% ?p (w::class (? x ont::EVENT-OF-CHANGE))))))
-			    (:required  (w::SUBJ (% W::NP (w::var ?subjvar)))
-				       (w::DOBJ (% W::NP (w::var ?dobjvar))))
+			    (:required  (w::SUBJ (% W::NP (w::var ?subjvar) (W::sem ?lsubjsem)))
+				       (w::DOBJ (% W::NP (w::var ?dobjvar) (W::sem ?lobjsem))))
 					  
 	       ) ONT::FORMAL)
 	))
 
+; nobody uses this
+#| 
  (AGENT-Affected-THEME-SUBJCONTROL-optional-TEMPL
        (ARGUMENTS
     ;;;;; (LSUBJ (% NP) AGENT)
-	(LSUBJ (% W::NP (W::lex ?lsubjlex) (W::var ?lsubjvar)) ONT::AGENT)
+	(LSUBJ (% W::NP (W::lex ?lsubjlex) (W::sem ?lobjsem) (W::var ?lsubjvar)) ONT::AGENT)
     ;;;;; (LCOMP (:parameter xp (:default (% cp (ctype s-to))) (:required (subj ?lsubj))) THEME)
 	(LOBJ (% W::NP) ONT::affected)
 	(LCOMP (:parameter xp (:default (% W::cp (W::ctype W::s-to))) (:required (ont::agent ?lsubjvar))) ONT::FORMAL optional)
 	))
-      
+|#
+
       ;; he had a book reviewed
       (CAUSE-EFFECT-passive-TEMPL
        (ARGUMENTS
@@ -1137,7 +1140,7 @@
       (Agent-theme-complex-subjcontrol-TEMPL
        (ARGUMENTS
 	(LSUBJ (% W::NP  (w::var ?subjvar)(w::lex ?subjlex) (w::sem ?subjsem))  ONT::agent)
-	(LCOMP (% W::PRED (W::filled -) (W::gap ?gap) (W::argument (% W::np (W::sem ?subjsem) (W::lex ?subjlex) 
+	(LCOMP (% W::PRED (W::filled -) (W::gap ?gap) (W::arg ?subjvar) (W::argument (% W::np (W::sem ?subjsem) (W::lex ?subjlex) 
 								      (W::var ?subjvar)))) ont::formal)
 	))
 
@@ -2213,9 +2216,9 @@
   (SUBCAT-DISJ-Templ
    (SYNTAX
     (W::SUBCAT (? W::SUB W::S W::PP W::NP W::VP W::ADJP))
-    (W::status w::indefinite)
+    (W::status ont::indefinite)
     (w::agr ?agr)
-    (w::operator w::one-of)
+    (w::operator ont::one-of)
     (W::conj -) (W::disj +) 
     )
    (ARGUMENTS
@@ -2586,7 +2589,7 @@
 
   (binary-constraint-S-decl-templ
    (SYNTAX (W::SORT W::BINARY-CONSTRAINT) (W::ATYPE (? ATYPE W::PRE W::POST))
-	   (W::ALLOW-DELETED-COMP -)
+	   (W::ALLOW-DELETED-COMP -) (adj-s-prepost -)
 	   )
    (ARGUMENTS
     (ARGUMENT (% W::S) ONT::FIGURE)
@@ -2645,7 +2648,7 @@
 	  )
    (ARGUMENTS
     (ARGUMENT (% W::S) ONT::FIGURE)
-    (SUBCAT (% W::NP (w::sort w::pred) (w::lf (% w::description (w::status w::kind)))) ONT::GROUND)
+    (SUBCAT (% W::NP (w::sort w::pred) (w::lf (% w::description (w::status ont::kind)))) ONT::GROUND)
     ))
 
   
@@ -2850,8 +2853,8 @@
    (ARGUMENTS
     (ARGUMENT (% W::UTT (w::subjvar ?sv)) ONT::FIGURE)
     ))
-  
-  (disc-post-templ
+
+(disc-post-templ
    (SYNTAX(W::SORT W::DISC) (W::SA-ID ?SA-ID) (W::ATYPE W::POST))
    (ARGUMENTS
     (ARGUMENT (% W::S) ONT::FIGURE)
@@ -3484,50 +3487,50 @@
   ;;;;; Pronoun templates
   ;;;;;
   (pronoun-templ
-   (SYNTAX(W::pro +) (W::MASS W::count) (W::status W::PRO) (W::case (? case W::sub W::obj -)) (W::agr 
+   (SYNTAX(W::pro +) (W::MASS W::count) (W::status ONT::PRO) (W::case (? case W::sub W::obj -)) (W::agr 
       W::3s))
    (ARGUMENTS
     ))
 
   ;; mine, yours, his, hers, ours, theirs -- stand alone, don't modify a noun
   (poss-pronoun-templ
-   (SYNTAX(W::pro +) (W::case W::poss) (W::status W::PRO) (W::poss +) (W::agr (? a w::3p W::3s)))
+   (SYNTAX(W::pro +) (W::case W::poss) (W::status ONT::PRO) (W::poss +) (W::agr (? a w::3p W::3s)))
    (ARGUMENTS
     ))
 
   ;; my, your, his, her, its, our, their -- must modify a noun
   (poss-pro-det-templ
-   (SYNTAX (W::pro +) (W::case W::poss) (W::status W::PRO-DET) (W::poss +) (W::agr (? a w::3p W::3s)))
+   (SYNTAX (W::pro +) (W::case W::poss) (W::status ONT::PRO-DET) (W::poss +) (W::agr (? a w::3p W::3s)))
    (ARGUMENTS
     ))
 
   ;; whose
   (poss-pro-det-indef-templ
-   (SYNTAX (W::pro w::indef) (W::case W::poss) (W::status W::PRO-DET) (W::poss +) (W::agr (? a w::3p W::3s)))
+   (SYNTAX (W::pro w::indef) (W::case W::poss) (W::status ONT::PRO-DET) (W::poss +) (W::agr (? a w::3p W::3s)))
    (ARGUMENTS
     ))
   
 (pronoun-indef-templ
-   (SYNTAX (W::MASS W::count) (W::status W::PRO) (W::case (? case W::sub W::obj -)) (W::PRO W::INDEF)
+   (SYNTAX (W::MASS W::count) (W::status ONT::PRO) (W::case (? case W::sub W::obj -)) (W::PRO W::INDEF)
 	   (W::agr W::3s))
    (ARGUMENTS
     ))
 
   (pronoun-plural-templ
-   (SYNTAX (W::MASS W::count) (W::status W::PRO-SET) (W::case (? case W::sub W::obj -))
+   (SYNTAX (W::MASS W::count) (W::status ONT::PRO-SET) (W::case (? case W::sub W::obj -))
       (W::agr W::3P))
    (ARGUMENTS
     ))
 
   ;; each other, one another
   (pronoun-reciprocal-templ
-   (SYNTAX(W::MASS W::count) (W::status W::PRO)  (W::case (? case W::obj -)) (W::PRO W::RECIP)
+   (SYNTAX(W::MASS W::count) (W::status ONT::PRO)  (W::case (? case W::obj -)) (W::PRO W::RECIP)
       (W::agr  (? a W::3s w::3p)))
    (ARGUMENTS
     ))
 
   (pronoun-quan-templ
-   (SYNTAX(W::MASS W::count) (W::status W::QUANTIFIER) (W::case (? case W::sub W::obj -)) (W::PRO W::INDEF
+   (SYNTAX(W::MASS W::count) (W::status ONT::QUANTIFIER) (W::case (? case W::sub W::obj -)) (W::PRO W::INDEF
      ) (W::agr W::3s))
    (ARGUMENTS
     ))

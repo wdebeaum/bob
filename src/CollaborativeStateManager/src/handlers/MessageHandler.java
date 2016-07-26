@@ -9,6 +9,7 @@ public abstract class MessageHandler {
 	KQMLPerformative msg;
 	KQMLList content;
 	
+	
 	public MessageHandler(KQMLPerformative msg, KQMLList content)
 	{
 		this.msg = msg;
@@ -17,25 +18,45 @@ public abstract class MessageHandler {
 	
 	public abstract KQMLList process();
 	
-	public KQMLList failureMessage(String what)
+	public KQMLList failureMessage(String what, KQMLObject context)
 	{
-		KQMLList context = new KQMLList();
-		KQMLObject contextObject = content.getKeywordArg(":CONTEXT");
-		if (contextObject != null && contextObject instanceof KQMLList)
-			context = (KQMLList)contextObject;
+		return failureMessage(what,context,null);
+	}
+	
+	public KQMLList failureMessage(String what,KQMLObject context, KQMLObject reason, KQMLObject possibleSolutions)
+	{
 		
 		KQMLList failureContent = new KQMLList();
 		failureContent.add("FAILED-TO-INTERPRET");
 		failureContent.add(":WHAT");
 		failureContent.add(what);
 		failureContent.add(":REASON");
-		failureContent.add("NIL");
-		return reportContent(failureContent, context);
+		if (reason == null)
+			failureContent.add("NIL");
+		else
+			failureContent.add(reason);
+		
+		failureContent.add(":POSSIBLE-SOLUTIONS");
+		if (possibleSolutions == null)
+			failureContent.add("NIL");
+		else
+			failureContent.add(possibleSolutions);
+		return reportContent(failureContent, context);		
+	}
+	
+	public KQMLList failureMessage(String what, KQMLObject context, KQMLObject reason)
+	{
+		return failureMessage(what,context,reason,null);	
+	}
+	
+	public KQMLList failureMessage(KQMLObject context)
+	{
+		return failureMessage("NIL", context);
 	}
 	
 	public KQMLList failureMessage()
 	{
-		return failureMessage("NIL");
+		return failureMessage(new KQMLList());
 	}
 	
     protected KQMLList reportContent(KQMLObject content, KQMLObject context)

@@ -183,7 +183,7 @@
 
 (load "symbolmapping.lisp")
 
-; bobRules is before drum so that the domain specific EVENT rules take precedence (and also because bobRules also contains TERM extractions)
+; bobRules is before drum so that the domain specific EVENT rules take precedence (and also because bobRules also contains TERM extractions) (and also because CREATE is matched for both the BOB-specific CREATE event and for the general drum ACTIVATE)
 (setq im::*extraction-sequence* '((im::drumterms) (im::drumtermsAdd) (im::bobRules) (im::drum) (im::drummod) (im::drumCC) (im::drumMisc) (im::emptyRules)))
 (setq im::*substitute-terms-in-extraction* t)
 
@@ -198,5 +198,5 @@
 
 ;; the :dummy component is used to fake certain message interactions during
 ;; system development. If not wanted, comment out the following line
-;(load  #!TRIPS"src;Systems;bob;dummymessages")
-;(load  #!TRIPS"src;Systems;bob;dummy-for-CSM")
+#(load  #!TRIPS"src;Systems;bob;dummymessages")
+#(load  #!TRIPS"src;Systems;bob;dummy-for-CSM")

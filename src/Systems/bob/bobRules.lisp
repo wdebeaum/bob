@@ -51,10 +51,12 @@
 	  ; X activates Y, Y activates Z, Z activates W
 	  ; this rule is to rename :SEQUENCE to :SEQ so we don't have to extract all :SEQUENCE slots
           ((ONT::F ?ev
-	    ONT::S-CONJOINED :OPERATOR ?!op :SEQUENCE ?!seq :DRUM ?code)
+;	    ONT::S-CONJOINED :OPERATOR ?!op :SEQUENCE ?!seq :DRUM ?code)
+	    ?!t :OPERATOR ?!op :SEQUENCE ?!seq :DRUM ?code)   ; not S-CONJOINED anymore.  It's now the unification of the types of the sequence members
            -rule-seq>
            60
-           (ONT::F ?ev ONT::S-CONJOINED
+;           (ONT::F ?ev ONT::S-CONJOINED
+           (ONT::F ?ev ONT::X-CONJOINED
             :rule -rule-seq
 	    :OPERATOR ?!op
 	    :SEQ ?!seq
@@ -93,6 +95,7 @@
            )
 	  
 	  ; build
+	  ; Note: CREATE is used for ACTIVATE too, but this rule takes precedence because it is at an earlier extraction phase (and it also has a higher priority)
           (((? reln0 ONT::F ONT::QUANTIFIER ONT::KIND ONT::A ONT::INDEF-PLURAL ONT::THE ONT::THE-SET ONT::INDEF-SET ONT::BARE ONT::SM ONT::PRO ONT::PRO-SET) ?ev
             (:* (? type ONT::CREATE) ?!w) :AGENT ?!ag :AFFECTED-RESULT ?!obj :DRUM ?code)
            (?reln1 ?!ag  (? t1 ONT::PERSON))
@@ -100,7 +103,7 @@
            60
            (ONT::EVENT ?ev ?type
             :rule -rule1c
-	    :AGENT -
+;	    :AGENT -
             :AFFECTED-RESULT ?!obj
             :DRUM ?code
             )
@@ -155,6 +158,17 @@
             )
            )
 
+	  ; forget it
+          (((? reln0 ONT::F ONT::QUANTIFIER ONT::KIND ONT::A ONT::INDEF-PLURAL ONT::THE ONT::THE-SET ONT::INDEF-SET ONT::BARE ONT::SM ONT::PRO ONT::PRO-SET) ?ev
+            (:* (? type ONT::FORGET ONT::CANCEL ONT::RESTART) ?!w))  
+           -rule-rollback>
+           60
+           (ONT::EVENT ?ev ONT::ROLLBACK   ; the arguments (AGENT etc) are automatically passed on
+            :rule -rule-rollback
+            )
+           )
+
+	  
 #|
 ; now we have the full set of DRUMRules
 

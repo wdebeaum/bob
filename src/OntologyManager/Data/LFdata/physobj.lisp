@@ -671,6 +671,7 @@
 ;; engineer, artist, scientist
 (define-type ONT::professional
     :wordnet-sense-keys ("professional%1:18:00" "professional_person%1:18:00")
+    :comment "a person defined by a role that they play. e.g., doctor, leader, ..."
     :parent ONT::PERSON
     :sem (F::Phys-obj (F::form F::solid-object)
 		      (F::spatial-abstraction F::spatial-point)
@@ -1087,6 +1088,14 @@
 		)
     )
 
+(define-type ont::step
+    :comment "part of a staircase"
+    :parent ONT::structural-component
+    :wordnet-sense-keys ("step%1:06:00")
+    :arguments ((:OPTIONAL ONT::FIGURE (F::Phys-obj))
+		)
+    )
+
 (define-type ont::furnishings
     :comment "e.g.,  chair, desk, table"
     :parent ONT::manufactured-object
@@ -1173,6 +1182,7 @@
 		)
     )
 
+; used by ORIENTS-TO
 (define-type ONT::loc-wrt-orientation
     :parent ONT::loc-as-defined-by-reln-to-ground
     )
@@ -1294,7 +1304,28 @@
 		)
     )
 
+(define-type ONT::TOP-LOCATION
+    :wordnet-sense-keys ("top%1:15:01" "top%1:15:00")
+    :parent ONT::object-dependent-location
+    )
+
+(define-type ONT::BOTTOM-LOCATION
+    :wordnet-sense-keys ("bottom%1:15:00" "bottom%1:15:01")
+    :parent ONT::object-dependent-location
+    )
+
+(define-type ONT::SIDE-LOCATION
+    :wordnet-sense-keys ("side%1:15:02")
+    :parent ONT::object-dependent-location
+    )
+
+(define-type ONT::SURFACE-LOCATION
+    :wordnet-sense-keys ("surface%1:06:00" "surface%1:15:00")
+    :parent ONT::object-dependent-location
+    )
+
 ;; noun sense of north, south, east, west
+; used by ORIENTS-TO
 (define-type ONT::cardinal-point
     :parent ONT::LOCATION-by-description
     :wordnet-sense-keys ("cardinal_compass_point%1:24:00")

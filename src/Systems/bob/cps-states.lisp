@@ -7,23 +7,33 @@
 (add-state 'propose-cps-act
  (state :action '(SAY-ONE-OF  :content ("What do you want to do?"))
 	:transitions (list
+		      #|
+		      (transition
+		       :description "Forget it.  Let's start over."
+		       :pattern '((ONT::SPEECHACT ?!sa (? x ONT::PROPOSE ONT::REQUEST) :what ?!what)
+				  (?spec ?!what (? t ONT::FORGET ONT::CANCEL ONT::RESTART))
+				  (ont::eval (generate-AKRL-context :what ?!what :result ?akrl-context))
+				  (ont::eval (find-attr :result ?goal :feature ACTIVE-GOAL))
+				  -propose-restart>
+				  (RECORD  CPS-HYPOTHESIS (PROPOSE :content ?!what :context ?akrl-context :active-goal ?goal))
+				  (INVOKE-BA :msg (INTERPRET-SPEECH-ACT :content (PROPOSE :content ?!what :context ?akrl-context
+											   :active-goal ?goal))))
+		       :destination 'handle-csm-response
+		       :trigger t)
+		      |#
+
 		      (transition
 		       :description "Let's build a model/I need to find a treatment for cancer"
 		       :pattern '((ONT::SPEECHACT ?!sa (? x ONT::PROPOSE ONT::REQUEST) :what ?!what)
 				  ((? spec ONT::EVENT ONT::EPI) ?!what ?!t)
 				  (ont::eval (generate-AKRL-context :what ?!what :result ?akrl-context))
 				  (ont::eval (find-attr :result ?goal :feature ACTIVE-GOAL))
-				  (ont::eval (FIND-CSM-INTERPS :sa PROPOSE :what ?!what :context ?akrl-context
-					      :result ?best-interp :new-akrl-context ?new-akrl :active-goal ?goal))
-				  
 				  -propose-goal>
-				  (UPDATE-CSM (PROPOSED :content ?best-interp :context ?new-akrl))
-				  (RECORD PROPOSAL-ON-TABLE (ONT::PROPOSE-GOAL :Content ?best-interp :context ?new-akrl))
-				  (INVOKE-BA :msg (EVALUATE 
-						   :content ?best-interp 
-						   :context ?new-akrl))
-				  )
-		       :destination 'propose-cps-act-response
+				  (RECORD  CPS-HYPOTHESIS (PROPOSE :content ?!what :context ?akrl-context :active-goal ?goal))
+				  (INVOKE-BA :msg (INTERPRET-SPEECH-ACT :content (PROPOSE :content ?!what :context ?akrl-context
+											   :active-goal ?goal))))
+				  
+		       :destination 'handle-csm-response
 		       :trigger t)
 		      (transition
 		       :description "what drug should we use?"
@@ -31,17 +41,28 @@
 				  (ONT::TERM ?!what ?object-type)
 				  (ont::eval (generate-AKRL-context :what ?!what :result ?akrl-context))  
 				  (ont::eval (find-attr :result ?goal :feature ACTIVE-GOAL))
-				  (ont::eval (FIND-CSM-INTERPS :sa ONT::ASK-WHAT-IS :what ?!what :context ?akrl-context
-					      :result ?best-interp :new-akrl-context ?new-context :active-goal ?goal))
-				  
 				  -propose-goal-via-question>
-				  (UPDATE-CSM (PROPOSED :content ?best-interp :what ?!what :context ?new-context))
-				  (INVOKE-BA :msg (EVALUATE 
-						   :content ?best-interp 
-						   :context ?new-context))
-				  )
-		       :destination 'propose-cps-act-response
+				  (RECORD  CPS-HYPOTHESIS (ONT::ASK-WHAT-IS :content ?!what :context ?akrl-context :active-goal ?goal))
+				  (INVOKE-BA :msg (INTERPRET-SPEECH-ACT :content (ONT::ASK-WHAT-IS :content ?!what :context ?akrl-context
+												   :active-goal ?goal))))
+				  
+		       :destination 'handle-csm-response
 		       :trigger t)
+
+		      ; This should go after the previous (-propose-goal-via-question>)
+		      (transition
+		       :description "Does the BRAF-NRAS complex vanish?"
+		       :pattern '((ONT::SPEECHACT ?!sa (? s-act ONT::ASK-IF) :what ?!what)
+				  (?!spec ?!what ?!type)
+				  (ont::eval (generate-AKRL-context :what ?!what :result ?akrl-context))  
+				  (ont::eval (find-attr :result ?goal :feature ACTIVE-GOAL))
+				  -ask-question>
+				  (RECORD  CPS-HYPOTHESIS (ONT::ASK-IF :content ?!what :context ?akrl-context :active-goal ?goal))
+				  (INVOKE-BA :msg (INTERPRET-SPEECH-ACT :content (ONT::ASK-IF :content ?!what :context ?akrl-context
+												   :active-goal ?goal))))
+		       :destination 'handle-csm-response
+		       :trigger t)
+		      
 		      (transition
 		       :description "is ERK activated if we add X"
 		       :pattern '((ONT::SPEECHACT ?!sa ONT::ASK-CONDITIONAL-IF :what ?!what :condition ?!test)
@@ -49,16 +70,12 @@
 				  (ONT::EVENT ?!test ONT::EVENT-OF-CAUSATION) 
 				  (ont::eval (generate-AKRL-context :what ?!what :result ?akrl-context))
 				  (ont::eval (find-attr :result ?goal :feature ACTIVE-GOAL))
-				  (ont::eval (FIND-CSM-INTERPS :sa ONT::EVALUATE-RESULT :what ?!what :test ?!test :context ?akrl-context
-					      :result ?best-interp :new-akrl-context ?new-context :active-goal ?goal))
-				  
 				  -propose-test>
-				  (UPDATE-CSM (PROPOSED :content ?best-interp :what ?!what :context ?new-context))
-				  (INVOKE-BA :msg (EVALUATE 
-						   :content ?best-interp 
-						   :context ?new-context))
-				  )
-		       :destination 'propose-cps-act-response
+				  (RECORD CPS-HYPOTHESIS (ONT::EVALUATE-RESULT  :content ?!what :test ?!test :context ?akrl-context :active-goal ?goal))
+				  (INVOKE-BA :msg (INTERPRET-SPEECH-ACT :content (ONT::EVALUATE-RESULT :content ?!what :test ?!test :context ?akrl-context
+						   :active-goal ?goal))
+				  ))
+		       :destination 'handle-csm-response
 		       :trigger t)
 		      (transition
 		       :description "Kras activates Raf -- as performing steps in elaborating a model"
@@ -66,19 +83,61 @@
 				  ;;(ONT::EVENT ?!what ONT::ACTIVATE :agent ?!agent :affected ?!affected)
 				  (ont::eval (generate-AKRL-context :what ?!root :result ?akrl-context))
 				  (ont::eval (find-attr :result ?goal :feature ACTIVE-GOAL))
-				  (ont::eval (FIND-CSM-INTERPS :sa ASSERTION :what ?!root :context ?akrl-context
-					      :result ?best-interp :new-akrl-context ?new-context :active-goal ?goal))
-				  
 				  -refine-goal-with-assertion>
-				  (UPDATE-CSM (PROPOSED :content ?best-interp :what ?!root :context ?new-context))
-				  (INVOKE-BA :msg (EVALUATE 
-						   :content ?best-interp 
-						   :context ?new-context))
-				  )
-		       :destination 'propose-cps-act-response
+				  (RECORD  CPS-HYPOTHESIS (ASSERTION :content ?!root :context ?akrl-context :active-goal ?goal))
+				  (INVOKE-BA :msg  (INTERPRET-SPEECH-ACT :content (ASSERTION :content ?!root :context ?akrl-context
+						    :active-goal ?goal))
+				  ))
+				  
+		       :destination 'handle-csm-response
 		       :trigger t)
+		      
 		      )
 	))
+
+(add-state 'handle-CSM-response
+	   (state :action nil
+		  :transitions (list
+		      (transition
+		       :description "CSM returns a successful proposal interpretation"
+		       :pattern '((BA-RESPONSE X (? act ADOPT ASSERTION) :what ?!goal :as ?as :context ?new-akrl)
+				  -successful-interp1>
+				  (UPDATE-CSM (PROPOSED :content (ADOPT :what ?!goal :as ?as)
+					       :context ?new-akrl))
+				  (RECORD PROPOSAL-ON-TABLE (ONT::PROPOSE-GOAL :Content (ADOPT :what ?!goal :as ?as)
+							     :context ?new-akrl))
+				  (INVOKE-BA :msg (EVALUATE 
+						   :content ((? act ADOPT ASSERTION) :what ?!goal :as ?as)
+						   :context ?new-akrl))
+				  )
+		       :destination 'propose-cps-act-response
+		       )
+
+		      
+		      ;; failure: can't identify goal
+		      ;;(TELL :RECEIVER DAGENT :CONTENT (REPORT :content (FAILED-TO-INTERPRET :WHAT ONT::V32042 :REASON (MISSING-ACTIVE-GOAL) :POSSIBLE-SOLUTIONS (ONT::BUILD-MODEL)) :context ()) :IN-REPLY-TO IO-32505 :sender CSM)
+		      (transition
+		       :description "CSM fails to identify the goal, but has a guess"
+		       :pattern '((BA-RESPONSE  X FAILED-TO-INTERPRET :WHAT ?content :REASON (MISSING-ACTIVE-GOAL) :POSSIBLE-SOLUTIONS (?!possible-goal) :context ?context)
+				  -intention-failure1>
+				  (RECORD FAILURE (FAILED-TO-INTERPRET :WHAT ?content :REASON (MISSING-ACTIVE-GOAL) :POSSIBLE-SOLUTIONS (?!possible-goal) :context ?context))
+				  (RECORD POSSIBLE-GOAL ?!possible-goal))
+		       :destination 'clarify-goal
+			)
+		      
+		      (transition
+		       :description "CSM fails to identify the goal, and no guess. Right now we just prompt the user
+                                     to identify their goal and forget the current utterance"
+		       :pattern '((BA-RESPONSE  X FAILED-TO-INTERPRET :WHAT ?content :REASON (MISSING-ACTIVE-GOAL) :context ?context)
+				  -intention-complete-failure>
+				  (RECORD FAILURE (FAILED-TO-INTERPRET :WHAT ?content :REASON (MISSING-ACTIVE-GOAL) :context ?context))
+				  (RECORD POSSIBLE-GOAL nil)
+				  )
+		       :destination 'propose-cps-act
+		       )
+		      
+		  )))
+	  
 		      
 (add-state 'propose-cps-act-response
 	   (state :action nil
@@ -86,12 +145,14 @@
 				(transition
 				 :description "acceptance"
 				 :pattern '((BA-RESPONSE X ACCEPTABLE :what ?!psgoal :context ?!context)
+					    (ont::eval (extract-feature-from-act :result ?goal-id :expr ?!psgoal :feature :what))
 					    -goal-response1>
 					    (UPDATE-CSM (ACCEPTED :content ?!psgoal :context ?!context))
 					    
 					    (notify-BA :msg (COMMIT
 							     :content ?!psgoal)) ;; :context ?!context))  SIFT doesn't want the context
-					    (RECORD ACTIVE-GOAL ?!psgoal)
+					    
+					    (RECORD ACTIVE-GOAL ?goal-id)
 					    (RECORD ACTIVE-CONTEXT ?!context)
 					    (generate :content (ONT::ACCEPT)))
 				 
@@ -107,6 +168,31 @@
 				)
 		  ))
 
+;;  CLARIFICATION MANAGEMENT
+
+(add-state 'clarify-goal 
+	   (state :action '(SAY :content "Are you trying to build a model?")
+		  :preprocessing-ids '(yes-no)
+		  :transitions
+		  (list
+		   (transition
+		    :description "yes"
+		    :pattern '((ANSWER :value YES)
+			       (ont::eval (find-attr :result ?goal :feature POSSIBLE-GOAL))
+			       (ont::eval (find-attr :result ?cps-hyp :feature CPS-HYPOTHESIS))
+			       -right-guess-on-goal>
+			       (SAY :content "Great!")
+			       (UPDATE-CSM (ACCEPTED :content ?goal))
+			       (INVOKE-BA :msg (INTERPRET-SPEECH-ACT :content ?cps-hyp)))
+		    :destination 'handle-CSM-response
+		    )
+		   )
+		  ))
+
+
+
+
+;;   INTITIATIVE MANAGEMENT
 ;; This state starts an interaction with the BA to determine if the system should take
 ;;  initiative or not
 
@@ -763,6 +849,8 @@
    )
 
   ))
+|#
+
    
 ;;;;;;;;;;
 (add-preprocessing 'yes-no
@@ -812,6 +900,7 @@
 		    ))
 
 
+#|
 (add-preprocessing 'yes-no-others
 		   (list
 		    ; should really record current time minus 10 minutes

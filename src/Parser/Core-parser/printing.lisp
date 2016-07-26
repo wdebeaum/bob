@@ -3,7 +3,7 @@
 ;;;
 ;;; Author:  James Allen <james@cs.rochester.edu>
 ;;;
-;;; Time-stamp: <Wed Jun 29 15:54:02 EDT 2016 jallen>
+;;; Time-stamp: <Wed Jul 20 09:30:35 EDT 2016 jallen>
 
 (in-package "PARSER")
 
@@ -1175,19 +1175,20 @@ usually not be 0 for speech. Also it finds one path quickly in order to set the 
 	 )
     (if (eq constraint-list '-) (setq constraint-list nil))
     (cond
-     ((member status '(w::name w::gname))
+     ((member status '(ONT::name ONT::gname))
       (let ((name (if (and lex (not (eq lex '-)))
 		      (if (consp lex) lex (list lex)) input)))
 	(if name (setq constraint-list (insert-into-& (list :name-of name) constraint-list)))
 	))
-     ((eq status 'w::number)
+     ((eq status 'ONT::number)
       (let ((val (get-fvalue desc 'w::val)))
 	(if val (setq constraint-list (insert-into-& (list :number val) constraint-list)))
 	))
-     ((eq status 'pro)
+     ((eq status 'ONT::pro)
       ;; add a proform feature for the pro unless it is already there
-      (setq constraint-list (if (not (get-fvalue (third constraint-list) 'proform))
-				(insert-into-& (list :proform (or input (list lex))) constraint-list)
+      (setq constraint-list (if (not (get-fvalue (third constraint-list) 'w::proform))
+;				(insert-into-& (list :proform (or input (list lex))) constraint-list)
+				(insert-into-& (list :proform (or input lex)) constraint-list)
 				constraint-list))))
     (let* ((newlf (list* (build-spec status)
 			 var
@@ -1463,7 +1464,8 @@ usually not be 0 for speech. Also it finds one path quickly in order to set the 
 	((numberp val)
 	   val)
 	((consp val) (mapcar #'convert-to-ont-if-in-parser-package 
-			     val))))
+			     val))
+	(t val)))
        
 
 (defun build-modifier (lf-var mod)
@@ -1754,18 +1756,19 @@ usually not be 0 for speech. Also it finds one path quickly in order to set the 
 
     (if (eq constraint-list '-) (setq constraint-list nil))
     (cond
-     ((member status '(w::name w::gname))
+     ((member status '(ONT::name ONT::gname))
       (let ((name (or (if lex (if (consp lex) lex (list lex)) input))))
 	(if name (setq constraint-list (insert-into-& (list :name-of name) constraint-list)))
 	))     
-     ((eq status 'w::number)
+     ((eq status 'ONT::number)
       (let ((val (get-fvalue desc 'w::val)))
 	(if val (setq constraint-list (insert-into-& (list :number val) constraint-list)))
 	))
-     ((eq status 'pro)
+     ((eq status 'ONT::pro)
       ;; add a proform feature for the pro unless it is already there
-      (setq constraint-list (if (not (get-fvalue (third constraint-list) 'proform))
-				(insert-into-& (list :proform (or input (list lex))) constraint-list)
+      (setq constraint-list (if (not (get-fvalue (third constraint-list) 'w::proform))
+;				(insert-into-& (list :proform (or input (list lex))) constraint-list)
+				(insert-into-& (list :proform (or input lex)) constraint-list)
 			      constraint-list))))
     (list* (build-spec status)
 	   var

@@ -17,10 +17,13 @@ public class TakeInitiativeHandler extends MessageHandler {
 		//KQMLList goal = (KQMLList)(content.getKeywordArg(":GOAL"));
 		
 		KQMLObject goalObject = content.getKeywordArg(":GOAL");
-		if (goalObject == null)
-			return failureMessage();
-		String goalWhat = goalObject.stringValue();
 		KQMLObject context = content.getKeywordArg(":CONTEXT");
+		if (context == null)
+			context = new KQMLList();
+		if (goalObject == null)
+			return failureMessage(context);
+		String goalWhat = goalObject.stringValue();
+		
 		KQMLList goalLF = null;
 		for (KQMLObject lfTerm : (KQMLList)context)
 		{
@@ -28,7 +31,7 @@ public class TakeInitiativeHandler extends MessageHandler {
 				goalLF = (KQMLList)lfTerm;
 		}
 		if (goalLF == null)
-			return failureMessage();
+			return failureMessage(context);
 		
 		String goalType = goalLF.getKeywordArg(":INSTANCE-OF").stringValue();
 		System.out.println("Goal type: *" + goalType + "*");

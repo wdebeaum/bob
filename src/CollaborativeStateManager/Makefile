@@ -15,7 +15,13 @@ SRCS = 	CollaborativeStateManager.java \
 	src/handlers/MessageHandler.java \
 	src/handlers/UpdateCSMHandler.java \
 	src/handlers/InterpretSpeechActHandler.java \
-	src/handlers/TakeInitiativeHandler.java 
+	src/handlers/TakeInitiativeHandler.java \
+	src/extractors/OntologyReader.java \
+	src/extractors/TermExtractor.java \
+	src/handlers/QueryCSMHandler.java \
+	src/handlers/UpdateCSMHandler.java \
+	src/states/Goal.java \
+	src/plans/GoalPlanner.java \
 
 CLASSES = $(SRCS:.java=.class) 
 
