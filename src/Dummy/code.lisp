@@ -57,7 +57,7 @@
 			   ))
 
 	(ont::identify 
-	 (let ((obj (find-lf-in-context context (find-arg act :affected))))
+	 (let ((obj (find-lf-in-context context (or (find-arg act :affected) (find-arg act :neutral)))))
 	   (case (find-arg obj :instance-of)
 	     (ont::protein
 	      (reply-to-message msg

@@ -41,14 +41,14 @@
 ;	      (list 'REPORT :content `(ADOPT :what ,id :as (SUBGOAL :OF ,(find-arg-in-act active-goal :what)))
 	      (list 'REPORT :content `(ADOPT :what ,id :as (SUBGOAL :OF ,active-goal))
 		    :context 
-		    (cons `(ont::RELN ,id :instance-of ONT::IDENTIFY :affected ,what)
+		    (cons `(ont::RELN ,id :instance-of ONT::IDENTIFY :neutral ,what)
 			  context)))
 	     (T
 	      
 ;	      (list 'REPORT :content `(ADOPT :what ,id :as (SUBGOAL :of ,(find-arg-in-act active-goal :what)))
 	      (list 'REPORT :content `(ADOPT :what ,id :as (SUBGOAL :of ,active-goal))
 	      
-		    :context (cons `(ont::RELN ,id :instance-of ONT::IDENTIFY :affected ,what)
+		    :context (cons `(ont::RELN ,id :instance-of ONT::IDENTIFY :neutral ,what)
 					    context))))
        ))
 	  

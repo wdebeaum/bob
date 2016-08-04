@@ -2,6 +2,7 @@ package handlers;
 
 import java.util.List;
 
+import plans.ActionPlanner;
 import plans.GoalPlanner;
 import states.Goal;
 import TRIPS.KQML.KQMLList;
@@ -15,11 +16,14 @@ public class UpdateCSMHandler extends MessageHandler {
 	KQMLObject context;
 	String updateType;
 	GoalPlanner goalPlanner;
+	ActionPlanner actionPlanner;
 	String activeGoal = null;
 	
-	public UpdateCSMHandler(KQMLPerformative msg, KQMLList content, GoalPlanner goalPlanner) {
+	public UpdateCSMHandler(KQMLPerformative msg, KQMLList content,
+			GoalPlanner goalPlanner, ActionPlanner actionPlanner) {
 		super(msg, content);
 		this.goalPlanner = goalPlanner;
+		this.actionPlanner = actionPlanner;
 		// TODO Auto-generated constructor stub
 	}
 
@@ -58,14 +62,22 @@ public class UpdateCSMHandler extends MessageHandler {
 			return handleInitiativeTakenOnGoal();
 		case "failed-on":
 			return handleFailedOn();
-			
+		case "solved":
+			return handleSolved();
 		}
 		
+		KQMLList error = new KQMLList();
+		error.add("UNKNOWN-UPDATE-TYPE");
 		return failureMessage("NIL",context, 
-				new KQMLString("UNKNOWN-UPDATE-TYPE"), new KQMLList());
+				error, new KQMLList());
 		
 	}
 	
+	private KQMLList handleSolved() {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
 	private KQMLList handleProposed()
 	{
 		return null;
@@ -116,7 +128,7 @@ public class UpdateCSMHandler extends MessageHandler {
 	{
 		KQMLList acceptContent = (KQMLList)(innerContent.getKeywordArg(":CONTENT"));
 		String goalName = acceptContent.getKeywordArg(":WHAT").stringValue();
-		
+		System.out.println("Accepting goal: " + goalName);
 		//TODO: Give better error message
 		
 		if (goalPlanner.hasGoal(goalName))
@@ -124,10 +136,15 @@ public class UpdateCSMHandler extends MessageHandler {
 			goalPlanner.setActiveGoal(goalName);
 			System.out.println("Active goal now: " + goalName);
 		}
+		else if (actionPlanner.hasAction(goalName))
+		{
+			actionPlanner.getAction(goalName).setAccepted(true);
+			System.out.println("Action " + goalName + " accepted.");
+		}
 		else
 		{
-			System.out.println("No such goal in system.");
-			return missingGoal(goalName);
+			System.out.println("No such goal or action in system.");
+			return null;
 		}
 		
 		return null;

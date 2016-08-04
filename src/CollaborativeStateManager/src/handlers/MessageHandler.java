@@ -27,6 +27,8 @@ public abstract class MessageHandler {
 	{
 		
 		KQMLList failureContent = new KQMLList();
+		failureContent.add("FAILURE");
+		failureContent.add(":type");
 		failureContent.add("FAILED-TO-INTERPRET");
 		failureContent.add(":WHAT");
 		failureContent.add(what);
@@ -36,11 +38,13 @@ public abstract class MessageHandler {
 		else
 			failureContent.add(reason);
 		
-		failureContent.add(":POSSIBLE-SOLUTIONS");
+		failureContent.add(":POSSIBLE-RESOLUTION");
 		if (possibleSolutions == null)
 			failureContent.add("NIL");
 		else
 			failureContent.add(possibleSolutions);
+		
+		
 		return reportContent(failureContent, context);		
 	}
 	

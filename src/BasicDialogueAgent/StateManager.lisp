@@ -2,7 +2,7 @@
 
 (in-package :dagent)
   
-(defvar *state-definitions* nil)
+;;(defvar *state-definitions* nil)
 (defvar *segments* nil)
 (defvar *state-table* nil)
 (defvar *transition-ids* nil)
@@ -376,7 +376,7 @@
 	  ((and (consp (car value)) (eq (caar value) 'S))
 	   (cons (format nil "~:(~A~)" (cadar value))  ;; write out string in all uppercase
 		 (instantiate-dstate-args (cdr value) user)))
-	  (t (cons (car value)
+	  (t (cons (instantiate-dstate-args (car value) user)
 		   (instantiate-dstate-args (cdr value) user))))
 	value)))
 		    
@@ -616,9 +616,12 @@
   (declare (ignore hyps context words))
   "processes the LF with the patterns associated with the current state. 
       Returns T if interpretation succeeded"
+  (when (not (user-p user))
+    (format t "~%Warning: process-lf-in-state  called with a bad user argument: ~S" user)
+    (setq user *current-user*))
   (let ((s (current-dstate user)))
     (trace-msg 2 "~%Interpreting LF ~S for ~S" lfs (user-name user))
-    (trace-msg 1 "~% in state ~S"  (state-id s))
+    (trace-msg 1 "~% in state ~S"  (if (state-p s) (state-id s)))
     (trace-msg 4 "~%~S" s)
     (when s
       ;; first extract out terms if desired
@@ -798,7 +801,7 @@
   (when act
     (trace-msg 1 "Executing ~S ..." (car act))
     (trace-msg 2 "~%~S" act)
-    
+    (setq act (instantiate-dstate-args act user))
     (let ((ans (case (car act)
 		 (perform (mapcar #'(lambda (x) (execute-action x channel user uttnum))
 				  (cdr act)))
@@ -877,6 +880,8 @@
 		nil)
 	       (notify-ba 
 		(notify-ba (cdr act) user channel uttnum))
+	       (extract-goal-description
+		(apply #'extract-goal-description (cdr act)))
 	       ;; this function is called only if it is the the action slot of a state, so results are cached so the pattern rules 
 	       ;;  can access them
 	       (take-initiative?
@@ -926,6 +931,16 @@
     (send-msg `(REQUEST :content ,msg))
     ))
 
+(defun extract-goal-description (&key cps-act context result goal-id)
+  (let* ((lf (find-lf-in-context (find-arg-in-act cps-act :what) context))
+	 (id (second lf)))
+    (append (im::match-vals nil goal-id id)
+	    (im::match-vals nil result (list lf)))))
+
+(defun find-lf-in-context (id context)
+  (find-if #'(lambda (x) (eq (second x) id))
+		 context))
+
 (defun generate-AKRL-context (&key what result)
   (let ((reduced-context (remove-unused-context-with-root what *most-recent-lfs*)))
     (when reduced-context
@@ -938,6 +953,7 @@
   (im::match-vals nil result (find-arg-in-act (get-attr *current-user* attr) feature)))
 
 (defun extract-feature-from-act (&key result expr feature)
+  (format t "~%extracting features: expr = ~S feature = ~S result = ~S" expr feature (find-arg-in-act expr feature))
   (im::match-vals nil result (find-arg-in-act expr feature)))
   
 (defun invoke-generator (msg user channel uttnum)

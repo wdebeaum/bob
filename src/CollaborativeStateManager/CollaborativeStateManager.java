@@ -270,7 +270,7 @@ public class CollaborativeStateManager extends StandardTripsModule  {
 		else if (content0.equalsIgnoreCase("update-csm"))
 		{
 			KQMLObject replyWith = msg.getParameter(":REPLY-WITH");	
-			UpdateCSMHandler uch = new UpdateCSMHandler(msg, content, goalPlanner);
+			UpdateCSMHandler uch = new UpdateCSMHandler(msg, content, goalPlanner, actionPlanner);
 			KQMLList responseContent = uch.process();
 			if (responseContent != null)
 			{

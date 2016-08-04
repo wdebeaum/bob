@@ -166,7 +166,7 @@
 
 ;; Here are the BOB specific files for the Basic Dialogue Agent
 
-(load "cps-states.lisp")
+;;(load "cps-states.lisp")
 ;;(load "CPS-actions.lisp")
 
 (im::trace-on 1)
@@ -182,7 +182,6 @@
 (load "emptyRules.lisp")  ; an empty rules file just so I can check the results of the LF substitution
 
 (load "symbolmapping.lisp")
-
 ; bobRules is before drum so that the domain specific EVENT rules take precedence (and also because bobRules also contains TERM extractions) (and also because CREATE is matched for both the BOB-specific CREATE event and for the general drum ACTIVATE)
 (setq im::*extraction-sequence* '((im::drumterms) (im::drumtermsAdd) (im::bobRules) (im::drum) (im::drummod) (im::drumCC) (im::drumMisc) (im::emptyRules)))
 (setq im::*substitute-terms-in-extraction* t)
@@ -196,7 +195,11 @@
 ; just the default user
 (setq dagent::*users* (list (cons "desktop" (dagent::make-user :name "desktop" :channel-id 'dagent::desktop))))
 
-;; the :dummy component is used to fake certain message interactions during
-;; system development. If not wanted, comment out the following line
-#(load  #!TRIPS"src;Systems;bob;dummymessages")
-#(load  #!TRIPS"src;Systems;bob;dummy-for-CSM")
+;;  loading the dummy message handling
+
+;; the :dummy component is used to fake certain message interactions during 
+;; system development.
+;; if you need to use either of the following Dummy features, uncomment them 
+;; LOCALLY, but please do not commit without comments!
+;(load  #!TRIPS"src;Systems;bob;dummymessages")
+;(load  #!TRIPS"src;Systems;bob;dummy-for-CSM")

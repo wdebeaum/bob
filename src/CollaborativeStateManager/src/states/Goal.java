@@ -1,5 +1,7 @@
 package states;
 
+import java.util.*;
+
 import extractors.TermExtractor;
 import TRIPS.KQML.KQMLList;
 
@@ -9,6 +11,7 @@ public class Goal {
 	KQMLList term;
 	boolean accepted;
 	boolean failed;
+	List<KQMLList> failureMessages;
 	
 	public Goal(KQMLList term)
 	{
@@ -22,6 +25,7 @@ public class Goal {
 		this.parent = parent;
 		accepted = false;
 		failed = false;
+		failureMessages = new ArrayList<KQMLList>();
 	}
 	
 	public Goal(String variableName, KQMLList context, Goal parent)
@@ -31,6 +35,7 @@ public class Goal {
 		this.parent = parent;	
 		accepted = false;
 		failed = false;
+		failureMessages = new ArrayList<KQMLList>();
 	}
 	
 	public Goal(String variableName, KQMLList context)

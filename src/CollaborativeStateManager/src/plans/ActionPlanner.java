@@ -23,4 +23,9 @@ public class ActionPlanner {
 	{
 		return variableActionMapping.get(variableName);
 	}
+	
+	public boolean hasAction(String variableName)
+	{
+		return variableActionMapping.containsKey(variableName);
+	}
 }

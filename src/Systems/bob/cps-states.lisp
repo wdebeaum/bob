@@ -100,12 +100,14 @@
 		  :transitions (list
 		      (transition
 		       :description "CSM returns a successful proposal interpretation"
-		       :pattern '((BA-RESPONSE X (? act ADOPT ASSERTION) :what ?!goal :as ?as :context ?new-akrl)
+		       :pattern '((BA-RESPONSE X (? act ADOPT ASSERTION) :what ?!goal :as ?as :context ?new-akrl :alternative ?alt-as)
 				  -successful-interp1>
 				  (UPDATE-CSM (PROPOSED :content (ADOPT :what ?!goal :as ?as)
 					       :context ?new-akrl))
 				  (RECORD PROPOSAL-ON-TABLE (ONT::PROPOSE-GOAL :Content (ADOPT :what ?!goal :as ?as)
 							     :context ?new-akrl))
+				  (RECORD ACTIVE-GOAL ?!goal)
+				  (RECORD ALT-AS ?alt-as)
 				  (INVOKE-BA :msg (EVALUATE 
 						   :content ((? act ADOPT ASSERTION) :what ?!goal :as ?as)
 						   :context ?new-akrl))
@@ -119,11 +121,15 @@
 		      (transition
 		       :description "CSM fails to identify the goal, but has a guess"
 		       :pattern '((BA-RESPONSE  X FAILED-TO-INTERPRET :WHAT ?content :REASON (MISSING-ACTIVE-GOAL) :POSSIBLE-SOLUTIONS (?!possible-goal) :context ?context)
-				  -intention-failure1>
-				  (RECORD FAILURE (FAILED-TO-INTERPRET :WHAT ?content :REASON (MISSING-ACTIVE-GOAL) :POSSIBLE-SOLUTIONS (?!possible-goal) :context ?context))
-				  (RECORD POSSIBLE-GOAL ?!possible-goal))
+				  (ont::eval  (extract-goal-description :cps-act ?!possible-goal :context ?context :result ?goal-description :goal-id ?goal-id))
+			     				  
+				  -intention-failure-with-guess>
+				  (RECORD FAILURE (FAILED-TO-INTERPRET :WHAT ?!possible-goal :REASON (MISSING-ACTIVE-GOAL) :POSSIBLE-SOLUTIONS (?!possible-goal) :context ?context))
+				  (RECORD POSSIBLE-GOAL ?!possible-goal)
+				  (RECORD POSSIBLE-GOAL-ID ?goal-id)
+				  (RECORD POSSIBLE-GOAL-CONTEXT ?goal-description))
 		       :destination 'clarify-goal
-			)
+		       )
 		      
 		      (transition
 		       :description "CSM fails to identify the goal, and no guess. Right now we just prompt the user
@@ -141,7 +147,7 @@
 		      
 (add-state 'propose-cps-act-response
 	   (state :action nil
-		  :transitions (list
+		  :Transitions (list
 				(transition
 				 :description "acceptance"
 				 :pattern '((BA-RESPONSE X ACCEPTABLE :what ?!psgoal :context ?!context)
@@ -151,7 +157,6 @@
 					    
 					    (notify-BA :msg (COMMIT
 							     :content ?!psgoal)) ;; :context ?!context))  SIFT doesn't want the context
-					    
 					    (RECORD ACTIVE-GOAL ?goal-id)
 					    (RECORD ACTIVE-CONTEXT ?!context)
 					    (generate :content (ONT::ACCEPT)))
@@ -162,33 +167,85 @@
 				 :pattern '((BA-RESPONSE (? x REJECT UNACCEPTABLE) ?!psobj :context ?!context )
 					    ;;(ont::eval (find-attr ?goal  GOAL))
 					    -goal-response2>
-					    (RECORD REJECTED ?!psobj :context ?context)
-					    (SAY :content "Sorry I can't do that"))
-				 :destination 'segmentend)
+					    (RECORD REJECTED ?!psobj :context ?context))
+				 :destination 'explore-alt-interp)
 				)
 		  ))
+
+(add-state 'explore-alt-interp
+	   (state :action nil
+		  :Transitions (list
+				(transition
+				 :description "we have a backup interpretation"
+				 :pattern '((ont::eval (find-attr :result ?!alt :feature ALT-AS))
+					    -alt-found1>
+					    (RECORD PROPOSAL-ON-TABLE (ONT::PROPOSE-GOAL :Content (ADOPT :what ?!goal :as ?!alt)
+								       ))
+					    (RECORD ALT-AS nil)
+					    (INVOKE-BA :msg (EVALUATE 
+							     :content (ADOPT :what ?!goal :as ?altas)
+							     :context ?new-akrl)))
+				 
+				 :destination 'propose-cps-act-response)
+				
+				(transition
+				 :description "no backup alt left"
+				 :pattern '((ont::eval (find-attr :result nil :feature ALT-AS))
+					    -no-alt>
+					    (say :content "I didn't understand what you are trying to do")
+					    ))
+				)))
 
 ;;  CLARIFICATION MANAGEMENT
 
 (add-state 'clarify-goal 
-	   (state :action '(SAY :content "Are you trying to build a model?")
+	   (state :action '(GENERATE :content (ONT::CLARIFY-GOAL :content (V possible-goal-id) :context (V POSSIBLE-GOAL-context))
+			  )
 		  :preprocessing-ids '(yes-no)
 		  :transitions
 		  (list
 		   (transition
 		    :description "yes"
 		    :pattern '((ANSWER :value YES)
-			       (ont::eval (find-attr :result ?goal :feature POSSIBLE-GOAL))
-			       (ont::eval (find-attr :result ?cps-hyp :feature CPS-HYPOTHESIS))
+			       (ont::eval (find-attr :result ?context :feature POSSIBLE-GOAL-context))
+			       (ont::eval (find-attr :result ?poss-goal :feature possible-goal))
 			       -right-guess-on-goal>
-			       (SAY :content "Great!")
-			       (UPDATE-CSM (ACCEPTED :content ?goal))
-			       (INVOKE-BA :msg (INTERPRET-SPEECH-ACT :content ?cps-hyp)))
-		    :destination 'handle-CSM-response
+			       (INVOKE-BA :msg (EVALUATE 
+						:content ?poss-goal
+						:context ?context))
+			       
+			       )
+		    :destination 'confirm-goal-with-BA)
+		   
+		   (transition
+		    :description "no"
+		    :pattern '((ANSWER :value NO)
+			       -propose-cps-act>
+			       (SAY :content "OK"))
+		    :destination 'propose-cps-act
 		    )
-		   )
-		  ))
+		  )))
 
+(add-state 'confirm-goal-with-BA
+	   (state :action nil
+		  :transitions (list
+				(transition
+				 :description "check with BA that the clarified goal is acceptable"
+				 :pattern '((BA-RESPONSE X ACCEPTABLE :what ?!psgoal :context ?!context)
+					    (ont::eval (extract-feature-from-act :result ?goal-id :expr ?!psgoal :feature :what))
+					    (ont::eval (find-attr :result ?orig-cps-hyp :feature CPS-HYPOTHESIS))
+					    -confirmed-clarify-goal>
+					    (UPDATE-CSM (ACCEPTED :content ?!psgoal :context ?!context))
+					    
+					    (notify-BA :msg (COMMIT
+							     :content ?!psgoal)) ;; :context ?!context))  SIFT doesn't want the context
+					    (RECORD ACTIVE-GOAL ?goal-id)
+					    (RECORD ACTIVE-CONTEXT ?!context)
+					    (SAY :content "Great!")
+					    ;;  Now we try to reinterpret the original utterance that caused the clarification
+					    (INVOKE-BA :msg (INTERPRET-SPEECH-ACT :content ?orig-cps-hyp :active-goal ?goal-id)))
+				 :destination 'handle-CSM-response
+				))))
 
 
 
@@ -805,7 +862,7 @@
   (rule
    :description "a couple"
    :pattern '((ONT::A ?!x  (:* ONT::QUANTITY -) :UNIT (:* ONT::QUANTITY ONT::COUPLE))
-	      (ONT::EVAL (FREQUENCY-TO-NUMBER W::A-COUPLE ?n))
+	      ONT::EVAL (FREQUENCY-TO-NUMBER W::A-COUPLE ?n))
 	      -how-often16>
 	      (HOWOFTEN :value ?n))
    )
