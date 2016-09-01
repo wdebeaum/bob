@@ -30,6 +30,7 @@
 |#
 
 ; BOB-specific roles
+#|
 (setq *roles-to-emit* (append *roles-to-emit* '(			    
 ;    :DISEASE
     :SUCHTHAT
@@ -37,8 +38,13 @@
     :EXT
     :OPERATOR
     :SEQ
+    :CONDITION  ; if (but then need :GROUND too because :CONDITION only contains the linking POS-CONDITION)
     ))
 )
+|#
+
+; return all roles
+(setq *roles-to-emit* nil)			    
 
 
 ;(setq *extraction-rules* '(bobRules))

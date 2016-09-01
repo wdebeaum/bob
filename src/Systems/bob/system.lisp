@@ -64,13 +64,15 @@
 	;;
 	(parser::*no-positions-in-lf* nil)
 	;;
-	(parser::*beam-pruning-on* t) 
+
+	(parser::*beam-pruning-on* nil)   ; no pruning
+
 	;;
 	(parser::*pruning-frequency* 500)
 	;;
 	(parser::*beam-width* 20)
 	;; max number of constituents built before stopping
-	((parser::setmaxnumberentries 6000))
+	((parser::setmaxnumberentries 2000))
 	;;
 	((parser::setmaxchartsize 8000))
 	;;
@@ -175,6 +177,7 @@
 (load "DRUMtermRules.lisp")
 (load "DRUMtermRules_add.lisp")
 (load "DRUMRules_ev.lisp")
+(load "DRUMRules_ev_add.lisp")
 (load "DRUMRules_mod.lisp")
 (load "DRUMRules_CC.lisp")
 (load "bobRules.lisp")
@@ -183,7 +186,7 @@
 
 (load "symbolmapping.lisp")
 ; bobRules is before drum so that the domain specific EVENT rules take precedence (and also because bobRules also contains TERM extractions) (and also because CREATE is matched for both the BOB-specific CREATE event and for the general drum ACTIVATE)
-(setq im::*extraction-sequence* '((im::drumterms) (im::drumtermsAdd) (im::bobRules) (im::drum) (im::drummod) (im::drumCC) (im::drumMisc) (im::emptyRules)))
+(setq im::*extraction-sequence* '((im::drumterms) (im::drumtermsAdd) (im::bobRules) (im::drum) (im::drum_ev_add) (im::drummod) (im::drumCC) (im::drumMisc) (im::emptyRules)))
 (setq im::*substitute-terms-in-extraction* t)
 
 
@@ -201,5 +204,5 @@
 ;; system development.
 ;; if you need to use either of the following Dummy features, uncomment them 
 ;; LOCALLY, but please do not commit without comments!
-;(load  #!TRIPS"src;Systems;bob;dummymessages")
+;;(load  #!TRIPS"src;Systems;bob;dummymessages")
 ;(load  #!TRIPS"src;Systems;bob;dummy-for-CSM")

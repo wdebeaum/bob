@@ -2,6 +2,7 @@
 ;;;; W::NOW
 ;;;;
 
+#|
 (define-words 
     :pos W::adv :templ DISC-PRE-TEMPL
  :tags (:base500)
@@ -16,6 +17,7 @@
     )
    )
 ))
+|#
 
 (define-words 
     :pos W::adv :templ DISC-PRE-TEMPL
@@ -35,7 +37,8 @@
   (W::NOW
    (wordfeats (W::ATYPE (? atype W::pre W::post)))
    (SENSES
-    ((LF-PARENT ONT::EVENT-TIME-REL)
+    (;(LF-PARENT ONT::EVENT-TIME-REL)
+     (LF-PARENT ONT::EVENT-TIME-REL-NOW)
      (SYNTAX (W::IMPRO-CLASS (:* ONT::TIME-LOC W::NOW)))
      )
     ))
@@ -58,7 +61,8 @@
   ((W::now w::and w::then)
    (SENSES
     ((meta-data :origin cardiac :entry-date 20090319 :change-date nil :comments nil)
-     (LF-PARENT ONT::FREQUENCY)
+;     (LF-PARENT ONT::FREQUENCY)
+     (LF-PARENT ONT::sometimes)
      (lf-form w::sometimes)
      (TEMPL pred-s-post-TEMPL)
      )

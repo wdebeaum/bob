@@ -862,7 +862,7 @@
   (rule
    :description "a couple"
    :pattern '((ONT::A ?!x  (:* ONT::QUANTITY -) :UNIT (:* ONT::QUANTITY ONT::COUPLE))
-	      ONT::EVAL (FREQUENCY-TO-NUMBER W::A-COUPLE ?n))
+	      (ONT::EVAL (FREQUENCY-TO-NUMBER W::A-COUPLE ?n))
 	      -how-often16>
 	      (HOWOFTEN :value ?n))
    )

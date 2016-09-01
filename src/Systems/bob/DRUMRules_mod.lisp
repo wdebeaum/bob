@@ -126,7 +126,7 @@
            )
           ;; rule60_0_EXPERIENCER_FORMAL rule with only EXPERIENCER
           (((? reln0  ONT::F ONT::QUANTIFIER ONT::KIND ONT::A ONT::INDEF-PLURAL ONT::THE ONT::THE-SET ONT::INDEF-SET ONT::BARE ONT::SM ONT::PRO ONT::PRO-SET) ?ev
-            (:* (? type ONT::ASSUME ONT::SUPPOSE ) ?!w) :EXPERIENCER ?!ag :AFFECTED - :AFFECTED-RESULT - :NEUTRAL - :FORMAL - :DRUM ?code :MODALITY ?modVal :FORCE ?fVal :DEGREE ?var_degree :FREQUENCY ?var_freq )
+            (:* (? type ONT::ASSUME ONT::SUPPOSE ) ?!w) :EXPERIENCER ?!ag :DRUM ?code :MODALITY ?modVal :FORCE ?fVal :DEGREE ?var_degree :FREQUENCY ?var_freq )
            (?reln1 ?!ag ?t1)
 ;           ((? reln2 ONT::EVENT) ?!obj ?t2)
            (ONT::F ?var_degree ?type_degree)  
@@ -137,7 +137,7 @@
            (ONT::epi ?ev ?!eventName
             :rule -rule60_0_EXPERIENCER_FORMAL-EXPERIENCER
             :EXPERIENCER ?!ag
-;            :FORMAL ?!obj
+            :FORMAL -
             :MODALITY ?modVal
             :FORCE ?fVal
             :DEGREE ?type_degree
@@ -147,7 +147,7 @@
             ))
           ;; rule60_0_EXPERIENCER_FORMAL rule with only FORMAL
           (((? reln0  ONT::F ONT::QUANTIFIER ONT::KIND ONT::A ONT::INDEF-PLURAL ONT::THE ONT::THE-SET ONT::INDEF-SET ONT::BARE ONT::SM ONT::PRO ONT::PRO-SET) ?ev
-            (:* (? type ONT::ASSUME ONT::SUPPOSE ) ?!w) :EXPERIENCER - :FORMAL ?!obj :DRUM ?code :MODALITY ?modVal :FORCE ?fVal :DEGREE ?var_degree :FREQUENCY ?var_freq )
+            (:* (? type ONT::ASSUME ONT::SUPPOSE ) ?!w) :FORMAL ?!obj :DRUM ?code :MODALITY ?modVal :FORCE ?fVal :DEGREE ?var_degree :FREQUENCY ?var_freq )
 ;           (?reln1 ?!ag ?t1)
            ((? reln2 ONT::EVENT) ?!obj ?t2)
            (ONT::F ?var_degree ?type_degree)  
@@ -157,7 +157,7 @@
            60
            (ONT::epi ?ev ?!eventName
             :rule -rule60_0_EXPERIENCER_FORMAL-FORMAL
-;            :EXPERIENCER ?!ag
+            :EXPERIENCER -
             :FORMAL ?!obj
             :MODALITY ?modVal
             :FORCE ?fVal
@@ -232,7 +232,7 @@
             ))
           ;; rule60_0_EXPERIENCER_FORMAL rule with neither EXPERIENCER nor FORMAL
           (((? reln0 ONT::F ONT::QUANTIFIER ONT::KIND ONT::A ONT::INDEF-PLURAL ONT::THE ONT::THE-SET ONT::INDEF-SET ONT::BARE ONT::SM ONT::PRO ONT::PRO-SET) ?ev
-            (:* (? type ONT::ASSUME ONT::SUPPOSE ) ?!w) :EXPERIENCER - :FORMAL - :DRUM ?code :MODALITY ?modVal :FORCE ?fVal :DEGREE ?var_degree :FREQUENCY ?var_freq )
+            (:* (? type ONT::ASSUME ONT::SUPPOSE ) ?!w) :EXPERIENCER - :FORMAL - :AFFECTED - :AFFECTED1 - :AFFECTED-RESULT - :NEUTRAL - :NEUTRAL1 - :NEUTRAL2 - :FORMAL - :DRUM ?code :MODALITY ?modVal :FORCE ?fVal :DEGREE ?var_degree :FREQUENCY ?var_freq )
 ;           (?reln1 ?!ag ?t1)
 ;           ((? reln2 ONT::EVENT) ?!obj ?t2)
            (ONT::F ?var_degree ?type_degree)  
@@ -357,7 +357,7 @@
            )
           ;; rule60_0_EXPERIENCER_FORMAL-POLARITY1-gd rule with only EXPERIENCER
           (((? reln0  ONT::F ONT::QUANTIFIER ONT::KIND ONT::A ONT::INDEF-PLURAL ONT::THE ONT::THE-SET ONT::INDEF-SET ONT::BARE ONT::SM ONT::PRO ONT::PRO-SET) ?ev
-            (:* (? type ONT::ASSUME ONT::SUPPOSE ) ?!w) :EXPERIENCER ?!ag :AFFECTED - :AFFECTED-RESULT - :NEUTRAL - :FORMAL - :DRUM ?code :MODALITY ?modVal :FORCE ?fVal :DEGREE ?var_degree :FREQUENCY ?var_freq )
+            (:* (? type ONT::ASSUME ONT::SUPPOSE ) ?!w) :EXPERIENCER ?!ag :DRUM ?code :MODALITY ?modVal :FORCE ?fVal :DEGREE ?var_degree :FREQUENCY ?var_freq )
            (?reln1 ?!ag ?t1)
 ;           ((? reln2 ONT::EVENT) ?!obj ?t2)
            (ONT::F ?var_degree ?type_degree)  
@@ -370,7 +370,7 @@
            (ONT::epi ?ev ?!eventName
             :rule -rule60_0_EXPERIENCER_FORMAL-POLARITY1-gd-EXPERIENCER
             :EXPERIENCER ?!ag
-;            :FORMAL ?!obj
+            :FORMAL -
             :POLARITY ?!m1_new
             :MODALITY ?modVal
             :FORCE ?fVal
@@ -381,7 +381,7 @@
             ))
           ;; rule60_0_EXPERIENCER_FORMAL-POLARITY1-gd rule with only FORMAL
           (((? reln0  ONT::F ONT::QUANTIFIER ONT::KIND ONT::A ONT::INDEF-PLURAL ONT::THE ONT::THE-SET ONT::INDEF-SET ONT::BARE ONT::SM ONT::PRO ONT::PRO-SET) ?ev
-            (:* (? type ONT::ASSUME ONT::SUPPOSE ) ?!w) :EXPERIENCER - :FORMAL ?!obj :DRUM ?code :MODALITY ?modVal :FORCE ?fVal :DEGREE ?var_degree :FREQUENCY ?var_freq )
+            (:* (? type ONT::ASSUME ONT::SUPPOSE ) ?!w) :FORMAL ?!obj :DRUM ?code :MODALITY ?modVal :FORCE ?fVal :DEGREE ?var_degree :FREQUENCY ?var_freq )
 ;           (?reln1 ?!ag ?t1)
            ((? reln2 ONT::EVENT) ?!obj ?t2)
            (ONT::F ?var_degree ?type_degree)  
@@ -393,7 +393,7 @@
            60
            (ONT::epi ?ev ?!eventName
             :rule -rule60_0_EXPERIENCER_FORMAL-POLARITY1-gd-FORMAL
-;            :EXPERIENCER ?!ag
+            :EXPERIENCER -
             :FORMAL ?!obj
             :POLARITY ?!m1_new
             :MODALITY ?modVal
@@ -475,7 +475,7 @@
             ))
           ;; rule60_0_EXPERIENCER_FORMAL-POLARITY1-gd rule with neither EXPERIENCER nor FORMAL
           (((? reln0 ONT::F ONT::QUANTIFIER ONT::KIND ONT::A ONT::INDEF-PLURAL ONT::THE ONT::THE-SET ONT::INDEF-SET ONT::BARE ONT::SM ONT::PRO ONT::PRO-SET) ?ev
-            (:* (? type ONT::ASSUME ONT::SUPPOSE ) ?!w) :EXPERIENCER - :FORMAL - :DRUM ?code :MODALITY ?modVal :FORCE ?fVal :DEGREE ?var_degree :FREQUENCY ?var_freq )
+            (:* (? type ONT::ASSUME ONT::SUPPOSE ) ?!w) :EXPERIENCER - :FORMAL - :AFFECTED - :AFFECTED1 - :AFFECTED-RESULT - :NEUTRAL - :NEUTRAL1 - :NEUTRAL2 - :FORMAL - :DRUM ?code :MODALITY ?modVal :FORCE ?fVal :DEGREE ?var_degree :FREQUENCY ?var_freq )
 ;           (?reln1 ?!ag ?t1)
 ;           ((? reln2 ONT::EVENT) ?!obj ?t2)
            (ONT::F ?var_degree ?type_degree)  
@@ -607,7 +607,7 @@
            )
           ;; rule60_0_EXPERIENCER_FORMAL-MODA1_1 rule with only EXPERIENCER
           (((? reln0  ONT::F ONT::QUANTIFIER ONT::KIND ONT::A ONT::INDEF-PLURAL ONT::THE ONT::THE-SET ONT::INDEF-SET ONT::BARE ONT::SM ONT::PRO ONT::PRO-SET) ?ev
-            (:* (? type ONT::ASSUME ONT::SUPPOSE ) ?!w) :EXPERIENCER ?!ag :AFFECTED - :AFFECTED-RESULT - :NEUTRAL - :FORMAL - :DRUM ?code :MODALITY ?modVal :FORCE ?fVal :DEGREE ?var_degree :FREQUENCY ?var_freq :MODS (?!modA))
+            (:* (? type ONT::ASSUME ONT::SUPPOSE ) ?!w) :EXPERIENCER ?!ag :DRUM ?code :MODALITY ?modVal :FORCE ?fVal :DEGREE ?var_degree :FREQUENCY ?var_freq :MODS (?!modA))
            (?reln1 ?!ag ?t1)
 ;           ((? reln2 ONT::EVENT) ?!obj ?t2)
            (ONT::F ?var_degree ?type_degree)  
@@ -619,7 +619,7 @@
            (ONT::epi ?ev ?!eventName
             :rule -rule60_0_EXPERIENCER_FORMAL-MODA1_1-EXPERIENCER
             :EXPERIENCER ?!ag
-;            :FORMAL ?!obj
+            :FORMAL -
             :MODA ?tmp ;?!modA
             :MODALITY ?modVal
             :FORCE ?fVal
@@ -630,7 +630,7 @@
             ))
           ;; rule60_0_EXPERIENCER_FORMAL-MODA1_1 rule with only FORMAL
           (((? reln0  ONT::F ONT::QUANTIFIER ONT::KIND ONT::A ONT::INDEF-PLURAL ONT::THE ONT::THE-SET ONT::INDEF-SET ONT::BARE ONT::SM ONT::PRO ONT::PRO-SET) ?ev
-            (:* (? type ONT::ASSUME ONT::SUPPOSE ) ?!w) :EXPERIENCER - :FORMAL ?!obj :DRUM ?code :MODALITY ?modVal :FORCE ?fVal :DEGREE ?var_degree :FREQUENCY ?var_freq :MODS (?!modA))
+            (:* (? type ONT::ASSUME ONT::SUPPOSE ) ?!w) :FORMAL ?!obj :DRUM ?code :MODALITY ?modVal :FORCE ?fVal :DEGREE ?var_degree :FREQUENCY ?var_freq :MODS (?!modA))
 ;           (?reln1 ?!ag ?t1)
            ((? reln2 ONT::EVENT) ?!obj ?t2)
            (ONT::F ?var_degree ?type_degree)  
@@ -641,7 +641,7 @@
            60
            (ONT::epi ?ev ?!eventName
             :rule -rule60_0_EXPERIENCER_FORMAL-MODA1_1-FORMAL
-;            :EXPERIENCER ?!ag
+            :EXPERIENCER -
             :FORMAL ?!obj
             :MODA ?tmp ;?!modA
             :MODALITY ?modVal
@@ -721,7 +721,7 @@
             ))
           ;; rule60_0_EXPERIENCER_FORMAL-MODA1_1 rule with neither EXPERIENCER nor FORMAL
           (((? reln0 ONT::F ONT::QUANTIFIER ONT::KIND ONT::A ONT::INDEF-PLURAL ONT::THE ONT::THE-SET ONT::INDEF-SET ONT::BARE ONT::SM ONT::PRO ONT::PRO-SET) ?ev
-            (:* (? type ONT::ASSUME ONT::SUPPOSE ) ?!w) :EXPERIENCER - :FORMAL - :DRUM ?code :MODALITY ?modVal :FORCE ?fVal :DEGREE ?var_degree :FREQUENCY ?var_freq :MODS (?!modA))
+            (:* (? type ONT::ASSUME ONT::SUPPOSE ) ?!w) :EXPERIENCER - :FORMAL - :AFFECTED - :AFFECTED1 - :AFFECTED-RESULT - :NEUTRAL - :NEUTRAL1 - :NEUTRAL2 - :FORMAL - :DRUM ?code :MODALITY ?modVal :FORCE ?fVal :DEGREE ?var_degree :FREQUENCY ?var_freq :MODS (?!modA))
 ;           (?reln1 ?!ag ?t1)
 ;           ((? reln2 ONT::EVENT) ?!obj ?t2)
            (ONT::F ?var_degree ?type_degree)  
@@ -850,7 +850,7 @@
            )
           ;; rule60_0_EXPERIENCER_FORMAL-MODA1_2 rule with only EXPERIENCER
           (((? reln0  ONT::F ONT::QUANTIFIER ONT::KIND ONT::A ONT::INDEF-PLURAL ONT::THE ONT::THE-SET ONT::INDEF-SET ONT::BARE ONT::SM ONT::PRO ONT::PRO-SET) ?ev
-            (:* (? type ONT::ASSUME ONT::SUPPOSE ) ?!w) :EXPERIENCER ?!ag :AFFECTED - :AFFECTED-RESULT - :NEUTRAL - :FORMAL - :DRUM ?code :MODALITY ?modVal :FORCE ?fVal :DEGREE ?var_degree :FREQUENCY ?var_freq :MANNER ?!modA)
+            (:* (? type ONT::ASSUME ONT::SUPPOSE ) ?!w) :EXPERIENCER ?!ag :DRUM ?code :MODALITY ?modVal :FORCE ?fVal :DEGREE ?var_degree :FREQUENCY ?var_freq :MANNER ?!modA)
            (?reln1 ?!ag ?t1)
 ;           ((? reln2 ONT::EVENT) ?!obj ?t2)
            (ONT::F ?var_degree ?type_degree)  
@@ -862,7 +862,7 @@
            (ONT::epi ?ev ?!eventName
             :rule -rule60_0_EXPERIENCER_FORMAL-MODA1_2-EXPERIENCER
             :EXPERIENCER ?!ag
-;            :FORMAL ?!obj
+            :FORMAL -
             :MODA ?tmp ;?!modA
             :MODALITY ?modVal
             :FORCE ?fVal
@@ -873,7 +873,7 @@
             ))
           ;; rule60_0_EXPERIENCER_FORMAL-MODA1_2 rule with only FORMAL
           (((? reln0  ONT::F ONT::QUANTIFIER ONT::KIND ONT::A ONT::INDEF-PLURAL ONT::THE ONT::THE-SET ONT::INDEF-SET ONT::BARE ONT::SM ONT::PRO ONT::PRO-SET) ?ev
-            (:* (? type ONT::ASSUME ONT::SUPPOSE ) ?!w) :EXPERIENCER - :FORMAL ?!obj :DRUM ?code :MODALITY ?modVal :FORCE ?fVal :DEGREE ?var_degree :FREQUENCY ?var_freq :MANNER ?!modA)
+            (:* (? type ONT::ASSUME ONT::SUPPOSE ) ?!w) :FORMAL ?!obj :DRUM ?code :MODALITY ?modVal :FORCE ?fVal :DEGREE ?var_degree :FREQUENCY ?var_freq :MANNER ?!modA)
 ;           (?reln1 ?!ag ?t1)
            ((? reln2 ONT::EVENT) ?!obj ?t2)
            (ONT::F ?var_degree ?type_degree)  
@@ -884,7 +884,7 @@
            60
            (ONT::epi ?ev ?!eventName
             :rule -rule60_0_EXPERIENCER_FORMAL-MODA1_2-FORMAL
-;            :EXPERIENCER ?!ag
+            :EXPERIENCER -
             :FORMAL ?!obj
             :MODA ?tmp ;?!modA
             :MODALITY ?modVal
@@ -964,7 +964,7 @@
             ))
           ;; rule60_0_EXPERIENCER_FORMAL-MODA1_2 rule with neither EXPERIENCER nor FORMAL
           (((? reln0 ONT::F ONT::QUANTIFIER ONT::KIND ONT::A ONT::INDEF-PLURAL ONT::THE ONT::THE-SET ONT::INDEF-SET ONT::BARE ONT::SM ONT::PRO ONT::PRO-SET) ?ev
-            (:* (? type ONT::ASSUME ONT::SUPPOSE ) ?!w) :EXPERIENCER - :FORMAL - :DRUM ?code :MODALITY ?modVal :FORCE ?fVal :DEGREE ?var_degree :FREQUENCY ?var_freq :MANNER ?!modA)
+            (:* (? type ONT::ASSUME ONT::SUPPOSE ) ?!w) :EXPERIENCER - :FORMAL - :AFFECTED - :AFFECTED1 - :AFFECTED-RESULT - :NEUTRAL - :NEUTRAL1 - :NEUTRAL2 - :FORMAL - :DRUM ?code :MODALITY ?modVal :FORCE ?fVal :DEGREE ?var_degree :FREQUENCY ?var_freq :MANNER ?!modA)
 ;           (?reln1 ?!ag ?t1)
 ;           ((? reln2 ONT::EVENT) ?!obj ?t2)
            (ONT::F ?var_degree ?type_degree)  
@@ -1093,7 +1093,7 @@
            )
           ;; rule60_0_EXPERIENCER_FORMAL-MODN1_1 rule with only EXPERIENCER
           (((? reln0  ONT::F ONT::QUANTIFIER ONT::KIND ONT::A ONT::INDEF-PLURAL ONT::THE ONT::THE-SET ONT::INDEF-SET ONT::BARE ONT::SM ONT::PRO ONT::PRO-SET) ?ev
-            (:* (? type ONT::ASSUME ONT::SUPPOSE ) ?!w) :EXPERIENCER ?!ag :AFFECTED - :AFFECTED-RESULT - :NEUTRAL - :FORMAL - :DRUM ?code :MODALITY ?modVal :FORCE ?fVal :DEGREE ?var_degree :FREQUENCY ?var_freq :MODS (?!modN))
+            (:* (? type ONT::ASSUME ONT::SUPPOSE ) ?!w) :EXPERIENCER ?!ag :DRUM ?code :MODALITY ?modVal :FORCE ?fVal :DEGREE ?var_degree :FREQUENCY ?var_freq :MODS (?!modN))
            (?reln1 ?!ag ?t1)
 ;           ((? reln2 ONT::EVENT) ?!obj ?t2)
            (ONT::F ?var_degree ?type_degree)  
@@ -1105,7 +1105,7 @@
            (ONT::epi ?ev ?!eventName
             :rule -rule60_0_EXPERIENCER_FORMAL-MODN1_1-EXPERIENCER
             :EXPERIENCER ?!ag
-;            :FORMAL ?!obj
+            :FORMAL -
             :MODN ?tmp ;?!modN
             :MODALITY ?modVal
             :FORCE ?fVal
@@ -1116,7 +1116,7 @@
             ))
           ;; rule60_0_EXPERIENCER_FORMAL-MODN1_1 rule with only FORMAL
           (((? reln0  ONT::F ONT::QUANTIFIER ONT::KIND ONT::A ONT::INDEF-PLURAL ONT::THE ONT::THE-SET ONT::INDEF-SET ONT::BARE ONT::SM ONT::PRO ONT::PRO-SET) ?ev
-            (:* (? type ONT::ASSUME ONT::SUPPOSE ) ?!w) :EXPERIENCER - :FORMAL ?!obj :DRUM ?code :MODALITY ?modVal :FORCE ?fVal :DEGREE ?var_degree :FREQUENCY ?var_freq :MODS (?!modN))
+            (:* (? type ONT::ASSUME ONT::SUPPOSE ) ?!w) :FORMAL ?!obj :DRUM ?code :MODALITY ?modVal :FORCE ?fVal :DEGREE ?var_degree :FREQUENCY ?var_freq :MODS (?!modN))
 ;           (?reln1 ?!ag ?t1)
            ((? reln2 ONT::EVENT) ?!obj ?t2)
            (ONT::F ?var_degree ?type_degree)  
@@ -1127,7 +1127,7 @@
            60
            (ONT::epi ?ev ?!eventName
             :rule -rule60_0_EXPERIENCER_FORMAL-MODN1_1-FORMAL
-;            :EXPERIENCER ?!ag
+            :EXPERIENCER -
             :FORMAL ?!obj
             :MODN ?tmp ;?!modN
             :MODALITY ?modVal
@@ -1207,7 +1207,7 @@
             ))
           ;; rule60_0_EXPERIENCER_FORMAL-MODN1_1 rule with neither EXPERIENCER nor FORMAL
           (((? reln0 ONT::F ONT::QUANTIFIER ONT::KIND ONT::A ONT::INDEF-PLURAL ONT::THE ONT::THE-SET ONT::INDEF-SET ONT::BARE ONT::SM ONT::PRO ONT::PRO-SET) ?ev
-            (:* (? type ONT::ASSUME ONT::SUPPOSE ) ?!w) :EXPERIENCER - :FORMAL - :DRUM ?code :MODALITY ?modVal :FORCE ?fVal :DEGREE ?var_degree :FREQUENCY ?var_freq :MODS (?!modN))
+            (:* (? type ONT::ASSUME ONT::SUPPOSE ) ?!w) :EXPERIENCER - :FORMAL - :AFFECTED - :AFFECTED1 - :AFFECTED-RESULT - :NEUTRAL - :NEUTRAL1 - :NEUTRAL2 - :FORMAL - :DRUM ?code :MODALITY ?modVal :FORCE ?fVal :DEGREE ?var_degree :FREQUENCY ?var_freq :MODS (?!modN))
 ;           (?reln1 ?!ag ?t1)
 ;           ((? reln2 ONT::EVENT) ?!obj ?t2)
            (ONT::F ?var_degree ?type_degree)  
@@ -1336,7 +1336,7 @@
            )
           ;; rule60_0_EXPERIENCER_FORMAL-MODN1_2 rule with only EXPERIENCER
           (((? reln0  ONT::F ONT::QUANTIFIER ONT::KIND ONT::A ONT::INDEF-PLURAL ONT::THE ONT::THE-SET ONT::INDEF-SET ONT::BARE ONT::SM ONT::PRO ONT::PRO-SET) ?ev
-            (:* (? type ONT::ASSUME ONT::SUPPOSE ) ?!w) :EXPERIENCER ?!ag :AFFECTED - :AFFECTED-RESULT - :NEUTRAL - :FORMAL - :DRUM ?code :MODALITY ?modVal :FORCE ?fVal :DEGREE ?var_degree :FREQUENCY ?var_freq :MANNER ?!modN)
+            (:* (? type ONT::ASSUME ONT::SUPPOSE ) ?!w) :EXPERIENCER ?!ag :DRUM ?code :MODALITY ?modVal :FORCE ?fVal :DEGREE ?var_degree :FREQUENCY ?var_freq :MANNER ?!modN)
            (?reln1 ?!ag ?t1)
 ;           ((? reln2 ONT::EVENT) ?!obj ?t2)
            (ONT::F ?var_degree ?type_degree)  
@@ -1348,7 +1348,7 @@
            (ONT::epi ?ev ?!eventName
             :rule -rule60_0_EXPERIENCER_FORMAL-MODN1_2-EXPERIENCER
             :EXPERIENCER ?!ag
-;            :FORMAL ?!obj
+            :FORMAL -
             :MODN ?tmp ;?!modN
             :MODALITY ?modVal
             :FORCE ?fVal
@@ -1359,7 +1359,7 @@
             ))
           ;; rule60_0_EXPERIENCER_FORMAL-MODN1_2 rule with only FORMAL
           (((? reln0  ONT::F ONT::QUANTIFIER ONT::KIND ONT::A ONT::INDEF-PLURAL ONT::THE ONT::THE-SET ONT::INDEF-SET ONT::BARE ONT::SM ONT::PRO ONT::PRO-SET) ?ev
-            (:* (? type ONT::ASSUME ONT::SUPPOSE ) ?!w) :EXPERIENCER - :FORMAL ?!obj :DRUM ?code :MODALITY ?modVal :FORCE ?fVal :DEGREE ?var_degree :FREQUENCY ?var_freq :MANNER ?!modN)
+            (:* (? type ONT::ASSUME ONT::SUPPOSE ) ?!w) :FORMAL ?!obj :DRUM ?code :MODALITY ?modVal :FORCE ?fVal :DEGREE ?var_degree :FREQUENCY ?var_freq :MANNER ?!modN)
 ;           (?reln1 ?!ag ?t1)
            ((? reln2 ONT::EVENT) ?!obj ?t2)
            (ONT::F ?var_degree ?type_degree)  
@@ -1370,7 +1370,7 @@
            60
            (ONT::epi ?ev ?!eventName
             :rule -rule60_0_EXPERIENCER_FORMAL-MODN1_2-FORMAL
-;            :EXPERIENCER ?!ag
+            :EXPERIENCER -
             :FORMAL ?!obj
             :MODN ?tmp ;?!modN
             :MODALITY ?modVal
@@ -1450,7 +1450,7 @@
             ))
           ;; rule60_0_EXPERIENCER_FORMAL-MODN1_2 rule with neither EXPERIENCER nor FORMAL
           (((? reln0 ONT::F ONT::QUANTIFIER ONT::KIND ONT::A ONT::INDEF-PLURAL ONT::THE ONT::THE-SET ONT::INDEF-SET ONT::BARE ONT::SM ONT::PRO ONT::PRO-SET) ?ev
-            (:* (? type ONT::ASSUME ONT::SUPPOSE ) ?!w) :EXPERIENCER - :FORMAL - :DRUM ?code :MODALITY ?modVal :FORCE ?fVal :DEGREE ?var_degree :FREQUENCY ?var_freq :MANNER ?!modN)
+            (:* (? type ONT::ASSUME ONT::SUPPOSE ) ?!w) :EXPERIENCER - :FORMAL - :AFFECTED - :AFFECTED1 - :AFFECTED-RESULT - :NEUTRAL - :NEUTRAL1 - :NEUTRAL2 - :FORMAL - :DRUM ?code :MODALITY ?modVal :FORCE ?fVal :DEGREE ?var_degree :FREQUENCY ?var_freq :MANNER ?!modN)
 ;           (?reln1 ?!ag ?t1)
 ;           ((? reln2 ONT::EVENT) ?!obj ?t2)
            (ONT::F ?var_degree ?type_degree)  
@@ -1586,7 +1586,7 @@
            )
           ;; rule60_0_EXPERIENCER_NEUTRAL rule with only EXPERIENCER
           (((? reln0  ONT::F ONT::QUANTIFIER ONT::KIND ONT::A ONT::INDEF-PLURAL ONT::THE ONT::THE-SET ONT::INDEF-SET ONT::BARE ONT::SM ONT::PRO ONT::PRO-SET) ?ev
-            (:* (? type ONT::ASSUME ONT::SUPPOSE ) ?!w) :EXPERIENCER ?!ag :AFFECTED - :AFFECTED-RESULT - :NEUTRAL - :FORMAL - :DRUM ?code :MODALITY ?modVal :FORCE ?fVal :DEGREE ?var_degree :FREQUENCY ?var_freq )
+            (:* (? type ONT::ASSUME ONT::SUPPOSE ) ?!w) :EXPERIENCER ?!ag :DRUM ?code :MODALITY ?modVal :FORCE ?fVal :DEGREE ?var_degree :FREQUENCY ?var_freq )
            (?reln1 ?!ag ?t1)
 ;           ((? reln2 ONT::EVENT) ?!obj ?t2)
            (ONT::F ?var_degree ?type_degree)  
@@ -1597,7 +1597,7 @@
            (ONT::epi ?ev ?!eventName
             :rule -rule60_0_EXPERIENCER_NEUTRAL-EXPERIENCER
             :EXPERIENCER ?!ag
-;            :NEUTRAL ?!obj
+            :NEUTRAL -
             :MODALITY ?modVal
             :FORCE ?fVal
             :DEGREE ?type_degree
@@ -1607,7 +1607,7 @@
             ))
           ;; rule60_0_EXPERIENCER_NEUTRAL rule with only NEUTRAL
           (((? reln0  ONT::F ONT::QUANTIFIER ONT::KIND ONT::A ONT::INDEF-PLURAL ONT::THE ONT::THE-SET ONT::INDEF-SET ONT::BARE ONT::SM ONT::PRO ONT::PRO-SET) ?ev
-            (:* (? type ONT::ASSUME ONT::SUPPOSE ) ?!w) :EXPERIENCER - :NEUTRAL ?!obj :DRUM ?code :MODALITY ?modVal :FORCE ?fVal :DEGREE ?var_degree :FREQUENCY ?var_freq )
+            (:* (? type ONT::ASSUME ONT::SUPPOSE ) ?!w) :NEUTRAL ?!obj :DRUM ?code :MODALITY ?modVal :FORCE ?fVal :DEGREE ?var_degree :FREQUENCY ?var_freq )
 ;           (?reln1 ?!ag ?t1)
            ((? reln2 ONT::EVENT) ?!obj ?t2)
            (ONT::F ?var_degree ?type_degree)  
@@ -1617,7 +1617,7 @@
            60
            (ONT::epi ?ev ?!eventName
             :rule -rule60_0_EXPERIENCER_NEUTRAL-NEUTRAL
-;            :EXPERIENCER ?!ag
+            :EXPERIENCER -
             :NEUTRAL ?!obj
             :MODALITY ?modVal
             :FORCE ?fVal
@@ -1692,7 +1692,7 @@
             ))
           ;; rule60_0_EXPERIENCER_NEUTRAL rule with neither EXPERIENCER nor NEUTRAL
           (((? reln0 ONT::F ONT::QUANTIFIER ONT::KIND ONT::A ONT::INDEF-PLURAL ONT::THE ONT::THE-SET ONT::INDEF-SET ONT::BARE ONT::SM ONT::PRO ONT::PRO-SET) ?ev
-            (:* (? type ONT::ASSUME ONT::SUPPOSE ) ?!w) :EXPERIENCER - :NEUTRAL - :DRUM ?code :MODALITY ?modVal :FORCE ?fVal :DEGREE ?var_degree :FREQUENCY ?var_freq )
+            (:* (? type ONT::ASSUME ONT::SUPPOSE ) ?!w) :EXPERIENCER - :NEUTRAL - :AFFECTED - :AFFECTED1 - :AFFECTED-RESULT - :NEUTRAL - :NEUTRAL1 - :NEUTRAL2 - :FORMAL - :DRUM ?code :MODALITY ?modVal :FORCE ?fVal :DEGREE ?var_degree :FREQUENCY ?var_freq )
 ;           (?reln1 ?!ag ?t1)
 ;           ((? reln2 ONT::EVENT) ?!obj ?t2)
            (ONT::F ?var_degree ?type_degree)  
@@ -1817,7 +1817,7 @@
            )
           ;; rule60_0_EXPERIENCER_NEUTRAL-POLARITY1-gd rule with only EXPERIENCER
           (((? reln0  ONT::F ONT::QUANTIFIER ONT::KIND ONT::A ONT::INDEF-PLURAL ONT::THE ONT::THE-SET ONT::INDEF-SET ONT::BARE ONT::SM ONT::PRO ONT::PRO-SET) ?ev
-            (:* (? type ONT::ASSUME ONT::SUPPOSE ) ?!w) :EXPERIENCER ?!ag :AFFECTED - :AFFECTED-RESULT - :NEUTRAL - :FORMAL - :DRUM ?code :MODALITY ?modVal :FORCE ?fVal :DEGREE ?var_degree :FREQUENCY ?var_freq )
+            (:* (? type ONT::ASSUME ONT::SUPPOSE ) ?!w) :EXPERIENCER ?!ag :DRUM ?code :MODALITY ?modVal :FORCE ?fVal :DEGREE ?var_degree :FREQUENCY ?var_freq )
            (?reln1 ?!ag ?t1)
 ;           ((? reln2 ONT::EVENT) ?!obj ?t2)
            (ONT::F ?var_degree ?type_degree)  
@@ -1830,7 +1830,7 @@
            (ONT::epi ?ev ?!eventName
             :rule -rule60_0_EXPERIENCER_NEUTRAL-POLARITY1-gd-EXPERIENCER
             :EXPERIENCER ?!ag
-;            :NEUTRAL ?!obj
+            :NEUTRAL -
             :POLARITY ?!m1_new
             :MODALITY ?modVal
             :FORCE ?fVal
@@ -1841,7 +1841,7 @@
             ))
           ;; rule60_0_EXPERIENCER_NEUTRAL-POLARITY1-gd rule with only NEUTRAL
           (((? reln0  ONT::F ONT::QUANTIFIER ONT::KIND ONT::A ONT::INDEF-PLURAL ONT::THE ONT::THE-SET ONT::INDEF-SET ONT::BARE ONT::SM ONT::PRO ONT::PRO-SET) ?ev
-            (:* (? type ONT::ASSUME ONT::SUPPOSE ) ?!w) :EXPERIENCER - :NEUTRAL ?!obj :DRUM ?code :MODALITY ?modVal :FORCE ?fVal :DEGREE ?var_degree :FREQUENCY ?var_freq )
+            (:* (? type ONT::ASSUME ONT::SUPPOSE ) ?!w) :NEUTRAL ?!obj :DRUM ?code :MODALITY ?modVal :FORCE ?fVal :DEGREE ?var_degree :FREQUENCY ?var_freq )
 ;           (?reln1 ?!ag ?t1)
            ((? reln2 ONT::EVENT) ?!obj ?t2)
            (ONT::F ?var_degree ?type_degree)  
@@ -1853,7 +1853,7 @@
            60
            (ONT::epi ?ev ?!eventName
             :rule -rule60_0_EXPERIENCER_NEUTRAL-POLARITY1-gd-NEUTRAL
-;            :EXPERIENCER ?!ag
+            :EXPERIENCER -
             :NEUTRAL ?!obj
             :POLARITY ?!m1_new
             :MODALITY ?modVal
@@ -1935,7 +1935,7 @@
             ))
           ;; rule60_0_EXPERIENCER_NEUTRAL-POLARITY1-gd rule with neither EXPERIENCER nor NEUTRAL
           (((? reln0 ONT::F ONT::QUANTIFIER ONT::KIND ONT::A ONT::INDEF-PLURAL ONT::THE ONT::THE-SET ONT::INDEF-SET ONT::BARE ONT::SM ONT::PRO ONT::PRO-SET) ?ev
-            (:* (? type ONT::ASSUME ONT::SUPPOSE ) ?!w) :EXPERIENCER - :NEUTRAL - :DRUM ?code :MODALITY ?modVal :FORCE ?fVal :DEGREE ?var_degree :FREQUENCY ?var_freq )
+            (:* (? type ONT::ASSUME ONT::SUPPOSE ) ?!w) :EXPERIENCER - :NEUTRAL - :AFFECTED - :AFFECTED1 - :AFFECTED-RESULT - :NEUTRAL - :NEUTRAL1 - :NEUTRAL2 - :FORMAL - :DRUM ?code :MODALITY ?modVal :FORCE ?fVal :DEGREE ?var_degree :FREQUENCY ?var_freq )
 ;           (?reln1 ?!ag ?t1)
 ;           ((? reln2 ONT::EVENT) ?!obj ?t2)
            (ONT::F ?var_degree ?type_degree)  
@@ -2067,7 +2067,7 @@
            )
           ;; rule60_0_EXPERIENCER_NEUTRAL-MODA1_1 rule with only EXPERIENCER
           (((? reln0  ONT::F ONT::QUANTIFIER ONT::KIND ONT::A ONT::INDEF-PLURAL ONT::THE ONT::THE-SET ONT::INDEF-SET ONT::BARE ONT::SM ONT::PRO ONT::PRO-SET) ?ev
-            (:* (? type ONT::ASSUME ONT::SUPPOSE ) ?!w) :EXPERIENCER ?!ag :AFFECTED - :AFFECTED-RESULT - :NEUTRAL - :FORMAL - :DRUM ?code :MODALITY ?modVal :FORCE ?fVal :DEGREE ?var_degree :FREQUENCY ?var_freq :MODS (?!modA))
+            (:* (? type ONT::ASSUME ONT::SUPPOSE ) ?!w) :EXPERIENCER ?!ag :DRUM ?code :MODALITY ?modVal :FORCE ?fVal :DEGREE ?var_degree :FREQUENCY ?var_freq :MODS (?!modA))
            (?reln1 ?!ag ?t1)
 ;           ((? reln2 ONT::EVENT) ?!obj ?t2)
            (ONT::F ?var_degree ?type_degree)  
@@ -2079,7 +2079,7 @@
            (ONT::epi ?ev ?!eventName
             :rule -rule60_0_EXPERIENCER_NEUTRAL-MODA1_1-EXPERIENCER
             :EXPERIENCER ?!ag
-;            :NEUTRAL ?!obj
+            :NEUTRAL -
             :MODA ?tmp ;?!modA
             :MODALITY ?modVal
             :FORCE ?fVal
@@ -2090,7 +2090,7 @@
             ))
           ;; rule60_0_EXPERIENCER_NEUTRAL-MODA1_1 rule with only NEUTRAL
           (((? reln0  ONT::F ONT::QUANTIFIER ONT::KIND ONT::A ONT::INDEF-PLURAL ONT::THE ONT::THE-SET ONT::INDEF-SET ONT::BARE ONT::SM ONT::PRO ONT::PRO-SET) ?ev
-            (:* (? type ONT::ASSUME ONT::SUPPOSE ) ?!w) :EXPERIENCER - :NEUTRAL ?!obj :DRUM ?code :MODALITY ?modVal :FORCE ?fVal :DEGREE ?var_degree :FREQUENCY ?var_freq :MODS (?!modA))
+            (:* (? type ONT::ASSUME ONT::SUPPOSE ) ?!w) :NEUTRAL ?!obj :DRUM ?code :MODALITY ?modVal :FORCE ?fVal :DEGREE ?var_degree :FREQUENCY ?var_freq :MODS (?!modA))
 ;           (?reln1 ?!ag ?t1)
            ((? reln2 ONT::EVENT) ?!obj ?t2)
            (ONT::F ?var_degree ?type_degree)  
@@ -2101,7 +2101,7 @@
            60
            (ONT::epi ?ev ?!eventName
             :rule -rule60_0_EXPERIENCER_NEUTRAL-MODA1_1-NEUTRAL
-;            :EXPERIENCER ?!ag
+            :EXPERIENCER -
             :NEUTRAL ?!obj
             :MODA ?tmp ;?!modA
             :MODALITY ?modVal
@@ -2181,7 +2181,7 @@
             ))
           ;; rule60_0_EXPERIENCER_NEUTRAL-MODA1_1 rule with neither EXPERIENCER nor NEUTRAL
           (((? reln0 ONT::F ONT::QUANTIFIER ONT::KIND ONT::A ONT::INDEF-PLURAL ONT::THE ONT::THE-SET ONT::INDEF-SET ONT::BARE ONT::SM ONT::PRO ONT::PRO-SET) ?ev
-            (:* (? type ONT::ASSUME ONT::SUPPOSE ) ?!w) :EXPERIENCER - :NEUTRAL - :DRUM ?code :MODALITY ?modVal :FORCE ?fVal :DEGREE ?var_degree :FREQUENCY ?var_freq :MODS (?!modA))
+            (:* (? type ONT::ASSUME ONT::SUPPOSE ) ?!w) :EXPERIENCER - :NEUTRAL - :AFFECTED - :AFFECTED1 - :AFFECTED-RESULT - :NEUTRAL - :NEUTRAL1 - :NEUTRAL2 - :FORMAL - :DRUM ?code :MODALITY ?modVal :FORCE ?fVal :DEGREE ?var_degree :FREQUENCY ?var_freq :MODS (?!modA))
 ;           (?reln1 ?!ag ?t1)
 ;           ((? reln2 ONT::EVENT) ?!obj ?t2)
            (ONT::F ?var_degree ?type_degree)  
@@ -2310,7 +2310,7 @@
            )
           ;; rule60_0_EXPERIENCER_NEUTRAL-MODA1_2 rule with only EXPERIENCER
           (((? reln0  ONT::F ONT::QUANTIFIER ONT::KIND ONT::A ONT::INDEF-PLURAL ONT::THE ONT::THE-SET ONT::INDEF-SET ONT::BARE ONT::SM ONT::PRO ONT::PRO-SET) ?ev
-            (:* (? type ONT::ASSUME ONT::SUPPOSE ) ?!w) :EXPERIENCER ?!ag :AFFECTED - :AFFECTED-RESULT - :NEUTRAL - :FORMAL - :DRUM ?code :MODALITY ?modVal :FORCE ?fVal :DEGREE ?var_degree :FREQUENCY ?var_freq :MANNER ?!modA)
+            (:* (? type ONT::ASSUME ONT::SUPPOSE ) ?!w) :EXPERIENCER ?!ag :DRUM ?code :MODALITY ?modVal :FORCE ?fVal :DEGREE ?var_degree :FREQUENCY ?var_freq :MANNER ?!modA)
            (?reln1 ?!ag ?t1)
 ;           ((? reln2 ONT::EVENT) ?!obj ?t2)
            (ONT::F ?var_degree ?type_degree)  
@@ -2322,7 +2322,7 @@
            (ONT::epi ?ev ?!eventName
             :rule -rule60_0_EXPERIENCER_NEUTRAL-MODA1_2-EXPERIENCER
             :EXPERIENCER ?!ag
-;            :NEUTRAL ?!obj
+            :NEUTRAL -
             :MODA ?tmp ;?!modA
             :MODALITY ?modVal
             :FORCE ?fVal
@@ -2333,7 +2333,7 @@
             ))
           ;; rule60_0_EXPERIENCER_NEUTRAL-MODA1_2 rule with only NEUTRAL
           (((? reln0  ONT::F ONT::QUANTIFIER ONT::KIND ONT::A ONT::INDEF-PLURAL ONT::THE ONT::THE-SET ONT::INDEF-SET ONT::BARE ONT::SM ONT::PRO ONT::PRO-SET) ?ev
-            (:* (? type ONT::ASSUME ONT::SUPPOSE ) ?!w) :EXPERIENCER - :NEUTRAL ?!obj :DRUM ?code :MODALITY ?modVal :FORCE ?fVal :DEGREE ?var_degree :FREQUENCY ?var_freq :MANNER ?!modA)
+            (:* (? type ONT::ASSUME ONT::SUPPOSE ) ?!w) :NEUTRAL ?!obj :DRUM ?code :MODALITY ?modVal :FORCE ?fVal :DEGREE ?var_degree :FREQUENCY ?var_freq :MANNER ?!modA)
 ;           (?reln1 ?!ag ?t1)
            ((? reln2 ONT::EVENT) ?!obj ?t2)
            (ONT::F ?var_degree ?type_degree)  
@@ -2344,7 +2344,7 @@
            60
            (ONT::epi ?ev ?!eventName
             :rule -rule60_0_EXPERIENCER_NEUTRAL-MODA1_2-NEUTRAL
-;            :EXPERIENCER ?!ag
+            :EXPERIENCER -
             :NEUTRAL ?!obj
             :MODA ?tmp ;?!modA
             :MODALITY ?modVal
@@ -2424,7 +2424,7 @@
             ))
           ;; rule60_0_EXPERIENCER_NEUTRAL-MODA1_2 rule with neither EXPERIENCER nor NEUTRAL
           (((? reln0 ONT::F ONT::QUANTIFIER ONT::KIND ONT::A ONT::INDEF-PLURAL ONT::THE ONT::THE-SET ONT::INDEF-SET ONT::BARE ONT::SM ONT::PRO ONT::PRO-SET) ?ev
-            (:* (? type ONT::ASSUME ONT::SUPPOSE ) ?!w) :EXPERIENCER - :NEUTRAL - :DRUM ?code :MODALITY ?modVal :FORCE ?fVal :DEGREE ?var_degree :FREQUENCY ?var_freq :MANNER ?!modA)
+            (:* (? type ONT::ASSUME ONT::SUPPOSE ) ?!w) :EXPERIENCER - :NEUTRAL - :AFFECTED - :AFFECTED1 - :AFFECTED-RESULT - :NEUTRAL - :NEUTRAL1 - :NEUTRAL2 - :FORMAL - :DRUM ?code :MODALITY ?modVal :FORCE ?fVal :DEGREE ?var_degree :FREQUENCY ?var_freq :MANNER ?!modA)
 ;           (?reln1 ?!ag ?t1)
 ;           ((? reln2 ONT::EVENT) ?!obj ?t2)
            (ONT::F ?var_degree ?type_degree)  
@@ -2553,7 +2553,7 @@
            )
           ;; rule60_0_EXPERIENCER_NEUTRAL-MODN1_1 rule with only EXPERIENCER
           (((? reln0  ONT::F ONT::QUANTIFIER ONT::KIND ONT::A ONT::INDEF-PLURAL ONT::THE ONT::THE-SET ONT::INDEF-SET ONT::BARE ONT::SM ONT::PRO ONT::PRO-SET) ?ev
-            (:* (? type ONT::ASSUME ONT::SUPPOSE ) ?!w) :EXPERIENCER ?!ag :AFFECTED - :AFFECTED-RESULT - :NEUTRAL - :FORMAL - :DRUM ?code :MODALITY ?modVal :FORCE ?fVal :DEGREE ?var_degree :FREQUENCY ?var_freq :MODS (?!modN))
+            (:* (? type ONT::ASSUME ONT::SUPPOSE ) ?!w) :EXPERIENCER ?!ag :DRUM ?code :MODALITY ?modVal :FORCE ?fVal :DEGREE ?var_degree :FREQUENCY ?var_freq :MODS (?!modN))
            (?reln1 ?!ag ?t1)
 ;           ((? reln2 ONT::EVENT) ?!obj ?t2)
            (ONT::F ?var_degree ?type_degree)  
@@ -2565,7 +2565,7 @@
            (ONT::epi ?ev ?!eventName
             :rule -rule60_0_EXPERIENCER_NEUTRAL-MODN1_1-EXPERIENCER
             :EXPERIENCER ?!ag
-;            :NEUTRAL ?!obj
+            :NEUTRAL -
             :MODN ?tmp ;?!modN
             :MODALITY ?modVal
             :FORCE ?fVal
@@ -2576,7 +2576,7 @@
             ))
           ;; rule60_0_EXPERIENCER_NEUTRAL-MODN1_1 rule with only NEUTRAL
           (((? reln0  ONT::F ONT::QUANTIFIER ONT::KIND ONT::A ONT::INDEF-PLURAL ONT::THE ONT::THE-SET ONT::INDEF-SET ONT::BARE ONT::SM ONT::PRO ONT::PRO-SET) ?ev
-            (:* (? type ONT::ASSUME ONT::SUPPOSE ) ?!w) :EXPERIENCER - :NEUTRAL ?!obj :DRUM ?code :MODALITY ?modVal :FORCE ?fVal :DEGREE ?var_degree :FREQUENCY ?var_freq :MODS (?!modN))
+            (:* (? type ONT::ASSUME ONT::SUPPOSE ) ?!w) :NEUTRAL ?!obj :DRUM ?code :MODALITY ?modVal :FORCE ?fVal :DEGREE ?var_degree :FREQUENCY ?var_freq :MODS (?!modN))
 ;           (?reln1 ?!ag ?t1)
            ((? reln2 ONT::EVENT) ?!obj ?t2)
            (ONT::F ?var_degree ?type_degree)  
@@ -2587,7 +2587,7 @@
            60
            (ONT::epi ?ev ?!eventName
             :rule -rule60_0_EXPERIENCER_NEUTRAL-MODN1_1-NEUTRAL
-;            :EXPERIENCER ?!ag
+            :EXPERIENCER -
             :NEUTRAL ?!obj
             :MODN ?tmp ;?!modN
             :MODALITY ?modVal
@@ -2667,7 +2667,7 @@
             ))
           ;; rule60_0_EXPERIENCER_NEUTRAL-MODN1_1 rule with neither EXPERIENCER nor NEUTRAL
           (((? reln0 ONT::F ONT::QUANTIFIER ONT::KIND ONT::A ONT::INDEF-PLURAL ONT::THE ONT::THE-SET ONT::INDEF-SET ONT::BARE ONT::SM ONT::PRO ONT::PRO-SET) ?ev
-            (:* (? type ONT::ASSUME ONT::SUPPOSE ) ?!w) :EXPERIENCER - :NEUTRAL - :DRUM ?code :MODALITY ?modVal :FORCE ?fVal :DEGREE ?var_degree :FREQUENCY ?var_freq :MODS (?!modN))
+            (:* (? type ONT::ASSUME ONT::SUPPOSE ) ?!w) :EXPERIENCER - :NEUTRAL - :AFFECTED - :AFFECTED1 - :AFFECTED-RESULT - :NEUTRAL - :NEUTRAL1 - :NEUTRAL2 - :FORMAL - :DRUM ?code :MODALITY ?modVal :FORCE ?fVal :DEGREE ?var_degree :FREQUENCY ?var_freq :MODS (?!modN))
 ;           (?reln1 ?!ag ?t1)
 ;           ((? reln2 ONT::EVENT) ?!obj ?t2)
            (ONT::F ?var_degree ?type_degree)  
@@ -2796,7 +2796,7 @@
            )
           ;; rule60_0_EXPERIENCER_NEUTRAL-MODN1_2 rule with only EXPERIENCER
           (((? reln0  ONT::F ONT::QUANTIFIER ONT::KIND ONT::A ONT::INDEF-PLURAL ONT::THE ONT::THE-SET ONT::INDEF-SET ONT::BARE ONT::SM ONT::PRO ONT::PRO-SET) ?ev
-            (:* (? type ONT::ASSUME ONT::SUPPOSE ) ?!w) :EXPERIENCER ?!ag :AFFECTED - :AFFECTED-RESULT - :NEUTRAL - :FORMAL - :DRUM ?code :MODALITY ?modVal :FORCE ?fVal :DEGREE ?var_degree :FREQUENCY ?var_freq :MANNER ?!modN)
+            (:* (? type ONT::ASSUME ONT::SUPPOSE ) ?!w) :EXPERIENCER ?!ag :DRUM ?code :MODALITY ?modVal :FORCE ?fVal :DEGREE ?var_degree :FREQUENCY ?var_freq :MANNER ?!modN)
            (?reln1 ?!ag ?t1)
 ;           ((? reln2 ONT::EVENT) ?!obj ?t2)
            (ONT::F ?var_degree ?type_degree)  
@@ -2808,7 +2808,7 @@
            (ONT::epi ?ev ?!eventName
             :rule -rule60_0_EXPERIENCER_NEUTRAL-MODN1_2-EXPERIENCER
             :EXPERIENCER ?!ag
-;            :NEUTRAL ?!obj
+            :NEUTRAL -
             :MODN ?tmp ;?!modN
             :MODALITY ?modVal
             :FORCE ?fVal
@@ -2819,7 +2819,7 @@
             ))
           ;; rule60_0_EXPERIENCER_NEUTRAL-MODN1_2 rule with only NEUTRAL
           (((? reln0  ONT::F ONT::QUANTIFIER ONT::KIND ONT::A ONT::INDEF-PLURAL ONT::THE ONT::THE-SET ONT::INDEF-SET ONT::BARE ONT::SM ONT::PRO ONT::PRO-SET) ?ev
-            (:* (? type ONT::ASSUME ONT::SUPPOSE ) ?!w) :EXPERIENCER - :NEUTRAL ?!obj :DRUM ?code :MODALITY ?modVal :FORCE ?fVal :DEGREE ?var_degree :FREQUENCY ?var_freq :MANNER ?!modN)
+            (:* (? type ONT::ASSUME ONT::SUPPOSE ) ?!w) :NEUTRAL ?!obj :DRUM ?code :MODALITY ?modVal :FORCE ?fVal :DEGREE ?var_degree :FREQUENCY ?var_freq :MANNER ?!modN)
 ;           (?reln1 ?!ag ?t1)
            ((? reln2 ONT::EVENT) ?!obj ?t2)
            (ONT::F ?var_degree ?type_degree)  
@@ -2830,7 +2830,7 @@
            60
            (ONT::epi ?ev ?!eventName
             :rule -rule60_0_EXPERIENCER_NEUTRAL-MODN1_2-NEUTRAL
-;            :EXPERIENCER ?!ag
+            :EXPERIENCER -
             :NEUTRAL ?!obj
             :MODN ?tmp ;?!modN
             :MODALITY ?modVal
@@ -2910,7 +2910,7 @@
             ))
           ;; rule60_0_EXPERIENCER_NEUTRAL-MODN1_2 rule with neither EXPERIENCER nor NEUTRAL
           (((? reln0 ONT::F ONT::QUANTIFIER ONT::KIND ONT::A ONT::INDEF-PLURAL ONT::THE ONT::THE-SET ONT::INDEF-SET ONT::BARE ONT::SM ONT::PRO ONT::PRO-SET) ?ev
-            (:* (? type ONT::ASSUME ONT::SUPPOSE ) ?!w) :EXPERIENCER - :NEUTRAL - :DRUM ?code :MODALITY ?modVal :FORCE ?fVal :DEGREE ?var_degree :FREQUENCY ?var_freq :MANNER ?!modN)
+            (:* (? type ONT::ASSUME ONT::SUPPOSE ) ?!w) :EXPERIENCER - :NEUTRAL - :AFFECTED - :AFFECTED1 - :AFFECTED-RESULT - :NEUTRAL - :NEUTRAL1 - :NEUTRAL2 - :FORMAL - :DRUM ?code :MODALITY ?modVal :FORCE ?fVal :DEGREE ?var_degree :FREQUENCY ?var_freq :MANNER ?!modN)
 ;           (?reln1 ?!ag ?t1)
 ;           ((? reln2 ONT::EVENT) ?!obj ?t2)
            (ONT::F ?var_degree ?type_degree)  
@@ -3046,7 +3046,7 @@
            )
           ;; rule50_0_EXPERIENCER_FORMAL rule with only EXPERIENCER
           (((? reln0  ONT::F ONT::QUANTIFIER ONT::KIND ONT::A ONT::INDEF-PLURAL ONT::THE ONT::THE-SET ONT::INDEF-SET ONT::BARE ONT::SM ONT::PRO ONT::PRO-SET) ?ev
-            (:* (? type ONT::KNOW ONT::EXPECTATION ONT::BELIEVE ONT::DOUBT ONT::HYPOTHESIZE ) ?!w) :EXPERIENCER ?!ag :AFFECTED - :AFFECTED-RESULT - :NEUTRAL - :FORMAL - :DRUM ?code :MODALITY ?modVal :FORCE ?fVal :DEGREE ?var_degree :FREQUENCY ?var_freq )
+            (:* (? type ONT::KNOW ONT::EXPECTATION ONT::BELIEVE ONT::DOUBT ONT::HYPOTHESIZE ) ?!w) :EXPERIENCER ?!ag :DRUM ?code :MODALITY ?modVal :FORCE ?fVal :DEGREE ?var_degree :FREQUENCY ?var_freq )
            (?reln1 ?!ag ?t1)
 ;           ((? reln2 ONT::EVENT) ?!obj ?t2)
            (ONT::F ?var_degree ?type_degree)  
@@ -3057,7 +3057,7 @@
            (ONT::epi ?ev ?!eventName
             :rule -rule50_0_EXPERIENCER_FORMAL-EXPERIENCER
             :EXPERIENCER ?!ag
-;            :FORMAL ?!obj
+            :FORMAL -
             :MODALITY ?modVal
             :FORCE ?fVal
             :DEGREE ?type_degree
@@ -3067,7 +3067,7 @@
             ))
           ;; rule50_0_EXPERIENCER_FORMAL rule with only FORMAL
           (((? reln0  ONT::F ONT::QUANTIFIER ONT::KIND ONT::A ONT::INDEF-PLURAL ONT::THE ONT::THE-SET ONT::INDEF-SET ONT::BARE ONT::SM ONT::PRO ONT::PRO-SET) ?ev
-            (:* (? type ONT::KNOW ONT::EXPECTATION ONT::BELIEVE ONT::DOUBT ONT::HYPOTHESIZE ) ?!w) :EXPERIENCER - :FORMAL ?!obj :DRUM ?code :MODALITY ?modVal :FORCE ?fVal :DEGREE ?var_degree :FREQUENCY ?var_freq )
+            (:* (? type ONT::KNOW ONT::EXPECTATION ONT::BELIEVE ONT::DOUBT ONT::HYPOTHESIZE ) ?!w) :FORMAL ?!obj :DRUM ?code :MODALITY ?modVal :FORCE ?fVal :DEGREE ?var_degree :FREQUENCY ?var_freq )
 ;           (?reln1 ?!ag ?t1)
            ((? reln2 ONT::EVENT) ?!obj ?t2)
            (ONT::F ?var_degree ?type_degree)  
@@ -3077,7 +3077,7 @@
            50
            (ONT::epi ?ev ?!eventName
             :rule -rule50_0_EXPERIENCER_FORMAL-FORMAL
-;            :EXPERIENCER ?!ag
+            :EXPERIENCER -
             :FORMAL ?!obj
             :MODALITY ?modVal
             :FORCE ?fVal
@@ -3152,7 +3152,7 @@
             ))
           ;; rule50_0_EXPERIENCER_FORMAL rule with neither EXPERIENCER nor FORMAL
           (((? reln0 ONT::F ONT::QUANTIFIER ONT::KIND ONT::A ONT::INDEF-PLURAL ONT::THE ONT::THE-SET ONT::INDEF-SET ONT::BARE ONT::SM ONT::PRO ONT::PRO-SET) ?ev
-            (:* (? type ONT::KNOW ONT::EXPECTATION ONT::BELIEVE ONT::DOUBT ONT::HYPOTHESIZE ) ?!w) :EXPERIENCER - :FORMAL - :DRUM ?code :MODALITY ?modVal :FORCE ?fVal :DEGREE ?var_degree :FREQUENCY ?var_freq )
+            (:* (? type ONT::KNOW ONT::EXPECTATION ONT::BELIEVE ONT::DOUBT ONT::HYPOTHESIZE ) ?!w) :EXPERIENCER - :FORMAL - :AFFECTED - :AFFECTED1 - :AFFECTED-RESULT - :NEUTRAL - :NEUTRAL1 - :NEUTRAL2 - :FORMAL - :DRUM ?code :MODALITY ?modVal :FORCE ?fVal :DEGREE ?var_degree :FREQUENCY ?var_freq )
 ;           (?reln1 ?!ag ?t1)
 ;           ((? reln2 ONT::EVENT) ?!obj ?t2)
            (ONT::F ?var_degree ?type_degree)  
@@ -3277,7 +3277,7 @@
            )
           ;; rule50_0_EXPERIENCER_FORMAL-POLARITY1-gd rule with only EXPERIENCER
           (((? reln0  ONT::F ONT::QUANTIFIER ONT::KIND ONT::A ONT::INDEF-PLURAL ONT::THE ONT::THE-SET ONT::INDEF-SET ONT::BARE ONT::SM ONT::PRO ONT::PRO-SET) ?ev
-            (:* (? type ONT::KNOW ONT::EXPECTATION ONT::BELIEVE ONT::DOUBT ONT::HYPOTHESIZE ) ?!w) :EXPERIENCER ?!ag :AFFECTED - :AFFECTED-RESULT - :NEUTRAL - :FORMAL - :DRUM ?code :MODALITY ?modVal :FORCE ?fVal :DEGREE ?var_degree :FREQUENCY ?var_freq )
+            (:* (? type ONT::KNOW ONT::EXPECTATION ONT::BELIEVE ONT::DOUBT ONT::HYPOTHESIZE ) ?!w) :EXPERIENCER ?!ag :DRUM ?code :MODALITY ?modVal :FORCE ?fVal :DEGREE ?var_degree :FREQUENCY ?var_freq )
            (?reln1 ?!ag ?t1)
 ;           ((? reln2 ONT::EVENT) ?!obj ?t2)
            (ONT::F ?var_degree ?type_degree)  
@@ -3290,7 +3290,7 @@
            (ONT::epi ?ev ?!eventName
             :rule -rule50_0_EXPERIENCER_FORMAL-POLARITY1-gd-EXPERIENCER
             :EXPERIENCER ?!ag
-;            :FORMAL ?!obj
+            :FORMAL -
             :POLARITY ?!m1_new
             :MODALITY ?modVal
             :FORCE ?fVal
@@ -3301,7 +3301,7 @@
             ))
           ;; rule50_0_EXPERIENCER_FORMAL-POLARITY1-gd rule with only FORMAL
           (((? reln0  ONT::F ONT::QUANTIFIER ONT::KIND ONT::A ONT::INDEF-PLURAL ONT::THE ONT::THE-SET ONT::INDEF-SET ONT::BARE ONT::SM ONT::PRO ONT::PRO-SET) ?ev
-            (:* (? type ONT::KNOW ONT::EXPECTATION ONT::BELIEVE ONT::DOUBT ONT::HYPOTHESIZE ) ?!w) :EXPERIENCER - :FORMAL ?!obj :DRUM ?code :MODALITY ?modVal :FORCE ?fVal :DEGREE ?var_degree :FREQUENCY ?var_freq )
+            (:* (? type ONT::KNOW ONT::EXPECTATION ONT::BELIEVE ONT::DOUBT ONT::HYPOTHESIZE ) ?!w) :FORMAL ?!obj :DRUM ?code :MODALITY ?modVal :FORCE ?fVal :DEGREE ?var_degree :FREQUENCY ?var_freq )
 ;           (?reln1 ?!ag ?t1)
            ((? reln2 ONT::EVENT) ?!obj ?t2)
            (ONT::F ?var_degree ?type_degree)  
@@ -3313,7 +3313,7 @@
            50
            (ONT::epi ?ev ?!eventName
             :rule -rule50_0_EXPERIENCER_FORMAL-POLARITY1-gd-FORMAL
-;            :EXPERIENCER ?!ag
+            :EXPERIENCER -
             :FORMAL ?!obj
             :POLARITY ?!m1_new
             :MODALITY ?modVal
@@ -3395,7 +3395,7 @@
             ))
           ;; rule50_0_EXPERIENCER_FORMAL-POLARITY1-gd rule with neither EXPERIENCER nor FORMAL
           (((? reln0 ONT::F ONT::QUANTIFIER ONT::KIND ONT::A ONT::INDEF-PLURAL ONT::THE ONT::THE-SET ONT::INDEF-SET ONT::BARE ONT::SM ONT::PRO ONT::PRO-SET) ?ev
-            (:* (? type ONT::KNOW ONT::EXPECTATION ONT::BELIEVE ONT::DOUBT ONT::HYPOTHESIZE ) ?!w) :EXPERIENCER - :FORMAL - :DRUM ?code :MODALITY ?modVal :FORCE ?fVal :DEGREE ?var_degree :FREQUENCY ?var_freq )
+            (:* (? type ONT::KNOW ONT::EXPECTATION ONT::BELIEVE ONT::DOUBT ONT::HYPOTHESIZE ) ?!w) :EXPERIENCER - :FORMAL - :AFFECTED - :AFFECTED1 - :AFFECTED-RESULT - :NEUTRAL - :NEUTRAL1 - :NEUTRAL2 - :FORMAL - :DRUM ?code :MODALITY ?modVal :FORCE ?fVal :DEGREE ?var_degree :FREQUENCY ?var_freq )
 ;           (?reln1 ?!ag ?t1)
 ;           ((? reln2 ONT::EVENT) ?!obj ?t2)
            (ONT::F ?var_degree ?type_degree)  
@@ -3527,7 +3527,7 @@
            )
           ;; rule50_0_EXPERIENCER_FORMAL-MODA1_1 rule with only EXPERIENCER
           (((? reln0  ONT::F ONT::QUANTIFIER ONT::KIND ONT::A ONT::INDEF-PLURAL ONT::THE ONT::THE-SET ONT::INDEF-SET ONT::BARE ONT::SM ONT::PRO ONT::PRO-SET) ?ev
-            (:* (? type ONT::KNOW ONT::EXPECTATION ONT::BELIEVE ONT::DOUBT ONT::HYPOTHESIZE ) ?!w) :EXPERIENCER ?!ag :AFFECTED - :AFFECTED-RESULT - :NEUTRAL - :FORMAL - :DRUM ?code :MODALITY ?modVal :FORCE ?fVal :DEGREE ?var_degree :FREQUENCY ?var_freq :MODS (?!modA))
+            (:* (? type ONT::KNOW ONT::EXPECTATION ONT::BELIEVE ONT::DOUBT ONT::HYPOTHESIZE ) ?!w) :EXPERIENCER ?!ag :DRUM ?code :MODALITY ?modVal :FORCE ?fVal :DEGREE ?var_degree :FREQUENCY ?var_freq :MODS (?!modA))
            (?reln1 ?!ag ?t1)
 ;           ((? reln2 ONT::EVENT) ?!obj ?t2)
            (ONT::F ?var_degree ?type_degree)  
@@ -3539,7 +3539,7 @@
            (ONT::epi ?ev ?!eventName
             :rule -rule50_0_EXPERIENCER_FORMAL-MODA1_1-EXPERIENCER
             :EXPERIENCER ?!ag
-;            :FORMAL ?!obj
+            :FORMAL -
             :MODA ?tmp ;?!modA
             :MODALITY ?modVal
             :FORCE ?fVal
@@ -3550,7 +3550,7 @@
             ))
           ;; rule50_0_EXPERIENCER_FORMAL-MODA1_1 rule with only FORMAL
           (((? reln0  ONT::F ONT::QUANTIFIER ONT::KIND ONT::A ONT::INDEF-PLURAL ONT::THE ONT::THE-SET ONT::INDEF-SET ONT::BARE ONT::SM ONT::PRO ONT::PRO-SET) ?ev
-            (:* (? type ONT::KNOW ONT::EXPECTATION ONT::BELIEVE ONT::DOUBT ONT::HYPOTHESIZE ) ?!w) :EXPERIENCER - :FORMAL ?!obj :DRUM ?code :MODALITY ?modVal :FORCE ?fVal :DEGREE ?var_degree :FREQUENCY ?var_freq :MODS (?!modA))
+            (:* (? type ONT::KNOW ONT::EXPECTATION ONT::BELIEVE ONT::DOUBT ONT::HYPOTHESIZE ) ?!w) :FORMAL ?!obj :DRUM ?code :MODALITY ?modVal :FORCE ?fVal :DEGREE ?var_degree :FREQUENCY ?var_freq :MODS (?!modA))
 ;           (?reln1 ?!ag ?t1)
            ((? reln2 ONT::EVENT) ?!obj ?t2)
            (ONT::F ?var_degree ?type_degree)  
@@ -3561,7 +3561,7 @@
            50
            (ONT::epi ?ev ?!eventName
             :rule -rule50_0_EXPERIENCER_FORMAL-MODA1_1-FORMAL
-;            :EXPERIENCER ?!ag
+            :EXPERIENCER -
             :FORMAL ?!obj
             :MODA ?tmp ;?!modA
             :MODALITY ?modVal
@@ -3641,7 +3641,7 @@
             ))
           ;; rule50_0_EXPERIENCER_FORMAL-MODA1_1 rule with neither EXPERIENCER nor FORMAL
           (((? reln0 ONT::F ONT::QUANTIFIER ONT::KIND ONT::A ONT::INDEF-PLURAL ONT::THE ONT::THE-SET ONT::INDEF-SET ONT::BARE ONT::SM ONT::PRO ONT::PRO-SET) ?ev
-            (:* (? type ONT::KNOW ONT::EXPECTATION ONT::BELIEVE ONT::DOUBT ONT::HYPOTHESIZE ) ?!w) :EXPERIENCER - :FORMAL - :DRUM ?code :MODALITY ?modVal :FORCE ?fVal :DEGREE ?var_degree :FREQUENCY ?var_freq :MODS (?!modA))
+            (:* (? type ONT::KNOW ONT::EXPECTATION ONT::BELIEVE ONT::DOUBT ONT::HYPOTHESIZE ) ?!w) :EXPERIENCER - :FORMAL - :AFFECTED - :AFFECTED1 - :AFFECTED-RESULT - :NEUTRAL - :NEUTRAL1 - :NEUTRAL2 - :FORMAL - :DRUM ?code :MODALITY ?modVal :FORCE ?fVal :DEGREE ?var_degree :FREQUENCY ?var_freq :MODS (?!modA))
 ;           (?reln1 ?!ag ?t1)
 ;           ((? reln2 ONT::EVENT) ?!obj ?t2)
            (ONT::F ?var_degree ?type_degree)  
@@ -3770,7 +3770,7 @@
            )
           ;; rule50_0_EXPERIENCER_FORMAL-MODA1_2 rule with only EXPERIENCER
           (((? reln0  ONT::F ONT::QUANTIFIER ONT::KIND ONT::A ONT::INDEF-PLURAL ONT::THE ONT::THE-SET ONT::INDEF-SET ONT::BARE ONT::SM ONT::PRO ONT::PRO-SET) ?ev
-            (:* (? type ONT::KNOW ONT::EXPECTATION ONT::BELIEVE ONT::DOUBT ONT::HYPOTHESIZE ) ?!w) :EXPERIENCER ?!ag :AFFECTED - :AFFECTED-RESULT - :NEUTRAL - :FORMAL - :DRUM ?code :MODALITY ?modVal :FORCE ?fVal :DEGREE ?var_degree :FREQUENCY ?var_freq :MANNER ?!modA)
+            (:* (? type ONT::KNOW ONT::EXPECTATION ONT::BELIEVE ONT::DOUBT ONT::HYPOTHESIZE ) ?!w) :EXPERIENCER ?!ag :DRUM ?code :MODALITY ?modVal :FORCE ?fVal :DEGREE ?var_degree :FREQUENCY ?var_freq :MANNER ?!modA)
            (?reln1 ?!ag ?t1)
 ;           ((? reln2 ONT::EVENT) ?!obj ?t2)
            (ONT::F ?var_degree ?type_degree)  
@@ -3782,7 +3782,7 @@
            (ONT::epi ?ev ?!eventName
             :rule -rule50_0_EXPERIENCER_FORMAL-MODA1_2-EXPERIENCER
             :EXPERIENCER ?!ag
-;            :FORMAL ?!obj
+            :FORMAL -
             :MODA ?tmp ;?!modA
             :MODALITY ?modVal
             :FORCE ?fVal
@@ -3793,7 +3793,7 @@
             ))
           ;; rule50_0_EXPERIENCER_FORMAL-MODA1_2 rule with only FORMAL
           (((? reln0  ONT::F ONT::QUANTIFIER ONT::KIND ONT::A ONT::INDEF-PLURAL ONT::THE ONT::THE-SET ONT::INDEF-SET ONT::BARE ONT::SM ONT::PRO ONT::PRO-SET) ?ev
-            (:* (? type ONT::KNOW ONT::EXPECTATION ONT::BELIEVE ONT::DOUBT ONT::HYPOTHESIZE ) ?!w) :EXPERIENCER - :FORMAL ?!obj :DRUM ?code :MODALITY ?modVal :FORCE ?fVal :DEGREE ?var_degree :FREQUENCY ?var_freq :MANNER ?!modA)
+            (:* (? type ONT::KNOW ONT::EXPECTATION ONT::BELIEVE ONT::DOUBT ONT::HYPOTHESIZE ) ?!w) :FORMAL ?!obj :DRUM ?code :MODALITY ?modVal :FORCE ?fVal :DEGREE ?var_degree :FREQUENCY ?var_freq :MANNER ?!modA)
 ;           (?reln1 ?!ag ?t1)
            ((? reln2 ONT::EVENT) ?!obj ?t2)
            (ONT::F ?var_degree ?type_degree)  
@@ -3804,7 +3804,7 @@
            50
            (ONT::epi ?ev ?!eventName
             :rule -rule50_0_EXPERIENCER_FORMAL-MODA1_2-FORMAL
-;            :EXPERIENCER ?!ag
+            :EXPERIENCER -
             :FORMAL ?!obj
             :MODA ?tmp ;?!modA
             :MODALITY ?modVal
@@ -3884,7 +3884,7 @@
             ))
           ;; rule50_0_EXPERIENCER_FORMAL-MODA1_2 rule with neither EXPERIENCER nor FORMAL
           (((? reln0 ONT::F ONT::QUANTIFIER ONT::KIND ONT::A ONT::INDEF-PLURAL ONT::THE ONT::THE-SET ONT::INDEF-SET ONT::BARE ONT::SM ONT::PRO ONT::PRO-SET) ?ev
-            (:* (? type ONT::KNOW ONT::EXPECTATION ONT::BELIEVE ONT::DOUBT ONT::HYPOTHESIZE ) ?!w) :EXPERIENCER - :FORMAL - :DRUM ?code :MODALITY ?modVal :FORCE ?fVal :DEGREE ?var_degree :FREQUENCY ?var_freq :MANNER ?!modA)
+            (:* (? type ONT::KNOW ONT::EXPECTATION ONT::BELIEVE ONT::DOUBT ONT::HYPOTHESIZE ) ?!w) :EXPERIENCER - :FORMAL - :AFFECTED - :AFFECTED1 - :AFFECTED-RESULT - :NEUTRAL - :NEUTRAL1 - :NEUTRAL2 - :FORMAL - :DRUM ?code :MODALITY ?modVal :FORCE ?fVal :DEGREE ?var_degree :FREQUENCY ?var_freq :MANNER ?!modA)
 ;           (?reln1 ?!ag ?t1)
 ;           ((? reln2 ONT::EVENT) ?!obj ?t2)
            (ONT::F ?var_degree ?type_degree)  
@@ -4013,7 +4013,7 @@
            )
           ;; rule50_0_EXPERIENCER_FORMAL-MODN1_1 rule with only EXPERIENCER
           (((? reln0  ONT::F ONT::QUANTIFIER ONT::KIND ONT::A ONT::INDEF-PLURAL ONT::THE ONT::THE-SET ONT::INDEF-SET ONT::BARE ONT::SM ONT::PRO ONT::PRO-SET) ?ev
-            (:* (? type ONT::KNOW ONT::EXPECTATION ONT::BELIEVE ONT::DOUBT ONT::HYPOTHESIZE ) ?!w) :EXPERIENCER ?!ag :AFFECTED - :AFFECTED-RESULT - :NEUTRAL - :FORMAL - :DRUM ?code :MODALITY ?modVal :FORCE ?fVal :DEGREE ?var_degree :FREQUENCY ?var_freq :MODS (?!modN))
+            (:* (? type ONT::KNOW ONT::EXPECTATION ONT::BELIEVE ONT::DOUBT ONT::HYPOTHESIZE ) ?!w) :EXPERIENCER ?!ag :DRUM ?code :MODALITY ?modVal :FORCE ?fVal :DEGREE ?var_degree :FREQUENCY ?var_freq :MODS (?!modN))
            (?reln1 ?!ag ?t1)
 ;           ((? reln2 ONT::EVENT) ?!obj ?t2)
            (ONT::F ?var_degree ?type_degree)  
@@ -4025,7 +4025,7 @@
            (ONT::epi ?ev ?!eventName
             :rule -rule50_0_EXPERIENCER_FORMAL-MODN1_1-EXPERIENCER
             :EXPERIENCER ?!ag
-;            :FORMAL ?!obj
+            :FORMAL -
             :MODN ?tmp ;?!modN
             :MODALITY ?modVal
             :FORCE ?fVal
@@ -4036,7 +4036,7 @@
             ))
           ;; rule50_0_EXPERIENCER_FORMAL-MODN1_1 rule with only FORMAL
           (((? reln0  ONT::F ONT::QUANTIFIER ONT::KIND ONT::A ONT::INDEF-PLURAL ONT::THE ONT::THE-SET ONT::INDEF-SET ONT::BARE ONT::SM ONT::PRO ONT::PRO-SET) ?ev
-            (:* (? type ONT::KNOW ONT::EXPECTATION ONT::BELIEVE ONT::DOUBT ONT::HYPOTHESIZE ) ?!w) :EXPERIENCER - :FORMAL ?!obj :DRUM ?code :MODALITY ?modVal :FORCE ?fVal :DEGREE ?var_degree :FREQUENCY ?var_freq :MODS (?!modN))
+            (:* (? type ONT::KNOW ONT::EXPECTATION ONT::BELIEVE ONT::DOUBT ONT::HYPOTHESIZE ) ?!w) :FORMAL ?!obj :DRUM ?code :MODALITY ?modVal :FORCE ?fVal :DEGREE ?var_degree :FREQUENCY ?var_freq :MODS (?!modN))
 ;           (?reln1 ?!ag ?t1)
            ((? reln2 ONT::EVENT) ?!obj ?t2)
            (ONT::F ?var_degree ?type_degree)  
@@ -4047,7 +4047,7 @@
            50
            (ONT::epi ?ev ?!eventName
             :rule -rule50_0_EXPERIENCER_FORMAL-MODN1_1-FORMAL
-;            :EXPERIENCER ?!ag
+            :EXPERIENCER -
             :FORMAL ?!obj
             :MODN ?tmp ;?!modN
             :MODALITY ?modVal
@@ -4127,7 +4127,7 @@
             ))
           ;; rule50_0_EXPERIENCER_FORMAL-MODN1_1 rule with neither EXPERIENCER nor FORMAL
           (((? reln0 ONT::F ONT::QUANTIFIER ONT::KIND ONT::A ONT::INDEF-PLURAL ONT::THE ONT::THE-SET ONT::INDEF-SET ONT::BARE ONT::SM ONT::PRO ONT::PRO-SET) ?ev
-            (:* (? type ONT::KNOW ONT::EXPECTATION ONT::BELIEVE ONT::DOUBT ONT::HYPOTHESIZE ) ?!w) :EXPERIENCER - :FORMAL - :DRUM ?code :MODALITY ?modVal :FORCE ?fVal :DEGREE ?var_degree :FREQUENCY ?var_freq :MODS (?!modN))
+            (:* (? type ONT::KNOW ONT::EXPECTATION ONT::BELIEVE ONT::DOUBT ONT::HYPOTHESIZE ) ?!w) :EXPERIENCER - :FORMAL - :AFFECTED - :AFFECTED1 - :AFFECTED-RESULT - :NEUTRAL - :NEUTRAL1 - :NEUTRAL2 - :FORMAL - :DRUM ?code :MODALITY ?modVal :FORCE ?fVal :DEGREE ?var_degree :FREQUENCY ?var_freq :MODS (?!modN))
 ;           (?reln1 ?!ag ?t1)
 ;           ((? reln2 ONT::EVENT) ?!obj ?t2)
            (ONT::F ?var_degree ?type_degree)  
@@ -4256,7 +4256,7 @@
            )
           ;; rule50_0_EXPERIENCER_FORMAL-MODN1_2 rule with only EXPERIENCER
           (((? reln0  ONT::F ONT::QUANTIFIER ONT::KIND ONT::A ONT::INDEF-PLURAL ONT::THE ONT::THE-SET ONT::INDEF-SET ONT::BARE ONT::SM ONT::PRO ONT::PRO-SET) ?ev
-            (:* (? type ONT::KNOW ONT::EXPECTATION ONT::BELIEVE ONT::DOUBT ONT::HYPOTHESIZE ) ?!w) :EXPERIENCER ?!ag :AFFECTED - :AFFECTED-RESULT - :NEUTRAL - :FORMAL - :DRUM ?code :MODALITY ?modVal :FORCE ?fVal :DEGREE ?var_degree :FREQUENCY ?var_freq :MANNER ?!modN)
+            (:* (? type ONT::KNOW ONT::EXPECTATION ONT::BELIEVE ONT::DOUBT ONT::HYPOTHESIZE ) ?!w) :EXPERIENCER ?!ag :DRUM ?code :MODALITY ?modVal :FORCE ?fVal :DEGREE ?var_degree :FREQUENCY ?var_freq :MANNER ?!modN)
            (?reln1 ?!ag ?t1)
 ;           ((? reln2 ONT::EVENT) ?!obj ?t2)
            (ONT::F ?var_degree ?type_degree)  
@@ -4268,7 +4268,7 @@
            (ONT::epi ?ev ?!eventName
             :rule -rule50_0_EXPERIENCER_FORMAL-MODN1_2-EXPERIENCER
             :EXPERIENCER ?!ag
-;            :FORMAL ?!obj
+            :FORMAL -
             :MODN ?tmp ;?!modN
             :MODALITY ?modVal
             :FORCE ?fVal
@@ -4279,7 +4279,7 @@
             ))
           ;; rule50_0_EXPERIENCER_FORMAL-MODN1_2 rule with only FORMAL
           (((? reln0  ONT::F ONT::QUANTIFIER ONT::KIND ONT::A ONT::INDEF-PLURAL ONT::THE ONT::THE-SET ONT::INDEF-SET ONT::BARE ONT::SM ONT::PRO ONT::PRO-SET) ?ev
-            (:* (? type ONT::KNOW ONT::EXPECTATION ONT::BELIEVE ONT::DOUBT ONT::HYPOTHESIZE ) ?!w) :EXPERIENCER - :FORMAL ?!obj :DRUM ?code :MODALITY ?modVal :FORCE ?fVal :DEGREE ?var_degree :FREQUENCY ?var_freq :MANNER ?!modN)
+            (:* (? type ONT::KNOW ONT::EXPECTATION ONT::BELIEVE ONT::DOUBT ONT::HYPOTHESIZE ) ?!w) :FORMAL ?!obj :DRUM ?code :MODALITY ?modVal :FORCE ?fVal :DEGREE ?var_degree :FREQUENCY ?var_freq :MANNER ?!modN)
 ;           (?reln1 ?!ag ?t1)
            ((? reln2 ONT::EVENT) ?!obj ?t2)
            (ONT::F ?var_degree ?type_degree)  
@@ -4290,7 +4290,7 @@
            50
            (ONT::epi ?ev ?!eventName
             :rule -rule50_0_EXPERIENCER_FORMAL-MODN1_2-FORMAL
-;            :EXPERIENCER ?!ag
+            :EXPERIENCER -
             :FORMAL ?!obj
             :MODN ?tmp ;?!modN
             :MODALITY ?modVal
@@ -4370,7 +4370,7 @@
             ))
           ;; rule50_0_EXPERIENCER_FORMAL-MODN1_2 rule with neither EXPERIENCER nor FORMAL
           (((? reln0 ONT::F ONT::QUANTIFIER ONT::KIND ONT::A ONT::INDEF-PLURAL ONT::THE ONT::THE-SET ONT::INDEF-SET ONT::BARE ONT::SM ONT::PRO ONT::PRO-SET) ?ev
-            (:* (? type ONT::KNOW ONT::EXPECTATION ONT::BELIEVE ONT::DOUBT ONT::HYPOTHESIZE ) ?!w) :EXPERIENCER - :FORMAL - :DRUM ?code :MODALITY ?modVal :FORCE ?fVal :DEGREE ?var_degree :FREQUENCY ?var_freq :MANNER ?!modN)
+            (:* (? type ONT::KNOW ONT::EXPECTATION ONT::BELIEVE ONT::DOUBT ONT::HYPOTHESIZE ) ?!w) :EXPERIENCER - :FORMAL - :AFFECTED - :AFFECTED1 - :AFFECTED-RESULT - :NEUTRAL - :NEUTRAL1 - :NEUTRAL2 - :FORMAL - :DRUM ?code :MODALITY ?modVal :FORCE ?fVal :DEGREE ?var_degree :FREQUENCY ?var_freq :MANNER ?!modN)
 ;           (?reln1 ?!ag ?t1)
 ;           ((? reln2 ONT::EVENT) ?!obj ?t2)
            (ONT::F ?var_degree ?type_degree)  
@@ -4506,7 +4506,7 @@
            )
           ;; rule50_0_EXPERIENCER_NEUTRAL rule with only EXPERIENCER
           (((? reln0  ONT::F ONT::QUANTIFIER ONT::KIND ONT::A ONT::INDEF-PLURAL ONT::THE ONT::THE-SET ONT::INDEF-SET ONT::BARE ONT::SM ONT::PRO ONT::PRO-SET) ?ev
-            (:* (? type ONT::KNOW ONT::EXPECTATION ONT::BELIEVE ONT::DOUBT ONT::HYPOTHESIZE ) ?!w) :EXPERIENCER ?!ag :AFFECTED - :AFFECTED-RESULT - :NEUTRAL - :FORMAL - :DRUM ?code :MODALITY ?modVal :FORCE ?fVal :DEGREE ?var_degree :FREQUENCY ?var_freq )
+            (:* (? type ONT::KNOW ONT::EXPECTATION ONT::BELIEVE ONT::DOUBT ONT::HYPOTHESIZE ) ?!w) :EXPERIENCER ?!ag :DRUM ?code :MODALITY ?modVal :FORCE ?fVal :DEGREE ?var_degree :FREQUENCY ?var_freq )
            (?reln1 ?!ag ?t1)
 ;           ((? reln2 ONT::EVENT) ?!obj ?t2)
            (ONT::F ?var_degree ?type_degree)  
@@ -4517,7 +4517,7 @@
            (ONT::epi ?ev ?!eventName
             :rule -rule50_0_EXPERIENCER_NEUTRAL-EXPERIENCER
             :EXPERIENCER ?!ag
-;            :NEUTRAL ?!obj
+            :NEUTRAL -
             :MODALITY ?modVal
             :FORCE ?fVal
             :DEGREE ?type_degree
@@ -4527,7 +4527,7 @@
             ))
           ;; rule50_0_EXPERIENCER_NEUTRAL rule with only NEUTRAL
           (((? reln0  ONT::F ONT::QUANTIFIER ONT::KIND ONT::A ONT::INDEF-PLURAL ONT::THE ONT::THE-SET ONT::INDEF-SET ONT::BARE ONT::SM ONT::PRO ONT::PRO-SET) ?ev
-            (:* (? type ONT::KNOW ONT::EXPECTATION ONT::BELIEVE ONT::DOUBT ONT::HYPOTHESIZE ) ?!w) :EXPERIENCER - :NEUTRAL ?!obj :DRUM ?code :MODALITY ?modVal :FORCE ?fVal :DEGREE ?var_degree :FREQUENCY ?var_freq )
+            (:* (? type ONT::KNOW ONT::EXPECTATION ONT::BELIEVE ONT::DOUBT ONT::HYPOTHESIZE ) ?!w) :NEUTRAL ?!obj :DRUM ?code :MODALITY ?modVal :FORCE ?fVal :DEGREE ?var_degree :FREQUENCY ?var_freq )
 ;           (?reln1 ?!ag ?t1)
            ((? reln2 ONT::EVENT) ?!obj ?t2)
            (ONT::F ?var_degree ?type_degree)  
@@ -4537,7 +4537,7 @@
            50
            (ONT::epi ?ev ?!eventName
             :rule -rule50_0_EXPERIENCER_NEUTRAL-NEUTRAL
-;            :EXPERIENCER ?!ag
+            :EXPERIENCER -
             :NEUTRAL ?!obj
             :MODALITY ?modVal
             :FORCE ?fVal
@@ -4612,7 +4612,7 @@
             ))
           ;; rule50_0_EXPERIENCER_NEUTRAL rule with neither EXPERIENCER nor NEUTRAL
           (((? reln0 ONT::F ONT::QUANTIFIER ONT::KIND ONT::A ONT::INDEF-PLURAL ONT::THE ONT::THE-SET ONT::INDEF-SET ONT::BARE ONT::SM ONT::PRO ONT::PRO-SET) ?ev
-            (:* (? type ONT::KNOW ONT::EXPECTATION ONT::BELIEVE ONT::DOUBT ONT::HYPOTHESIZE ) ?!w) :EXPERIENCER - :NEUTRAL - :DRUM ?code :MODALITY ?modVal :FORCE ?fVal :DEGREE ?var_degree :FREQUENCY ?var_freq )
+            (:* (? type ONT::KNOW ONT::EXPECTATION ONT::BELIEVE ONT::DOUBT ONT::HYPOTHESIZE ) ?!w) :EXPERIENCER - :NEUTRAL - :AFFECTED - :AFFECTED1 - :AFFECTED-RESULT - :NEUTRAL - :NEUTRAL1 - :NEUTRAL2 - :FORMAL - :DRUM ?code :MODALITY ?modVal :FORCE ?fVal :DEGREE ?var_degree :FREQUENCY ?var_freq )
 ;           (?reln1 ?!ag ?t1)
 ;           ((? reln2 ONT::EVENT) ?!obj ?t2)
            (ONT::F ?var_degree ?type_degree)  
@@ -4737,7 +4737,7 @@
            )
           ;; rule50_0_EXPERIENCER_NEUTRAL-POLARITY1-gd rule with only EXPERIENCER
           (((? reln0  ONT::F ONT::QUANTIFIER ONT::KIND ONT::A ONT::INDEF-PLURAL ONT::THE ONT::THE-SET ONT::INDEF-SET ONT::BARE ONT::SM ONT::PRO ONT::PRO-SET) ?ev
-            (:* (? type ONT::KNOW ONT::EXPECTATION ONT::BELIEVE ONT::DOUBT ONT::HYPOTHESIZE ) ?!w) :EXPERIENCER ?!ag :AFFECTED - :AFFECTED-RESULT - :NEUTRAL - :FORMAL - :DRUM ?code :MODALITY ?modVal :FORCE ?fVal :DEGREE ?var_degree :FREQUENCY ?var_freq )
+            (:* (? type ONT::KNOW ONT::EXPECTATION ONT::BELIEVE ONT::DOUBT ONT::HYPOTHESIZE ) ?!w) :EXPERIENCER ?!ag :DRUM ?code :MODALITY ?modVal :FORCE ?fVal :DEGREE ?var_degree :FREQUENCY ?var_freq )
            (?reln1 ?!ag ?t1)
 ;           ((? reln2 ONT::EVENT) ?!obj ?t2)
            (ONT::F ?var_degree ?type_degree)  
@@ -4750,7 +4750,7 @@
            (ONT::epi ?ev ?!eventName
             :rule -rule50_0_EXPERIENCER_NEUTRAL-POLARITY1-gd-EXPERIENCER
             :EXPERIENCER ?!ag
-;            :NEUTRAL ?!obj
+            :NEUTRAL -
             :POLARITY ?!m1_new
             :MODALITY ?modVal
             :FORCE ?fVal
@@ -4761,7 +4761,7 @@
             ))
           ;; rule50_0_EXPERIENCER_NEUTRAL-POLARITY1-gd rule with only NEUTRAL
           (((? reln0  ONT::F ONT::QUANTIFIER ONT::KIND ONT::A ONT::INDEF-PLURAL ONT::THE ONT::THE-SET ONT::INDEF-SET ONT::BARE ONT::SM ONT::PRO ONT::PRO-SET) ?ev
-            (:* (? type ONT::KNOW ONT::EXPECTATION ONT::BELIEVE ONT::DOUBT ONT::HYPOTHESIZE ) ?!w) :EXPERIENCER - :NEUTRAL ?!obj :DRUM ?code :MODALITY ?modVal :FORCE ?fVal :DEGREE ?var_degree :FREQUENCY ?var_freq )
+            (:* (? type ONT::KNOW ONT::EXPECTATION ONT::BELIEVE ONT::DOUBT ONT::HYPOTHESIZE ) ?!w) :NEUTRAL ?!obj :DRUM ?code :MODALITY ?modVal :FORCE ?fVal :DEGREE ?var_degree :FREQUENCY ?var_freq )
 ;           (?reln1 ?!ag ?t1)
            ((? reln2 ONT::EVENT) ?!obj ?t2)
            (ONT::F ?var_degree ?type_degree)  
@@ -4773,7 +4773,7 @@
            50
            (ONT::epi ?ev ?!eventName
             :rule -rule50_0_EXPERIENCER_NEUTRAL-POLARITY1-gd-NEUTRAL
-;            :EXPERIENCER ?!ag
+            :EXPERIENCER -
             :NEUTRAL ?!obj
             :POLARITY ?!m1_new
             :MODALITY ?modVal
@@ -4855,7 +4855,7 @@
             ))
           ;; rule50_0_EXPERIENCER_NEUTRAL-POLARITY1-gd rule with neither EXPERIENCER nor NEUTRAL
           (((? reln0 ONT::F ONT::QUANTIFIER ONT::KIND ONT::A ONT::INDEF-PLURAL ONT::THE ONT::THE-SET ONT::INDEF-SET ONT::BARE ONT::SM ONT::PRO ONT::PRO-SET) ?ev
-            (:* (? type ONT::KNOW ONT::EXPECTATION ONT::BELIEVE ONT::DOUBT ONT::HYPOTHESIZE ) ?!w) :EXPERIENCER - :NEUTRAL - :DRUM ?code :MODALITY ?modVal :FORCE ?fVal :DEGREE ?var_degree :FREQUENCY ?var_freq )
+            (:* (? type ONT::KNOW ONT::EXPECTATION ONT::BELIEVE ONT::DOUBT ONT::HYPOTHESIZE ) ?!w) :EXPERIENCER - :NEUTRAL - :AFFECTED - :AFFECTED1 - :AFFECTED-RESULT - :NEUTRAL - :NEUTRAL1 - :NEUTRAL2 - :FORMAL - :DRUM ?code :MODALITY ?modVal :FORCE ?fVal :DEGREE ?var_degree :FREQUENCY ?var_freq )
 ;           (?reln1 ?!ag ?t1)
 ;           ((? reln2 ONT::EVENT) ?!obj ?t2)
            (ONT::F ?var_degree ?type_degree)  
@@ -4987,7 +4987,7 @@
            )
           ;; rule50_0_EXPERIENCER_NEUTRAL-MODA1_1 rule with only EXPERIENCER
           (((? reln0  ONT::F ONT::QUANTIFIER ONT::KIND ONT::A ONT::INDEF-PLURAL ONT::THE ONT::THE-SET ONT::INDEF-SET ONT::BARE ONT::SM ONT::PRO ONT::PRO-SET) ?ev
-            (:* (? type ONT::KNOW ONT::EXPECTATION ONT::BELIEVE ONT::DOUBT ONT::HYPOTHESIZE ) ?!w) :EXPERIENCER ?!ag :AFFECTED - :AFFECTED-RESULT - :NEUTRAL - :FORMAL - :DRUM ?code :MODALITY ?modVal :FORCE ?fVal :DEGREE ?var_degree :FREQUENCY ?var_freq :MODS (?!modA))
+            (:* (? type ONT::KNOW ONT::EXPECTATION ONT::BELIEVE ONT::DOUBT ONT::HYPOTHESIZE ) ?!w) :EXPERIENCER ?!ag :DRUM ?code :MODALITY ?modVal :FORCE ?fVal :DEGREE ?var_degree :FREQUENCY ?var_freq :MODS (?!modA))
            (?reln1 ?!ag ?t1)
 ;           ((? reln2 ONT::EVENT) ?!obj ?t2)
            (ONT::F ?var_degree ?type_degree)  
@@ -4999,7 +4999,7 @@
            (ONT::epi ?ev ?!eventName
             :rule -rule50_0_EXPERIENCER_NEUTRAL-MODA1_1-EXPERIENCER
             :EXPERIENCER ?!ag
-;            :NEUTRAL ?!obj
+            :NEUTRAL -
             :MODA ?tmp ;?!modA
             :MODALITY ?modVal
             :FORCE ?fVal
@@ -5010,7 +5010,7 @@
             ))
           ;; rule50_0_EXPERIENCER_NEUTRAL-MODA1_1 rule with only NEUTRAL
           (((? reln0  ONT::F ONT::QUANTIFIER ONT::KIND ONT::A ONT::INDEF-PLURAL ONT::THE ONT::THE-SET ONT::INDEF-SET ONT::BARE ONT::SM ONT::PRO ONT::PRO-SET) ?ev
-            (:* (? type ONT::KNOW ONT::EXPECTATION ONT::BELIEVE ONT::DOUBT ONT::HYPOTHESIZE ) ?!w) :EXPERIENCER - :NEUTRAL ?!obj :DRUM ?code :MODALITY ?modVal :FORCE ?fVal :DEGREE ?var_degree :FREQUENCY ?var_freq :MODS (?!modA))
+            (:* (? type ONT::KNOW ONT::EXPECTATION ONT::BELIEVE ONT::DOUBT ONT::HYPOTHESIZE ) ?!w) :NEUTRAL ?!obj :DRUM ?code :MODALITY ?modVal :FORCE ?fVal :DEGREE ?var_degree :FREQUENCY ?var_freq :MODS (?!modA))
 ;           (?reln1 ?!ag ?t1)
            ((? reln2 ONT::EVENT) ?!obj ?t2)
            (ONT::F ?var_degree ?type_degree)  
@@ -5021,7 +5021,7 @@
            50
            (ONT::epi ?ev ?!eventName
             :rule -rule50_0_EXPERIENCER_NEUTRAL-MODA1_1-NEUTRAL
-;            :EXPERIENCER ?!ag
+            :EXPERIENCER -
             :NEUTRAL ?!obj
             :MODA ?tmp ;?!modA
             :MODALITY ?modVal
@@ -5101,7 +5101,7 @@
             ))
           ;; rule50_0_EXPERIENCER_NEUTRAL-MODA1_1 rule with neither EXPERIENCER nor NEUTRAL
           (((? reln0 ONT::F ONT::QUANTIFIER ONT::KIND ONT::A ONT::INDEF-PLURAL ONT::THE ONT::THE-SET ONT::INDEF-SET ONT::BARE ONT::SM ONT::PRO ONT::PRO-SET) ?ev
-            (:* (? type ONT::KNOW ONT::EXPECTATION ONT::BELIEVE ONT::DOUBT ONT::HYPOTHESIZE ) ?!w) :EXPERIENCER - :NEUTRAL - :DRUM ?code :MODALITY ?modVal :FORCE ?fVal :DEGREE ?var_degree :FREQUENCY ?var_freq :MODS (?!modA))
+            (:* (? type ONT::KNOW ONT::EXPECTATION ONT::BELIEVE ONT::DOUBT ONT::HYPOTHESIZE ) ?!w) :EXPERIENCER - :NEUTRAL - :AFFECTED - :AFFECTED1 - :AFFECTED-RESULT - :NEUTRAL - :NEUTRAL1 - :NEUTRAL2 - :FORMAL - :DRUM ?code :MODALITY ?modVal :FORCE ?fVal :DEGREE ?var_degree :FREQUENCY ?var_freq :MODS (?!modA))
 ;           (?reln1 ?!ag ?t1)
 ;           ((? reln2 ONT::EVENT) ?!obj ?t2)
            (ONT::F ?var_degree ?type_degree)  
@@ -5230,7 +5230,7 @@
            )
           ;; rule50_0_EXPERIENCER_NEUTRAL-MODA1_2 rule with only EXPERIENCER
           (((? reln0  ONT::F ONT::QUANTIFIER ONT::KIND ONT::A ONT::INDEF-PLURAL ONT::THE ONT::THE-SET ONT::INDEF-SET ONT::BARE ONT::SM ONT::PRO ONT::PRO-SET) ?ev
-            (:* (? type ONT::KNOW ONT::EXPECTATION ONT::BELIEVE ONT::DOUBT ONT::HYPOTHESIZE ) ?!w) :EXPERIENCER ?!ag :AFFECTED - :AFFECTED-RESULT - :NEUTRAL - :FORMAL - :DRUM ?code :MODALITY ?modVal :FORCE ?fVal :DEGREE ?var_degree :FREQUENCY ?var_freq :MANNER ?!modA)
+            (:* (? type ONT::KNOW ONT::EXPECTATION ONT::BELIEVE ONT::DOUBT ONT::HYPOTHESIZE ) ?!w) :EXPERIENCER ?!ag :DRUM ?code :MODALITY ?modVal :FORCE ?fVal :DEGREE ?var_degree :FREQUENCY ?var_freq :MANNER ?!modA)
            (?reln1 ?!ag ?t1)
 ;           ((? reln2 ONT::EVENT) ?!obj ?t2)
            (ONT::F ?var_degree ?type_degree)  
@@ -5242,7 +5242,7 @@
            (ONT::epi ?ev ?!eventName
             :rule -rule50_0_EXPERIENCER_NEUTRAL-MODA1_2-EXPERIENCER
             :EXPERIENCER ?!ag
-;            :NEUTRAL ?!obj
+            :NEUTRAL -
             :MODA ?tmp ;?!modA
             :MODALITY ?modVal
             :FORCE ?fVal
@@ -5253,7 +5253,7 @@
             ))
           ;; rule50_0_EXPERIENCER_NEUTRAL-MODA1_2 rule with only NEUTRAL
           (((? reln0  ONT::F ONT::QUANTIFIER ONT::KIND ONT::A ONT::INDEF-PLURAL ONT::THE ONT::THE-SET ONT::INDEF-SET ONT::BARE ONT::SM ONT::PRO ONT::PRO-SET) ?ev
-            (:* (? type ONT::KNOW ONT::EXPECTATION ONT::BELIEVE ONT::DOUBT ONT::HYPOTHESIZE ) ?!w) :EXPERIENCER - :NEUTRAL ?!obj :DRUM ?code :MODALITY ?modVal :FORCE ?fVal :DEGREE ?var_degree :FREQUENCY ?var_freq :MANNER ?!modA)
+            (:* (? type ONT::KNOW ONT::EXPECTATION ONT::BELIEVE ONT::DOUBT ONT::HYPOTHESIZE ) ?!w) :NEUTRAL ?!obj :DRUM ?code :MODALITY ?modVal :FORCE ?fVal :DEGREE ?var_degree :FREQUENCY ?var_freq :MANNER ?!modA)
 ;           (?reln1 ?!ag ?t1)
            ((? reln2 ONT::EVENT) ?!obj ?t2)
            (ONT::F ?var_degree ?type_degree)  
@@ -5264,7 +5264,7 @@
            50
            (ONT::epi ?ev ?!eventName
             :rule -rule50_0_EXPERIENCER_NEUTRAL-MODA1_2-NEUTRAL
-;            :EXPERIENCER ?!ag
+            :EXPERIENCER -
             :NEUTRAL ?!obj
             :MODA ?tmp ;?!modA
             :MODALITY ?modVal
@@ -5344,7 +5344,7 @@
             ))
           ;; rule50_0_EXPERIENCER_NEUTRAL-MODA1_2 rule with neither EXPERIENCER nor NEUTRAL
           (((? reln0 ONT::F ONT::QUANTIFIER ONT::KIND ONT::A ONT::INDEF-PLURAL ONT::THE ONT::THE-SET ONT::INDEF-SET ONT::BARE ONT::SM ONT::PRO ONT::PRO-SET) ?ev
-            (:* (? type ONT::KNOW ONT::EXPECTATION ONT::BELIEVE ONT::DOUBT ONT::HYPOTHESIZE ) ?!w) :EXPERIENCER - :NEUTRAL - :DRUM ?code :MODALITY ?modVal :FORCE ?fVal :DEGREE ?var_degree :FREQUENCY ?var_freq :MANNER ?!modA)
+            (:* (? type ONT::KNOW ONT::EXPECTATION ONT::BELIEVE ONT::DOUBT ONT::HYPOTHESIZE ) ?!w) :EXPERIENCER - :NEUTRAL - :AFFECTED - :AFFECTED1 - :AFFECTED-RESULT - :NEUTRAL - :NEUTRAL1 - :NEUTRAL2 - :FORMAL - :DRUM ?code :MODALITY ?modVal :FORCE ?fVal :DEGREE ?var_degree :FREQUENCY ?var_freq :MANNER ?!modA)
 ;           (?reln1 ?!ag ?t1)
 ;           ((? reln2 ONT::EVENT) ?!obj ?t2)
            (ONT::F ?var_degree ?type_degree)  
@@ -5473,7 +5473,7 @@
            )
           ;; rule50_0_EXPERIENCER_NEUTRAL-MODN1_1 rule with only EXPERIENCER
           (((? reln0  ONT::F ONT::QUANTIFIER ONT::KIND ONT::A ONT::INDEF-PLURAL ONT::THE ONT::THE-SET ONT::INDEF-SET ONT::BARE ONT::SM ONT::PRO ONT::PRO-SET) ?ev
-            (:* (? type ONT::KNOW ONT::EXPECTATION ONT::BELIEVE ONT::DOUBT ONT::HYPOTHESIZE ) ?!w) :EXPERIENCER ?!ag :AFFECTED - :AFFECTED-RESULT - :NEUTRAL - :FORMAL - :DRUM ?code :MODALITY ?modVal :FORCE ?fVal :DEGREE ?var_degree :FREQUENCY ?var_freq :MODS (?!modN))
+            (:* (? type ONT::KNOW ONT::EXPECTATION ONT::BELIEVE ONT::DOUBT ONT::HYPOTHESIZE ) ?!w) :EXPERIENCER ?!ag :DRUM ?code :MODALITY ?modVal :FORCE ?fVal :DEGREE ?var_degree :FREQUENCY ?var_freq :MODS (?!modN))
            (?reln1 ?!ag ?t1)
 ;           ((? reln2 ONT::EVENT) ?!obj ?t2)
            (ONT::F ?var_degree ?type_degree)  
@@ -5485,7 +5485,7 @@
            (ONT::epi ?ev ?!eventName
             :rule -rule50_0_EXPERIENCER_NEUTRAL-MODN1_1-EXPERIENCER
             :EXPERIENCER ?!ag
-;            :NEUTRAL ?!obj
+            :NEUTRAL -
             :MODN ?tmp ;?!modN
             :MODALITY ?modVal
             :FORCE ?fVal
@@ -5496,7 +5496,7 @@
             ))
           ;; rule50_0_EXPERIENCER_NEUTRAL-MODN1_1 rule with only NEUTRAL
           (((? reln0  ONT::F ONT::QUANTIFIER ONT::KIND ONT::A ONT::INDEF-PLURAL ONT::THE ONT::THE-SET ONT::INDEF-SET ONT::BARE ONT::SM ONT::PRO ONT::PRO-SET) ?ev
-            (:* (? type ONT::KNOW ONT::EXPECTATION ONT::BELIEVE ONT::DOUBT ONT::HYPOTHESIZE ) ?!w) :EXPERIENCER - :NEUTRAL ?!obj :DRUM ?code :MODALITY ?modVal :FORCE ?fVal :DEGREE ?var_degree :FREQUENCY ?var_freq :MODS (?!modN))
+            (:* (? type ONT::KNOW ONT::EXPECTATION ONT::BELIEVE ONT::DOUBT ONT::HYPOTHESIZE ) ?!w) :NEUTRAL ?!obj :DRUM ?code :MODALITY ?modVal :FORCE ?fVal :DEGREE ?var_degree :FREQUENCY ?var_freq :MODS (?!modN))
 ;           (?reln1 ?!ag ?t1)
            ((? reln2 ONT::EVENT) ?!obj ?t2)
            (ONT::F ?var_degree ?type_degree)  
@@ -5507,7 +5507,7 @@
            50
            (ONT::epi ?ev ?!eventName
             :rule -rule50_0_EXPERIENCER_NEUTRAL-MODN1_1-NEUTRAL
-;            :EXPERIENCER ?!ag
+            :EXPERIENCER -
             :NEUTRAL ?!obj
             :MODN ?tmp ;?!modN
             :MODALITY ?modVal
@@ -5587,7 +5587,7 @@
             ))
           ;; rule50_0_EXPERIENCER_NEUTRAL-MODN1_1 rule with neither EXPERIENCER nor NEUTRAL
           (((? reln0 ONT::F ONT::QUANTIFIER ONT::KIND ONT::A ONT::INDEF-PLURAL ONT::THE ONT::THE-SET ONT::INDEF-SET ONT::BARE ONT::SM ONT::PRO ONT::PRO-SET) ?ev
-            (:* (? type ONT::KNOW ONT::EXPECTATION ONT::BELIEVE ONT::DOUBT ONT::HYPOTHESIZE ) ?!w) :EXPERIENCER - :NEUTRAL - :DRUM ?code :MODALITY ?modVal :FORCE ?fVal :DEGREE ?var_degree :FREQUENCY ?var_freq :MODS (?!modN))
+            (:* (? type ONT::KNOW ONT::EXPECTATION ONT::BELIEVE ONT::DOUBT ONT::HYPOTHESIZE ) ?!w) :EXPERIENCER - :NEUTRAL - :AFFECTED - :AFFECTED1 - :AFFECTED-RESULT - :NEUTRAL - :NEUTRAL1 - :NEUTRAL2 - :FORMAL - :DRUM ?code :MODALITY ?modVal :FORCE ?fVal :DEGREE ?var_degree :FREQUENCY ?var_freq :MODS (?!modN))
 ;           (?reln1 ?!ag ?t1)
 ;           ((? reln2 ONT::EVENT) ?!obj ?t2)
            (ONT::F ?var_degree ?type_degree)  
@@ -5716,7 +5716,7 @@
            )
           ;; rule50_0_EXPERIENCER_NEUTRAL-MODN1_2 rule with only EXPERIENCER
           (((? reln0  ONT::F ONT::QUANTIFIER ONT::KIND ONT::A ONT::INDEF-PLURAL ONT::THE ONT::THE-SET ONT::INDEF-SET ONT::BARE ONT::SM ONT::PRO ONT::PRO-SET) ?ev
-            (:* (? type ONT::KNOW ONT::EXPECTATION ONT::BELIEVE ONT::DOUBT ONT::HYPOTHESIZE ) ?!w) :EXPERIENCER ?!ag :AFFECTED - :AFFECTED-RESULT - :NEUTRAL - :FORMAL - :DRUM ?code :MODALITY ?modVal :FORCE ?fVal :DEGREE ?var_degree :FREQUENCY ?var_freq :MANNER ?!modN)
+            (:* (? type ONT::KNOW ONT::EXPECTATION ONT::BELIEVE ONT::DOUBT ONT::HYPOTHESIZE ) ?!w) :EXPERIENCER ?!ag :DRUM ?code :MODALITY ?modVal :FORCE ?fVal :DEGREE ?var_degree :FREQUENCY ?var_freq :MANNER ?!modN)
            (?reln1 ?!ag ?t1)
 ;           ((? reln2 ONT::EVENT) ?!obj ?t2)
            (ONT::F ?var_degree ?type_degree)  
@@ -5728,7 +5728,7 @@
            (ONT::epi ?ev ?!eventName
             :rule -rule50_0_EXPERIENCER_NEUTRAL-MODN1_2-EXPERIENCER
             :EXPERIENCER ?!ag
-;            :NEUTRAL ?!obj
+            :NEUTRAL -
             :MODN ?tmp ;?!modN
             :MODALITY ?modVal
             :FORCE ?fVal
@@ -5739,7 +5739,7 @@
             ))
           ;; rule50_0_EXPERIENCER_NEUTRAL-MODN1_2 rule with only NEUTRAL
           (((? reln0  ONT::F ONT::QUANTIFIER ONT::KIND ONT::A ONT::INDEF-PLURAL ONT::THE ONT::THE-SET ONT::INDEF-SET ONT::BARE ONT::SM ONT::PRO ONT::PRO-SET) ?ev
-            (:* (? type ONT::KNOW ONT::EXPECTATION ONT::BELIEVE ONT::DOUBT ONT::HYPOTHESIZE ) ?!w) :EXPERIENCER - :NEUTRAL ?!obj :DRUM ?code :MODALITY ?modVal :FORCE ?fVal :DEGREE ?var_degree :FREQUENCY ?var_freq :MANNER ?!modN)
+            (:* (? type ONT::KNOW ONT::EXPECTATION ONT::BELIEVE ONT::DOUBT ONT::HYPOTHESIZE ) ?!w) :NEUTRAL ?!obj :DRUM ?code :MODALITY ?modVal :FORCE ?fVal :DEGREE ?var_degree :FREQUENCY ?var_freq :MANNER ?!modN)
 ;           (?reln1 ?!ag ?t1)
            ((? reln2 ONT::EVENT) ?!obj ?t2)
            (ONT::F ?var_degree ?type_degree)  
@@ -5750,7 +5750,7 @@
            50
            (ONT::epi ?ev ?!eventName
             :rule -rule50_0_EXPERIENCER_NEUTRAL-MODN1_2-NEUTRAL
-;            :EXPERIENCER ?!ag
+            :EXPERIENCER -
             :NEUTRAL ?!obj
             :MODN ?tmp ;?!modN
             :MODALITY ?modVal
@@ -5830,7 +5830,7 @@
             ))
           ;; rule50_0_EXPERIENCER_NEUTRAL-MODN1_2 rule with neither EXPERIENCER nor NEUTRAL
           (((? reln0 ONT::F ONT::QUANTIFIER ONT::KIND ONT::A ONT::INDEF-PLURAL ONT::THE ONT::THE-SET ONT::INDEF-SET ONT::BARE ONT::SM ONT::PRO ONT::PRO-SET) ?ev
-            (:* (? type ONT::KNOW ONT::EXPECTATION ONT::BELIEVE ONT::DOUBT ONT::HYPOTHESIZE ) ?!w) :EXPERIENCER - :NEUTRAL - :DRUM ?code :MODALITY ?modVal :FORCE ?fVal :DEGREE ?var_degree :FREQUENCY ?var_freq :MANNER ?!modN)
+            (:* (? type ONT::KNOW ONT::EXPECTATION ONT::BELIEVE ONT::DOUBT ONT::HYPOTHESIZE ) ?!w) :EXPERIENCER - :NEUTRAL - :AFFECTED - :AFFECTED1 - :AFFECTED-RESULT - :NEUTRAL - :NEUTRAL1 - :NEUTRAL2 - :FORMAL - :DRUM ?code :MODALITY ?modVal :FORCE ?fVal :DEGREE ?var_degree :FREQUENCY ?var_freq :MANNER ?!modN)
 ;           (?reln1 ?!ag ?t1)
 ;           ((? reln2 ONT::EVENT) ?!obj ?t2)
            (ONT::F ?var_degree ?type_degree)  
@@ -5966,7 +5966,7 @@
            )
           ;; rule50_0_NEUTRAL_FORMAL rule with only NEUTRAL
           (((? reln0  ONT::F ONT::QUANTIFIER ONT::KIND ONT::A ONT::INDEF-PLURAL ONT::THE ONT::THE-SET ONT::INDEF-SET ONT::BARE ONT::SM ONT::PRO ONT::PRO-SET) ?ev
-            (:* (? type ONT::POSSIBLY-TRUE ONT::APPEARS-TO-HAVE-PROPERTY ONT::BE-INCLINED ONT::CORRELATION ONT::REFUTE ) ?!w) :NEUTRAL ?!ag :AFFECTED - :AFFECTED-RESULT - :NEUTRAL - :FORMAL - :DRUM ?code :MODALITY ?modVal :FORCE ?fVal :DEGREE ?var_degree :FREQUENCY ?var_freq )
+            (:* (? type ONT::POSSIBLY-TRUE ONT::APPEARS-TO-HAVE-PROPERTY ONT::BE-INCLINED ONT::CORRELATION ONT::REFUTE ) ?!w) :NEUTRAL ?!ag :DRUM ?code :MODALITY ?modVal :FORCE ?fVal :DEGREE ?var_degree :FREQUENCY ?var_freq )
            (?reln1 ?!ag ?t1)
 ;           ((? reln2 ONT::EVENT) ?!obj ?t2)
            (ONT::F ?var_degree ?type_degree)  
@@ -5977,7 +5977,7 @@
            (ONT::epi ?ev ?!eventName
             :rule -rule50_0_NEUTRAL_FORMAL-NEUTRAL
             :NEUTRAL ?!ag
-;            :FORMAL ?!obj
+            :FORMAL -
             :MODALITY ?modVal
             :FORCE ?fVal
             :DEGREE ?type_degree
@@ -5987,7 +5987,7 @@
             ))
           ;; rule50_0_NEUTRAL_FORMAL rule with only FORMAL
           (((? reln0  ONT::F ONT::QUANTIFIER ONT::KIND ONT::A ONT::INDEF-PLURAL ONT::THE ONT::THE-SET ONT::INDEF-SET ONT::BARE ONT::SM ONT::PRO ONT::PRO-SET) ?ev
-            (:* (? type ONT::POSSIBLY-TRUE ONT::APPEARS-TO-HAVE-PROPERTY ONT::BE-INCLINED ONT::CORRELATION ONT::REFUTE ) ?!w) :NEUTRAL - :FORMAL ?!obj :DRUM ?code :MODALITY ?modVal :FORCE ?fVal :DEGREE ?var_degree :FREQUENCY ?var_freq )
+            (:* (? type ONT::POSSIBLY-TRUE ONT::APPEARS-TO-HAVE-PROPERTY ONT::BE-INCLINED ONT::CORRELATION ONT::REFUTE ) ?!w) :FORMAL ?!obj :DRUM ?code :MODALITY ?modVal :FORCE ?fVal :DEGREE ?var_degree :FREQUENCY ?var_freq )
 ;           (?reln1 ?!ag ?t1)
            ((? reln2 ONT::EVENT) ?!obj ?t2)
            (ONT::F ?var_degree ?type_degree)  
@@ -5997,7 +5997,7 @@
            50
            (ONT::epi ?ev ?!eventName
             :rule -rule50_0_NEUTRAL_FORMAL-FORMAL
-;            :NEUTRAL ?!ag
+            :NEUTRAL -
             :FORMAL ?!obj
             :MODALITY ?modVal
             :FORCE ?fVal
@@ -6072,7 +6072,7 @@
             ))
           ;; rule50_0_NEUTRAL_FORMAL rule with neither NEUTRAL nor FORMAL
           (((? reln0 ONT::F ONT::QUANTIFIER ONT::KIND ONT::A ONT::INDEF-PLURAL ONT::THE ONT::THE-SET ONT::INDEF-SET ONT::BARE ONT::SM ONT::PRO ONT::PRO-SET) ?ev
-            (:* (? type ONT::POSSIBLY-TRUE ONT::APPEARS-TO-HAVE-PROPERTY ONT::BE-INCLINED ONT::CORRELATION ONT::REFUTE ) ?!w) :NEUTRAL - :FORMAL - :DRUM ?code :MODALITY ?modVal :FORCE ?fVal :DEGREE ?var_degree :FREQUENCY ?var_freq )
+            (:* (? type ONT::POSSIBLY-TRUE ONT::APPEARS-TO-HAVE-PROPERTY ONT::BE-INCLINED ONT::CORRELATION ONT::REFUTE ) ?!w) :NEUTRAL - :FORMAL - :AFFECTED - :AFFECTED1 - :AFFECTED-RESULT - :NEUTRAL - :NEUTRAL1 - :NEUTRAL2 - :FORMAL - :DRUM ?code :MODALITY ?modVal :FORCE ?fVal :DEGREE ?var_degree :FREQUENCY ?var_freq )
 ;           (?reln1 ?!ag ?t1)
 ;           ((? reln2 ONT::EVENT) ?!obj ?t2)
            (ONT::F ?var_degree ?type_degree)  
@@ -6197,7 +6197,7 @@
            )
           ;; rule50_0_NEUTRAL_FORMAL-POLARITY1-gd rule with only NEUTRAL
           (((? reln0  ONT::F ONT::QUANTIFIER ONT::KIND ONT::A ONT::INDEF-PLURAL ONT::THE ONT::THE-SET ONT::INDEF-SET ONT::BARE ONT::SM ONT::PRO ONT::PRO-SET) ?ev
-            (:* (? type ONT::POSSIBLY-TRUE ONT::APPEARS-TO-HAVE-PROPERTY ONT::BE-INCLINED ONT::CORRELATION ONT::REFUTE ) ?!w) :NEUTRAL ?!ag :AFFECTED - :AFFECTED-RESULT - :NEUTRAL - :FORMAL - :DRUM ?code :MODALITY ?modVal :FORCE ?fVal :DEGREE ?var_degree :FREQUENCY ?var_freq )
+            (:* (? type ONT::POSSIBLY-TRUE ONT::APPEARS-TO-HAVE-PROPERTY ONT::BE-INCLINED ONT::CORRELATION ONT::REFUTE ) ?!w) :NEUTRAL ?!ag :DRUM ?code :MODALITY ?modVal :FORCE ?fVal :DEGREE ?var_degree :FREQUENCY ?var_freq )
            (?reln1 ?!ag ?t1)
 ;           ((? reln2 ONT::EVENT) ?!obj ?t2)
            (ONT::F ?var_degree ?type_degree)  
@@ -6210,7 +6210,7 @@
            (ONT::epi ?ev ?!eventName
             :rule -rule50_0_NEUTRAL_FORMAL-POLARITY1-gd-NEUTRAL
             :NEUTRAL ?!ag
-;            :FORMAL ?!obj
+            :FORMAL -
             :POLARITY ?!m1_new
             :MODALITY ?modVal
             :FORCE ?fVal
@@ -6221,7 +6221,7 @@
             ))
           ;; rule50_0_NEUTRAL_FORMAL-POLARITY1-gd rule with only FORMAL
           (((? reln0  ONT::F ONT::QUANTIFIER ONT::KIND ONT::A ONT::INDEF-PLURAL ONT::THE ONT::THE-SET ONT::INDEF-SET ONT::BARE ONT::SM ONT::PRO ONT::PRO-SET) ?ev
-            (:* (? type ONT::POSSIBLY-TRUE ONT::APPEARS-TO-HAVE-PROPERTY ONT::BE-INCLINED ONT::CORRELATION ONT::REFUTE ) ?!w) :NEUTRAL - :FORMAL ?!obj :DRUM ?code :MODALITY ?modVal :FORCE ?fVal :DEGREE ?var_degree :FREQUENCY ?var_freq )
+            (:* (? type ONT::POSSIBLY-TRUE ONT::APPEARS-TO-HAVE-PROPERTY ONT::BE-INCLINED ONT::CORRELATION ONT::REFUTE ) ?!w) :FORMAL ?!obj :DRUM ?code :MODALITY ?modVal :FORCE ?fVal :DEGREE ?var_degree :FREQUENCY ?var_freq )
 ;           (?reln1 ?!ag ?t1)
            ((? reln2 ONT::EVENT) ?!obj ?t2)
            (ONT::F ?var_degree ?type_degree)  
@@ -6233,7 +6233,7 @@
            50
            (ONT::epi ?ev ?!eventName
             :rule -rule50_0_NEUTRAL_FORMAL-POLARITY1-gd-FORMAL
-;            :NEUTRAL ?!ag
+            :NEUTRAL -
             :FORMAL ?!obj
             :POLARITY ?!m1_new
             :MODALITY ?modVal
@@ -6315,7 +6315,7 @@
             ))
           ;; rule50_0_NEUTRAL_FORMAL-POLARITY1-gd rule with neither NEUTRAL nor FORMAL
           (((? reln0 ONT::F ONT::QUANTIFIER ONT::KIND ONT::A ONT::INDEF-PLURAL ONT::THE ONT::THE-SET ONT::INDEF-SET ONT::BARE ONT::SM ONT::PRO ONT::PRO-SET) ?ev
-            (:* (? type ONT::POSSIBLY-TRUE ONT::APPEARS-TO-HAVE-PROPERTY ONT::BE-INCLINED ONT::CORRELATION ONT::REFUTE ) ?!w) :NEUTRAL - :FORMAL - :DRUM ?code :MODALITY ?modVal :FORCE ?fVal :DEGREE ?var_degree :FREQUENCY ?var_freq )
+            (:* (? type ONT::POSSIBLY-TRUE ONT::APPEARS-TO-HAVE-PROPERTY ONT::BE-INCLINED ONT::CORRELATION ONT::REFUTE ) ?!w) :NEUTRAL - :FORMAL - :AFFECTED - :AFFECTED1 - :AFFECTED-RESULT - :NEUTRAL - :NEUTRAL1 - :NEUTRAL2 - :FORMAL - :DRUM ?code :MODALITY ?modVal :FORCE ?fVal :DEGREE ?var_degree :FREQUENCY ?var_freq )
 ;           (?reln1 ?!ag ?t1)
 ;           ((? reln2 ONT::EVENT) ?!obj ?t2)
            (ONT::F ?var_degree ?type_degree)  
@@ -6447,7 +6447,7 @@
            )
           ;; rule50_0_NEUTRAL_FORMAL-MODA1_1 rule with only NEUTRAL
           (((? reln0  ONT::F ONT::QUANTIFIER ONT::KIND ONT::A ONT::INDEF-PLURAL ONT::THE ONT::THE-SET ONT::INDEF-SET ONT::BARE ONT::SM ONT::PRO ONT::PRO-SET) ?ev
-            (:* (? type ONT::POSSIBLY-TRUE ONT::APPEARS-TO-HAVE-PROPERTY ONT::BE-INCLINED ONT::CORRELATION ONT::REFUTE ) ?!w) :NEUTRAL ?!ag :AFFECTED - :AFFECTED-RESULT - :NEUTRAL - :FORMAL - :DRUM ?code :MODALITY ?modVal :FORCE ?fVal :DEGREE ?var_degree :FREQUENCY ?var_freq :MODS (?!modA))
+            (:* (? type ONT::POSSIBLY-TRUE ONT::APPEARS-TO-HAVE-PROPERTY ONT::BE-INCLINED ONT::CORRELATION ONT::REFUTE ) ?!w) :NEUTRAL ?!ag :DRUM ?code :MODALITY ?modVal :FORCE ?fVal :DEGREE ?var_degree :FREQUENCY ?var_freq :MODS (?!modA))
            (?reln1 ?!ag ?t1)
 ;           ((? reln2 ONT::EVENT) ?!obj ?t2)
            (ONT::F ?var_degree ?type_degree)  
@@ -6459,7 +6459,7 @@
            (ONT::epi ?ev ?!eventName
             :rule -rule50_0_NEUTRAL_FORMAL-MODA1_1-NEUTRAL
             :NEUTRAL ?!ag
-;            :FORMAL ?!obj
+            :FORMAL -
             :MODA ?tmp ;?!modA
             :MODALITY ?modVal
             :FORCE ?fVal
@@ -6470,7 +6470,7 @@
             ))
           ;; rule50_0_NEUTRAL_FORMAL-MODA1_1 rule with only FORMAL
           (((? reln0  ONT::F ONT::QUANTIFIER ONT::KIND ONT::A ONT::INDEF-PLURAL ONT::THE ONT::THE-SET ONT::INDEF-SET ONT::BARE ONT::SM ONT::PRO ONT::PRO-SET) ?ev
-            (:* (? type ONT::POSSIBLY-TRUE ONT::APPEARS-TO-HAVE-PROPERTY ONT::BE-INCLINED ONT::CORRELATION ONT::REFUTE ) ?!w) :NEUTRAL - :FORMAL ?!obj :DRUM ?code :MODALITY ?modVal :FORCE ?fVal :DEGREE ?var_degree :FREQUENCY ?var_freq :MODS (?!modA))
+            (:* (? type ONT::POSSIBLY-TRUE ONT::APPEARS-TO-HAVE-PROPERTY ONT::BE-INCLINED ONT::CORRELATION ONT::REFUTE ) ?!w) :FORMAL ?!obj :DRUM ?code :MODALITY ?modVal :FORCE ?fVal :DEGREE ?var_degree :FREQUENCY ?var_freq :MODS (?!modA))
 ;           (?reln1 ?!ag ?t1)
            ((? reln2 ONT::EVENT) ?!obj ?t2)
            (ONT::F ?var_degree ?type_degree)  
@@ -6481,7 +6481,7 @@
            50
            (ONT::epi ?ev ?!eventName
             :rule -rule50_0_NEUTRAL_FORMAL-MODA1_1-FORMAL
-;            :NEUTRAL ?!ag
+            :NEUTRAL -
             :FORMAL ?!obj
             :MODA ?tmp ;?!modA
             :MODALITY ?modVal
@@ -6561,7 +6561,7 @@
             ))
           ;; rule50_0_NEUTRAL_FORMAL-MODA1_1 rule with neither NEUTRAL nor FORMAL
           (((? reln0 ONT::F ONT::QUANTIFIER ONT::KIND ONT::A ONT::INDEF-PLURAL ONT::THE ONT::THE-SET ONT::INDEF-SET ONT::BARE ONT::SM ONT::PRO ONT::PRO-SET) ?ev
-            (:* (? type ONT::POSSIBLY-TRUE ONT::APPEARS-TO-HAVE-PROPERTY ONT::BE-INCLINED ONT::CORRELATION ONT::REFUTE ) ?!w) :NEUTRAL - :FORMAL - :DRUM ?code :MODALITY ?modVal :FORCE ?fVal :DEGREE ?var_degree :FREQUENCY ?var_freq :MODS (?!modA))
+            (:* (? type ONT::POSSIBLY-TRUE ONT::APPEARS-TO-HAVE-PROPERTY ONT::BE-INCLINED ONT::CORRELATION ONT::REFUTE ) ?!w) :NEUTRAL - :FORMAL - :AFFECTED - :AFFECTED1 - :AFFECTED-RESULT - :NEUTRAL - :NEUTRAL1 - :NEUTRAL2 - :FORMAL - :DRUM ?code :MODALITY ?modVal :FORCE ?fVal :DEGREE ?var_degree :FREQUENCY ?var_freq :MODS (?!modA))
 ;           (?reln1 ?!ag ?t1)
 ;           ((? reln2 ONT::EVENT) ?!obj ?t2)
            (ONT::F ?var_degree ?type_degree)  
@@ -6690,7 +6690,7 @@
            )
           ;; rule50_0_NEUTRAL_FORMAL-MODA1_2 rule with only NEUTRAL
           (((? reln0  ONT::F ONT::QUANTIFIER ONT::KIND ONT::A ONT::INDEF-PLURAL ONT::THE ONT::THE-SET ONT::INDEF-SET ONT::BARE ONT::SM ONT::PRO ONT::PRO-SET) ?ev
-            (:* (? type ONT::POSSIBLY-TRUE ONT::APPEARS-TO-HAVE-PROPERTY ONT::BE-INCLINED ONT::CORRELATION ONT::REFUTE ) ?!w) :NEUTRAL ?!ag :AFFECTED - :AFFECTED-RESULT - :NEUTRAL - :FORMAL - :DRUM ?code :MODALITY ?modVal :FORCE ?fVal :DEGREE ?var_degree :FREQUENCY ?var_freq :MANNER ?!modA)
+            (:* (? type ONT::POSSIBLY-TRUE ONT::APPEARS-TO-HAVE-PROPERTY ONT::BE-INCLINED ONT::CORRELATION ONT::REFUTE ) ?!w) :NEUTRAL ?!ag :DRUM ?code :MODALITY ?modVal :FORCE ?fVal :DEGREE ?var_degree :FREQUENCY ?var_freq :MANNER ?!modA)
            (?reln1 ?!ag ?t1)
 ;           ((? reln2 ONT::EVENT) ?!obj ?t2)
            (ONT::F ?var_degree ?type_degree)  
@@ -6702,7 +6702,7 @@
            (ONT::epi ?ev ?!eventName
             :rule -rule50_0_NEUTRAL_FORMAL-MODA1_2-NEUTRAL
             :NEUTRAL ?!ag
-;            :FORMAL ?!obj
+            :FORMAL -
             :MODA ?tmp ;?!modA
             :MODALITY ?modVal
             :FORCE ?fVal
@@ -6713,7 +6713,7 @@
             ))
           ;; rule50_0_NEUTRAL_FORMAL-MODA1_2 rule with only FORMAL
           (((? reln0  ONT::F ONT::QUANTIFIER ONT::KIND ONT::A ONT::INDEF-PLURAL ONT::THE ONT::THE-SET ONT::INDEF-SET ONT::BARE ONT::SM ONT::PRO ONT::PRO-SET) ?ev
-            (:* (? type ONT::POSSIBLY-TRUE ONT::APPEARS-TO-HAVE-PROPERTY ONT::BE-INCLINED ONT::CORRELATION ONT::REFUTE ) ?!w) :NEUTRAL - :FORMAL ?!obj :DRUM ?code :MODALITY ?modVal :FORCE ?fVal :DEGREE ?var_degree :FREQUENCY ?var_freq :MANNER ?!modA)
+            (:* (? type ONT::POSSIBLY-TRUE ONT::APPEARS-TO-HAVE-PROPERTY ONT::BE-INCLINED ONT::CORRELATION ONT::REFUTE ) ?!w) :FORMAL ?!obj :DRUM ?code :MODALITY ?modVal :FORCE ?fVal :DEGREE ?var_degree :FREQUENCY ?var_freq :MANNER ?!modA)
 ;           (?reln1 ?!ag ?t1)
            ((? reln2 ONT::EVENT) ?!obj ?t2)
            (ONT::F ?var_degree ?type_degree)  
@@ -6724,7 +6724,7 @@
            50
            (ONT::epi ?ev ?!eventName
             :rule -rule50_0_NEUTRAL_FORMAL-MODA1_2-FORMAL
-;            :NEUTRAL ?!ag
+            :NEUTRAL -
             :FORMAL ?!obj
             :MODA ?tmp ;?!modA
             :MODALITY ?modVal
@@ -6804,7 +6804,7 @@
             ))
           ;; rule50_0_NEUTRAL_FORMAL-MODA1_2 rule with neither NEUTRAL nor FORMAL
           (((? reln0 ONT::F ONT::QUANTIFIER ONT::KIND ONT::A ONT::INDEF-PLURAL ONT::THE ONT::THE-SET ONT::INDEF-SET ONT::BARE ONT::SM ONT::PRO ONT::PRO-SET) ?ev
-            (:* (? type ONT::POSSIBLY-TRUE ONT::APPEARS-TO-HAVE-PROPERTY ONT::BE-INCLINED ONT::CORRELATION ONT::REFUTE ) ?!w) :NEUTRAL - :FORMAL - :DRUM ?code :MODALITY ?modVal :FORCE ?fVal :DEGREE ?var_degree :FREQUENCY ?var_freq :MANNER ?!modA)
+            (:* (? type ONT::POSSIBLY-TRUE ONT::APPEARS-TO-HAVE-PROPERTY ONT::BE-INCLINED ONT::CORRELATION ONT::REFUTE ) ?!w) :NEUTRAL - :FORMAL - :AFFECTED - :AFFECTED1 - :AFFECTED-RESULT - :NEUTRAL - :NEUTRAL1 - :NEUTRAL2 - :FORMAL - :DRUM ?code :MODALITY ?modVal :FORCE ?fVal :DEGREE ?var_degree :FREQUENCY ?var_freq :MANNER ?!modA)
 ;           (?reln1 ?!ag ?t1)
 ;           ((? reln2 ONT::EVENT) ?!obj ?t2)
            (ONT::F ?var_degree ?type_degree)  
@@ -6933,7 +6933,7 @@
            )
           ;; rule50_0_NEUTRAL_FORMAL-MODN1_1 rule with only NEUTRAL
           (((? reln0  ONT::F ONT::QUANTIFIER ONT::KIND ONT::A ONT::INDEF-PLURAL ONT::THE ONT::THE-SET ONT::INDEF-SET ONT::BARE ONT::SM ONT::PRO ONT::PRO-SET) ?ev
-            (:* (? type ONT::POSSIBLY-TRUE ONT::APPEARS-TO-HAVE-PROPERTY ONT::BE-INCLINED ONT::CORRELATION ONT::REFUTE ) ?!w) :NEUTRAL ?!ag :AFFECTED - :AFFECTED-RESULT - :NEUTRAL - :FORMAL - :DRUM ?code :MODALITY ?modVal :FORCE ?fVal :DEGREE ?var_degree :FREQUENCY ?var_freq :MODS (?!modN))
+            (:* (? type ONT::POSSIBLY-TRUE ONT::APPEARS-TO-HAVE-PROPERTY ONT::BE-INCLINED ONT::CORRELATION ONT::REFUTE ) ?!w) :NEUTRAL ?!ag :DRUM ?code :MODALITY ?modVal :FORCE ?fVal :DEGREE ?var_degree :FREQUENCY ?var_freq :MODS (?!modN))
            (?reln1 ?!ag ?t1)
 ;           ((? reln2 ONT::EVENT) ?!obj ?t2)
            (ONT::F ?var_degree ?type_degree)  
@@ -6945,7 +6945,7 @@
            (ONT::epi ?ev ?!eventName
             :rule -rule50_0_NEUTRAL_FORMAL-MODN1_1-NEUTRAL
             :NEUTRAL ?!ag
-;            :FORMAL ?!obj
+            :FORMAL -
             :MODN ?tmp ;?!modN
             :MODALITY ?modVal
             :FORCE ?fVal
@@ -6956,7 +6956,7 @@
             ))
           ;; rule50_0_NEUTRAL_FORMAL-MODN1_1 rule with only FORMAL
           (((? reln0  ONT::F ONT::QUANTIFIER ONT::KIND ONT::A ONT::INDEF-PLURAL ONT::THE ONT::THE-SET ONT::INDEF-SET ONT::BARE ONT::SM ONT::PRO ONT::PRO-SET) ?ev
-            (:* (? type ONT::POSSIBLY-TRUE ONT::APPEARS-TO-HAVE-PROPERTY ONT::BE-INCLINED ONT::CORRELATION ONT::REFUTE ) ?!w) :NEUTRAL - :FORMAL ?!obj :DRUM ?code :MODALITY ?modVal :FORCE ?fVal :DEGREE ?var_degree :FREQUENCY ?var_freq :MODS (?!modN))
+            (:* (? type ONT::POSSIBLY-TRUE ONT::APPEARS-TO-HAVE-PROPERTY ONT::BE-INCLINED ONT::CORRELATION ONT::REFUTE ) ?!w) :FORMAL ?!obj :DRUM ?code :MODALITY ?modVal :FORCE ?fVal :DEGREE ?var_degree :FREQUENCY ?var_freq :MODS (?!modN))
 ;           (?reln1 ?!ag ?t1)
            ((? reln2 ONT::EVENT) ?!obj ?t2)
            (ONT::F ?var_degree ?type_degree)  
@@ -6967,7 +6967,7 @@
            50
            (ONT::epi ?ev ?!eventName
             :rule -rule50_0_NEUTRAL_FORMAL-MODN1_1-FORMAL
-;            :NEUTRAL ?!ag
+            :NEUTRAL -
             :FORMAL ?!obj
             :MODN ?tmp ;?!modN
             :MODALITY ?modVal
@@ -7047,7 +7047,7 @@
             ))
           ;; rule50_0_NEUTRAL_FORMAL-MODN1_1 rule with neither NEUTRAL nor FORMAL
           (((? reln0 ONT::F ONT::QUANTIFIER ONT::KIND ONT::A ONT::INDEF-PLURAL ONT::THE ONT::THE-SET ONT::INDEF-SET ONT::BARE ONT::SM ONT::PRO ONT::PRO-SET) ?ev
-            (:* (? type ONT::POSSIBLY-TRUE ONT::APPEARS-TO-HAVE-PROPERTY ONT::BE-INCLINED ONT::CORRELATION ONT::REFUTE ) ?!w) :NEUTRAL - :FORMAL - :DRUM ?code :MODALITY ?modVal :FORCE ?fVal :DEGREE ?var_degree :FREQUENCY ?var_freq :MODS (?!modN))
+            (:* (? type ONT::POSSIBLY-TRUE ONT::APPEARS-TO-HAVE-PROPERTY ONT::BE-INCLINED ONT::CORRELATION ONT::REFUTE ) ?!w) :NEUTRAL - :FORMAL - :AFFECTED - :AFFECTED1 - :AFFECTED-RESULT - :NEUTRAL - :NEUTRAL1 - :NEUTRAL2 - :FORMAL - :DRUM ?code :MODALITY ?modVal :FORCE ?fVal :DEGREE ?var_degree :FREQUENCY ?var_freq :MODS (?!modN))
 ;           (?reln1 ?!ag ?t1)
 ;           ((? reln2 ONT::EVENT) ?!obj ?t2)
            (ONT::F ?var_degree ?type_degree)  
@@ -7176,7 +7176,7 @@
            )
           ;; rule50_0_NEUTRAL_FORMAL-MODN1_2 rule with only NEUTRAL
           (((? reln0  ONT::F ONT::QUANTIFIER ONT::KIND ONT::A ONT::INDEF-PLURAL ONT::THE ONT::THE-SET ONT::INDEF-SET ONT::BARE ONT::SM ONT::PRO ONT::PRO-SET) ?ev
-            (:* (? type ONT::POSSIBLY-TRUE ONT::APPEARS-TO-HAVE-PROPERTY ONT::BE-INCLINED ONT::CORRELATION ONT::REFUTE ) ?!w) :NEUTRAL ?!ag :AFFECTED - :AFFECTED-RESULT - :NEUTRAL - :FORMAL - :DRUM ?code :MODALITY ?modVal :FORCE ?fVal :DEGREE ?var_degree :FREQUENCY ?var_freq :MANNER ?!modN)
+            (:* (? type ONT::POSSIBLY-TRUE ONT::APPEARS-TO-HAVE-PROPERTY ONT::BE-INCLINED ONT::CORRELATION ONT::REFUTE ) ?!w) :NEUTRAL ?!ag :DRUM ?code :MODALITY ?modVal :FORCE ?fVal :DEGREE ?var_degree :FREQUENCY ?var_freq :MANNER ?!modN)
            (?reln1 ?!ag ?t1)
 ;           ((? reln2 ONT::EVENT) ?!obj ?t2)
            (ONT::F ?var_degree ?type_degree)  
@@ -7188,7 +7188,7 @@
            (ONT::epi ?ev ?!eventName
             :rule -rule50_0_NEUTRAL_FORMAL-MODN1_2-NEUTRAL
             :NEUTRAL ?!ag
-;            :FORMAL ?!obj
+            :FORMAL -
             :MODN ?tmp ;?!modN
             :MODALITY ?modVal
             :FORCE ?fVal
@@ -7199,7 +7199,7 @@
             ))
           ;; rule50_0_NEUTRAL_FORMAL-MODN1_2 rule with only FORMAL
           (((? reln0  ONT::F ONT::QUANTIFIER ONT::KIND ONT::A ONT::INDEF-PLURAL ONT::THE ONT::THE-SET ONT::INDEF-SET ONT::BARE ONT::SM ONT::PRO ONT::PRO-SET) ?ev
-            (:* (? type ONT::POSSIBLY-TRUE ONT::APPEARS-TO-HAVE-PROPERTY ONT::BE-INCLINED ONT::CORRELATION ONT::REFUTE ) ?!w) :NEUTRAL - :FORMAL ?!obj :DRUM ?code :MODALITY ?modVal :FORCE ?fVal :DEGREE ?var_degree :FREQUENCY ?var_freq :MANNER ?!modN)
+            (:* (? type ONT::POSSIBLY-TRUE ONT::APPEARS-TO-HAVE-PROPERTY ONT::BE-INCLINED ONT::CORRELATION ONT::REFUTE ) ?!w) :FORMAL ?!obj :DRUM ?code :MODALITY ?modVal :FORCE ?fVal :DEGREE ?var_degree :FREQUENCY ?var_freq :MANNER ?!modN)
 ;           (?reln1 ?!ag ?t1)
            ((? reln2 ONT::EVENT) ?!obj ?t2)
            (ONT::F ?var_degree ?type_degree)  
@@ -7210,7 +7210,7 @@
            50
            (ONT::epi ?ev ?!eventName
             :rule -rule50_0_NEUTRAL_FORMAL-MODN1_2-FORMAL
-;            :NEUTRAL ?!ag
+            :NEUTRAL -
             :FORMAL ?!obj
             :MODN ?tmp ;?!modN
             :MODALITY ?modVal
@@ -7290,7 +7290,7 @@
             ))
           ;; rule50_0_NEUTRAL_FORMAL-MODN1_2 rule with neither NEUTRAL nor FORMAL
           (((? reln0 ONT::F ONT::QUANTIFIER ONT::KIND ONT::A ONT::INDEF-PLURAL ONT::THE ONT::THE-SET ONT::INDEF-SET ONT::BARE ONT::SM ONT::PRO ONT::PRO-SET) ?ev
-            (:* (? type ONT::POSSIBLY-TRUE ONT::APPEARS-TO-HAVE-PROPERTY ONT::BE-INCLINED ONT::CORRELATION ONT::REFUTE ) ?!w) :NEUTRAL - :FORMAL - :DRUM ?code :MODALITY ?modVal :FORCE ?fVal :DEGREE ?var_degree :FREQUENCY ?var_freq :MANNER ?!modN)
+            (:* (? type ONT::POSSIBLY-TRUE ONT::APPEARS-TO-HAVE-PROPERTY ONT::BE-INCLINED ONT::CORRELATION ONT::REFUTE ) ?!w) :NEUTRAL - :FORMAL - :AFFECTED - :AFFECTED1 - :AFFECTED-RESULT - :NEUTRAL - :NEUTRAL1 - :NEUTRAL2 - :FORMAL - :DRUM ?code :MODALITY ?modVal :FORCE ?fVal :DEGREE ?var_degree :FREQUENCY ?var_freq :MANNER ?!modN)
 ;           (?reln1 ?!ag ?t1)
 ;           ((? reln2 ONT::EVENT) ?!obj ?t2)
            (ONT::F ?var_degree ?type_degree)  
@@ -7426,7 +7426,7 @@
            )
           ;; rule50_0_AGENT_FORMAL rule with only AGENT
           (((? reln0  ONT::F ONT::QUANTIFIER ONT::KIND ONT::A ONT::INDEF-PLURAL ONT::THE ONT::THE-SET ONT::INDEF-SET ONT::BARE ONT::SM ONT::PRO ONT::PRO-SET) ?ev
-            (:* (? type ONT::CONFIRM ONT::CONSENT ONT::ACCEPT-AGREE ONT::SHOW ONT::CONTEST ONT::REJECT ONT::SCRUTINY ONT::QUESTIONING ONT::BECOMING-AWARE ONT::ACTIVE-PERCEPTION ONT::COME-TO-UNDERSTAND ONT::DETERMINE ) ?!w) :AGENT ?!ag :AFFECTED - :AFFECTED-RESULT - :NEUTRAL - :FORMAL - :DRUM ?code :MODALITY ?modVal :FORCE ?fVal :DEGREE ?var_degree :FREQUENCY ?var_freq )
+            (:* (? type ONT::CONFIRM ONT::CONSENT ONT::ACCEPT-AGREE ONT::SHOW ONT::CONTEST ONT::REJECT ONT::SCRUTINY ONT::QUESTIONING ONT::BECOMING-AWARE ONT::ACTIVE-PERCEPTION ONT::COME-TO-UNDERSTAND ONT::DETERMINE ) ?!w) :AGENT ?!ag :DRUM ?code :MODALITY ?modVal :FORCE ?fVal :DEGREE ?var_degree :FREQUENCY ?var_freq )
            (?reln1 ?!ag ?t1)
 ;           ((? reln2 ONT::EVENT) ?!obj ?t2)
            (ONT::F ?var_degree ?type_degree)  
@@ -7437,7 +7437,7 @@
            (ONT::epi ?ev ?!eventName
             :rule -rule50_0_AGENT_FORMAL-AGENT
             :AGENT ?!ag
-;            :FORMAL ?!obj
+            :FORMAL -
             :MODALITY ?modVal
             :FORCE ?fVal
             :DEGREE ?type_degree
@@ -7447,7 +7447,7 @@
             ))
           ;; rule50_0_AGENT_FORMAL rule with only FORMAL
           (((? reln0  ONT::F ONT::QUANTIFIER ONT::KIND ONT::A ONT::INDEF-PLURAL ONT::THE ONT::THE-SET ONT::INDEF-SET ONT::BARE ONT::SM ONT::PRO ONT::PRO-SET) ?ev
-            (:* (? type ONT::CONFIRM ONT::CONSENT ONT::ACCEPT-AGREE ONT::SHOW ONT::CONTEST ONT::REJECT ONT::SCRUTINY ONT::QUESTIONING ONT::BECOMING-AWARE ONT::ACTIVE-PERCEPTION ONT::COME-TO-UNDERSTAND ONT::DETERMINE ) ?!w) :AGENT - :FORMAL ?!obj :DRUM ?code :MODALITY ?modVal :FORCE ?fVal :DEGREE ?var_degree :FREQUENCY ?var_freq )
+            (:* (? type ONT::CONFIRM ONT::CONSENT ONT::ACCEPT-AGREE ONT::SHOW ONT::CONTEST ONT::REJECT ONT::SCRUTINY ONT::QUESTIONING ONT::BECOMING-AWARE ONT::ACTIVE-PERCEPTION ONT::COME-TO-UNDERSTAND ONT::DETERMINE ) ?!w) :FORMAL ?!obj :DRUM ?code :MODALITY ?modVal :FORCE ?fVal :DEGREE ?var_degree :FREQUENCY ?var_freq )
 ;           (?reln1 ?!ag ?t1)
            ((? reln2 ONT::EVENT) ?!obj ?t2)
            (ONT::F ?var_degree ?type_degree)  
@@ -7457,7 +7457,7 @@
            50
            (ONT::epi ?ev ?!eventName
             :rule -rule50_0_AGENT_FORMAL-FORMAL
-;            :AGENT ?!ag
+            :AGENT -
             :FORMAL ?!obj
             :MODALITY ?modVal
             :FORCE ?fVal
@@ -7532,7 +7532,7 @@
             ))
           ;; rule50_0_AGENT_FORMAL rule with neither AGENT nor FORMAL
           (((? reln0 ONT::F ONT::QUANTIFIER ONT::KIND ONT::A ONT::INDEF-PLURAL ONT::THE ONT::THE-SET ONT::INDEF-SET ONT::BARE ONT::SM ONT::PRO ONT::PRO-SET) ?ev
-            (:* (? type ONT::CONFIRM ONT::CONSENT ONT::ACCEPT-AGREE ONT::SHOW ONT::CONTEST ONT::REJECT ONT::SCRUTINY ONT::QUESTIONING ONT::BECOMING-AWARE ONT::ACTIVE-PERCEPTION ONT::COME-TO-UNDERSTAND ONT::DETERMINE ) ?!w) :AGENT - :FORMAL - :DRUM ?code :MODALITY ?modVal :FORCE ?fVal :DEGREE ?var_degree :FREQUENCY ?var_freq )
+            (:* (? type ONT::CONFIRM ONT::CONSENT ONT::ACCEPT-AGREE ONT::SHOW ONT::CONTEST ONT::REJECT ONT::SCRUTINY ONT::QUESTIONING ONT::BECOMING-AWARE ONT::ACTIVE-PERCEPTION ONT::COME-TO-UNDERSTAND ONT::DETERMINE ) ?!w) :AGENT - :FORMAL - :AFFECTED - :AFFECTED1 - :AFFECTED-RESULT - :NEUTRAL - :NEUTRAL1 - :NEUTRAL2 - :FORMAL - :DRUM ?code :MODALITY ?modVal :FORCE ?fVal :DEGREE ?var_degree :FREQUENCY ?var_freq )
 ;           (?reln1 ?!ag ?t1)
 ;           ((? reln2 ONT::EVENT) ?!obj ?t2)
            (ONT::F ?var_degree ?type_degree)  
@@ -7657,7 +7657,7 @@
            )
           ;; rule50_0_AGENT_FORMAL-POLARITY1-gd rule with only AGENT
           (((? reln0  ONT::F ONT::QUANTIFIER ONT::KIND ONT::A ONT::INDEF-PLURAL ONT::THE ONT::THE-SET ONT::INDEF-SET ONT::BARE ONT::SM ONT::PRO ONT::PRO-SET) ?ev
-            (:* (? type ONT::CONFIRM ONT::CONSENT ONT::ACCEPT-AGREE ONT::SHOW ONT::CONTEST ONT::REJECT ONT::SCRUTINY ONT::QUESTIONING ONT::BECOMING-AWARE ONT::ACTIVE-PERCEPTION ONT::COME-TO-UNDERSTAND ONT::DETERMINE ) ?!w) :AGENT ?!ag :AFFECTED - :AFFECTED-RESULT - :NEUTRAL - :FORMAL - :DRUM ?code :MODALITY ?modVal :FORCE ?fVal :DEGREE ?var_degree :FREQUENCY ?var_freq )
+            (:* (? type ONT::CONFIRM ONT::CONSENT ONT::ACCEPT-AGREE ONT::SHOW ONT::CONTEST ONT::REJECT ONT::SCRUTINY ONT::QUESTIONING ONT::BECOMING-AWARE ONT::ACTIVE-PERCEPTION ONT::COME-TO-UNDERSTAND ONT::DETERMINE ) ?!w) :AGENT ?!ag :DRUM ?code :MODALITY ?modVal :FORCE ?fVal :DEGREE ?var_degree :FREQUENCY ?var_freq )
            (?reln1 ?!ag ?t1)
 ;           ((? reln2 ONT::EVENT) ?!obj ?t2)
            (ONT::F ?var_degree ?type_degree)  
@@ -7670,7 +7670,7 @@
            (ONT::epi ?ev ?!eventName
             :rule -rule50_0_AGENT_FORMAL-POLARITY1-gd-AGENT
             :AGENT ?!ag
-;            :FORMAL ?!obj
+            :FORMAL -
             :POLARITY ?!m1_new
             :MODALITY ?modVal
             :FORCE ?fVal
@@ -7681,7 +7681,7 @@
             ))
           ;; rule50_0_AGENT_FORMAL-POLARITY1-gd rule with only FORMAL
           (((? reln0  ONT::F ONT::QUANTIFIER ONT::KIND ONT::A ONT::INDEF-PLURAL ONT::THE ONT::THE-SET ONT::INDEF-SET ONT::BARE ONT::SM ONT::PRO ONT::PRO-SET) ?ev
-            (:* (? type ONT::CONFIRM ONT::CONSENT ONT::ACCEPT-AGREE ONT::SHOW ONT::CONTEST ONT::REJECT ONT::SCRUTINY ONT::QUESTIONING ONT::BECOMING-AWARE ONT::ACTIVE-PERCEPTION ONT::COME-TO-UNDERSTAND ONT::DETERMINE ) ?!w) :AGENT - :FORMAL ?!obj :DRUM ?code :MODALITY ?modVal :FORCE ?fVal :DEGREE ?var_degree :FREQUENCY ?var_freq )
+            (:* (? type ONT::CONFIRM ONT::CONSENT ONT::ACCEPT-AGREE ONT::SHOW ONT::CONTEST ONT::REJECT ONT::SCRUTINY ONT::QUESTIONING ONT::BECOMING-AWARE ONT::ACTIVE-PERCEPTION ONT::COME-TO-UNDERSTAND ONT::DETERMINE ) ?!w) :FORMAL ?!obj :DRUM ?code :MODALITY ?modVal :FORCE ?fVal :DEGREE ?var_degree :FREQUENCY ?var_freq )
 ;           (?reln1 ?!ag ?t1)
            ((? reln2 ONT::EVENT) ?!obj ?t2)
            (ONT::F ?var_degree ?type_degree)  
@@ -7693,7 +7693,7 @@
            50
            (ONT::epi ?ev ?!eventName
             :rule -rule50_0_AGENT_FORMAL-POLARITY1-gd-FORMAL
-;            :AGENT ?!ag
+            :AGENT -
             :FORMAL ?!obj
             :POLARITY ?!m1_new
             :MODALITY ?modVal
@@ -7775,7 +7775,7 @@
             ))
           ;; rule50_0_AGENT_FORMAL-POLARITY1-gd rule with neither AGENT nor FORMAL
           (((? reln0 ONT::F ONT::QUANTIFIER ONT::KIND ONT::A ONT::INDEF-PLURAL ONT::THE ONT::THE-SET ONT::INDEF-SET ONT::BARE ONT::SM ONT::PRO ONT::PRO-SET) ?ev
-            (:* (? type ONT::CONFIRM ONT::CONSENT ONT::ACCEPT-AGREE ONT::SHOW ONT::CONTEST ONT::REJECT ONT::SCRUTINY ONT::QUESTIONING ONT::BECOMING-AWARE ONT::ACTIVE-PERCEPTION ONT::COME-TO-UNDERSTAND ONT::DETERMINE ) ?!w) :AGENT - :FORMAL - :DRUM ?code :MODALITY ?modVal :FORCE ?fVal :DEGREE ?var_degree :FREQUENCY ?var_freq )
+            (:* (? type ONT::CONFIRM ONT::CONSENT ONT::ACCEPT-AGREE ONT::SHOW ONT::CONTEST ONT::REJECT ONT::SCRUTINY ONT::QUESTIONING ONT::BECOMING-AWARE ONT::ACTIVE-PERCEPTION ONT::COME-TO-UNDERSTAND ONT::DETERMINE ) ?!w) :AGENT - :FORMAL - :AFFECTED - :AFFECTED1 - :AFFECTED-RESULT - :NEUTRAL - :NEUTRAL1 - :NEUTRAL2 - :FORMAL - :DRUM ?code :MODALITY ?modVal :FORCE ?fVal :DEGREE ?var_degree :FREQUENCY ?var_freq )
 ;           (?reln1 ?!ag ?t1)
 ;           ((? reln2 ONT::EVENT) ?!obj ?t2)
            (ONT::F ?var_degree ?type_degree)  
@@ -7907,7 +7907,7 @@
            )
           ;; rule50_0_AGENT_FORMAL-MODA1_1 rule with only AGENT
           (((? reln0  ONT::F ONT::QUANTIFIER ONT::KIND ONT::A ONT::INDEF-PLURAL ONT::THE ONT::THE-SET ONT::INDEF-SET ONT::BARE ONT::SM ONT::PRO ONT::PRO-SET) ?ev
-            (:* (? type ONT::CONFIRM ONT::CONSENT ONT::ACCEPT-AGREE ONT::SHOW ONT::CONTEST ONT::REJECT ONT::SCRUTINY ONT::QUESTIONING ONT::BECOMING-AWARE ONT::ACTIVE-PERCEPTION ONT::COME-TO-UNDERSTAND ONT::DETERMINE ) ?!w) :AGENT ?!ag :AFFECTED - :AFFECTED-RESULT - :NEUTRAL - :FORMAL - :DRUM ?code :MODALITY ?modVal :FORCE ?fVal :DEGREE ?var_degree :FREQUENCY ?var_freq :MODS (?!modA))
+            (:* (? type ONT::CONFIRM ONT::CONSENT ONT::ACCEPT-AGREE ONT::SHOW ONT::CONTEST ONT::REJECT ONT::SCRUTINY ONT::QUESTIONING ONT::BECOMING-AWARE ONT::ACTIVE-PERCEPTION ONT::COME-TO-UNDERSTAND ONT::DETERMINE ) ?!w) :AGENT ?!ag :DRUM ?code :MODALITY ?modVal :FORCE ?fVal :DEGREE ?var_degree :FREQUENCY ?var_freq :MODS (?!modA))
            (?reln1 ?!ag ?t1)
 ;           ((? reln2 ONT::EVENT) ?!obj ?t2)
            (ONT::F ?var_degree ?type_degree)  
@@ -7919,7 +7919,7 @@
            (ONT::epi ?ev ?!eventName
             :rule -rule50_0_AGENT_FORMAL-MODA1_1-AGENT
             :AGENT ?!ag
-;            :FORMAL ?!obj
+            :FORMAL -
             :MODA ?tmp ;?!modA
             :MODALITY ?modVal
             :FORCE ?fVal
@@ -7930,7 +7930,7 @@
             ))
           ;; rule50_0_AGENT_FORMAL-MODA1_1 rule with only FORMAL
           (((? reln0  ONT::F ONT::QUANTIFIER ONT::KIND ONT::A ONT::INDEF-PLURAL ONT::THE ONT::THE-SET ONT::INDEF-SET ONT::BARE ONT::SM ONT::PRO ONT::PRO-SET) ?ev
-            (:* (? type ONT::CONFIRM ONT::CONSENT ONT::ACCEPT-AGREE ONT::SHOW ONT::CONTEST ONT::REJECT ONT::SCRUTINY ONT::QUESTIONING ONT::BECOMING-AWARE ONT::ACTIVE-PERCEPTION ONT::COME-TO-UNDERSTAND ONT::DETERMINE ) ?!w) :AGENT - :FORMAL ?!obj :DRUM ?code :MODALITY ?modVal :FORCE ?fVal :DEGREE ?var_degree :FREQUENCY ?var_freq :MODS (?!modA))
+            (:* (? type ONT::CONFIRM ONT::CONSENT ONT::ACCEPT-AGREE ONT::SHOW ONT::CONTEST ONT::REJECT ONT::SCRUTINY ONT::QUESTIONING ONT::BECOMING-AWARE ONT::ACTIVE-PERCEPTION ONT::COME-TO-UNDERSTAND ONT::DETERMINE ) ?!w) :FORMAL ?!obj :DRUM ?code :MODALITY ?modVal :FORCE ?fVal :DEGREE ?var_degree :FREQUENCY ?var_freq :MODS (?!modA))
 ;           (?reln1 ?!ag ?t1)
            ((? reln2 ONT::EVENT) ?!obj ?t2)
            (ONT::F ?var_degree ?type_degree)  
@@ -7941,7 +7941,7 @@
            50
            (ONT::epi ?ev ?!eventName
             :rule -rule50_0_AGENT_FORMAL-MODA1_1-FORMAL
-;            :AGENT ?!ag
+            :AGENT -
             :FORMAL ?!obj
             :MODA ?tmp ;?!modA
             :MODALITY ?modVal
@@ -8021,7 +8021,7 @@
             ))
           ;; rule50_0_AGENT_FORMAL-MODA1_1 rule with neither AGENT nor FORMAL
           (((? reln0 ONT::F ONT::QUANTIFIER ONT::KIND ONT::A ONT::INDEF-PLURAL ONT::THE ONT::THE-SET ONT::INDEF-SET ONT::BARE ONT::SM ONT::PRO ONT::PRO-SET) ?ev
-            (:* (? type ONT::CONFIRM ONT::CONSENT ONT::ACCEPT-AGREE ONT::SHOW ONT::CONTEST ONT::REJECT ONT::SCRUTINY ONT::QUESTIONING ONT::BECOMING-AWARE ONT::ACTIVE-PERCEPTION ONT::COME-TO-UNDERSTAND ONT::DETERMINE ) ?!w) :AGENT - :FORMAL - :DRUM ?code :MODALITY ?modVal :FORCE ?fVal :DEGREE ?var_degree :FREQUENCY ?var_freq :MODS (?!modA))
+            (:* (? type ONT::CONFIRM ONT::CONSENT ONT::ACCEPT-AGREE ONT::SHOW ONT::CONTEST ONT::REJECT ONT::SCRUTINY ONT::QUESTIONING ONT::BECOMING-AWARE ONT::ACTIVE-PERCEPTION ONT::COME-TO-UNDERSTAND ONT::DETERMINE ) ?!w) :AGENT - :FORMAL - :AFFECTED - :AFFECTED1 - :AFFECTED-RESULT - :NEUTRAL - :NEUTRAL1 - :NEUTRAL2 - :FORMAL - :DRUM ?code :MODALITY ?modVal :FORCE ?fVal :DEGREE ?var_degree :FREQUENCY ?var_freq :MODS (?!modA))
 ;           (?reln1 ?!ag ?t1)
 ;           ((? reln2 ONT::EVENT) ?!obj ?t2)
            (ONT::F ?var_degree ?type_degree)  
@@ -8150,7 +8150,7 @@
            )
           ;; rule50_0_AGENT_FORMAL-MODA1_2 rule with only AGENT
           (((? reln0  ONT::F ONT::QUANTIFIER ONT::KIND ONT::A ONT::INDEF-PLURAL ONT::THE ONT::THE-SET ONT::INDEF-SET ONT::BARE ONT::SM ONT::PRO ONT::PRO-SET) ?ev
-            (:* (? type ONT::CONFIRM ONT::CONSENT ONT::ACCEPT-AGREE ONT::SHOW ONT::CONTEST ONT::REJECT ONT::SCRUTINY ONT::QUESTIONING ONT::BECOMING-AWARE ONT::ACTIVE-PERCEPTION ONT::COME-TO-UNDERSTAND ONT::DETERMINE ) ?!w) :AGENT ?!ag :AFFECTED - :AFFECTED-RESULT - :NEUTRAL - :FORMAL - :DRUM ?code :MODALITY ?modVal :FORCE ?fVal :DEGREE ?var_degree :FREQUENCY ?var_freq :MANNER ?!modA)
+            (:* (? type ONT::CONFIRM ONT::CONSENT ONT::ACCEPT-AGREE ONT::SHOW ONT::CONTEST ONT::REJECT ONT::SCRUTINY ONT::QUESTIONING ONT::BECOMING-AWARE ONT::ACTIVE-PERCEPTION ONT::COME-TO-UNDERSTAND ONT::DETERMINE ) ?!w) :AGENT ?!ag :DRUM ?code :MODALITY ?modVal :FORCE ?fVal :DEGREE ?var_degree :FREQUENCY ?var_freq :MANNER ?!modA)
            (?reln1 ?!ag ?t1)
 ;           ((? reln2 ONT::EVENT) ?!obj ?t2)
            (ONT::F ?var_degree ?type_degree)  
@@ -8162,7 +8162,7 @@
            (ONT::epi ?ev ?!eventName
             :rule -rule50_0_AGENT_FORMAL-MODA1_2-AGENT
             :AGENT ?!ag
-;            :FORMAL ?!obj
+            :FORMAL -
             :MODA ?tmp ;?!modA
             :MODALITY ?modVal
             :FORCE ?fVal
@@ -8173,7 +8173,7 @@
             ))
           ;; rule50_0_AGENT_FORMAL-MODA1_2 rule with only FORMAL
           (((? reln0  ONT::F ONT::QUANTIFIER ONT::KIND ONT::A ONT::INDEF-PLURAL ONT::THE ONT::THE-SET ONT::INDEF-SET ONT::BARE ONT::SM ONT::PRO ONT::PRO-SET) ?ev
-            (:* (? type ONT::CONFIRM ONT::CONSENT ONT::ACCEPT-AGREE ONT::SHOW ONT::CONTEST ONT::REJECT ONT::SCRUTINY ONT::QUESTIONING ONT::BECOMING-AWARE ONT::ACTIVE-PERCEPTION ONT::COME-TO-UNDERSTAND ONT::DETERMINE ) ?!w) :AGENT - :FORMAL ?!obj :DRUM ?code :MODALITY ?modVal :FORCE ?fVal :DEGREE ?var_degree :FREQUENCY ?var_freq :MANNER ?!modA)
+            (:* (? type ONT::CONFIRM ONT::CONSENT ONT::ACCEPT-AGREE ONT::SHOW ONT::CONTEST ONT::REJECT ONT::SCRUTINY ONT::QUESTIONING ONT::BECOMING-AWARE ONT::ACTIVE-PERCEPTION ONT::COME-TO-UNDERSTAND ONT::DETERMINE ) ?!w) :FORMAL ?!obj :DRUM ?code :MODALITY ?modVal :FORCE ?fVal :DEGREE ?var_degree :FREQUENCY ?var_freq :MANNER ?!modA)
 ;           (?reln1 ?!ag ?t1)
            ((? reln2 ONT::EVENT) ?!obj ?t2)
            (ONT::F ?var_degree ?type_degree)  
@@ -8184,7 +8184,7 @@
            50
            (ONT::epi ?ev ?!eventName
             :rule -rule50_0_AGENT_FORMAL-MODA1_2-FORMAL
-;            :AGENT ?!ag
+            :AGENT -
             :FORMAL ?!obj
             :MODA ?tmp ;?!modA
             :MODALITY ?modVal
@@ -8264,7 +8264,7 @@
             ))
           ;; rule50_0_AGENT_FORMAL-MODA1_2 rule with neither AGENT nor FORMAL
           (((? reln0 ONT::F ONT::QUANTIFIER ONT::KIND ONT::A ONT::INDEF-PLURAL ONT::THE ONT::THE-SET ONT::INDEF-SET ONT::BARE ONT::SM ONT::PRO ONT::PRO-SET) ?ev
-            (:* (? type ONT::CONFIRM ONT::CONSENT ONT::ACCEPT-AGREE ONT::SHOW ONT::CONTEST ONT::REJECT ONT::SCRUTINY ONT::QUESTIONING ONT::BECOMING-AWARE ONT::ACTIVE-PERCEPTION ONT::COME-TO-UNDERSTAND ONT::DETERMINE ) ?!w) :AGENT - :FORMAL - :DRUM ?code :MODALITY ?modVal :FORCE ?fVal :DEGREE ?var_degree :FREQUENCY ?var_freq :MANNER ?!modA)
+            (:* (? type ONT::CONFIRM ONT::CONSENT ONT::ACCEPT-AGREE ONT::SHOW ONT::CONTEST ONT::REJECT ONT::SCRUTINY ONT::QUESTIONING ONT::BECOMING-AWARE ONT::ACTIVE-PERCEPTION ONT::COME-TO-UNDERSTAND ONT::DETERMINE ) ?!w) :AGENT - :FORMAL - :AFFECTED - :AFFECTED1 - :AFFECTED-RESULT - :NEUTRAL - :NEUTRAL1 - :NEUTRAL2 - :FORMAL - :DRUM ?code :MODALITY ?modVal :FORCE ?fVal :DEGREE ?var_degree :FREQUENCY ?var_freq :MANNER ?!modA)
 ;           (?reln1 ?!ag ?t1)
 ;           ((? reln2 ONT::EVENT) ?!obj ?t2)
            (ONT::F ?var_degree ?type_degree)  
@@ -8393,7 +8393,7 @@
            )
           ;; rule50_0_AGENT_FORMAL-MODN1_1 rule with only AGENT
           (((? reln0  ONT::F ONT::QUANTIFIER ONT::KIND ONT::A ONT::INDEF-PLURAL ONT::THE ONT::THE-SET ONT::INDEF-SET ONT::BARE ONT::SM ONT::PRO ONT::PRO-SET) ?ev
-            (:* (? type ONT::CONFIRM ONT::CONSENT ONT::ACCEPT-AGREE ONT::SHOW ONT::CONTEST ONT::REJECT ONT::SCRUTINY ONT::QUESTIONING ONT::BECOMING-AWARE ONT::ACTIVE-PERCEPTION ONT::COME-TO-UNDERSTAND ONT::DETERMINE ) ?!w) :AGENT ?!ag :AFFECTED - :AFFECTED-RESULT - :NEUTRAL - :FORMAL - :DRUM ?code :MODALITY ?modVal :FORCE ?fVal :DEGREE ?var_degree :FREQUENCY ?var_freq :MODS (?!modN))
+            (:* (? type ONT::CONFIRM ONT::CONSENT ONT::ACCEPT-AGREE ONT::SHOW ONT::CONTEST ONT::REJECT ONT::SCRUTINY ONT::QUESTIONING ONT::BECOMING-AWARE ONT::ACTIVE-PERCEPTION ONT::COME-TO-UNDERSTAND ONT::DETERMINE ) ?!w) :AGENT ?!ag :DRUM ?code :MODALITY ?modVal :FORCE ?fVal :DEGREE ?var_degree :FREQUENCY ?var_freq :MODS (?!modN))
            (?reln1 ?!ag ?t1)
 ;           ((? reln2 ONT::EVENT) ?!obj ?t2)
            (ONT::F ?var_degree ?type_degree)  
@@ -8405,7 +8405,7 @@
            (ONT::epi ?ev ?!eventName
             :rule -rule50_0_AGENT_FORMAL-MODN1_1-AGENT
             :AGENT ?!ag
-;            :FORMAL ?!obj
+            :FORMAL -
             :MODN ?tmp ;?!modN
             :MODALITY ?modVal
             :FORCE ?fVal
@@ -8416,7 +8416,7 @@
             ))
           ;; rule50_0_AGENT_FORMAL-MODN1_1 rule with only FORMAL
           (((? reln0  ONT::F ONT::QUANTIFIER ONT::KIND ONT::A ONT::INDEF-PLURAL ONT::THE ONT::THE-SET ONT::INDEF-SET ONT::BARE ONT::SM ONT::PRO ONT::PRO-SET) ?ev
-            (:* (? type ONT::CONFIRM ONT::CONSENT ONT::ACCEPT-AGREE ONT::SHOW ONT::CONTEST ONT::REJECT ONT::SCRUTINY ONT::QUESTIONING ONT::BECOMING-AWARE ONT::ACTIVE-PERCEPTION ONT::COME-TO-UNDERSTAND ONT::DETERMINE ) ?!w) :AGENT - :FORMAL ?!obj :DRUM ?code :MODALITY ?modVal :FORCE ?fVal :DEGREE ?var_degree :FREQUENCY ?var_freq :MODS (?!modN))
+            (:* (? type ONT::CONFIRM ONT::CONSENT ONT::ACCEPT-AGREE ONT::SHOW ONT::CONTEST ONT::REJECT ONT::SCRUTINY ONT::QUESTIONING ONT::BECOMING-AWARE ONT::ACTIVE-PERCEPTION ONT::COME-TO-UNDERSTAND ONT::DETERMINE ) ?!w) :FORMAL ?!obj :DRUM ?code :MODALITY ?modVal :FORCE ?fVal :DEGREE ?var_degree :FREQUENCY ?var_freq :MODS (?!modN))
 ;           (?reln1 ?!ag ?t1)
            ((? reln2 ONT::EVENT) ?!obj ?t2)
            (ONT::F ?var_degree ?type_degree)  
@@ -8427,7 +8427,7 @@
            50
            (ONT::epi ?ev ?!eventName
             :rule -rule50_0_AGENT_FORMAL-MODN1_1-FORMAL
-;            :AGENT ?!ag
+            :AGENT -
             :FORMAL ?!obj
             :MODN ?tmp ;?!modN
             :MODALITY ?modVal
@@ -8507,7 +8507,7 @@
             ))
           ;; rule50_0_AGENT_FORMAL-MODN1_1 rule with neither AGENT nor FORMAL
           (((? reln0 ONT::F ONT::QUANTIFIER ONT::KIND ONT::A ONT::INDEF-PLURAL ONT::THE ONT::THE-SET ONT::INDEF-SET ONT::BARE ONT::SM ONT::PRO ONT::PRO-SET) ?ev
-            (:* (? type ONT::CONFIRM ONT::CONSENT ONT::ACCEPT-AGREE ONT::SHOW ONT::CONTEST ONT::REJECT ONT::SCRUTINY ONT::QUESTIONING ONT::BECOMING-AWARE ONT::ACTIVE-PERCEPTION ONT::COME-TO-UNDERSTAND ONT::DETERMINE ) ?!w) :AGENT - :FORMAL - :DRUM ?code :MODALITY ?modVal :FORCE ?fVal :DEGREE ?var_degree :FREQUENCY ?var_freq :MODS (?!modN))
+            (:* (? type ONT::CONFIRM ONT::CONSENT ONT::ACCEPT-AGREE ONT::SHOW ONT::CONTEST ONT::REJECT ONT::SCRUTINY ONT::QUESTIONING ONT::BECOMING-AWARE ONT::ACTIVE-PERCEPTION ONT::COME-TO-UNDERSTAND ONT::DETERMINE ) ?!w) :AGENT - :FORMAL - :AFFECTED - :AFFECTED1 - :AFFECTED-RESULT - :NEUTRAL - :NEUTRAL1 - :NEUTRAL2 - :FORMAL - :DRUM ?code :MODALITY ?modVal :FORCE ?fVal :DEGREE ?var_degree :FREQUENCY ?var_freq :MODS (?!modN))
 ;           (?reln1 ?!ag ?t1)
 ;           ((? reln2 ONT::EVENT) ?!obj ?t2)
            (ONT::F ?var_degree ?type_degree)  
@@ -8636,7 +8636,7 @@
            )
           ;; rule50_0_AGENT_FORMAL-MODN1_2 rule with only AGENT
           (((? reln0  ONT::F ONT::QUANTIFIER ONT::KIND ONT::A ONT::INDEF-PLURAL ONT::THE ONT::THE-SET ONT::INDEF-SET ONT::BARE ONT::SM ONT::PRO ONT::PRO-SET) ?ev
-            (:* (? type ONT::CONFIRM ONT::CONSENT ONT::ACCEPT-AGREE ONT::SHOW ONT::CONTEST ONT::REJECT ONT::SCRUTINY ONT::QUESTIONING ONT::BECOMING-AWARE ONT::ACTIVE-PERCEPTION ONT::COME-TO-UNDERSTAND ONT::DETERMINE ) ?!w) :AGENT ?!ag :AFFECTED - :AFFECTED-RESULT - :NEUTRAL - :FORMAL - :DRUM ?code :MODALITY ?modVal :FORCE ?fVal :DEGREE ?var_degree :FREQUENCY ?var_freq :MANNER ?!modN)
+            (:* (? type ONT::CONFIRM ONT::CONSENT ONT::ACCEPT-AGREE ONT::SHOW ONT::CONTEST ONT::REJECT ONT::SCRUTINY ONT::QUESTIONING ONT::BECOMING-AWARE ONT::ACTIVE-PERCEPTION ONT::COME-TO-UNDERSTAND ONT::DETERMINE ) ?!w) :AGENT ?!ag :DRUM ?code :MODALITY ?modVal :FORCE ?fVal :DEGREE ?var_degree :FREQUENCY ?var_freq :MANNER ?!modN)
            (?reln1 ?!ag ?t1)
 ;           ((? reln2 ONT::EVENT) ?!obj ?t2)
            (ONT::F ?var_degree ?type_degree)  
@@ -8648,7 +8648,7 @@
            (ONT::epi ?ev ?!eventName
             :rule -rule50_0_AGENT_FORMAL-MODN1_2-AGENT
             :AGENT ?!ag
-;            :FORMAL ?!obj
+            :FORMAL -
             :MODN ?tmp ;?!modN
             :MODALITY ?modVal
             :FORCE ?fVal
@@ -8659,7 +8659,7 @@
             ))
           ;; rule50_0_AGENT_FORMAL-MODN1_2 rule with only FORMAL
           (((? reln0  ONT::F ONT::QUANTIFIER ONT::KIND ONT::A ONT::INDEF-PLURAL ONT::THE ONT::THE-SET ONT::INDEF-SET ONT::BARE ONT::SM ONT::PRO ONT::PRO-SET) ?ev
-            (:* (? type ONT::CONFIRM ONT::CONSENT ONT::ACCEPT-AGREE ONT::SHOW ONT::CONTEST ONT::REJECT ONT::SCRUTINY ONT::QUESTIONING ONT::BECOMING-AWARE ONT::ACTIVE-PERCEPTION ONT::COME-TO-UNDERSTAND ONT::DETERMINE ) ?!w) :AGENT - :FORMAL ?!obj :DRUM ?code :MODALITY ?modVal :FORCE ?fVal :DEGREE ?var_degree :FREQUENCY ?var_freq :MANNER ?!modN)
+            (:* (? type ONT::CONFIRM ONT::CONSENT ONT::ACCEPT-AGREE ONT::SHOW ONT::CONTEST ONT::REJECT ONT::SCRUTINY ONT::QUESTIONING ONT::BECOMING-AWARE ONT::ACTIVE-PERCEPTION ONT::COME-TO-UNDERSTAND ONT::DETERMINE ) ?!w) :FORMAL ?!obj :DRUM ?code :MODALITY ?modVal :FORCE ?fVal :DEGREE ?var_degree :FREQUENCY ?var_freq :MANNER ?!modN)
 ;           (?reln1 ?!ag ?t1)
            ((? reln2 ONT::EVENT) ?!obj ?t2)
            (ONT::F ?var_degree ?type_degree)  
@@ -8670,7 +8670,7 @@
            50
            (ONT::epi ?ev ?!eventName
             :rule -rule50_0_AGENT_FORMAL-MODN1_2-FORMAL
-;            :AGENT ?!ag
+            :AGENT -
             :FORMAL ?!obj
             :MODN ?tmp ;?!modN
             :MODALITY ?modVal
@@ -8750,7 +8750,7 @@
             ))
           ;; rule50_0_AGENT_FORMAL-MODN1_2 rule with neither AGENT nor FORMAL
           (((? reln0 ONT::F ONT::QUANTIFIER ONT::KIND ONT::A ONT::INDEF-PLURAL ONT::THE ONT::THE-SET ONT::INDEF-SET ONT::BARE ONT::SM ONT::PRO ONT::PRO-SET) ?ev
-            (:* (? type ONT::CONFIRM ONT::CONSENT ONT::ACCEPT-AGREE ONT::SHOW ONT::CONTEST ONT::REJECT ONT::SCRUTINY ONT::QUESTIONING ONT::BECOMING-AWARE ONT::ACTIVE-PERCEPTION ONT::COME-TO-UNDERSTAND ONT::DETERMINE ) ?!w) :AGENT - :FORMAL - :DRUM ?code :MODALITY ?modVal :FORCE ?fVal :DEGREE ?var_degree :FREQUENCY ?var_freq :MANNER ?!modN)
+            (:* (? type ONT::CONFIRM ONT::CONSENT ONT::ACCEPT-AGREE ONT::SHOW ONT::CONTEST ONT::REJECT ONT::SCRUTINY ONT::QUESTIONING ONT::BECOMING-AWARE ONT::ACTIVE-PERCEPTION ONT::COME-TO-UNDERSTAND ONT::DETERMINE ) ?!w) :AGENT - :FORMAL - :AFFECTED - :AFFECTED1 - :AFFECTED-RESULT - :NEUTRAL - :NEUTRAL1 - :NEUTRAL2 - :FORMAL - :DRUM ?code :MODALITY ?modVal :FORCE ?fVal :DEGREE ?var_degree :FREQUENCY ?var_freq :MANNER ?!modN)
 ;           (?reln1 ?!ag ?t1)
 ;           ((? reln2 ONT::EVENT) ?!obj ?t2)
            (ONT::F ?var_degree ?type_degree)  
@@ -8886,7 +8886,7 @@
            )
           ;; rule50_0_AGENT_NEUTRAL rule with only AGENT
           (((? reln0  ONT::F ONT::QUANTIFIER ONT::KIND ONT::A ONT::INDEF-PLURAL ONT::THE ONT::THE-SET ONT::INDEF-SET ONT::BARE ONT::SM ONT::PRO ONT::PRO-SET) ?ev
-            (:* (? type ONT::CONFIRM ONT::CONSENT ONT::ACCEPT-AGREE ONT::SHOW ONT::SCRUTINY ONT::QUESTIONING ONT::BECOMING-AWARE ONT::ACTIVE-PERCEPTION ONT::COME-TO-UNDERSTAND ONT::DETERMINE ) ?!w) :AGENT ?!ag :AFFECTED - :AFFECTED-RESULT - :NEUTRAL - :FORMAL - :DRUM ?code :MODALITY ?modVal :FORCE ?fVal :DEGREE ?var_degree :FREQUENCY ?var_freq )
+            (:* (? type ONT::CONFIRM ONT::CONSENT ONT::ACCEPT-AGREE ONT::SHOW ONT::SCRUTINY ONT::QUESTIONING ONT::BECOMING-AWARE ONT::ACTIVE-PERCEPTION ONT::COME-TO-UNDERSTAND ONT::DETERMINE ) ?!w) :AGENT ?!ag :DRUM ?code :MODALITY ?modVal :FORCE ?fVal :DEGREE ?var_degree :FREQUENCY ?var_freq )
            (?reln1 ?!ag ?t1)
 ;           ((? reln2 ONT::EVENT) ?!obj ?t2)
            (ONT::F ?var_degree ?type_degree)  
@@ -8897,7 +8897,7 @@
            (ONT::epi ?ev ?!eventName
             :rule -rule50_0_AGENT_NEUTRAL-AGENT
             :AGENT ?!ag
-;            :NEUTRAL ?!obj
+            :NEUTRAL -
             :MODALITY ?modVal
             :FORCE ?fVal
             :DEGREE ?type_degree
@@ -8907,7 +8907,7 @@
             ))
           ;; rule50_0_AGENT_NEUTRAL rule with only NEUTRAL
           (((? reln0  ONT::F ONT::QUANTIFIER ONT::KIND ONT::A ONT::INDEF-PLURAL ONT::THE ONT::THE-SET ONT::INDEF-SET ONT::BARE ONT::SM ONT::PRO ONT::PRO-SET) ?ev
-            (:* (? type ONT::CONFIRM ONT::CONSENT ONT::ACCEPT-AGREE ONT::SHOW ONT::SCRUTINY ONT::QUESTIONING ONT::BECOMING-AWARE ONT::ACTIVE-PERCEPTION ONT::COME-TO-UNDERSTAND ONT::DETERMINE ) ?!w) :AGENT - :NEUTRAL ?!obj :DRUM ?code :MODALITY ?modVal :FORCE ?fVal :DEGREE ?var_degree :FREQUENCY ?var_freq )
+            (:* (? type ONT::CONFIRM ONT::CONSENT ONT::ACCEPT-AGREE ONT::SHOW ONT::SCRUTINY ONT::QUESTIONING ONT::BECOMING-AWARE ONT::ACTIVE-PERCEPTION ONT::COME-TO-UNDERSTAND ONT::DETERMINE ) ?!w) :NEUTRAL ?!obj :DRUM ?code :MODALITY ?modVal :FORCE ?fVal :DEGREE ?var_degree :FREQUENCY ?var_freq )
 ;           (?reln1 ?!ag ?t1)
            ((? reln2 ONT::EVENT) ?!obj ?t2)
            (ONT::F ?var_degree ?type_degree)  
@@ -8917,7 +8917,7 @@
            50
            (ONT::epi ?ev ?!eventName
             :rule -rule50_0_AGENT_NEUTRAL-NEUTRAL
-;            :AGENT ?!ag
+            :AGENT -
             :NEUTRAL ?!obj
             :MODALITY ?modVal
             :FORCE ?fVal
@@ -8992,7 +8992,7 @@
             ))
           ;; rule50_0_AGENT_NEUTRAL rule with neither AGENT nor NEUTRAL
           (((? reln0 ONT::F ONT::QUANTIFIER ONT::KIND ONT::A ONT::INDEF-PLURAL ONT::THE ONT::THE-SET ONT::INDEF-SET ONT::BARE ONT::SM ONT::PRO ONT::PRO-SET) ?ev
-            (:* (? type ONT::CONFIRM ONT::CONSENT ONT::ACCEPT-AGREE ONT::SHOW ONT::SCRUTINY ONT::QUESTIONING ONT::BECOMING-AWARE ONT::ACTIVE-PERCEPTION ONT::COME-TO-UNDERSTAND ONT::DETERMINE ) ?!w) :AGENT - :NEUTRAL - :DRUM ?code :MODALITY ?modVal :FORCE ?fVal :DEGREE ?var_degree :FREQUENCY ?var_freq )
+            (:* (? type ONT::CONFIRM ONT::CONSENT ONT::ACCEPT-AGREE ONT::SHOW ONT::SCRUTINY ONT::QUESTIONING ONT::BECOMING-AWARE ONT::ACTIVE-PERCEPTION ONT::COME-TO-UNDERSTAND ONT::DETERMINE ) ?!w) :AGENT - :NEUTRAL - :AFFECTED - :AFFECTED1 - :AFFECTED-RESULT - :NEUTRAL - :NEUTRAL1 - :NEUTRAL2 - :FORMAL - :DRUM ?code :MODALITY ?modVal :FORCE ?fVal :DEGREE ?var_degree :FREQUENCY ?var_freq )
 ;           (?reln1 ?!ag ?t1)
 ;           ((? reln2 ONT::EVENT) ?!obj ?t2)
            (ONT::F ?var_degree ?type_degree)  
@@ -9117,7 +9117,7 @@
            )
           ;; rule50_0_AGENT_NEUTRAL-POLARITY1-gd rule with only AGENT
           (((? reln0  ONT::F ONT::QUANTIFIER ONT::KIND ONT::A ONT::INDEF-PLURAL ONT::THE ONT::THE-SET ONT::INDEF-SET ONT::BARE ONT::SM ONT::PRO ONT::PRO-SET) ?ev
-            (:* (? type ONT::CONFIRM ONT::CONSENT ONT::ACCEPT-AGREE ONT::SHOW ONT::SCRUTINY ONT::QUESTIONING ONT::BECOMING-AWARE ONT::ACTIVE-PERCEPTION ONT::COME-TO-UNDERSTAND ONT::DETERMINE ) ?!w) :AGENT ?!ag :AFFECTED - :AFFECTED-RESULT - :NEUTRAL - :FORMAL - :DRUM ?code :MODALITY ?modVal :FORCE ?fVal :DEGREE ?var_degree :FREQUENCY ?var_freq )
+            (:* (? type ONT::CONFIRM ONT::CONSENT ONT::ACCEPT-AGREE ONT::SHOW ONT::SCRUTINY ONT::QUESTIONING ONT::BECOMING-AWARE ONT::ACTIVE-PERCEPTION ONT::COME-TO-UNDERSTAND ONT::DETERMINE ) ?!w) :AGENT ?!ag :DRUM ?code :MODALITY ?modVal :FORCE ?fVal :DEGREE ?var_degree :FREQUENCY ?var_freq )
            (?reln1 ?!ag ?t1)
 ;           ((? reln2 ONT::EVENT) ?!obj ?t2)
            (ONT::F ?var_degree ?type_degree)  
@@ -9130,7 +9130,7 @@
            (ONT::epi ?ev ?!eventName
             :rule -rule50_0_AGENT_NEUTRAL-POLARITY1-gd-AGENT
             :AGENT ?!ag
-;            :NEUTRAL ?!obj
+            :NEUTRAL -
             :POLARITY ?!m1_new
             :MODALITY ?modVal
             :FORCE ?fVal
@@ -9141,7 +9141,7 @@
             ))
           ;; rule50_0_AGENT_NEUTRAL-POLARITY1-gd rule with only NEUTRAL
           (((? reln0  ONT::F ONT::QUANTIFIER ONT::KIND ONT::A ONT::INDEF-PLURAL ONT::THE ONT::THE-SET ONT::INDEF-SET ONT::BARE ONT::SM ONT::PRO ONT::PRO-SET) ?ev
-            (:* (? type ONT::CONFIRM ONT::CONSENT ONT::ACCEPT-AGREE ONT::SHOW ONT::SCRUTINY ONT::QUESTIONING ONT::BECOMING-AWARE ONT::ACTIVE-PERCEPTION ONT::COME-TO-UNDERSTAND ONT::DETERMINE ) ?!w) :AGENT - :NEUTRAL ?!obj :DRUM ?code :MODALITY ?modVal :FORCE ?fVal :DEGREE ?var_degree :FREQUENCY ?var_freq )
+            (:* (? type ONT::CONFIRM ONT::CONSENT ONT::ACCEPT-AGREE ONT::SHOW ONT::SCRUTINY ONT::QUESTIONING ONT::BECOMING-AWARE ONT::ACTIVE-PERCEPTION ONT::COME-TO-UNDERSTAND ONT::DETERMINE ) ?!w) :NEUTRAL ?!obj :DRUM ?code :MODALITY ?modVal :FORCE ?fVal :DEGREE ?var_degree :FREQUENCY ?var_freq )
 ;           (?reln1 ?!ag ?t1)
            ((? reln2 ONT::EVENT) ?!obj ?t2)
            (ONT::F ?var_degree ?type_degree)  
@@ -9153,7 +9153,7 @@
            50
            (ONT::epi ?ev ?!eventName
             :rule -rule50_0_AGENT_NEUTRAL-POLARITY1-gd-NEUTRAL
-;            :AGENT ?!ag
+            :AGENT -
             :NEUTRAL ?!obj
             :POLARITY ?!m1_new
             :MODALITY ?modVal
@@ -9235,7 +9235,7 @@
             ))
           ;; rule50_0_AGENT_NEUTRAL-POLARITY1-gd rule with neither AGENT nor NEUTRAL
           (((? reln0 ONT::F ONT::QUANTIFIER ONT::KIND ONT::A ONT::INDEF-PLURAL ONT::THE ONT::THE-SET ONT::INDEF-SET ONT::BARE ONT::SM ONT::PRO ONT::PRO-SET) ?ev
-            (:* (? type ONT::CONFIRM ONT::CONSENT ONT::ACCEPT-AGREE ONT::SHOW ONT::SCRUTINY ONT::QUESTIONING ONT::BECOMING-AWARE ONT::ACTIVE-PERCEPTION ONT::COME-TO-UNDERSTAND ONT::DETERMINE ) ?!w) :AGENT - :NEUTRAL - :DRUM ?code :MODALITY ?modVal :FORCE ?fVal :DEGREE ?var_degree :FREQUENCY ?var_freq )
+            (:* (? type ONT::CONFIRM ONT::CONSENT ONT::ACCEPT-AGREE ONT::SHOW ONT::SCRUTINY ONT::QUESTIONING ONT::BECOMING-AWARE ONT::ACTIVE-PERCEPTION ONT::COME-TO-UNDERSTAND ONT::DETERMINE ) ?!w) :AGENT - :NEUTRAL - :AFFECTED - :AFFECTED1 - :AFFECTED-RESULT - :NEUTRAL - :NEUTRAL1 - :NEUTRAL2 - :FORMAL - :DRUM ?code :MODALITY ?modVal :FORCE ?fVal :DEGREE ?var_degree :FREQUENCY ?var_freq )
 ;           (?reln1 ?!ag ?t1)
 ;           ((? reln2 ONT::EVENT) ?!obj ?t2)
            (ONT::F ?var_degree ?type_degree)  
@@ -9367,7 +9367,7 @@
            )
           ;; rule50_0_AGENT_NEUTRAL-MODA1_1 rule with only AGENT
           (((? reln0  ONT::F ONT::QUANTIFIER ONT::KIND ONT::A ONT::INDEF-PLURAL ONT::THE ONT::THE-SET ONT::INDEF-SET ONT::BARE ONT::SM ONT::PRO ONT::PRO-SET) ?ev
-            (:* (? type ONT::CONFIRM ONT::CONSENT ONT::ACCEPT-AGREE ONT::SHOW ONT::SCRUTINY ONT::QUESTIONING ONT::BECOMING-AWARE ONT::ACTIVE-PERCEPTION ONT::COME-TO-UNDERSTAND ONT::DETERMINE ) ?!w) :AGENT ?!ag :AFFECTED - :AFFECTED-RESULT - :NEUTRAL - :FORMAL - :DRUM ?code :MODALITY ?modVal :FORCE ?fVal :DEGREE ?var_degree :FREQUENCY ?var_freq :MODS (?!modA))
+            (:* (? type ONT::CONFIRM ONT::CONSENT ONT::ACCEPT-AGREE ONT::SHOW ONT::SCRUTINY ONT::QUESTIONING ONT::BECOMING-AWARE ONT::ACTIVE-PERCEPTION ONT::COME-TO-UNDERSTAND ONT::DETERMINE ) ?!w) :AGENT ?!ag :DRUM ?code :MODALITY ?modVal :FORCE ?fVal :DEGREE ?var_degree :FREQUENCY ?var_freq :MODS (?!modA))
            (?reln1 ?!ag ?t1)
 ;           ((? reln2 ONT::EVENT) ?!obj ?t2)
            (ONT::F ?var_degree ?type_degree)  
@@ -9379,7 +9379,7 @@
            (ONT::epi ?ev ?!eventName
             :rule -rule50_0_AGENT_NEUTRAL-MODA1_1-AGENT
             :AGENT ?!ag
-;            :NEUTRAL ?!obj
+            :NEUTRAL -
             :MODA ?tmp ;?!modA
             :MODALITY ?modVal
             :FORCE ?fVal
@@ -9390,7 +9390,7 @@
             ))
           ;; rule50_0_AGENT_NEUTRAL-MODA1_1 rule with only NEUTRAL
           (((? reln0  ONT::F ONT::QUANTIFIER ONT::KIND ONT::A ONT::INDEF-PLURAL ONT::THE ONT::THE-SET ONT::INDEF-SET ONT::BARE ONT::SM ONT::PRO ONT::PRO-SET) ?ev
-            (:* (? type ONT::CONFIRM ONT::CONSENT ONT::ACCEPT-AGREE ONT::SHOW ONT::SCRUTINY ONT::QUESTIONING ONT::BECOMING-AWARE ONT::ACTIVE-PERCEPTION ONT::COME-TO-UNDERSTAND ONT::DETERMINE ) ?!w) :AGENT - :NEUTRAL ?!obj :DRUM ?code :MODALITY ?modVal :FORCE ?fVal :DEGREE ?var_degree :FREQUENCY ?var_freq :MODS (?!modA))
+            (:* (? type ONT::CONFIRM ONT::CONSENT ONT::ACCEPT-AGREE ONT::SHOW ONT::SCRUTINY ONT::QUESTIONING ONT::BECOMING-AWARE ONT::ACTIVE-PERCEPTION ONT::COME-TO-UNDERSTAND ONT::DETERMINE ) ?!w) :NEUTRAL ?!obj :DRUM ?code :MODALITY ?modVal :FORCE ?fVal :DEGREE ?var_degree :FREQUENCY ?var_freq :MODS (?!modA))
 ;           (?reln1 ?!ag ?t1)
            ((? reln2 ONT::EVENT) ?!obj ?t2)
            (ONT::F ?var_degree ?type_degree)  
@@ -9401,7 +9401,7 @@
            50
            (ONT::epi ?ev ?!eventName
             :rule -rule50_0_AGENT_NEUTRAL-MODA1_1-NEUTRAL
-;            :AGENT ?!ag
+            :AGENT -
             :NEUTRAL ?!obj
             :MODA ?tmp ;?!modA
             :MODALITY ?modVal
@@ -9481,7 +9481,7 @@
             ))
           ;; rule50_0_AGENT_NEUTRAL-MODA1_1 rule with neither AGENT nor NEUTRAL
           (((? reln0 ONT::F ONT::QUANTIFIER ONT::KIND ONT::A ONT::INDEF-PLURAL ONT::THE ONT::THE-SET ONT::INDEF-SET ONT::BARE ONT::SM ONT::PRO ONT::PRO-SET) ?ev
-            (:* (? type ONT::CONFIRM ONT::CONSENT ONT::ACCEPT-AGREE ONT::SHOW ONT::SCRUTINY ONT::QUESTIONING ONT::BECOMING-AWARE ONT::ACTIVE-PERCEPTION ONT::COME-TO-UNDERSTAND ONT::DETERMINE ) ?!w) :AGENT - :NEUTRAL - :DRUM ?code :MODALITY ?modVal :FORCE ?fVal :DEGREE ?var_degree :FREQUENCY ?var_freq :MODS (?!modA))
+            (:* (? type ONT::CONFIRM ONT::CONSENT ONT::ACCEPT-AGREE ONT::SHOW ONT::SCRUTINY ONT::QUESTIONING ONT::BECOMING-AWARE ONT::ACTIVE-PERCEPTION ONT::COME-TO-UNDERSTAND ONT::DETERMINE ) ?!w) :AGENT - :NEUTRAL - :AFFECTED - :AFFECTED1 - :AFFECTED-RESULT - :NEUTRAL - :NEUTRAL1 - :NEUTRAL2 - :FORMAL - :DRUM ?code :MODALITY ?modVal :FORCE ?fVal :DEGREE ?var_degree :FREQUENCY ?var_freq :MODS (?!modA))
 ;           (?reln1 ?!ag ?t1)
 ;           ((? reln2 ONT::EVENT) ?!obj ?t2)
            (ONT::F ?var_degree ?type_degree)  
@@ -9610,7 +9610,7 @@
            )
           ;; rule50_0_AGENT_NEUTRAL-MODA1_2 rule with only AGENT
           (((? reln0  ONT::F ONT::QUANTIFIER ONT::KIND ONT::A ONT::INDEF-PLURAL ONT::THE ONT::THE-SET ONT::INDEF-SET ONT::BARE ONT::SM ONT::PRO ONT::PRO-SET) ?ev
-            (:* (? type ONT::CONFIRM ONT::CONSENT ONT::ACCEPT-AGREE ONT::SHOW ONT::SCRUTINY ONT::QUESTIONING ONT::BECOMING-AWARE ONT::ACTIVE-PERCEPTION ONT::COME-TO-UNDERSTAND ONT::DETERMINE ) ?!w) :AGENT ?!ag :AFFECTED - :AFFECTED-RESULT - :NEUTRAL - :FORMAL - :DRUM ?code :MODALITY ?modVal :FORCE ?fVal :DEGREE ?var_degree :FREQUENCY ?var_freq :MANNER ?!modA)
+            (:* (? type ONT::CONFIRM ONT::CONSENT ONT::ACCEPT-AGREE ONT::SHOW ONT::SCRUTINY ONT::QUESTIONING ONT::BECOMING-AWARE ONT::ACTIVE-PERCEPTION ONT::COME-TO-UNDERSTAND ONT::DETERMINE ) ?!w) :AGENT ?!ag :DRUM ?code :MODALITY ?modVal :FORCE ?fVal :DEGREE ?var_degree :FREQUENCY ?var_freq :MANNER ?!modA)
            (?reln1 ?!ag ?t1)
 ;           ((? reln2 ONT::EVENT) ?!obj ?t2)
            (ONT::F ?var_degree ?type_degree)  
@@ -9622,7 +9622,7 @@
            (ONT::epi ?ev ?!eventName
             :rule -rule50_0_AGENT_NEUTRAL-MODA1_2-AGENT
             :AGENT ?!ag
-;            :NEUTRAL ?!obj
+            :NEUTRAL -
             :MODA ?tmp ;?!modA
             :MODALITY ?modVal
             :FORCE ?fVal
@@ -9633,7 +9633,7 @@
             ))
           ;; rule50_0_AGENT_NEUTRAL-MODA1_2 rule with only NEUTRAL
           (((? reln0  ONT::F ONT::QUANTIFIER ONT::KIND ONT::A ONT::INDEF-PLURAL ONT::THE ONT::THE-SET ONT::INDEF-SET ONT::BARE ONT::SM ONT::PRO ONT::PRO-SET) ?ev
-            (:* (? type ONT::CONFIRM ONT::CONSENT ONT::ACCEPT-AGREE ONT::SHOW ONT::SCRUTINY ONT::QUESTIONING ONT::BECOMING-AWARE ONT::ACTIVE-PERCEPTION ONT::COME-TO-UNDERSTAND ONT::DETERMINE ) ?!w) :AGENT - :NEUTRAL ?!obj :DRUM ?code :MODALITY ?modVal :FORCE ?fVal :DEGREE ?var_degree :FREQUENCY ?var_freq :MANNER ?!modA)
+            (:* (? type ONT::CONFIRM ONT::CONSENT ONT::ACCEPT-AGREE ONT::SHOW ONT::SCRUTINY ONT::QUESTIONING ONT::BECOMING-AWARE ONT::ACTIVE-PERCEPTION ONT::COME-TO-UNDERSTAND ONT::DETERMINE ) ?!w) :NEUTRAL ?!obj :DRUM ?code :MODALITY ?modVal :FORCE ?fVal :DEGREE ?var_degree :FREQUENCY ?var_freq :MANNER ?!modA)
 ;           (?reln1 ?!ag ?t1)
            ((? reln2 ONT::EVENT) ?!obj ?t2)
            (ONT::F ?var_degree ?type_degree)  
@@ -9644,7 +9644,7 @@
            50
            (ONT::epi ?ev ?!eventName
             :rule -rule50_0_AGENT_NEUTRAL-MODA1_2-NEUTRAL
-;            :AGENT ?!ag
+            :AGENT -
             :NEUTRAL ?!obj
             :MODA ?tmp ;?!modA
             :MODALITY ?modVal
@@ -9724,7 +9724,7 @@
             ))
           ;; rule50_0_AGENT_NEUTRAL-MODA1_2 rule with neither AGENT nor NEUTRAL
           (((? reln0 ONT::F ONT::QUANTIFIER ONT::KIND ONT::A ONT::INDEF-PLURAL ONT::THE ONT::THE-SET ONT::INDEF-SET ONT::BARE ONT::SM ONT::PRO ONT::PRO-SET) ?ev
-            (:* (? type ONT::CONFIRM ONT::CONSENT ONT::ACCEPT-AGREE ONT::SHOW ONT::SCRUTINY ONT::QUESTIONING ONT::BECOMING-AWARE ONT::ACTIVE-PERCEPTION ONT::COME-TO-UNDERSTAND ONT::DETERMINE ) ?!w) :AGENT - :NEUTRAL - :DRUM ?code :MODALITY ?modVal :FORCE ?fVal :DEGREE ?var_degree :FREQUENCY ?var_freq :MANNER ?!modA)
+            (:* (? type ONT::CONFIRM ONT::CONSENT ONT::ACCEPT-AGREE ONT::SHOW ONT::SCRUTINY ONT::QUESTIONING ONT::BECOMING-AWARE ONT::ACTIVE-PERCEPTION ONT::COME-TO-UNDERSTAND ONT::DETERMINE ) ?!w) :AGENT - :NEUTRAL - :AFFECTED - :AFFECTED1 - :AFFECTED-RESULT - :NEUTRAL - :NEUTRAL1 - :NEUTRAL2 - :FORMAL - :DRUM ?code :MODALITY ?modVal :FORCE ?fVal :DEGREE ?var_degree :FREQUENCY ?var_freq :MANNER ?!modA)
 ;           (?reln1 ?!ag ?t1)
 ;           ((? reln2 ONT::EVENT) ?!obj ?t2)
            (ONT::F ?var_degree ?type_degree)  
@@ -9853,7 +9853,7 @@
            )
           ;; rule50_0_AGENT_NEUTRAL-MODN1_1 rule with only AGENT
           (((? reln0  ONT::F ONT::QUANTIFIER ONT::KIND ONT::A ONT::INDEF-PLURAL ONT::THE ONT::THE-SET ONT::INDEF-SET ONT::BARE ONT::SM ONT::PRO ONT::PRO-SET) ?ev
-            (:* (? type ONT::CONFIRM ONT::CONSENT ONT::ACCEPT-AGREE ONT::SHOW ONT::SCRUTINY ONT::QUESTIONING ONT::BECOMING-AWARE ONT::ACTIVE-PERCEPTION ONT::COME-TO-UNDERSTAND ONT::DETERMINE ) ?!w) :AGENT ?!ag :AFFECTED - :AFFECTED-RESULT - :NEUTRAL - :FORMAL - :DRUM ?code :MODALITY ?modVal :FORCE ?fVal :DEGREE ?var_degree :FREQUENCY ?var_freq :MODS (?!modN))
+            (:* (? type ONT::CONFIRM ONT::CONSENT ONT::ACCEPT-AGREE ONT::SHOW ONT::SCRUTINY ONT::QUESTIONING ONT::BECOMING-AWARE ONT::ACTIVE-PERCEPTION ONT::COME-TO-UNDERSTAND ONT::DETERMINE ) ?!w) :AGENT ?!ag :DRUM ?code :MODALITY ?modVal :FORCE ?fVal :DEGREE ?var_degree :FREQUENCY ?var_freq :MODS (?!modN))
            (?reln1 ?!ag ?t1)
 ;           ((? reln2 ONT::EVENT) ?!obj ?t2)
            (ONT::F ?var_degree ?type_degree)  
@@ -9865,7 +9865,7 @@
            (ONT::epi ?ev ?!eventName
             :rule -rule50_0_AGENT_NEUTRAL-MODN1_1-AGENT
             :AGENT ?!ag
-;            :NEUTRAL ?!obj
+            :NEUTRAL -
             :MODN ?tmp ;?!modN
             :MODALITY ?modVal
             :FORCE ?fVal
@@ -9876,7 +9876,7 @@
             ))
           ;; rule50_0_AGENT_NEUTRAL-MODN1_1 rule with only NEUTRAL
           (((? reln0  ONT::F ONT::QUANTIFIER ONT::KIND ONT::A ONT::INDEF-PLURAL ONT::THE ONT::THE-SET ONT::INDEF-SET ONT::BARE ONT::SM ONT::PRO ONT::PRO-SET) ?ev
-            (:* (? type ONT::CONFIRM ONT::CONSENT ONT::ACCEPT-AGREE ONT::SHOW ONT::SCRUTINY ONT::QUESTIONING ONT::BECOMING-AWARE ONT::ACTIVE-PERCEPTION ONT::COME-TO-UNDERSTAND ONT::DETERMINE ) ?!w) :AGENT - :NEUTRAL ?!obj :DRUM ?code :MODALITY ?modVal :FORCE ?fVal :DEGREE ?var_degree :FREQUENCY ?var_freq :MODS (?!modN))
+            (:* (? type ONT::CONFIRM ONT::CONSENT ONT::ACCEPT-AGREE ONT::SHOW ONT::SCRUTINY ONT::QUESTIONING ONT::BECOMING-AWARE ONT::ACTIVE-PERCEPTION ONT::COME-TO-UNDERSTAND ONT::DETERMINE ) ?!w) :NEUTRAL ?!obj :DRUM ?code :MODALITY ?modVal :FORCE ?fVal :DEGREE ?var_degree :FREQUENCY ?var_freq :MODS (?!modN))
 ;           (?reln1 ?!ag ?t1)
            ((? reln2 ONT::EVENT) ?!obj ?t2)
            (ONT::F ?var_degree ?type_degree)  
@@ -9887,7 +9887,7 @@
            50
            (ONT::epi ?ev ?!eventName
             :rule -rule50_0_AGENT_NEUTRAL-MODN1_1-NEUTRAL
-;            :AGENT ?!ag
+            :AGENT -
             :NEUTRAL ?!obj
             :MODN ?tmp ;?!modN
             :MODALITY ?modVal
@@ -9967,7 +9967,7 @@
             ))
           ;; rule50_0_AGENT_NEUTRAL-MODN1_1 rule with neither AGENT nor NEUTRAL
           (((? reln0 ONT::F ONT::QUANTIFIER ONT::KIND ONT::A ONT::INDEF-PLURAL ONT::THE ONT::THE-SET ONT::INDEF-SET ONT::BARE ONT::SM ONT::PRO ONT::PRO-SET) ?ev
-            (:* (? type ONT::CONFIRM ONT::CONSENT ONT::ACCEPT-AGREE ONT::SHOW ONT::SCRUTINY ONT::QUESTIONING ONT::BECOMING-AWARE ONT::ACTIVE-PERCEPTION ONT::COME-TO-UNDERSTAND ONT::DETERMINE ) ?!w) :AGENT - :NEUTRAL - :DRUM ?code :MODALITY ?modVal :FORCE ?fVal :DEGREE ?var_degree :FREQUENCY ?var_freq :MODS (?!modN))
+            (:* (? type ONT::CONFIRM ONT::CONSENT ONT::ACCEPT-AGREE ONT::SHOW ONT::SCRUTINY ONT::QUESTIONING ONT::BECOMING-AWARE ONT::ACTIVE-PERCEPTION ONT::COME-TO-UNDERSTAND ONT::DETERMINE ) ?!w) :AGENT - :NEUTRAL - :AFFECTED - :AFFECTED1 - :AFFECTED-RESULT - :NEUTRAL - :NEUTRAL1 - :NEUTRAL2 - :FORMAL - :DRUM ?code :MODALITY ?modVal :FORCE ?fVal :DEGREE ?var_degree :FREQUENCY ?var_freq :MODS (?!modN))
 ;           (?reln1 ?!ag ?t1)
 ;           ((? reln2 ONT::EVENT) ?!obj ?t2)
            (ONT::F ?var_degree ?type_degree)  
@@ -10096,7 +10096,7 @@
            )
           ;; rule50_0_AGENT_NEUTRAL-MODN1_2 rule with only AGENT
           (((? reln0  ONT::F ONT::QUANTIFIER ONT::KIND ONT::A ONT::INDEF-PLURAL ONT::THE ONT::THE-SET ONT::INDEF-SET ONT::BARE ONT::SM ONT::PRO ONT::PRO-SET) ?ev
-            (:* (? type ONT::CONFIRM ONT::CONSENT ONT::ACCEPT-AGREE ONT::SHOW ONT::SCRUTINY ONT::QUESTIONING ONT::BECOMING-AWARE ONT::ACTIVE-PERCEPTION ONT::COME-TO-UNDERSTAND ONT::DETERMINE ) ?!w) :AGENT ?!ag :AFFECTED - :AFFECTED-RESULT - :NEUTRAL - :FORMAL - :DRUM ?code :MODALITY ?modVal :FORCE ?fVal :DEGREE ?var_degree :FREQUENCY ?var_freq :MANNER ?!modN)
+            (:* (? type ONT::CONFIRM ONT::CONSENT ONT::ACCEPT-AGREE ONT::SHOW ONT::SCRUTINY ONT::QUESTIONING ONT::BECOMING-AWARE ONT::ACTIVE-PERCEPTION ONT::COME-TO-UNDERSTAND ONT::DETERMINE ) ?!w) :AGENT ?!ag :DRUM ?code :MODALITY ?modVal :FORCE ?fVal :DEGREE ?var_degree :FREQUENCY ?var_freq :MANNER ?!modN)
            (?reln1 ?!ag ?t1)
 ;           ((? reln2 ONT::EVENT) ?!obj ?t2)
            (ONT::F ?var_degree ?type_degree)  
@@ -10108,7 +10108,7 @@
            (ONT::epi ?ev ?!eventName
             :rule -rule50_0_AGENT_NEUTRAL-MODN1_2-AGENT
             :AGENT ?!ag
-;            :NEUTRAL ?!obj
+            :NEUTRAL -
             :MODN ?tmp ;?!modN
             :MODALITY ?modVal
             :FORCE ?fVal
@@ -10119,7 +10119,7 @@
             ))
           ;; rule50_0_AGENT_NEUTRAL-MODN1_2 rule with only NEUTRAL
           (((? reln0  ONT::F ONT::QUANTIFIER ONT::KIND ONT::A ONT::INDEF-PLURAL ONT::THE ONT::THE-SET ONT::INDEF-SET ONT::BARE ONT::SM ONT::PRO ONT::PRO-SET) ?ev
-            (:* (? type ONT::CONFIRM ONT::CONSENT ONT::ACCEPT-AGREE ONT::SHOW ONT::SCRUTINY ONT::QUESTIONING ONT::BECOMING-AWARE ONT::ACTIVE-PERCEPTION ONT::COME-TO-UNDERSTAND ONT::DETERMINE ) ?!w) :AGENT - :NEUTRAL ?!obj :DRUM ?code :MODALITY ?modVal :FORCE ?fVal :DEGREE ?var_degree :FREQUENCY ?var_freq :MANNER ?!modN)
+            (:* (? type ONT::CONFIRM ONT::CONSENT ONT::ACCEPT-AGREE ONT::SHOW ONT::SCRUTINY ONT::QUESTIONING ONT::BECOMING-AWARE ONT::ACTIVE-PERCEPTION ONT::COME-TO-UNDERSTAND ONT::DETERMINE ) ?!w) :NEUTRAL ?!obj :DRUM ?code :MODALITY ?modVal :FORCE ?fVal :DEGREE ?var_degree :FREQUENCY ?var_freq :MANNER ?!modN)
 ;           (?reln1 ?!ag ?t1)
            ((? reln2 ONT::EVENT) ?!obj ?t2)
            (ONT::F ?var_degree ?type_degree)  
@@ -10130,7 +10130,7 @@
            50
            (ONT::epi ?ev ?!eventName
             :rule -rule50_0_AGENT_NEUTRAL-MODN1_2-NEUTRAL
-;            :AGENT ?!ag
+            :AGENT -
             :NEUTRAL ?!obj
             :MODN ?tmp ;?!modN
             :MODALITY ?modVal
@@ -10210,7 +10210,7 @@
             ))
           ;; rule50_0_AGENT_NEUTRAL-MODN1_2 rule with neither AGENT nor NEUTRAL
           (((? reln0 ONT::F ONT::QUANTIFIER ONT::KIND ONT::A ONT::INDEF-PLURAL ONT::THE ONT::THE-SET ONT::INDEF-SET ONT::BARE ONT::SM ONT::PRO ONT::PRO-SET) ?ev
-            (:* (? type ONT::CONFIRM ONT::CONSENT ONT::ACCEPT-AGREE ONT::SHOW ONT::SCRUTINY ONT::QUESTIONING ONT::BECOMING-AWARE ONT::ACTIVE-PERCEPTION ONT::COME-TO-UNDERSTAND ONT::DETERMINE ) ?!w) :AGENT - :NEUTRAL - :DRUM ?code :MODALITY ?modVal :FORCE ?fVal :DEGREE ?var_degree :FREQUENCY ?var_freq :MANNER ?!modN)
+            (:* (? type ONT::CONFIRM ONT::CONSENT ONT::ACCEPT-AGREE ONT::SHOW ONT::SCRUTINY ONT::QUESTIONING ONT::BECOMING-AWARE ONT::ACTIVE-PERCEPTION ONT::COME-TO-UNDERSTAND ONT::DETERMINE ) ?!w) :AGENT - :NEUTRAL - :AFFECTED - :AFFECTED1 - :AFFECTED-RESULT - :NEUTRAL - :NEUTRAL1 - :NEUTRAL2 - :FORMAL - :DRUM ?code :MODALITY ?modVal :FORCE ?fVal :DEGREE ?var_degree :FREQUENCY ?var_freq :MANNER ?!modN)
 ;           (?reln1 ?!ag ?t1)
 ;           ((? reln2 ONT::EVENT) ?!obj ?t2)
            (ONT::F ?var_degree ?type_degree)  
@@ -10346,7 +10346,7 @@
            )
           ;; rule50_0_NEUTRAL_NEUTRAL1 rule with only NEUTRAL
           (((? reln0  ONT::F ONT::QUANTIFIER ONT::KIND ONT::A ONT::INDEF-PLURAL ONT::THE ONT::THE-SET ONT::INDEF-SET ONT::BARE ONT::SM ONT::PRO ONT::PRO-SET) ?ev
-            (:* (? type ONT::CORRELATION ONT::REFUTE ONT::RELATE ) ?!w) :NEUTRAL ?!ag :AFFECTED - :AFFECTED-RESULT - :NEUTRAL - :FORMAL - :DRUM ?code :MODALITY ?modVal :FORCE ?fVal :DEGREE ?var_degree :FREQUENCY ?var_freq )
+            (:* (? type ONT::CORRELATION ONT::REFUTE ONT::RELATE ) ?!w) :NEUTRAL ?!ag :DRUM ?code :MODALITY ?modVal :FORCE ?fVal :DEGREE ?var_degree :FREQUENCY ?var_freq )
            (?reln1 ?!ag ?t1)
 ;           ((? reln2 ONT::EVENT) ?!obj ?t2)
            (ONT::F ?var_degree ?type_degree)  
@@ -10357,7 +10357,7 @@
            (ONT::epi ?ev ?!eventName
             :rule -rule50_0_NEUTRAL_NEUTRAL1-NEUTRAL
             :NEUTRAL ?!ag
-;            :NEUTRAL1 ?!obj
+            :NEUTRAL1 -
             :MODALITY ?modVal
             :FORCE ?fVal
             :DEGREE ?type_degree
@@ -10367,7 +10367,7 @@
             ))
           ;; rule50_0_NEUTRAL_NEUTRAL1 rule with only NEUTRAL1
           (((? reln0  ONT::F ONT::QUANTIFIER ONT::KIND ONT::A ONT::INDEF-PLURAL ONT::THE ONT::THE-SET ONT::INDEF-SET ONT::BARE ONT::SM ONT::PRO ONT::PRO-SET) ?ev
-            (:* (? type ONT::CORRELATION ONT::REFUTE ONT::RELATE ) ?!w) :NEUTRAL - :NEUTRAL1 ?!obj :DRUM ?code :MODALITY ?modVal :FORCE ?fVal :DEGREE ?var_degree :FREQUENCY ?var_freq )
+            (:* (? type ONT::CORRELATION ONT::REFUTE ONT::RELATE ) ?!w) :NEUTRAL1 ?!obj :DRUM ?code :MODALITY ?modVal :FORCE ?fVal :DEGREE ?var_degree :FREQUENCY ?var_freq )
 ;           (?reln1 ?!ag ?t1)
            ((? reln2 ONT::EVENT) ?!obj ?t2)
            (ONT::F ?var_degree ?type_degree)  
@@ -10377,7 +10377,7 @@
            50
            (ONT::epi ?ev ?!eventName
             :rule -rule50_0_NEUTRAL_NEUTRAL1-NEUTRAL1
-;            :NEUTRAL ?!ag
+            :NEUTRAL -
             :NEUTRAL1 ?!obj
             :MODALITY ?modVal
             :FORCE ?fVal
@@ -10452,7 +10452,7 @@
             ))
           ;; rule50_0_NEUTRAL_NEUTRAL1 rule with neither NEUTRAL nor NEUTRAL1
           (((? reln0 ONT::F ONT::QUANTIFIER ONT::KIND ONT::A ONT::INDEF-PLURAL ONT::THE ONT::THE-SET ONT::INDEF-SET ONT::BARE ONT::SM ONT::PRO ONT::PRO-SET) ?ev
-            (:* (? type ONT::CORRELATION ONT::REFUTE ONT::RELATE ) ?!w) :NEUTRAL - :NEUTRAL1 - :DRUM ?code :MODALITY ?modVal :FORCE ?fVal :DEGREE ?var_degree :FREQUENCY ?var_freq )
+            (:* (? type ONT::CORRELATION ONT::REFUTE ONT::RELATE ) ?!w) :NEUTRAL - :NEUTRAL1 - :AFFECTED - :AFFECTED1 - :AFFECTED-RESULT - :NEUTRAL - :NEUTRAL1 - :NEUTRAL2 - :FORMAL - :DRUM ?code :MODALITY ?modVal :FORCE ?fVal :DEGREE ?var_degree :FREQUENCY ?var_freq )
 ;           (?reln1 ?!ag ?t1)
 ;           ((? reln2 ONT::EVENT) ?!obj ?t2)
            (ONT::F ?var_degree ?type_degree)  
@@ -10577,7 +10577,7 @@
            )
           ;; rule50_0_NEUTRAL_NEUTRAL1-POLARITY1-gd rule with only NEUTRAL
           (((? reln0  ONT::F ONT::QUANTIFIER ONT::KIND ONT::A ONT::INDEF-PLURAL ONT::THE ONT::THE-SET ONT::INDEF-SET ONT::BARE ONT::SM ONT::PRO ONT::PRO-SET) ?ev
-            (:* (? type ONT::CORRELATION ONT::REFUTE ONT::RELATE ) ?!w) :NEUTRAL ?!ag :AFFECTED - :AFFECTED-RESULT - :NEUTRAL - :FORMAL - :DRUM ?code :MODALITY ?modVal :FORCE ?fVal :DEGREE ?var_degree :FREQUENCY ?var_freq )
+            (:* (? type ONT::CORRELATION ONT::REFUTE ONT::RELATE ) ?!w) :NEUTRAL ?!ag :DRUM ?code :MODALITY ?modVal :FORCE ?fVal :DEGREE ?var_degree :FREQUENCY ?var_freq )
            (?reln1 ?!ag ?t1)
 ;           ((? reln2 ONT::EVENT) ?!obj ?t2)
            (ONT::F ?var_degree ?type_degree)  
@@ -10590,7 +10590,7 @@
            (ONT::epi ?ev ?!eventName
             :rule -rule50_0_NEUTRAL_NEUTRAL1-POLARITY1-gd-NEUTRAL
             :NEUTRAL ?!ag
-;            :NEUTRAL1 ?!obj
+            :NEUTRAL1 -
             :POLARITY ?!m1_new
             :MODALITY ?modVal
             :FORCE ?fVal
@@ -10601,7 +10601,7 @@
             ))
           ;; rule50_0_NEUTRAL_NEUTRAL1-POLARITY1-gd rule with only NEUTRAL1
           (((? reln0  ONT::F ONT::QUANTIFIER ONT::KIND ONT::A ONT::INDEF-PLURAL ONT::THE ONT::THE-SET ONT::INDEF-SET ONT::BARE ONT::SM ONT::PRO ONT::PRO-SET) ?ev
-            (:* (? type ONT::CORRELATION ONT::REFUTE ONT::RELATE ) ?!w) :NEUTRAL - :NEUTRAL1 ?!obj :DRUM ?code :MODALITY ?modVal :FORCE ?fVal :DEGREE ?var_degree :FREQUENCY ?var_freq )
+            (:* (? type ONT::CORRELATION ONT::REFUTE ONT::RELATE ) ?!w) :NEUTRAL1 ?!obj :DRUM ?code :MODALITY ?modVal :FORCE ?fVal :DEGREE ?var_degree :FREQUENCY ?var_freq )
 ;           (?reln1 ?!ag ?t1)
            ((? reln2 ONT::EVENT) ?!obj ?t2)
            (ONT::F ?var_degree ?type_degree)  
@@ -10613,7 +10613,7 @@
            50
            (ONT::epi ?ev ?!eventName
             :rule -rule50_0_NEUTRAL_NEUTRAL1-POLARITY1-gd-NEUTRAL1
-;            :NEUTRAL ?!ag
+            :NEUTRAL -
             :NEUTRAL1 ?!obj
             :POLARITY ?!m1_new
             :MODALITY ?modVal
@@ -10695,7 +10695,7 @@
             ))
           ;; rule50_0_NEUTRAL_NEUTRAL1-POLARITY1-gd rule with neither NEUTRAL nor NEUTRAL1
           (((? reln0 ONT::F ONT::QUANTIFIER ONT::KIND ONT::A ONT::INDEF-PLURAL ONT::THE ONT::THE-SET ONT::INDEF-SET ONT::BARE ONT::SM ONT::PRO ONT::PRO-SET) ?ev
-            (:* (? type ONT::CORRELATION ONT::REFUTE ONT::RELATE ) ?!w) :NEUTRAL - :NEUTRAL1 - :DRUM ?code :MODALITY ?modVal :FORCE ?fVal :DEGREE ?var_degree :FREQUENCY ?var_freq )
+            (:* (? type ONT::CORRELATION ONT::REFUTE ONT::RELATE ) ?!w) :NEUTRAL - :NEUTRAL1 - :AFFECTED - :AFFECTED1 - :AFFECTED-RESULT - :NEUTRAL - :NEUTRAL1 - :NEUTRAL2 - :FORMAL - :DRUM ?code :MODALITY ?modVal :FORCE ?fVal :DEGREE ?var_degree :FREQUENCY ?var_freq )
 ;           (?reln1 ?!ag ?t1)
 ;           ((? reln2 ONT::EVENT) ?!obj ?t2)
            (ONT::F ?var_degree ?type_degree)  
@@ -10827,7 +10827,7 @@
            )
           ;; rule50_0_NEUTRAL_NEUTRAL1-MODA1_1 rule with only NEUTRAL
           (((? reln0  ONT::F ONT::QUANTIFIER ONT::KIND ONT::A ONT::INDEF-PLURAL ONT::THE ONT::THE-SET ONT::INDEF-SET ONT::BARE ONT::SM ONT::PRO ONT::PRO-SET) ?ev
-            (:* (? type ONT::CORRELATION ONT::REFUTE ONT::RELATE ) ?!w) :NEUTRAL ?!ag :AFFECTED - :AFFECTED-RESULT - :NEUTRAL - :FORMAL - :DRUM ?code :MODALITY ?modVal :FORCE ?fVal :DEGREE ?var_degree :FREQUENCY ?var_freq :MODS (?!modA))
+            (:* (? type ONT::CORRELATION ONT::REFUTE ONT::RELATE ) ?!w) :NEUTRAL ?!ag :DRUM ?code :MODALITY ?modVal :FORCE ?fVal :DEGREE ?var_degree :FREQUENCY ?var_freq :MODS (?!modA))
            (?reln1 ?!ag ?t1)
 ;           ((? reln2 ONT::EVENT) ?!obj ?t2)
            (ONT::F ?var_degree ?type_degree)  
@@ -10839,7 +10839,7 @@
            (ONT::epi ?ev ?!eventName
             :rule -rule50_0_NEUTRAL_NEUTRAL1-MODA1_1-NEUTRAL
             :NEUTRAL ?!ag
-;            :NEUTRAL1 ?!obj
+            :NEUTRAL1 -
             :MODA ?tmp ;?!modA
             :MODALITY ?modVal
             :FORCE ?fVal
@@ -10850,7 +10850,7 @@
             ))
           ;; rule50_0_NEUTRAL_NEUTRAL1-MODA1_1 rule with only NEUTRAL1
           (((? reln0  ONT::F ONT::QUANTIFIER ONT::KIND ONT::A ONT::INDEF-PLURAL ONT::THE ONT::THE-SET ONT::INDEF-SET ONT::BARE ONT::SM ONT::PRO ONT::PRO-SET) ?ev
-            (:* (? type ONT::CORRELATION ONT::REFUTE ONT::RELATE ) ?!w) :NEUTRAL - :NEUTRAL1 ?!obj :DRUM ?code :MODALITY ?modVal :FORCE ?fVal :DEGREE ?var_degree :FREQUENCY ?var_freq :MODS (?!modA))
+            (:* (? type ONT::CORRELATION ONT::REFUTE ONT::RELATE ) ?!w) :NEUTRAL1 ?!obj :DRUM ?code :MODALITY ?modVal :FORCE ?fVal :DEGREE ?var_degree :FREQUENCY ?var_freq :MODS (?!modA))
 ;           (?reln1 ?!ag ?t1)
            ((? reln2 ONT::EVENT) ?!obj ?t2)
            (ONT::F ?var_degree ?type_degree)  
@@ -10861,7 +10861,7 @@
            50
            (ONT::epi ?ev ?!eventName
             :rule -rule50_0_NEUTRAL_NEUTRAL1-MODA1_1-NEUTRAL1
-;            :NEUTRAL ?!ag
+            :NEUTRAL -
             :NEUTRAL1 ?!obj
             :MODA ?tmp ;?!modA
             :MODALITY ?modVal
@@ -10941,7 +10941,7 @@
             ))
           ;; rule50_0_NEUTRAL_NEUTRAL1-MODA1_1 rule with neither NEUTRAL nor NEUTRAL1
           (((? reln0 ONT::F ONT::QUANTIFIER ONT::KIND ONT::A ONT::INDEF-PLURAL ONT::THE ONT::THE-SET ONT::INDEF-SET ONT::BARE ONT::SM ONT::PRO ONT::PRO-SET) ?ev
-            (:* (? type ONT::CORRELATION ONT::REFUTE ONT::RELATE ) ?!w) :NEUTRAL - :NEUTRAL1 - :DRUM ?code :MODALITY ?modVal :FORCE ?fVal :DEGREE ?var_degree :FREQUENCY ?var_freq :MODS (?!modA))
+            (:* (? type ONT::CORRELATION ONT::REFUTE ONT::RELATE ) ?!w) :NEUTRAL - :NEUTRAL1 - :AFFECTED - :AFFECTED1 - :AFFECTED-RESULT - :NEUTRAL - :NEUTRAL1 - :NEUTRAL2 - :FORMAL - :DRUM ?code :MODALITY ?modVal :FORCE ?fVal :DEGREE ?var_degree :FREQUENCY ?var_freq :MODS (?!modA))
 ;           (?reln1 ?!ag ?t1)
 ;           ((? reln2 ONT::EVENT) ?!obj ?t2)
            (ONT::F ?var_degree ?type_degree)  
@@ -11070,7 +11070,7 @@
            )
           ;; rule50_0_NEUTRAL_NEUTRAL1-MODA1_2 rule with only NEUTRAL
           (((? reln0  ONT::F ONT::QUANTIFIER ONT::KIND ONT::A ONT::INDEF-PLURAL ONT::THE ONT::THE-SET ONT::INDEF-SET ONT::BARE ONT::SM ONT::PRO ONT::PRO-SET) ?ev
-            (:* (? type ONT::CORRELATION ONT::REFUTE ONT::RELATE ) ?!w) :NEUTRAL ?!ag :AFFECTED - :AFFECTED-RESULT - :NEUTRAL - :FORMAL - :DRUM ?code :MODALITY ?modVal :FORCE ?fVal :DEGREE ?var_degree :FREQUENCY ?var_freq :MANNER ?!modA)
+            (:* (? type ONT::CORRELATION ONT::REFUTE ONT::RELATE ) ?!w) :NEUTRAL ?!ag :DRUM ?code :MODALITY ?modVal :FORCE ?fVal :DEGREE ?var_degree :FREQUENCY ?var_freq :MANNER ?!modA)
            (?reln1 ?!ag ?t1)
 ;           ((? reln2 ONT::EVENT) ?!obj ?t2)
            (ONT::F ?var_degree ?type_degree)  
@@ -11082,7 +11082,7 @@
            (ONT::epi ?ev ?!eventName
             :rule -rule50_0_NEUTRAL_NEUTRAL1-MODA1_2-NEUTRAL
             :NEUTRAL ?!ag
-;            :NEUTRAL1 ?!obj
+            :NEUTRAL1 -
             :MODA ?tmp ;?!modA
             :MODALITY ?modVal
             :FORCE ?fVal
@@ -11093,7 +11093,7 @@
             ))
           ;; rule50_0_NEUTRAL_NEUTRAL1-MODA1_2 rule with only NEUTRAL1
           (((? reln0  ONT::F ONT::QUANTIFIER ONT::KIND ONT::A ONT::INDEF-PLURAL ONT::THE ONT::THE-SET ONT::INDEF-SET ONT::BARE ONT::SM ONT::PRO ONT::PRO-SET) ?ev
-            (:* (? type ONT::CORRELATION ONT::REFUTE ONT::RELATE ) ?!w) :NEUTRAL - :NEUTRAL1 ?!obj :DRUM ?code :MODALITY ?modVal :FORCE ?fVal :DEGREE ?var_degree :FREQUENCY ?var_freq :MANNER ?!modA)
+            (:* (? type ONT::CORRELATION ONT::REFUTE ONT::RELATE ) ?!w) :NEUTRAL1 ?!obj :DRUM ?code :MODALITY ?modVal :FORCE ?fVal :DEGREE ?var_degree :FREQUENCY ?var_freq :MANNER ?!modA)
 ;           (?reln1 ?!ag ?t1)
            ((? reln2 ONT::EVENT) ?!obj ?t2)
            (ONT::F ?var_degree ?type_degree)  
@@ -11104,7 +11104,7 @@
            50
            (ONT::epi ?ev ?!eventName
             :rule -rule50_0_NEUTRAL_NEUTRAL1-MODA1_2-NEUTRAL1
-;            :NEUTRAL ?!ag
+            :NEUTRAL -
             :NEUTRAL1 ?!obj
             :MODA ?tmp ;?!modA
             :MODALITY ?modVal
@@ -11184,7 +11184,7 @@
             ))
           ;; rule50_0_NEUTRAL_NEUTRAL1-MODA1_2 rule with neither NEUTRAL nor NEUTRAL1
           (((? reln0 ONT::F ONT::QUANTIFIER ONT::KIND ONT::A ONT::INDEF-PLURAL ONT::THE ONT::THE-SET ONT::INDEF-SET ONT::BARE ONT::SM ONT::PRO ONT::PRO-SET) ?ev
-            (:* (? type ONT::CORRELATION ONT::REFUTE ONT::RELATE ) ?!w) :NEUTRAL - :NEUTRAL1 - :DRUM ?code :MODALITY ?modVal :FORCE ?fVal :DEGREE ?var_degree :FREQUENCY ?var_freq :MANNER ?!modA)
+            (:* (? type ONT::CORRELATION ONT::REFUTE ONT::RELATE ) ?!w) :NEUTRAL - :NEUTRAL1 - :AFFECTED - :AFFECTED1 - :AFFECTED-RESULT - :NEUTRAL - :NEUTRAL1 - :NEUTRAL2 - :FORMAL - :DRUM ?code :MODALITY ?modVal :FORCE ?fVal :DEGREE ?var_degree :FREQUENCY ?var_freq :MANNER ?!modA)
 ;           (?reln1 ?!ag ?t1)
 ;           ((? reln2 ONT::EVENT) ?!obj ?t2)
            (ONT::F ?var_degree ?type_degree)  
@@ -11313,7 +11313,7 @@
            )
           ;; rule50_0_NEUTRAL_NEUTRAL1-MODN1_1 rule with only NEUTRAL
           (((? reln0  ONT::F ONT::QUANTIFIER ONT::KIND ONT::A ONT::INDEF-PLURAL ONT::THE ONT::THE-SET ONT::INDEF-SET ONT::BARE ONT::SM ONT::PRO ONT::PRO-SET) ?ev
-            (:* (? type ONT::CORRELATION ONT::REFUTE ONT::RELATE ) ?!w) :NEUTRAL ?!ag :AFFECTED - :AFFECTED-RESULT - :NEUTRAL - :FORMAL - :DRUM ?code :MODALITY ?modVal :FORCE ?fVal :DEGREE ?var_degree :FREQUENCY ?var_freq :MODS (?!modN))
+            (:* (? type ONT::CORRELATION ONT::REFUTE ONT::RELATE ) ?!w) :NEUTRAL ?!ag :DRUM ?code :MODALITY ?modVal :FORCE ?fVal :DEGREE ?var_degree :FREQUENCY ?var_freq :MODS (?!modN))
            (?reln1 ?!ag ?t1)
 ;           ((? reln2 ONT::EVENT) ?!obj ?t2)
            (ONT::F ?var_degree ?type_degree)  
@@ -11325,7 +11325,7 @@
            (ONT::epi ?ev ?!eventName
             :rule -rule50_0_NEUTRAL_NEUTRAL1-MODN1_1-NEUTRAL
             :NEUTRAL ?!ag
-;            :NEUTRAL1 ?!obj
+            :NEUTRAL1 -
             :MODN ?tmp ;?!modN
             :MODALITY ?modVal
             :FORCE ?fVal
@@ -11336,7 +11336,7 @@
             ))
           ;; rule50_0_NEUTRAL_NEUTRAL1-MODN1_1 rule with only NEUTRAL1
           (((? reln0  ONT::F ONT::QUANTIFIER ONT::KIND ONT::A ONT::INDEF-PLURAL ONT::THE ONT::THE-SET ONT::INDEF-SET ONT::BARE ONT::SM ONT::PRO ONT::PRO-SET) ?ev
-            (:* (? type ONT::CORRELATION ONT::REFUTE ONT::RELATE ) ?!w) :NEUTRAL - :NEUTRAL1 ?!obj :DRUM ?code :MODALITY ?modVal :FORCE ?fVal :DEGREE ?var_degree :FREQUENCY ?var_freq :MODS (?!modN))
+            (:* (? type ONT::CORRELATION ONT::REFUTE ONT::RELATE ) ?!w) :NEUTRAL1 ?!obj :DRUM ?code :MODALITY ?modVal :FORCE ?fVal :DEGREE ?var_degree :FREQUENCY ?var_freq :MODS (?!modN))
 ;           (?reln1 ?!ag ?t1)
            ((? reln2 ONT::EVENT) ?!obj ?t2)
            (ONT::F ?var_degree ?type_degree)  
@@ -11347,7 +11347,7 @@
            50
            (ONT::epi ?ev ?!eventName
             :rule -rule50_0_NEUTRAL_NEUTRAL1-MODN1_1-NEUTRAL1
-;            :NEUTRAL ?!ag
+            :NEUTRAL -
             :NEUTRAL1 ?!obj
             :MODN ?tmp ;?!modN
             :MODALITY ?modVal
@@ -11427,7 +11427,7 @@
             ))
           ;; rule50_0_NEUTRAL_NEUTRAL1-MODN1_1 rule with neither NEUTRAL nor NEUTRAL1
           (((? reln0 ONT::F ONT::QUANTIFIER ONT::KIND ONT::A ONT::INDEF-PLURAL ONT::THE ONT::THE-SET ONT::INDEF-SET ONT::BARE ONT::SM ONT::PRO ONT::PRO-SET) ?ev
-            (:* (? type ONT::CORRELATION ONT::REFUTE ONT::RELATE ) ?!w) :NEUTRAL - :NEUTRAL1 - :DRUM ?code :MODALITY ?modVal :FORCE ?fVal :DEGREE ?var_degree :FREQUENCY ?var_freq :MODS (?!modN))
+            (:* (? type ONT::CORRELATION ONT::REFUTE ONT::RELATE ) ?!w) :NEUTRAL - :NEUTRAL1 - :AFFECTED - :AFFECTED1 - :AFFECTED-RESULT - :NEUTRAL - :NEUTRAL1 - :NEUTRAL2 - :FORMAL - :DRUM ?code :MODALITY ?modVal :FORCE ?fVal :DEGREE ?var_degree :FREQUENCY ?var_freq :MODS (?!modN))
 ;           (?reln1 ?!ag ?t1)
 ;           ((? reln2 ONT::EVENT) ?!obj ?t2)
            (ONT::F ?var_degree ?type_degree)  
@@ -11556,7 +11556,7 @@
            )
           ;; rule50_0_NEUTRAL_NEUTRAL1-MODN1_2 rule with only NEUTRAL
           (((? reln0  ONT::F ONT::QUANTIFIER ONT::KIND ONT::A ONT::INDEF-PLURAL ONT::THE ONT::THE-SET ONT::INDEF-SET ONT::BARE ONT::SM ONT::PRO ONT::PRO-SET) ?ev
-            (:* (? type ONT::CORRELATION ONT::REFUTE ONT::RELATE ) ?!w) :NEUTRAL ?!ag :AFFECTED - :AFFECTED-RESULT - :NEUTRAL - :FORMAL - :DRUM ?code :MODALITY ?modVal :FORCE ?fVal :DEGREE ?var_degree :FREQUENCY ?var_freq :MANNER ?!modN)
+            (:* (? type ONT::CORRELATION ONT::REFUTE ONT::RELATE ) ?!w) :NEUTRAL ?!ag :DRUM ?code :MODALITY ?modVal :FORCE ?fVal :DEGREE ?var_degree :FREQUENCY ?var_freq :MANNER ?!modN)
            (?reln1 ?!ag ?t1)
 ;           ((? reln2 ONT::EVENT) ?!obj ?t2)
            (ONT::F ?var_degree ?type_degree)  
@@ -11568,7 +11568,7 @@
            (ONT::epi ?ev ?!eventName
             :rule -rule50_0_NEUTRAL_NEUTRAL1-MODN1_2-NEUTRAL
             :NEUTRAL ?!ag
-;            :NEUTRAL1 ?!obj
+            :NEUTRAL1 -
             :MODN ?tmp ;?!modN
             :MODALITY ?modVal
             :FORCE ?fVal
@@ -11579,7 +11579,7 @@
             ))
           ;; rule50_0_NEUTRAL_NEUTRAL1-MODN1_2 rule with only NEUTRAL1
           (((? reln0  ONT::F ONT::QUANTIFIER ONT::KIND ONT::A ONT::INDEF-PLURAL ONT::THE ONT::THE-SET ONT::INDEF-SET ONT::BARE ONT::SM ONT::PRO ONT::PRO-SET) ?ev
-            (:* (? type ONT::CORRELATION ONT::REFUTE ONT::RELATE ) ?!w) :NEUTRAL - :NEUTRAL1 ?!obj :DRUM ?code :MODALITY ?modVal :FORCE ?fVal :DEGREE ?var_degree :FREQUENCY ?var_freq :MANNER ?!modN)
+            (:* (? type ONT::CORRELATION ONT::REFUTE ONT::RELATE ) ?!w) :NEUTRAL1 ?!obj :DRUM ?code :MODALITY ?modVal :FORCE ?fVal :DEGREE ?var_degree :FREQUENCY ?var_freq :MANNER ?!modN)
 ;           (?reln1 ?!ag ?t1)
            ((? reln2 ONT::EVENT) ?!obj ?t2)
            (ONT::F ?var_degree ?type_degree)  
@@ -11590,7 +11590,7 @@
            50
            (ONT::epi ?ev ?!eventName
             :rule -rule50_0_NEUTRAL_NEUTRAL1-MODN1_2-NEUTRAL1
-;            :NEUTRAL ?!ag
+            :NEUTRAL -
             :NEUTRAL1 ?!obj
             :MODN ?tmp ;?!modN
             :MODALITY ?modVal
@@ -11670,7 +11670,7 @@
             ))
           ;; rule50_0_NEUTRAL_NEUTRAL1-MODN1_2 rule with neither NEUTRAL nor NEUTRAL1
           (((? reln0 ONT::F ONT::QUANTIFIER ONT::KIND ONT::A ONT::INDEF-PLURAL ONT::THE ONT::THE-SET ONT::INDEF-SET ONT::BARE ONT::SM ONT::PRO ONT::PRO-SET) ?ev
-            (:* (? type ONT::CORRELATION ONT::REFUTE ONT::RELATE ) ?!w) :NEUTRAL - :NEUTRAL1 - :DRUM ?code :MODALITY ?modVal :FORCE ?fVal :DEGREE ?var_degree :FREQUENCY ?var_freq :MANNER ?!modN)
+            (:* (? type ONT::CORRELATION ONT::REFUTE ONT::RELATE ) ?!w) :NEUTRAL - :NEUTRAL1 - :AFFECTED - :AFFECTED1 - :AFFECTED-RESULT - :NEUTRAL - :NEUTRAL1 - :NEUTRAL2 - :FORMAL - :DRUM ?code :MODALITY ?modVal :FORCE ?fVal :DEGREE ?var_degree :FREQUENCY ?var_freq :MANNER ?!modN)
 ;           (?reln1 ?!ag ?t1)
 ;           ((? reln2 ONT::EVENT) ?!obj ?t2)
            (ONT::F ?var_degree ?type_degree)  
@@ -11806,7 +11806,7 @@
            )
           ;; rule50_0_NEUTRAL1_NEUTRAL2 rule with only NEUTRAL1
           (((? reln0  ONT::F ONT::QUANTIFIER ONT::KIND ONT::A ONT::INDEF-PLURAL ONT::THE ONT::THE-SET ONT::INDEF-SET ONT::BARE ONT::SM ONT::PRO ONT::PRO-SET) ?ev
-            (:* (? type ONT::RELATE ) ?!w) :NEUTRAL1 ?!ag :AFFECTED - :AFFECTED-RESULT - :NEUTRAL - :FORMAL - :DRUM ?code :MODALITY ?modVal :FORCE ?fVal :DEGREE ?var_degree :FREQUENCY ?var_freq )
+            (:* (? type ONT::RELATE ) ?!w) :NEUTRAL1 ?!ag :DRUM ?code :MODALITY ?modVal :FORCE ?fVal :DEGREE ?var_degree :FREQUENCY ?var_freq )
            (?reln1 ?!ag ?t1)
 ;           ((? reln2 ONT::EVENT) ?!obj ?t2)
            (ONT::F ?var_degree ?type_degree)  
@@ -11817,7 +11817,7 @@
            (ONT::epi ?ev ?!eventName
             :rule -rule50_0_NEUTRAL1_NEUTRAL2-NEUTRAL1
             :NEUTRAL1 ?!ag
-;            :NEUTRAL2 ?!obj
+            :NEUTRAL2 -
             :MODALITY ?modVal
             :FORCE ?fVal
             :DEGREE ?type_degree
@@ -11827,7 +11827,7 @@
             ))
           ;; rule50_0_NEUTRAL1_NEUTRAL2 rule with only NEUTRAL2
           (((? reln0  ONT::F ONT::QUANTIFIER ONT::KIND ONT::A ONT::INDEF-PLURAL ONT::THE ONT::THE-SET ONT::INDEF-SET ONT::BARE ONT::SM ONT::PRO ONT::PRO-SET) ?ev
-            (:* (? type ONT::RELATE ) ?!w) :NEUTRAL1 - :NEUTRAL2 ?!obj :DRUM ?code :MODALITY ?modVal :FORCE ?fVal :DEGREE ?var_degree :FREQUENCY ?var_freq )
+            (:* (? type ONT::RELATE ) ?!w) :NEUTRAL2 ?!obj :DRUM ?code :MODALITY ?modVal :FORCE ?fVal :DEGREE ?var_degree :FREQUENCY ?var_freq )
 ;           (?reln1 ?!ag ?t1)
            ((? reln2 ONT::EVENT) ?!obj ?t2)
            (ONT::F ?var_degree ?type_degree)  
@@ -11837,7 +11837,7 @@
            50
            (ONT::epi ?ev ?!eventName
             :rule -rule50_0_NEUTRAL1_NEUTRAL2-NEUTRAL2
-;            :NEUTRAL1 ?!ag
+            :NEUTRAL1 -
             :NEUTRAL2 ?!obj
             :MODALITY ?modVal
             :FORCE ?fVal
@@ -11912,7 +11912,7 @@
             ))
           ;; rule50_0_NEUTRAL1_NEUTRAL2 rule with neither NEUTRAL1 nor NEUTRAL2
           (((? reln0 ONT::F ONT::QUANTIFIER ONT::KIND ONT::A ONT::INDEF-PLURAL ONT::THE ONT::THE-SET ONT::INDEF-SET ONT::BARE ONT::SM ONT::PRO ONT::PRO-SET) ?ev
-            (:* (? type ONT::RELATE ) ?!w) :NEUTRAL1 - :NEUTRAL2 - :DRUM ?code :MODALITY ?modVal :FORCE ?fVal :DEGREE ?var_degree :FREQUENCY ?var_freq )
+            (:* (? type ONT::RELATE ) ?!w) :NEUTRAL1 - :NEUTRAL2 - :AFFECTED - :AFFECTED1 - :AFFECTED-RESULT - :NEUTRAL - :NEUTRAL1 - :NEUTRAL2 - :FORMAL - :DRUM ?code :MODALITY ?modVal :FORCE ?fVal :DEGREE ?var_degree :FREQUENCY ?var_freq )
 ;           (?reln1 ?!ag ?t1)
 ;           ((? reln2 ONT::EVENT) ?!obj ?t2)
            (ONT::F ?var_degree ?type_degree)  
@@ -12037,7 +12037,7 @@
            )
           ;; rule50_0_NEUTRAL1_NEUTRAL2-POLARITY1-gd rule with only NEUTRAL1
           (((? reln0  ONT::F ONT::QUANTIFIER ONT::KIND ONT::A ONT::INDEF-PLURAL ONT::THE ONT::THE-SET ONT::INDEF-SET ONT::BARE ONT::SM ONT::PRO ONT::PRO-SET) ?ev
-            (:* (? type ONT::RELATE ) ?!w) :NEUTRAL1 ?!ag :AFFECTED - :AFFECTED-RESULT - :NEUTRAL - :FORMAL - :DRUM ?code :MODALITY ?modVal :FORCE ?fVal :DEGREE ?var_degree :FREQUENCY ?var_freq )
+            (:* (? type ONT::RELATE ) ?!w) :NEUTRAL1 ?!ag :DRUM ?code :MODALITY ?modVal :FORCE ?fVal :DEGREE ?var_degree :FREQUENCY ?var_freq )
            (?reln1 ?!ag ?t1)
 ;           ((? reln2 ONT::EVENT) ?!obj ?t2)
            (ONT::F ?var_degree ?type_degree)  
@@ -12050,7 +12050,7 @@
            (ONT::epi ?ev ?!eventName
             :rule -rule50_0_NEUTRAL1_NEUTRAL2-POLARITY1-gd-NEUTRAL1
             :NEUTRAL1 ?!ag
-;            :NEUTRAL2 ?!obj
+            :NEUTRAL2 -
             :POLARITY ?!m1_new
             :MODALITY ?modVal
             :FORCE ?fVal
@@ -12061,7 +12061,7 @@
             ))
           ;; rule50_0_NEUTRAL1_NEUTRAL2-POLARITY1-gd rule with only NEUTRAL2
           (((? reln0  ONT::F ONT::QUANTIFIER ONT::KIND ONT::A ONT::INDEF-PLURAL ONT::THE ONT::THE-SET ONT::INDEF-SET ONT::BARE ONT::SM ONT::PRO ONT::PRO-SET) ?ev
-            (:* (? type ONT::RELATE ) ?!w) :NEUTRAL1 - :NEUTRAL2 ?!obj :DRUM ?code :MODALITY ?modVal :FORCE ?fVal :DEGREE ?var_degree :FREQUENCY ?var_freq )
+            (:* (? type ONT::RELATE ) ?!w) :NEUTRAL2 ?!obj :DRUM ?code :MODALITY ?modVal :FORCE ?fVal :DEGREE ?var_degree :FREQUENCY ?var_freq )
 ;           (?reln1 ?!ag ?t1)
            ((? reln2 ONT::EVENT) ?!obj ?t2)
            (ONT::F ?var_degree ?type_degree)  
@@ -12073,7 +12073,7 @@
            50
            (ONT::epi ?ev ?!eventName
             :rule -rule50_0_NEUTRAL1_NEUTRAL2-POLARITY1-gd-NEUTRAL2
-;            :NEUTRAL1 ?!ag
+            :NEUTRAL1 -
             :NEUTRAL2 ?!obj
             :POLARITY ?!m1_new
             :MODALITY ?modVal
@@ -12155,7 +12155,7 @@
             ))
           ;; rule50_0_NEUTRAL1_NEUTRAL2-POLARITY1-gd rule with neither NEUTRAL1 nor NEUTRAL2
           (((? reln0 ONT::F ONT::QUANTIFIER ONT::KIND ONT::A ONT::INDEF-PLURAL ONT::THE ONT::THE-SET ONT::INDEF-SET ONT::BARE ONT::SM ONT::PRO ONT::PRO-SET) ?ev
-            (:* (? type ONT::RELATE ) ?!w) :NEUTRAL1 - :NEUTRAL2 - :DRUM ?code :MODALITY ?modVal :FORCE ?fVal :DEGREE ?var_degree :FREQUENCY ?var_freq )
+            (:* (? type ONT::RELATE ) ?!w) :NEUTRAL1 - :NEUTRAL2 - :AFFECTED - :AFFECTED1 - :AFFECTED-RESULT - :NEUTRAL - :NEUTRAL1 - :NEUTRAL2 - :FORMAL - :DRUM ?code :MODALITY ?modVal :FORCE ?fVal :DEGREE ?var_degree :FREQUENCY ?var_freq )
 ;           (?reln1 ?!ag ?t1)
 ;           ((? reln2 ONT::EVENT) ?!obj ?t2)
            (ONT::F ?var_degree ?type_degree)  
@@ -12287,7 +12287,7 @@
            )
           ;; rule50_0_NEUTRAL1_NEUTRAL2-MODA1_1 rule with only NEUTRAL1
           (((? reln0  ONT::F ONT::QUANTIFIER ONT::KIND ONT::A ONT::INDEF-PLURAL ONT::THE ONT::THE-SET ONT::INDEF-SET ONT::BARE ONT::SM ONT::PRO ONT::PRO-SET) ?ev
-            (:* (? type ONT::RELATE ) ?!w) :NEUTRAL1 ?!ag :AFFECTED - :AFFECTED-RESULT - :NEUTRAL - :FORMAL - :DRUM ?code :MODALITY ?modVal :FORCE ?fVal :DEGREE ?var_degree :FREQUENCY ?var_freq :MODS (?!modA))
+            (:* (? type ONT::RELATE ) ?!w) :NEUTRAL1 ?!ag :DRUM ?code :MODALITY ?modVal :FORCE ?fVal :DEGREE ?var_degree :FREQUENCY ?var_freq :MODS (?!modA))
            (?reln1 ?!ag ?t1)
 ;           ((? reln2 ONT::EVENT) ?!obj ?t2)
            (ONT::F ?var_degree ?type_degree)  
@@ -12299,7 +12299,7 @@
            (ONT::epi ?ev ?!eventName
             :rule -rule50_0_NEUTRAL1_NEUTRAL2-MODA1_1-NEUTRAL1
             :NEUTRAL1 ?!ag
-;            :NEUTRAL2 ?!obj
+            :NEUTRAL2 -
             :MODA ?tmp ;?!modA
             :MODALITY ?modVal
             :FORCE ?fVal
@@ -12310,7 +12310,7 @@
             ))
           ;; rule50_0_NEUTRAL1_NEUTRAL2-MODA1_1 rule with only NEUTRAL2
           (((? reln0  ONT::F ONT::QUANTIFIER ONT::KIND ONT::A ONT::INDEF-PLURAL ONT::THE ONT::THE-SET ONT::INDEF-SET ONT::BARE ONT::SM ONT::PRO ONT::PRO-SET) ?ev
-            (:* (? type ONT::RELATE ) ?!w) :NEUTRAL1 - :NEUTRAL2 ?!obj :DRUM ?code :MODALITY ?modVal :FORCE ?fVal :DEGREE ?var_degree :FREQUENCY ?var_freq :MODS (?!modA))
+            (:* (? type ONT::RELATE ) ?!w) :NEUTRAL2 ?!obj :DRUM ?code :MODALITY ?modVal :FORCE ?fVal :DEGREE ?var_degree :FREQUENCY ?var_freq :MODS (?!modA))
 ;           (?reln1 ?!ag ?t1)
            ((? reln2 ONT::EVENT) ?!obj ?t2)
            (ONT::F ?var_degree ?type_degree)  
@@ -12321,7 +12321,7 @@
            50
            (ONT::epi ?ev ?!eventName
             :rule -rule50_0_NEUTRAL1_NEUTRAL2-MODA1_1-NEUTRAL2
-;            :NEUTRAL1 ?!ag
+            :NEUTRAL1 -
             :NEUTRAL2 ?!obj
             :MODA ?tmp ;?!modA
             :MODALITY ?modVal
@@ -12401,7 +12401,7 @@
             ))
           ;; rule50_0_NEUTRAL1_NEUTRAL2-MODA1_1 rule with neither NEUTRAL1 nor NEUTRAL2
           (((? reln0 ONT::F ONT::QUANTIFIER ONT::KIND ONT::A ONT::INDEF-PLURAL ONT::THE ONT::THE-SET ONT::INDEF-SET ONT::BARE ONT::SM ONT::PRO ONT::PRO-SET) ?ev
-            (:* (? type ONT::RELATE ) ?!w) :NEUTRAL1 - :NEUTRAL2 - :DRUM ?code :MODALITY ?modVal :FORCE ?fVal :DEGREE ?var_degree :FREQUENCY ?var_freq :MODS (?!modA))
+            (:* (? type ONT::RELATE ) ?!w) :NEUTRAL1 - :NEUTRAL2 - :AFFECTED - :AFFECTED1 - :AFFECTED-RESULT - :NEUTRAL - :NEUTRAL1 - :NEUTRAL2 - :FORMAL - :DRUM ?code :MODALITY ?modVal :FORCE ?fVal :DEGREE ?var_degree :FREQUENCY ?var_freq :MODS (?!modA))
 ;           (?reln1 ?!ag ?t1)
 ;           ((? reln2 ONT::EVENT) ?!obj ?t2)
            (ONT::F ?var_degree ?type_degree)  
@@ -12530,7 +12530,7 @@
            )
           ;; rule50_0_NEUTRAL1_NEUTRAL2-MODA1_2 rule with only NEUTRAL1
           (((? reln0  ONT::F ONT::QUANTIFIER ONT::KIND ONT::A ONT::INDEF-PLURAL ONT::THE ONT::THE-SET ONT::INDEF-SET ONT::BARE ONT::SM ONT::PRO ONT::PRO-SET) ?ev
-            (:* (? type ONT::RELATE ) ?!w) :NEUTRAL1 ?!ag :AFFECTED - :AFFECTED-RESULT - :NEUTRAL - :FORMAL - :DRUM ?code :MODALITY ?modVal :FORCE ?fVal :DEGREE ?var_degree :FREQUENCY ?var_freq :MANNER ?!modA)
+            (:* (? type ONT::RELATE ) ?!w) :NEUTRAL1 ?!ag :DRUM ?code :MODALITY ?modVal :FORCE ?fVal :DEGREE ?var_degree :FREQUENCY ?var_freq :MANNER ?!modA)
            (?reln1 ?!ag ?t1)
 ;           ((? reln2 ONT::EVENT) ?!obj ?t2)
            (ONT::F ?var_degree ?type_degree)  
@@ -12542,7 +12542,7 @@
            (ONT::epi ?ev ?!eventName
             :rule -rule50_0_NEUTRAL1_NEUTRAL2-MODA1_2-NEUTRAL1
             :NEUTRAL1 ?!ag
-;            :NEUTRAL2 ?!obj
+            :NEUTRAL2 -
             :MODA ?tmp ;?!modA
             :MODALITY ?modVal
             :FORCE ?fVal
@@ -12553,7 +12553,7 @@
             ))
           ;; rule50_0_NEUTRAL1_NEUTRAL2-MODA1_2 rule with only NEUTRAL2
           (((? reln0  ONT::F ONT::QUANTIFIER ONT::KIND ONT::A ONT::INDEF-PLURAL ONT::THE ONT::THE-SET ONT::INDEF-SET ONT::BARE ONT::SM ONT::PRO ONT::PRO-SET) ?ev
-            (:* (? type ONT::RELATE ) ?!w) :NEUTRAL1 - :NEUTRAL2 ?!obj :DRUM ?code :MODALITY ?modVal :FORCE ?fVal :DEGREE ?var_degree :FREQUENCY ?var_freq :MANNER ?!modA)
+            (:* (? type ONT::RELATE ) ?!w) :NEUTRAL2 ?!obj :DRUM ?code :MODALITY ?modVal :FORCE ?fVal :DEGREE ?var_degree :FREQUENCY ?var_freq :MANNER ?!modA)
 ;           (?reln1 ?!ag ?t1)
            ((? reln2 ONT::EVENT) ?!obj ?t2)
            (ONT::F ?var_degree ?type_degree)  
@@ -12564,7 +12564,7 @@
            50
            (ONT::epi ?ev ?!eventName
             :rule -rule50_0_NEUTRAL1_NEUTRAL2-MODA1_2-NEUTRAL2
-;            :NEUTRAL1 ?!ag
+            :NEUTRAL1 -
             :NEUTRAL2 ?!obj
             :MODA ?tmp ;?!modA
             :MODALITY ?modVal
@@ -12644,7 +12644,7 @@
             ))
           ;; rule50_0_NEUTRAL1_NEUTRAL2-MODA1_2 rule with neither NEUTRAL1 nor NEUTRAL2
           (((? reln0 ONT::F ONT::QUANTIFIER ONT::KIND ONT::A ONT::INDEF-PLURAL ONT::THE ONT::THE-SET ONT::INDEF-SET ONT::BARE ONT::SM ONT::PRO ONT::PRO-SET) ?ev
-            (:* (? type ONT::RELATE ) ?!w) :NEUTRAL1 - :NEUTRAL2 - :DRUM ?code :MODALITY ?modVal :FORCE ?fVal :DEGREE ?var_degree :FREQUENCY ?var_freq :MANNER ?!modA)
+            (:* (? type ONT::RELATE ) ?!w) :NEUTRAL1 - :NEUTRAL2 - :AFFECTED - :AFFECTED1 - :AFFECTED-RESULT - :NEUTRAL - :NEUTRAL1 - :NEUTRAL2 - :FORMAL - :DRUM ?code :MODALITY ?modVal :FORCE ?fVal :DEGREE ?var_degree :FREQUENCY ?var_freq :MANNER ?!modA)
 ;           (?reln1 ?!ag ?t1)
 ;           ((? reln2 ONT::EVENT) ?!obj ?t2)
            (ONT::F ?var_degree ?type_degree)  
@@ -12773,7 +12773,7 @@
            )
           ;; rule50_0_NEUTRAL1_NEUTRAL2-MODN1_1 rule with only NEUTRAL1
           (((? reln0  ONT::F ONT::QUANTIFIER ONT::KIND ONT::A ONT::INDEF-PLURAL ONT::THE ONT::THE-SET ONT::INDEF-SET ONT::BARE ONT::SM ONT::PRO ONT::PRO-SET) ?ev
-            (:* (? type ONT::RELATE ) ?!w) :NEUTRAL1 ?!ag :AFFECTED - :AFFECTED-RESULT - :NEUTRAL - :FORMAL - :DRUM ?code :MODALITY ?modVal :FORCE ?fVal :DEGREE ?var_degree :FREQUENCY ?var_freq :MODS (?!modN))
+            (:* (? type ONT::RELATE ) ?!w) :NEUTRAL1 ?!ag :DRUM ?code :MODALITY ?modVal :FORCE ?fVal :DEGREE ?var_degree :FREQUENCY ?var_freq :MODS (?!modN))
            (?reln1 ?!ag ?t1)
 ;           ((? reln2 ONT::EVENT) ?!obj ?t2)
            (ONT::F ?var_degree ?type_degree)  
@@ -12785,7 +12785,7 @@
            (ONT::epi ?ev ?!eventName
             :rule -rule50_0_NEUTRAL1_NEUTRAL2-MODN1_1-NEUTRAL1
             :NEUTRAL1 ?!ag
-;            :NEUTRAL2 ?!obj
+            :NEUTRAL2 -
             :MODN ?tmp ;?!modN
             :MODALITY ?modVal
             :FORCE ?fVal
@@ -12796,7 +12796,7 @@
             ))
           ;; rule50_0_NEUTRAL1_NEUTRAL2-MODN1_1 rule with only NEUTRAL2
           (((? reln0  ONT::F ONT::QUANTIFIER ONT::KIND ONT::A ONT::INDEF-PLURAL ONT::THE ONT::THE-SET ONT::INDEF-SET ONT::BARE ONT::SM ONT::PRO ONT::PRO-SET) ?ev
-            (:* (? type ONT::RELATE ) ?!w) :NEUTRAL1 - :NEUTRAL2 ?!obj :DRUM ?code :MODALITY ?modVal :FORCE ?fVal :DEGREE ?var_degree :FREQUENCY ?var_freq :MODS (?!modN))
+            (:* (? type ONT::RELATE ) ?!w) :NEUTRAL2 ?!obj :DRUM ?code :MODALITY ?modVal :FORCE ?fVal :DEGREE ?var_degree :FREQUENCY ?var_freq :MODS (?!modN))
 ;           (?reln1 ?!ag ?t1)
            ((? reln2 ONT::EVENT) ?!obj ?t2)
            (ONT::F ?var_degree ?type_degree)  
@@ -12807,7 +12807,7 @@
            50
            (ONT::epi ?ev ?!eventName
             :rule -rule50_0_NEUTRAL1_NEUTRAL2-MODN1_1-NEUTRAL2
-;            :NEUTRAL1 ?!ag
+            :NEUTRAL1 -
             :NEUTRAL2 ?!obj
             :MODN ?tmp ;?!modN
             :MODALITY ?modVal
@@ -12887,7 +12887,7 @@
             ))
           ;; rule50_0_NEUTRAL1_NEUTRAL2-MODN1_1 rule with neither NEUTRAL1 nor NEUTRAL2
           (((? reln0 ONT::F ONT::QUANTIFIER ONT::KIND ONT::A ONT::INDEF-PLURAL ONT::THE ONT::THE-SET ONT::INDEF-SET ONT::BARE ONT::SM ONT::PRO ONT::PRO-SET) ?ev
-            (:* (? type ONT::RELATE ) ?!w) :NEUTRAL1 - :NEUTRAL2 - :DRUM ?code :MODALITY ?modVal :FORCE ?fVal :DEGREE ?var_degree :FREQUENCY ?var_freq :MODS (?!modN))
+            (:* (? type ONT::RELATE ) ?!w) :NEUTRAL1 - :NEUTRAL2 - :AFFECTED - :AFFECTED1 - :AFFECTED-RESULT - :NEUTRAL - :NEUTRAL1 - :NEUTRAL2 - :FORMAL - :DRUM ?code :MODALITY ?modVal :FORCE ?fVal :DEGREE ?var_degree :FREQUENCY ?var_freq :MODS (?!modN))
 ;           (?reln1 ?!ag ?t1)
 ;           ((? reln2 ONT::EVENT) ?!obj ?t2)
            (ONT::F ?var_degree ?type_degree)  
@@ -13016,7 +13016,7 @@
            )
           ;; rule50_0_NEUTRAL1_NEUTRAL2-MODN1_2 rule with only NEUTRAL1
           (((? reln0  ONT::F ONT::QUANTIFIER ONT::KIND ONT::A ONT::INDEF-PLURAL ONT::THE ONT::THE-SET ONT::INDEF-SET ONT::BARE ONT::SM ONT::PRO ONT::PRO-SET) ?ev
-            (:* (? type ONT::RELATE ) ?!w) :NEUTRAL1 ?!ag :AFFECTED - :AFFECTED-RESULT - :NEUTRAL - :FORMAL - :DRUM ?code :MODALITY ?modVal :FORCE ?fVal :DEGREE ?var_degree :FREQUENCY ?var_freq :MANNER ?!modN)
+            (:* (? type ONT::RELATE ) ?!w) :NEUTRAL1 ?!ag :DRUM ?code :MODALITY ?modVal :FORCE ?fVal :DEGREE ?var_degree :FREQUENCY ?var_freq :MANNER ?!modN)
            (?reln1 ?!ag ?t1)
 ;           ((? reln2 ONT::EVENT) ?!obj ?t2)
            (ONT::F ?var_degree ?type_degree)  
@@ -13028,7 +13028,7 @@
            (ONT::epi ?ev ?!eventName
             :rule -rule50_0_NEUTRAL1_NEUTRAL2-MODN1_2-NEUTRAL1
             :NEUTRAL1 ?!ag
-;            :NEUTRAL2 ?!obj
+            :NEUTRAL2 -
             :MODN ?tmp ;?!modN
             :MODALITY ?modVal
             :FORCE ?fVal
@@ -13039,7 +13039,7 @@
             ))
           ;; rule50_0_NEUTRAL1_NEUTRAL2-MODN1_2 rule with only NEUTRAL2
           (((? reln0  ONT::F ONT::QUANTIFIER ONT::KIND ONT::A ONT::INDEF-PLURAL ONT::THE ONT::THE-SET ONT::INDEF-SET ONT::BARE ONT::SM ONT::PRO ONT::PRO-SET) ?ev
-            (:* (? type ONT::RELATE ) ?!w) :NEUTRAL1 - :NEUTRAL2 ?!obj :DRUM ?code :MODALITY ?modVal :FORCE ?fVal :DEGREE ?var_degree :FREQUENCY ?var_freq :MANNER ?!modN)
+            (:* (? type ONT::RELATE ) ?!w) :NEUTRAL2 ?!obj :DRUM ?code :MODALITY ?modVal :FORCE ?fVal :DEGREE ?var_degree :FREQUENCY ?var_freq :MANNER ?!modN)
 ;           (?reln1 ?!ag ?t1)
            ((? reln2 ONT::EVENT) ?!obj ?t2)
            (ONT::F ?var_degree ?type_degree)  
@@ -13050,7 +13050,7 @@
            50
            (ONT::epi ?ev ?!eventName
             :rule -rule50_0_NEUTRAL1_NEUTRAL2-MODN1_2-NEUTRAL2
-;            :NEUTRAL1 ?!ag
+            :NEUTRAL1 -
             :NEUTRAL2 ?!obj
             :MODN ?tmp ;?!modN
             :MODALITY ?modVal
@@ -13130,7 +13130,7 @@
             ))
           ;; rule50_0_NEUTRAL1_NEUTRAL2-MODN1_2 rule with neither NEUTRAL1 nor NEUTRAL2
           (((? reln0 ONT::F ONT::QUANTIFIER ONT::KIND ONT::A ONT::INDEF-PLURAL ONT::THE ONT::THE-SET ONT::INDEF-SET ONT::BARE ONT::SM ONT::PRO ONT::PRO-SET) ?ev
-            (:* (? type ONT::RELATE ) ?!w) :NEUTRAL1 - :NEUTRAL2 - :DRUM ?code :MODALITY ?modVal :FORCE ?fVal :DEGREE ?var_degree :FREQUENCY ?var_freq :MANNER ?!modN)
+            (:* (? type ONT::RELATE ) ?!w) :NEUTRAL1 - :NEUTRAL2 - :AFFECTED - :AFFECTED1 - :AFFECTED-RESULT - :NEUTRAL - :NEUTRAL1 - :NEUTRAL2 - :FORMAL - :DRUM ?code :MODALITY ?modVal :FORCE ?fVal :DEGREE ?var_degree :FREQUENCY ?var_freq :MANNER ?!modN)
 ;           (?reln1 ?!ag ?t1)
 ;           ((? reln2 ONT::EVENT) ?!obj ?t2)
            (ONT::F ?var_degree ?type_degree)  

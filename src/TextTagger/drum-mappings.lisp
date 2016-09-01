@@ -208,6 +208,8 @@
      (inherit ONT::bird))
    (concept NCIT::C14207 ; Fish
      (inherit ONT::fish))
+    (concept NCIT::C79959 ; WT
+      (inherit ONT::referential-sem)) ; no, one specific wild-type fish should not be used to tag all instances of "WT" :-P
    (concept NCIT::C14234 ; Mammalia
      (inherit ONT::nonhuman-animal)) ; by default
     (concept NCIT::C14225 ; Human
@@ -245,6 +247,10 @@
     (inherit ONT::referential-sem))
   ;; ... except PTMs, most of which we handle by other means
   (concept NCIT::C17019 ; Post-Translational Modification
+    (inherit ONT::referential-sem))
+  ;; this has interfering things like "concentration" in it, and isn't that
+  ;; useful otherwise
+  (concept NCIT::C16840 ; Mental Process
     (inherit ONT::referential-sem))
 (concept NCIT::C16847 ; Technique
   (inherit ONT::procedure))

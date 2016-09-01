@@ -165,8 +165,12 @@
     (entry-prob i)
     ))
 
-(defun length-score (i)
-  (compute-length-score (or (entry-size i) 1)))
+(defun arc-length-score (i)
+  (let* ((start (or (agenda-item-start i) 1))
+	 (entry-end (entry-end (agenda-item-entry i))))
+  (compute-length-score (or (if (numberp entry-end)
+				(- entry-end start))
+			    1))))
 
 (defun length-entry-score (e)
   "computes a factor based on average prob. of a constituent of length L"
@@ -174,11 +178,11 @@
 
 (defun compute-length-score (size)
   "computes a factor based on average prob. of a constituent of length L"
-  (let* ((number-constit (or size 1));; (/ size *word-length*))
+  (let* ((number-constit (/ (or size 1) *word-length*))
 	 (raw-factor (compute-log-factor number-constit))
 	 (over-one (- raw-factor 1))
 	 (factor (if (>= *score-length-multiplier* 1)
-		     raw-factor
+		     	     raw-factor
 		     (if (> *score-length-multiplier* 0)
 			 (+ 1 (* *score-length-multiplier* over-one))
 			 1))))
@@ -200,7 +204,8 @@
      experiment with different scoring functions"
   (cond
    ((eql (agenda-item-start i) (agenda-item-end i)) 1) ;;  insurance check
-   (t (min (* (probability-score i) (length-score (agenda-item-entry i))) 1))))
+   (t (min (* (probability-score i) 
+	      (arc-length-score i)) 1))))
 
 (defun calculate-entry-score (e)
   "This is used for final output, so need not be efficient"
@@ -252,6 +257,7 @@
 				   *number-of-buckets-for-agenda*)))
 	       ;;(bucket (min (floor (* prob *number-of-buckets-for-agenda*)) *number-of-buckets-for-agenda*))
 	       )
+	  
 	  (when (eq *agenda-trace* 'ADD)
 	    (format t "~%Adding ~S ~S from ~S to ~S. p=~Ss=~S~%"
 		    (agenda-item-type i) (agenda-item-id i) 
@@ -310,6 +316,19 @@
 	      (setf (top-bucket *chart*) (find-new-top-bucket (top-bucket *chart*)))
 	      (if (> (top-bucket *chart*) 0) (agenda-item-pending threshold))
 	      )))))
+
+(defun show-rule-in-agenda (rule start end)
+  (dotimes (i *number-of-buckets-for-agenda*)
+    (find-arc-in-agenda (aref (agenda *chart*) i) rule start (+ end 1) i)))
+
+(defun find-arc-in-agenda (bucket rule-id  start end buck-num)
+  (mapcar #'(lambda (x) (format t "~%bucket ~S:~S" buck-num x))
+	  (remove-if-not #'(lambda (b)
+			     (and (eq (agenda-item-start b) start)
+				  (eq (agenda-item-end b) end)
+				  (eq (agenda-item-id b) rule-id)))
+			 bucket)))
+	  
 
 (defun remove-blanks (chars)
   (when chars
@@ -471,7 +490,7 @@
     ;; now boost entries with domain specific info
     (normalize
      (if (get-value c 'w::kr-type)
-	 (* score 1.02)
+	 (* score 1.01)
 	 score))
     ))
 
@@ -729,7 +748,7 @@
 	   (Make-New-BU-Active-Arcs entry (entry-name entry))
 	   (Chart-Extend entry (entry-name entry))))
 
-	;; If the new-score is higher than the next-score, and still non-zero, then
+	;; If the news-score is higher than the next-score, and still non-zero, then
 	;; add it back to the agenda, to get re-processed once it is again the highest
 	;; probability constituent.
 	((> new-score 0)

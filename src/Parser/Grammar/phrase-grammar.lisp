@@ -229,8 +229,17 @@
 		     (% *PRO* (VAR ?v) (SEM ?sem)
 			(STATUS ont::PRO) (class ?lf) (constraint (& (proform ?lex)))))))
 	  (NObareSpec +) (WH (? wh Q -)) (wh-var ?v))	 
+	 -possessive3-Q>
+	 (head (PRO (CASE POSS) (WH Q)
+		    (STATUS ont::PRO-DET) (SEM ?sem) (VAR ?v) (LF ?lf) (lex ?lex) (input ?i))))
+
+	((possessor (LF ONT::DEFINITE) (AGR ?agr) (ARG ?arg) (MASS ?m)
+	  (RESTR (& (assoc-poss
+		     (% *PRO* (VAR ?v) (SEM ?sem)
+			(STATUS ont::PRO) (class ?lf) (constraint (& (proform ?lex)))))))
+	  (NObareSpec +) (WH -))
 	 -possessive3>
-	 (head (PRO (CASE POSS) (WH (? wh Q -))
+	 (head (PRO (CASE POSS) (WH -)
 		    (STATUS ont::PRO-DET) (SEM ?sem) (VAR ?v) (LF ?lf) (lex ?lex) (input ?i))))
 #||
 	((possessor (LF DEFINITE) (AGR ?agr) (ARG ?arg) (mass ?m)
@@ -1013,15 +1022,15 @@
      -adj-unit-modifier> 1.0
      (ADJP (sort unit-measure) (var ?adjv) 
       (LF (% PROP (constraint (& (GROUND ?adjval)))))
-      (sem ($ F::ABSTR-OBJ (F::scale F::linear-scale))))
-     (head (ADJ (LF ?lf)  (VAR ?v) (SUBCAT -) (sem ($ F::ABSTR-OBJ (F::scale (? scale F::linear-scale))))
+      (sem ($ F::ABSTR-OBJ (F::scale (? sc ont::scale ont::linear-d)))))
+     (head (ADJ (LF ?lf)  (VAR ?v) (SUBCAT -) (sem ($ F::ABSTR-OBJ (F::scale (? sc ont::scale ont::linear-d))))
 		(SORT PRED) ;;(ARGUMENT-MAP ?argmap)
 		(transform ?transform) (constraint ?con)
 	    (atype ?atype) (comparative ?cmp)
 	    (post-subcat -)
 	    ))
      (append-conjuncts (conj1 ?restr) (conj2 ?r) (new ?tempcon))
-     (append-conjuncts (conj1 (& (FIGURE ?arg) (GROUND ?adjval) (scale (? scale F::linear-scale))))
+     (append-conjuncts (conj1 (& (FIGURE ?arg) (GROUND ?adjval) (scale (? sc ont::scale ont::linear-d))))
 		       (conj2 ?tempcon) (new ?newc)))
 
 ;;  a (ten foot)-high fence, a three mile wide path, .. 
@@ -1032,16 +1041,16 @@
      -adj-unit-modifier-HYPHEN> 1.1
      (ADJP (sort unit-measure) (var ?adjv) 
       (LF (% PROP (constraint (& (GROUND ?adjval)))))
-      (sem ($ F::ABSTR-OBJ (F::scale F::linear-scale))))
+      (sem ($ F::ABSTR-OBJ (F::scale (? sc ont::scale ont::linear-d)))))
      (word (lex w::punc-minus))
-     (head (ADJ (LF ?lf)  (VAR ?v) (SUBCAT -) (sem ($ F::ABSTR-OBJ (F::scale (? scale F::linear-scale))))
+     (head (ADJ (LF ?lf)  (VAR ?v) (SUBCAT -) (sem ($ F::ABSTR-OBJ (F::scale (? sc ont::scale ont::linear-d))))
 		(SORT PRED) ;;(ARGUMENT-MAP ?argmap)
 		(transform ?transform) (constraint ?con)
 	    (atype ?atype) (comparative ?cmp)
 	    (post-subcat -)
 	    ))
      (append-conjuncts (conj1 ?restr) (conj2 ?r) (new ?tempcon))
-     (append-conjuncts (conj1 (& (FIGURE ?arg) (GROUND ?adjval) (scale (? scale F::linear-scale))))
+     (append-conjuncts (conj1 (& (FIGURE ?arg) (GROUND ?adjval) (scale (? sc ont::scale ont::linear-d))))
 		       (conj2 ?tempcon) (new ?newc)))
 
    ;; adjectives with deleted complements  JFA 8/02
@@ -1219,7 +1228,7 @@
 				    ))
 	    (transform ?transform) (sem ?sem)
 	    )))
-    -adj-pred-scale>
+    -adj-pred-scale> 
     (head (ADJ (LF ?lf) (SUBCAT2 -) (post-subcat -)(VAR ?v) (comparative ?comp)
 	       (ARGUMENT-MAP ?argmap) (prefix -)
 	       (functn ?fn)
@@ -1227,7 +1236,7 @@
 	       (sem ?sem) (sem ($ F::ABSTR-OBJ (f::scale ?scale1) (F::intensity ?ints) (F::orientation ?orient)))
 	       (transform ?transform)
 	       ))
-    (pp (ptype w::in) (var ?sc-var) (sem  ($ F::ABSTR-OBJ (f::scale ?scale2))))
+    (pp (ptype w::in) (var ?sc-var) (sem  ($ F::ABSTR-OBJ (f::scale ?scale2))) (gap ?gap))
     (class-greatest-lower-bound (in1 ?scale1) (in2 ?scale2) (out ?newscale))
     )
 
@@ -2237,16 +2246,17 @@
          -unit-np-number-indef-explicit-scale>
 	 (NUMBER (val ?num) (VAR ?nv) (AGR ?agr) (restr ?r))
  	 (head (N1 (VAR ?v) (SORT unit-measure) (INDEF-ONLY -) (CLASS ?c) (MASS ?m)
-		   (KIND -) (sem ?sem) (sem ($ f::abstr-obj  (f::scale ?sc)))
+		   (KIND -) (sem ?sem) (sem ($ f::abstr-obj  (f::scale ?unit-sc)))
 		   (argument ?argument) (RESTR ?restr)
 		   (post-subcat -)
 		))
 	 (pp (ptype in) (gap -)
-	  (sem ($ f::abstr-obj (F::scale ?sc))))
+	  (sem ($ f::abstr-obj (F::type (? xx ont::domain)))))
+	 ;;(class-greatest-lower-bound (in1 ?unit-sc) (in2 ?explicit-sc) (out ?sc))
          (add-to-conjunct (val (& (value ?num))) (old ?r) (new ?newr))
 	 (add-to-conjunct (val (& (amount (% *PRO* (status ont::indefinite) (class ont::NUMBER) (VAR ?nv) (constraint ?newr)))
 				  (unit ?c)
-				  (scale ?sc))) (old ?restr) (new ?constr))
+				  (scale (? xx ont::domain)))) (old ?restr) (new ?constr))
 	 )
 
    ;;  NP with SPECS that subcategorize for "of" PP's that are count and definite
@@ -2635,7 +2645,7 @@
      ((ADJP (ARG ?arg) (VAR ?v) 
 	    (SUBCATMAP ont::affected) (ARGUMENT ?subj)
 	    (atype central) 
-	    (LF (% PROP (class ?lf) (VAR ?v) (constraint ?newc)))           
+	    (LF (% PROP (class ?lf) (VAR ?v) (constraint ?newc)))
       )
      -vp-pastprt-adjp>
      (head
@@ -2650,6 +2660,10 @@
      (append-conjuncts (conj1 ?cons) (conj2 (& (ont::affected ?arg))) (new ?newc))
      )
 
+     ; may have been subsumed by -VP-PASTPRT-ADJP>
+     ; If using this rule, need to make part "-" or check for matching part
+     ; Also note that VP- doesn't have headfeatures here
+     #|
     ;; TEST: the loaded truck
     ;; bare passive form as an adjective
     ;; Verb must be passive, and require no complement  
@@ -2663,6 +2677,7 @@
               (VAR ?v)
               )
       ))
+     |#
 
     ;; TEST: the computer-generated dog
     ((ADJP (VAR ?v)  (arg ?dobj) (class ?lf) (atype w::central) (argument (% NP (var ?dobj)))
@@ -2776,6 +2791,7 @@
               (VAR ?v) (transform ?transform)
 ;	      (prefix ?prefix)
 	      (restr ?prefix)
+	      (part (% -))
               )
            )
      (append-conjuncts (conj1 ?prefix) (conj2 (& (?!reln ?arg)))
@@ -2800,6 +2816,7 @@
               (VAR ?v) (transform ?transform)
 ;	      (prefix ?prefix)
 	      (restr ?prefix)
+	      (part (% -))
               )
            )
      (append-conjuncts (conj1 ?prefix) (conj2 (& (?!reln ?arg)))
@@ -2813,7 +2830,7 @@
 
 (parser::augment-grammar 
   '((headfeatures
-     (NP VAR SEM LEX wh case lex headcat transform postadvbl)
+     (NP VAR SEM LEX wh lex headcat transform postadvbl)
      (SPEC POSS POSS-VAR POSS-SEM  transform) 
      (ADVBL VAR SEM LEX ATYPE lex headcat transform neg)
      (ADVBL-R VAR SEM LEX ATYPE argument wh lex headcat transform)
@@ -3425,7 +3442,7 @@
     ;;  Words like there, here, tomorrow (no WH terms) are treated as PRO forms
 
     ((NP (PP-WORD +) (PRO +) (SORT (? srt pred set)) (VAR ?v) (SEM ?s) (lex ?lex)
-         (role ?lf) (agr (? agr 3s 3p -))
+         (role ?lf) (agr (? agr 3s 3p -)) (case ?case)
          (LF (% Description (status ont::pRO) (var ?v) (Class ?lf) (SORT (?agr -))
                 (Lex ?lex) (sem ?sem) (transform ?transform) (constraint (% & (proform ?lex)))
                 )))
@@ -3682,6 +3699,8 @@
 	  (comp3 ?comp3)
 	  (comp3-map ?comp-map)
 	  (rate-activity-nom (? ratelf ONT::RATE))
+	  (nomobjpreps ?nop)
+	  (nomsubjpreps ?nsp)
       )
      -nom-rate> 1.0
 	 (head (n1  (var ?v) (gap -) (aux -)(case ?case) (gerund ?ger) (agr ?agr)
@@ -3701,6 +3720,8 @@
 		    (generated -)
 		    (rate-activity-nom -)
 		    (agent-nom -)
+		    (nomobjpreps ?nop)
+		    (nomsubjpreps ?nsp)
 		    ))
 	 (n (lf (? ratelf ONT::RATE)) (rate-activity-nom -))
 	 )

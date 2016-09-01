@@ -8,7 +8,7 @@ include ../Makefile-common
 
 $(IMAGE):: ../../TextTagger/drum-dsl-resources.lisp ../../TextTagger/drum-mappings.lisp
 
-CSM_DATA = events goals
+CSM_DATA = events goals models
 
 install:: install-configs install-data
 
