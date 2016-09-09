@@ -45,7 +45,7 @@
 (defun reply-to-message (msg result)
   (let ((reply-with (find-arg-in-act msg :reply-with))
 	(sender (find-arg-in-act msg :sender)))
-    (send-msg (append (list 'tell :receiver sender :content result) (list :in-reply-to reply-with)))))
+    (send-msg (append (list 'reply :receiver sender :content result) (list :in-reply-to reply-with)))))
 
 (defun what-next (msg args)
   (let ((active-goal (find-arg args :active-goal))
@@ -98,10 +98,19 @@
 				   :content (FAILURE :what F1 :as (SUBGOAL :of ,target))
 				   :context ,(cons `(A F1 :instance-of ONT::LOOK-UP :neutral ,(second obj))
 						   context))))
-						   
 	      (otherwise 
 	       (reply-to-message msg
 				 `(REPORT :content (WAIT)))))))
+
+	(ont::query-model
+	 (reply-to-message msg
+	
+			   `(REPORT :content (ANSWER :what ONT::FALSE  :goal ,target :justification BA-QUERY-111)
+				    :context (ONT::RELN BA-QUERY-111 :INSTANCE-OF ONT::SIMULATION :QUERY (SATISFIES-PATTERN p1) :ANSWER (SUCCESS :content (:satisfies-rate 0.0 :num-sim 10)))
+						    )
+						   
+			   ))
+	
 	(otherwise 
 	       (reply-to-message msg
 				 `(REPORT :content (WAIT))))))

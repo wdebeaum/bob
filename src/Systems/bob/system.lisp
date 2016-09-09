@@ -42,7 +42,7 @@
 	;; average number of letters in a word (not critical)
 	(parser::*word-length* 8)
 	;; boost factor based on length of input covered
-	(parser::*score-length-multiplier* .6)
+	(parser::*score-length-multiplier* .4)
 	;; not clear this is helpful
 	(parser::*score-corner-multiplier* 0)
 	;; indicate we should use POS information
@@ -54,7 +54,7 @@
 	;; constituents that we expect in the skeleton
 	(parser::*skeleton-constit-cats* '(W::NP W::CP W::VP W::ADVBL W::PP W::S))
 	;; boost constituents that match the skeleton (from stat. parser)
-	(parser::*skeleton-boost-factor* 1.05)
+	(parser::*skeleton-boost-factor* 1.04)
 	;; penalty for crossing skeleton constituent boundaries
 	((setf (parser::barrier-penalty parser::*chart*) .99))
 	;;
@@ -65,14 +65,17 @@
 	(parser::*no-positions-in-lf* nil)
 	;;
 
-	(parser::*beam-pruning-on* nil)   ; no pruning
+;	(parser::*beam-pruning-on* nil)   ; no pruning
+	(parser::*beam-pruning-on* t)
 
 	;;
-	(parser::*pruning-frequency* 500)
+;	(parser::*pruning-frequency* 500)
+	(parser::*pruning-frequency* 1000)
 	;;
 	(parser::*beam-width* 20)
 	;; max number of constituents built before stopping
-	((parser::setmaxnumberentries 2000))
+;	((parser::setmaxnumberentries 2000))
+	((parser::setmaxnumberentries 6000))
 	;;
 	((parser::setmaxchartsize 8000))
 	;;
@@ -91,7 +94,7 @@
 	(parser::*filter-and-preparse-input* t)   ;; enable preparsing (e.g., for sequences)
 	((parser::customize-cost-table 
 	  '((ont::SA_QUERY 1.2) 
-	     (ont::IDENTIFY 2) 
+	     (ont::SA_IDENTIFY 2) 
 	     (ont::SA_pred-fragment 2) 
 	     (ont::SA_request 1) 
 	     (ont::SA_YN-QUESTION 1) 
@@ -99,7 +102,7 @@
 	     (w::advblp 1.3)
 	     (ont::SA_CONFIRM 1) 
 	     (ont::SA_WH-QUESTION 1) 
-	     (ont::TELL 1)
+	     (ont::SA_TELL 1)
 	     (w::CP 2) 
 	     (w::VP 1.1) 
 	     (w::punc .5))))
@@ -204,5 +207,5 @@
 ;; system development.
 ;; if you need to use either of the following Dummy features, uncomment them 
 ;; LOCALLY, but please do not commit without comments!
-;;(load  #!TRIPS"src;Systems;bob;dummymessages")
+;(load  #!TRIPS"src;Systems;bob;dummymessages")
 ;(load  #!TRIPS"src;Systems;bob;dummy-for-CSM")

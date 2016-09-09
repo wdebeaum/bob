@@ -39,7 +39,7 @@ public class InterpretSpeechActHandler extends MessageHandler{
 		this.goalPlanner = goalPlanner;
 	}
 	
-	public List<KQMLList> process()
+	public KQMLList process()
 	{
 		KQMLObject innerContentObj = content.getKeywordArg(":content");
 		innerContent = null;
@@ -58,7 +58,12 @@ public class InterpretSpeechActHandler extends MessageHandler{
 		    !activeGoalObject.stringValue().equals("-"))
 		{
 			activeGoal = activeGoalObject.stringValue();
-			goalPlanner.setActiveGoal(activeGoal);
+			boolean succeeded = goalPlanner.setActiveGoal(activeGoal,
+										(KQMLList)context);
+			
+			if (!succeeded)
+				System.out.println("Can't set active goal to " + activeGoal + 
+								", no such goal known.");
 		}
 		
 		for (KQMLObject lfTerm : (KQMLList)context)
@@ -112,24 +117,16 @@ public class InterpretSpeechActHandler extends MessageHandler{
 		return failureMessage(what, newContext,failureReason, adoptContentList);
 	}
 	
-	private KQMLList missingGoalToModify()
+	private KQMLList noEventsInContext()
 	{
 		KQMLList failureReason = new KQMLList();
-		failureReason.add("MISSING-GOAL-TO-MODIFY");
-
-		KQMLList newContext = new KQMLList();
-		newContext.addAll((KQMLList)context);
-		KQMLList solutionList = new KQMLList();
-		KQMLList selectList = new KQMLList();
-		selectList.add("SELECT-GOAL-TO-MODIFY");
+		failureReason.add("NO-EVENTS-IN-CONTEXT");
 		
-		solutionList.add(selectList);
-
-		
-		return failureMessage(what, newContext,failureReason, solutionList);
+		return failureMessage(what,context,failureReason);
 	}
+
 	
-	private List<KQMLList> handleAssertion()
+	private KQMLList handleAssertion()
 	{
 		
 		Goal currentAcceptedGoal = goalPlanner.getActiveGoal();
@@ -138,13 +135,15 @@ public class InterpretSpeechActHandler extends MessageHandler{
 		
 		if (activeGoal == null && currentAcceptedGoal == null)
 		{
-			ArrayList<KQMLList> result = new ArrayList<KQMLList>();
-			result.add(missingActiveGoal());
-			return result;
+			return missingActiveGoal();
 		}
 		
 		EventExtractor ee = new EventExtractor(ontologyReader);
 		ee.apply((KQMLList)context);
+		if (ee.getEventIDsInContext().isEmpty())
+		{
+			return noEventsInContext();
+		}
 		
 		KQMLList assertionRelnContent = new KQMLList();
 		assertionRelnContent.add("ont::RELN");
@@ -188,13 +187,11 @@ public class InterpretSpeechActHandler extends MessageHandler{
 			action.setContributesTo(contributesToGoal);
 		goalPlanner.addGoal(action,contributesToGoal.getVariableName());
 		
-		ArrayList<KQMLList> result = new ArrayList<KQMLList>();
-		result.add(reportContent(assertionContent, assertionEventContext));
-		return result;
+		return reportContent(assertionContent, assertionEventContext);
 		
 	}
 	
-	private List<KQMLList> handleEvaluateResult()
+	private KQMLList handleEvaluateResult()
 	{
 		Goal currentAcceptedGoal = goalPlanner.getActiveGoal();
 		if (currentAcceptedGoal != null)
@@ -202,9 +199,7 @@ public class InterpretSpeechActHandler extends MessageHandler{
 		
 		if (activeGoal == null && currentAcceptedGoal == null)
 		{
-			ArrayList<KQMLList> result = new ArrayList<KQMLList>();
-			result.add(missingActiveGoal());
-			return result;
+			return missingActiveGoal();
 		}
 		
 		// TODO: Get test parameter
@@ -236,15 +231,13 @@ public class InterpretSpeechActHandler extends MessageHandler{
 		evaReportContext.add(evaReln);
 		evaReportContext.add(causeReln);
 		evaReportContext.addAll((KQMLList)context);
-		
-		ArrayList<KQMLList> result = new ArrayList<KQMLList>();
-		result.add(reportContent(evaAdoptContent, evaReportContext));
-		return result;
+
+		return reportContent(evaAdoptContent, evaReportContext);
 		
 	}
 	
 	// TODO: Deal with edge cases
-	private List<KQMLList> handlePropose()
+	private KQMLList handlePropose()
 	{
 		Goal currentAcceptedGoal = goalPlanner.getActiveGoal();
 		if (currentAcceptedGoal != null)
@@ -263,16 +256,12 @@ public class InterpretSpeechActHandler extends MessageHandler{
 			case "MODIFY":
 				if (activeGoal == null && currentAcceptedGoal == null)
 				{
-					ArrayList<KQMLList> result = new ArrayList<KQMLList>();
-					result.add(missingActiveGoal());
-					return result;
+					return missingActiveGoal();
 				}
 				proposeAdoptContent = goalPlanner.modify(new Goal(what,(KQMLList)context));
 				if (proposeAdoptContent == null)
 				{
-					ArrayList<KQMLList> result = new ArrayList<KQMLList>();
-					result.add(missingGoalToModify());
-					return result;
+					return missingGoalToModify(what,context);
 				}
 				break;
 			}
@@ -288,12 +277,10 @@ public class InterpretSpeechActHandler extends MessageHandler{
 			goalPlanner.addGoal(new Goal(what,(KQMLList)context), activeGoal);
 		}
 
-		ArrayList<KQMLList> result = new ArrayList<KQMLList>();
-		result.add(reportContent(proposeAdoptContent, context));
-		return result;
+		return reportContent(proposeAdoptContent, context);
 	}
 	
-	private List<KQMLList> handleWhatIs()
+	private KQMLList handleWhatIs()
 	{
 		Goal currentAcceptedGoal = goalPlanner.getActiveGoal();
 		if (currentAcceptedGoal != null)
@@ -351,14 +338,12 @@ public class InterpretSpeechActHandler extends MessageHandler{
     	contextToSend.add(askRelnContent);
     	contextToSend.addAll((KQMLList)context);
 
-		ArrayList<KQMLList> result = new ArrayList<KQMLList>();
-		result.add(reportContent(askAdoptContent, contextToSend));
 		//result.add(reportContent(askWhatIsContent, contextToSend));
-		return result;
+		return reportContent(askAdoptContent, contextToSend);
 	}
 	
 	// TODO Change event to conditional
-	private List<KQMLList> handleAskConditionalIf()
+	private KQMLList handleAskConditionalIf()
 	{
 		Goal currentAcceptedGoal = goalPlanner.getActiveGoal();
 		if (currentAcceptedGoal != null)
@@ -416,17 +401,14 @@ public class InterpretSpeechActHandler extends MessageHandler{
     	contextToSend.add(queryGoalContent);
     	contextToSend.add(conditionalContent);
     	contextToSend.addAll((KQMLList)context);
-
-		ArrayList<KQMLList> result = new ArrayList<KQMLList>();
-		result.add(reportContent(askAdoptContent, contextToSend));
 		
 		//result.add(reportContent(askRelnContent, contextToSend));
 		
 		
-		return result;
+		return reportContent(askAdoptContent, contextToSend);
 	}
 	
-	private List<KQMLList> handleAskIf()
+	private KQMLList handleAskIf()
 	{
 		Goal currentAcceptedGoal = goalPlanner.getActiveGoal();
 		if (currentAcceptedGoal != null)
@@ -476,13 +458,10 @@ public class InterpretSpeechActHandler extends MessageHandler{
     	contextToSend.add(queryGoalContent);
     	contextToSend.addAll((KQMLList)context);
 
-		ArrayList<KQMLList> result = new ArrayList<KQMLList>();
-		result.add(reportContent(askAdoptContent, contextToSend));
-		
 		//result.add(reportContent(askRelnContent, contextToSend));
 		
 		
-		return result;
+		return reportContent(askAdoptContent, contextToSend);
 	}
 
 	
@@ -498,7 +477,7 @@ public class InterpretSpeechActHandler extends MessageHandler{
     	return relnContent;
     }
     
-
+    
     
 
     

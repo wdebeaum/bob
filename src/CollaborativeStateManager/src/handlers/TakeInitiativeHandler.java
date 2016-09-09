@@ -7,6 +7,7 @@ import java.util.*;
 import extractors.OntologyReader;
 import extractors.TermExtractor;
 import plans.GoalPlanner;
+import states.Goal;
 
 public class TakeInitiativeHandler extends MessageHandler {
 
@@ -21,9 +22,8 @@ public class TakeInitiativeHandler extends MessageHandler {
 		this.ontologyReader = ontologyReader;
 	}
 	
-	public List<KQMLList> process()
+	public KQMLList process()
 	{
-		ArrayList<KQMLList> result = new ArrayList<KQMLList>();
 		
 		//KQMLList goal = (KQMLList)(content.getKeywordArg(":GOAL"));
 		
@@ -34,29 +34,42 @@ public class TakeInitiativeHandler extends MessageHandler {
 		if (goalObject == null)
 		{
 			System.out.println("Goal parameter not set");
-			return null;
+			return missingGoalToModify("NIL", context);
 		}
 		String goalWhat = goalObject.stringValue();
+		
+		if (goalPlanner.isOverrideSystemInitiative())
+		{
+			if (goalPlanner.getOverrideSystemInitiativeValue() == true)
+				return takeInitiativeContent("YES", goalWhat, context);
+			else
+				return takeInitiativeContent("NO", goalWhat, context);
+		}
 		
 		KQMLList goalLF = null;
 		for (KQMLObject lfTerm : (KQMLList)context)
 		{
 			if (((KQMLList)lfTerm).get(1).stringValue().equalsIgnoreCase(goalWhat))
+			{
 				goalLF = (KQMLList)lfTerm;
+				goalPlanner.addGoal(new Goal(goalLF));
+			}
 		}
+
+		// Not in context, check the planner
+		if (goalLF == null && goalPlanner.hasGoal(goalWhat))
+		{
+			System.out.println("Searching goalplanner for variable: " + goalWhat);
+			goalLF = goalPlanner.getGoal(goalWhat).getKQMLTerm();
+		}
+		
+		// Not in context or planner, return error
 		if (goalLF == null)
 		{
-			if (goalPlanner.hasGoal(goalWhat))
-			{
-				System.out.println("Searching goalplanner for variable: " + goalWhat);
-				goalLF = goalPlanner.getGoal(goalWhat).getKQMLTerm();
-			}
-			else
-			{
-				System.out.println("No such goal in planner");
-				return null;
-			}
+			System.out.println("No such goal in planner");
+			return missingGoalToModify(goalWhat, context);
 		}
+		
 		
 		String goalType = goalLF.getKeywordArg(":INSTANCE-OF").stringValue();
 		System.out.println("Goal type: *" + goalType + "*");
@@ -123,10 +136,14 @@ public class TakeInitiativeHandler extends MessageHandler {
 			
 		}
 		if (takeInitContent == null)
-			takeInitContent = takeInitiativeContent("NO", goalWhat, context);
+		{
+			if (goalPlanner.isGlobalSystemInitiative())
+				takeInitContent = takeInitiativeContent("YES", goalWhat, context);
+			else
+				takeInitContent = takeInitiativeContent("NO", goalWhat, context);
+		}
 		
-		result.add(takeInitContent);
-		return result;
+		return takeInitContent;
 		
 	}
 	

@@ -71,8 +71,78 @@
 		       :pattern '((ONT::SPEECHACT ?!sa ONT::ASK-CONDITIONAL-IF :what ?!what :condition ?!test)
 ;				  (ONT::EVENT ?!what ONT::SITUATION-ROOT)
 ;				  (ONT::EVENT ?!test ONT::EVENT-OF-CAUSATION) 
-				  (?!sp1 ?!what ONT::SITUATION-ROOT)
-				  (?!sp2 ?!test ONT::EVENT-OF-CAUSATION) 
+				  (?!sp1 ?!what (? t1 ONT::SITUATION-ROOT
+; These are DRUM events.  Eventually they will go into a branch in the ontology.
+ONT::ACTIVITY
+ONT::PHOSPHORYLATION
+ONT::UBIQUITINATION
+ONT::ACETYLATION
+ONT::FARNESYLATION
+ONT::GLYCOSYLATION
+ONT::HYDROXYLATION
+ONT::METHYLATION
+ONT::RIBOSYLATION
+ONT::SUMOYLATION
+ONT::PTM
+ONT::EXPRESS
+ONT::TRANSCRIBE
+ONT::TRANSLATE
+ONT::HYDROLYZE
+ONT::CATALYZE
+ONT::ACTIVATE
+ONT::PRODUCE
+ONT::DEACTIVATE
+ONT::CONSUME
+ONT::STIMULATE
+ONT::INHIBIT
+ONT::INCREASE
+ONT::DECREASE
+ONT::PPEXPT
+ONT::BIND
+ONT::BREAK
+ONT::TRANSLOCATE
+ONT::MODULATE
+ONT::NO-CHANGE
+ONT::TRANSFORM
+ONT::SIGNALING
+ONT::INTERACT 
+						   ))
+				  (?!sp2 ?!test (? t2 ONT::EVENT-OF-CAUSATION
+ONT::ACTIVITY
+ONT::PHOSPHORYLATION
+ONT::UBIQUITINATION
+ONT::ACETYLATION
+ONT::FARNESYLATION
+ONT::GLYCOSYLATION
+ONT::HYDROXYLATION
+ONT::METHYLATION
+ONT::RIBOSYLATION
+ONT::SUMOYLATION
+ONT::PTM
+ONT::EXPRESS
+ONT::TRANSCRIBE
+ONT::TRANSLATE
+ONT::HYDROLYZE
+ONT::CATALYZE
+ONT::ACTIVATE
+ONT::PRODUCE
+ONT::DEACTIVATE
+ONT::CONSUME
+ONT::STIMULATE
+ONT::INHIBIT
+ONT::INCREASE
+ONT::DECREASE
+ONT::PPEXPT
+ONT::BIND
+ONT::BREAK
+ONT::TRANSLOCATE
+ONT::MODULATE
+ONT::NO-CHANGE
+ONT::TRANSFORM
+ONT::SIGNALING
+ONT::INTERACT 
+
+					 )) 
 				  (ont::eval (generate-AKRL-context :what ?!what :result ?akrl-context))
 				  (ont::eval (find-attr :result ?goal :feature ACTIVE-GOAL))
 				  -propose-test>
@@ -145,9 +215,18 @@
 				  -intention-complete-failure>
 				  (RECORD FAILURE (FAILED-TO-INTERPRET :WHAT ?!content :REASON (MISSING-ACTIVE-GOAL) :context ?context))
 				  (RECORD POSSIBLE-GOAL nil)
-				  (Generate :content (ONT::FAILED-TO-UNDERSTAND-GOAL :content ?!content :content ?context))
+				  (Generate :content (ONT::FAILED-TO-UNDERSTAND-GOAL :content ?!content :context ?context))
 				  )
 		       :destination 'propose-cps-act
+		       )
+
+		      (transition
+		       :description "CSM fails to identify any relevant events in the ASSERTION"
+		       :pattern '((BA-RESPONSE  X FAILURE :type FAILED-TO-INTERPRET :WHAT ?!content :REASON (NO-EVENTS-IN-CONTEXT) :context ?context)
+				  -intention-failure-noevent>
+				  (RECORD FAILURE (FAILED-TO-INTERPRET :WHAT ?!content :REASON (NO-EVENTS-IN-CONTEXT) :context ?context))
+				  )
+		       :destination 'segmentend  ; process the next pending speech act, if there is one
 		       )
 		      
 		  )))
@@ -353,6 +432,14 @@
 					    -take-init2-csm>
 					    (UPDATE-CSM (NO-INITIATIVE-TAKEN)))
 				 :destination 'segmentend)
+
+				;;; failure to interpret goal, just keep going
+				(transition
+				 :description "can't understand"
+				 :pattern '((FAILURE :what ?!X)
+					    -take-init3-csm>
+					    (UPDATE-CSM (NO-INITIATIVE-TAKEN)))
+				 :destination 'segmentend)
 				)
 		  ))
 
@@ -397,9 +484,21 @@
 				 :pattern '((BA-RESPONSE ?!X PERFORM :agent *USER* :action ?!action :context ?context)
 					    -what-next1>
 					    (UPDATE-CSM (PROPOSED :content ?!action :context ?context))
+					    (RECORD ACTIVE-GOAL ?!action)
+					    (RECORD ACTIVE-CONTEXT ?context)
 					    (RECORD PROPOSAL-ON-TABLE (ONT::PROPOSE :content ?!action :context ?context))
 					    (GENERATE :content (ONT::PROPOSE :content (ONT::PERFORM :action ?!action :context ?context))))
 				 :destination 'proposal-response)
+
+				(transition
+				 :description "action completed!"
+				 :pattern '((BA-RESPONSE ?!X EXECUTION-STATUS :action ?!action :status ONT::DONE)
+					    -what-next5>
+					    (UPDATE-CSM (ACTION-COMPLETED :action ?!action))
+					    (GENERATE :content (ONT::EVALUATION :content (ONT::GOOD))))
+				 :destination 'segmentend)
+				
+				
 				(transition
 				 :description "action completed!"
 				 :pattern '((BA-RESPONSE ?!X GOAL-ACHIEVED)
@@ -409,13 +508,19 @@
 					   
 					    (GENERATE :content (ONT::CLOSE)))
 				 :destination 'segmentend)
-				
+
 				(transition
-				 :description "BA has nothing to do"
-				 :pattern '((BA_RESPONSE ?!x WAIT)
-					    -what-next4>
-					    (UPDATE-CSM (BA-WAITING)))
+				 :description "answer to a question"
+				 :pattern '((BA-RESPONSE X ANSWER :what ?!what :of ?of :goal ?goal :justification ?j :context ?akrl-context)
+					    ;;(ont::eval (generate-AKRL-context :what ?!what :result ?akrl-context))
+					    -answer>
+					    (UPDATE-CSM (ANSWER :what ?!what :of ?of :goal ?goal :justification ?j :context ?akrl-context))
+					    (GENERATE 
+					     :content (ONT::ANSWER :content (?!what :of ?of :goal ?goal :justification ?j :context ?akrl-context))
+					     )
+					    )
 				 :destination 'segmentend)
+				
 				)
 
 		  ))
@@ -460,6 +565,7 @@
 					    -initiate-response1>
 					    (UPDATE-CSM (ACCEPTED :content (?prop :what ?!content :context ?!context)))
 					    (RECORD ACTIVE-GOAL ?!content)
+					    (RECORD ACTIVE-CONTEXT ?!context)
 					    (NOTIFY-BA :msg (SET-SHARED-GOAL :content ?!content
 							     :context ?!context)))
 				 
@@ -556,4 +662,18 @@
 				)
 		  ))
 
-
+(add-state 'done
+	   (state :action nil
+		  :transitions (list
+				(transition
+				 :description "goal accomplished"
+				 :pattern '((ONT::F ?!v ONT::HAVE-PROPERTY :FORMAL ?!f)
+					    (ONT::F ?!f ONT::FINISHED)
+					    -done1>
+					    (UPDATE-CSM (GOAL-ACHIEVED))
+					    (GENERATE :content (ONT::EVALUATION :content (ONT::GOOD)))
+					    (GENERATE :content (ONT::CLOSE)))
+				 :destination 'segmentend
+				 :trigger t)				
+				)
+		  ))

@@ -27,7 +27,7 @@ public class UpdateCSMHandler extends MessageHandler {
 	}
 
 	@Override
-	public List<KQMLList> process() {
+	public KQMLList process() {
 		KQMLObject innerContentObj = content.getKeywordArg(":content");
 		innerContent = null;
 		
@@ -69,6 +69,10 @@ public class UpdateCSMHandler extends MessageHandler {
 			return handleProblem();
 		case "ba-waiting":
 			return handleBaWaiting();
+		case "set-default-initiative":
+			return handleDefaultInitiative();
+		case "set-override-initiative":
+			return handleOverrideInitiative();
 			
 		}
 		
@@ -78,17 +82,59 @@ public class UpdateCSMHandler extends MessageHandler {
 		
 	}
 	
-	private List<KQMLList> handleSolved() {
+	private KQMLList handleOverrideInitiative()
+	{
+		System.out.println("Handling override initiative setting");
+		KQMLObject initiativeOverrideObject = innerContent.getKeywordArg(":OVERRIDE");
+		KQMLObject initiativeValueObject = innerContent.getKeywordArg(":VALUE");
+		if (initiativeOverrideObject == null || initiativeValueObject == null)
+			return null;
+		
+		if (initiativeOverrideObject != null)
+		{
+			if (initiativeOverrideObject.stringValue().equalsIgnoreCase("NIL"))
+				goalPlanner.setOverrideSystemInitiative(false);
+			else if (initiativeOverrideObject.stringValue().toUpperCase().contains("T"))
+				goalPlanner.setOverrideSystemInitiative(true);
+		}
+		
+		if (initiativeValueObject != null)
+		{
+			if (initiativeValueObject.stringValue().equalsIgnoreCase("NIL"))
+				goalPlanner.setOverrideSystemInitiativeValue(false);
+			else if (initiativeValueObject.stringValue().toUpperCase().contains("T"))
+				goalPlanner.setOverrideSystemInitiativeValue(true);			
+		}
+
+		return null;		
+	}
+	
+	private KQMLList handleDefaultInitiative()
+	{
+		System.out.println("Handling default initiative setting");
+		KQMLObject initiativeObject = innerContent.getKeywordArg(":VALUE");
+		if (initiativeObject == null)
+			return null;
+		
+		if (initiativeObject.stringValue().equalsIgnoreCase("NIL"))
+			goalPlanner.setGlobalSystemInitiative(false);
+		else if (initiativeObject.stringValue().toUpperCase().contains("T"))
+			goalPlanner.setGlobalSystemInitiative(true);
+		
+		return null;
+	}
+	
+	private KQMLList handleSolved() {
 		// TODO Auto-generated method stub
 		return null;
 	}
 
-	private List<KQMLList> handleProposed()
+	private KQMLList handleProposed()
 	{
 		return null;
 	}
 
-	private List<KQMLList> handlePrivateSystemGoal()
+	private KQMLList handlePrivateSystemGoal()
 	{
 		
 		String goalName;
@@ -119,7 +165,7 @@ public class UpdateCSMHandler extends MessageHandler {
 		return null;
 	}
 	
-	private List<KQMLList> handleFailedOn()
+	private KQMLList handleFailedOn()
 	{
 		
 		KQMLObject goalNameObject = innerContent.getKeywordArg(":WHAT");
@@ -155,7 +201,7 @@ public class UpdateCSMHandler extends MessageHandler {
 		return null;
 	}
 	
-	private List<KQMLList> handleProblem()
+	private KQMLList handleProblem()
 	{
 		
 		KQMLObject actionObject = innerContent.getKeywordArg(":WHAT");
@@ -211,8 +257,6 @@ public class UpdateCSMHandler extends MessageHandler {
 	
 	private void cannotPerform(String goalName)
 	{
-
-
 		if (goalPlanner.hasGoal(goalName))
 		{
 			goalPlanner.getGoal(goalName).setFailed(true);
@@ -226,12 +270,12 @@ public class UpdateCSMHandler extends MessageHandler {
 
 	}
 	
-	private List<KQMLList> handleAcceptedSolution()
+	private KQMLList handleAcceptedSolution()
 	{
 		return null;
 	}
 	
-	private List<KQMLList> handleAccepted()
+	private KQMLList handleAccepted()
 	{
 		KQMLList acceptContent = (KQMLList)(innerContent.getKeywordArg(":CONTENT"));
 		
@@ -271,7 +315,7 @@ public class UpdateCSMHandler extends MessageHandler {
 		return null;
 	}
 	
-	private List<KQMLList> handleNoInitiativeTaken()
+	private KQMLList handleNoInitiativeTaken()
 	{
 		KQMLObject goalNameObject = innerContent.getKeywordArg(":WHAT");
 		String goalName = null;
@@ -290,7 +334,7 @@ public class UpdateCSMHandler extends MessageHandler {
 		return null;
 	}
 
-	private List<KQMLList> handleInitiativeTakenOnGoal()
+	private KQMLList handleInitiativeTakenOnGoal()
 	{
 		KQMLObject goalNameObject = innerContent.getKeywordArg(":WHAT");
 		String goalName = null;
@@ -309,7 +353,7 @@ public class UpdateCSMHandler extends MessageHandler {
 		return null;
 	}
 	
-	private List<KQMLList> handleBaWaiting()
+	private KQMLList handleBaWaiting()
 	{
 		return null;
 	}
