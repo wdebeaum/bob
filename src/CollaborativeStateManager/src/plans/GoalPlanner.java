@@ -34,6 +34,13 @@ public class GoalPlanner {
 	{
 		if (goal == null)
 			return false;
+		
+		if (hasGoal(goal.getVariableName()))
+		{
+			System.out.println("Goal " + goal.getVariableName() + " already in planner.");
+			return false;
+		}
+		
 		String upperCaseParentVariableName = null;
 		if (parentVariableName != null)
 			upperCaseParentVariableName = parentVariableName.toUpperCase();
@@ -208,10 +215,18 @@ public class GoalPlanner {
 
 	public boolean setActiveGoal(Goal goal) {
 		boolean succeeded = false;
-		if (!goalConnections.containsKey(goal))
-			succeeded = addGoal(goal);
+		
+		if (hasGoal(goal.getVariableName()))
+		{
+			this.activeGoal = goal;
+			return true;
+		}
+		
+		succeeded = addGoal(goal);
+		
 		if (succeeded)
 			this.activeGoal = goal;
+		
 		
 		return succeeded;
 	}
@@ -219,8 +234,8 @@ public class GoalPlanner {
 	// Adds the goal from context if not already present
 	public boolean setActiveGoal(String goal, KQMLList context)
 	{
-		if (variableGoalMapping.containsKey(goal))
-			return setActiveGoal(variableGoalMapping.get(goal));
+		if (hasGoal(goal))
+			return setActiveGoal(getGoal(goal));
 		else
 		{
 			KQMLList goalTerm = TermExtractor.extractTerm(goal, context);
@@ -273,6 +288,24 @@ public class GoalPlanner {
 				parent = parent.getParent();
 		}
 		return parent;
+	}
+	
+	public void setCompleted(Goal goal)
+	{
+		goal.setCompleted(true);
+		System.out.println("Completed goal " + goal.getVariableName());
+		
+		if (goal.getParent() != null)
+		{
+
+			boolean succeeded = setActiveGoal(goal.getParent());
+			if (succeeded)
+				System.out.println("Set active goal to " +
+					goal.getParent().getVariableName());
+			else
+				System.out.println("Failed to set active goal to " +
+						goal.getParent().getVariableName());
+		}
 	}
 	
 	public Goal getNonActionAncestor(String goalName)

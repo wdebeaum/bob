@@ -58,12 +58,6 @@ public class InterpretSpeechActHandler extends MessageHandler{
 		    !activeGoalObject.stringValue().equals("-"))
 		{
 			activeGoal = activeGoalObject.stringValue();
-			boolean succeeded = goalPlanner.setActiveGoal(activeGoal,
-										(KQMLList)context);
-			
-			if (!succeeded)
-				System.out.println("Can't set active goal to " + activeGoal + 
-								", no such goal known.");
 		}
 		
 		for (KQMLObject lfTerm : (KQMLList)context)
@@ -131,12 +125,16 @@ public class InterpretSpeechActHandler extends MessageHandler{
 		
 		Goal currentAcceptedGoal = goalPlanner.getActiveGoal();
 		if (currentAcceptedGoal != null)
+		{
 			activeGoal = currentAcceptedGoal.getVariableName();
-		
+		}
+
 		if (activeGoal == null && currentAcceptedGoal == null)
 		{
 			return missingActiveGoal();
 		}
+		
+		System.out.println("Active goal: " + activeGoal + " at time of assertion");
 		
 		EventExtractor ee = new EventExtractor(ontologyReader);
 		ee.apply((KQMLList)context);
@@ -316,7 +314,7 @@ public class InterpretSpeechActHandler extends MessageHandler{
     	}
     	else
     	{
-    		goalPlanner.addGoal(new Goal(askRelnContent, goalPlanner.getGoal(activeGoal)));
+    		goalPlanner.addGoal(new Goal(askRelnContent), activeGoal);
     		askAdoptContent = adoptContent(newId, "SUBGOAL", activeGoal);
     	}
     	
@@ -394,7 +392,7 @@ public class InterpretSpeechActHandler extends MessageHandler{
     	}
     	else
     	{
-    		goalPlanner.addGoal(new Goal(queryGoalContent, goalPlanner.getGoal(activeGoal)));
+    		goalPlanner.addGoal(new Goal(queryGoalContent), activeGoal);
     	}
     	
     	KQMLList contextToSend = new KQMLList();
@@ -451,7 +449,7 @@ public class InterpretSpeechActHandler extends MessageHandler{
     	}
     	else
     	{
-    		goalPlanner.addGoal(new Goal(queryGoalContent, goalPlanner.getGoal(activeGoal)));
+    		goalPlanner.addGoal(new Goal(queryGoalContent), activeGoal);
     	}
     	
     	KQMLList contextToSend = new KQMLList();

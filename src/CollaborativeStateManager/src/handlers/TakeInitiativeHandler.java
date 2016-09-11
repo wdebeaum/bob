@@ -70,6 +70,15 @@ public class TakeInitiativeHandler extends MessageHandler {
 			return missingGoalToModify(goalWhat, context);
 		}
 		
+		Goal goal = null;
+		if (goalPlanner.hasGoal(goalWhat))
+			goal = goalPlanner.getGoal(goalWhat);
+		
+		if (goal.isCompleted())
+		{
+			return takeInitiativeContent("NO", goalWhat, context);
+		}
+		System.out.println("Goal " + goal.getVariableName() + " not completed");
 		
 		String goalType = goalLF.getKeywordArg(":INSTANCE-OF").stringValue();
 		System.out.println("Goal type: *" + goalType + "*");

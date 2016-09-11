@@ -143,7 +143,8 @@
 (setq *print-pretty* t)
 
 (setq *texttagger-split-mode*
-  :split-clauses
+  nil
+;  :split-clauses
 ;  :split-sentences
   )
 

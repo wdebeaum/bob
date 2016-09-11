@@ -51,10 +51,12 @@ public class OntologyReader {
 				    	System.out.print(goal.toUpperCase() + ":" );
 				    	for (String parent : parentList)
 				    		System.out.print(parent + ",");
+				    	System.out.println();
 			    	}
 			    	else
 			    	{
 			    		goals.put(goal.toUpperCase(),null);
+			    		System.out.println(goal.toUpperCase());
 			    	}
 			    }
 			    in.close();

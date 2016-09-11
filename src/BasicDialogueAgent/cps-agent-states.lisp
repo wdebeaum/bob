@@ -74,6 +74,7 @@
 				  (?!sp1 ?!what (? t1 ONT::SITUATION-ROOT
 ; These are DRUM events.  Eventually they will go into a branch in the ontology.
 ONT::ACTIVITY
+ONT::DEPLETE
 ONT::PHOSPHORYLATION
 ONT::UBIQUITINATION
 ONT::ACETYLATION
@@ -109,6 +110,7 @@ ONT::INTERACT
 						   ))
 				  (?!sp2 ?!test (? t2 ONT::EVENT-OF-CAUSATION
 ONT::ACTIVITY
+ONT::DEPLETE
 ONT::PHOSPHORYLATION
 ONT::UBIQUITINATION
 ONT::ACETYLATION
@@ -183,7 +185,7 @@ ONT::INTERACT
 							     :context ?new-akrl))
 				  (RECORD ACTIVE-GOAL ?!goal)
 				  (RECORD ALT-AS ?alt-as)
-				  (RECORD CURRENT-CONTEXT ?new-akrl)
+				  (RECORD ACTIVE-CONTEXT ?new-akrl)
 				  (INVOKE-BA :msg (EVALUATE 
 						   :content ((? act ADOPT ASSERTION) :what ?!goal :as ?as)
 						   :context ?new-akrl))
@@ -313,7 +315,7 @@ ONT::INTERACT
 				 :description "we have a backup interpretation"
 				 :pattern '((continue :arg ?!dummy)
 					    (ont::eval (find-attr :result ?!alt :feature ALT-AS))
-					    (ont::eval (find-attr :result ?!new-akrl :feature CURRENT-CONTEXT))
+					    (ont::eval (find-attr :result ?!new-akrl :feature ACTIVE-CONTEXT))
 					    -alt-found1>
 					    (RECORD PROPOSAL-ON-TABLE (ONT::PROPOSE-GOAL :Content (ADOPT :what ?!goal :as ?!alt)
 								       ))
@@ -375,16 +377,20 @@ ONT::INTERACT
 				 :pattern '((BA-RESPONSE X ACCEPTABLE :what ?!psgoal :context ?!context)
 					    (ont::eval (extract-feature-from-act :result ?goal-id :expr ?!psgoal :feature :what))
 					    (ont::eval (find-attr :result ?orig-cps-hyp :feature CPS-HYPOTHESIS))
+					    (ont::eval (find-attr :result ?active-goal :feature POSSIBLE-GOAL-ID))
+					    (ont::eval (replace-feature-val-in-act :result ?new-cps-hyp
+							:act ?orig-cps-hyp :feature :active-goal :newval ?active-goal))
 					    -confirmed-clarify-goal>
 					    (UPDATE-CSM (ACCEPTED :content ?!psgoal :context ?!context))
-					    
+					    (RECORD ACTIVE-GOAL ?active-goal)
+					    (RECORD CPS-HYPOTHESIS ?new-cps-hyp)
 					    (notify-BA :msg (COMMIT
 							     :content ?!psgoal)) ;; :context ?!context))  SIFT doesn't want the context
 					    (RECORD ACTIVE-GOAL ?goal-id)
 					    (RECORD ACTIVE-CONTEXT ?!context)
 					    (GENERATE :content (ONT::EVALUATION :content (ONT::GOOD)))
 					    ;;  Now we try to reinterpret the original utterance that caused the clarification
-					    (INVOKE-BA :msg (INTERPRET-SPEECH-ACT :content ?orig-cps-hyp :active-goal ?goal-id)))
+					    (INVOKE-BA :msg (INTERPRET-SPEECH-ACT :content ?new-cps-hyp)))
 				 :destination 'handle-CSM-response
 				))))
 
@@ -496,7 +502,7 @@ ONT::INTERACT
 					    -what-next5>
 					    (UPDATE-CSM (ACTION-COMPLETED :action ?!action))
 					    (GENERATE :content (ONT::EVALUATION :content (ONT::GOOD))))
-				 :destination 'segmentend)
+				 :destination 'what-next-initiative)
 				
 				
 				(transition
@@ -519,7 +525,7 @@ ONT::INTERACT
 					     :content (ONT::ANSWER :content (?!what :of ?of :goal ?goal :justification ?j :context ?akrl-context))
 					     )
 					    )
-				 :destination 'segmentend)
+				 :destination 'what-next-initiative)
 				
 				)
 

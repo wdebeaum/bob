@@ -73,6 +73,8 @@ public class UpdateCSMHandler extends MessageHandler {
 			return handleDefaultInitiative();
 		case "set-override-initiative":
 			return handleOverrideInitiative();
+		case "answer":
+			return handleAnswer();
 			
 		}
 		
@@ -321,7 +323,9 @@ public class UpdateCSMHandler extends MessageHandler {
 		String goalName = null;
 		if (goalNameObject != null)
 			goalName = goalNameObject.stringValue();
-		// This was a specific goal that failed
+		
+		
+		// This was a specific goal with initiative not taken
 		if (goalName != null && goalPlanner.hasGoal(goalName))
 		{
 			goalPlanner.getGoal(goalName).setSystemTookInitiative(false);
@@ -330,7 +334,7 @@ public class UpdateCSMHandler extends MessageHandler {
 		}
 		
 					
-		System.out.println("No such goal to set as initiative taken");
+		//System.out.println("No such goal to set as initiative taken");
 		return null;
 	}
 
@@ -340,7 +344,7 @@ public class UpdateCSMHandler extends MessageHandler {
 		String goalName = null;
 		if (goalNameObject != null)
 			goalName = goalNameObject.stringValue();
-		// This was a specific goal that failed
+		// This was a specific goal that with initiative taken
 		if (goalName != null && goalPlanner.hasGoal(goalName))
 		{
 			goalPlanner.getGoal(goalName).setSystemTookInitiative(true);
@@ -355,6 +359,25 @@ public class UpdateCSMHandler extends MessageHandler {
 	
 	private KQMLList handleBaWaiting()
 	{
+		return null;
+	}
+	
+	// TODO: Store answer?
+	private KQMLList handleAnswer()
+	{
+		KQMLObject goalNameObject = innerContent.getKeywordArg(":GOAL");
+		String goalName = null;
+		if (goalNameObject != null)
+			goalName = goalNameObject.stringValue();
+		// This was a specific goal that with initiative taken
+		if (goalName != null && goalPlanner.hasGoal(goalName))
+		{
+			goalPlanner.setCompleted(goalPlanner.getGoal(goalName));
+			System.out.println("Set goal " + goalName + " as completed via answer");
+			return null;
+		}
+		
+		System.out.println("No such goal to be answered");
 		return null;
 	}
 }
