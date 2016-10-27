@@ -2,7 +2,6 @@
 ;;;; phrase-grammar.lisp
 ;;;;
 
-
 (in-package :W)
 
 ;; VC verb crossing indicates when there's a verb between a modifier and
@@ -398,6 +397,7 @@
  '((headfeatures
     ;; (N1 VAR arg AGR MASS CASE SEM Changeagr lex quantity subcat transform)
     (N1 var arg lex headcat transform agr mass case sem quantity argument indef-only subcat-map refl abbrev gerund nomsubjpreps nomobjpreps dobj-map dobj subj-map generated)
+    ;;(N1 var arg lex headcat transform agr mass case sem quantity argument argument-map indef-only subcat-map refl abbrev gerund nomsubjpreps nomobjpreps dobj-map dobj subj-map generated)
     (N var arg lex headcat transform agr mass case sem quantity argument indef-only subcat-map refl abbrev gerund nomsubjpreps nomobjpreps dobj-map dobj subj-map generated)  ; this is a copy of N1 so -N-prefix> would pass on the features
     (NAME var arg lex headcat transform agr mass case sem quantity argument indef-only subcat-map refl abbrev gerund nomsubjpreps nomobjpreps dobj-map dobj subj-map generated)  ; this is a copy of N1 so -NAME-prefix> would pass on the features
     (UNITMOD var arg lex headcat transform agr mass case sem quantity subcat argument indef-only)
@@ -1236,8 +1236,8 @@
 	       (sem ?sem) (sem ($ F::ABSTR-OBJ (f::scale ?scale1) (F::intensity ?ints) (F::orientation ?orient)))
 	       (transform ?transform)
 	       ))
-    (pp (ptype w::in) (var ?sc-var) (sem  ($ F::ABSTR-OBJ (f::scale ?scale2))) (gap ?gap))
-    (class-greatest-lower-bound (in1 ?scale1) (in2 ?scale2) (out ?newscale))
+    (pp (ptype w::in) (var ?sc-var) (sem  ($ F::ABSTR-OBJ (f::scale ?!scale2))) (gap ?gap))
+    (class-greatest-lower-bound (in1 ?scale1) (in2 ?!scale2) (out ?newscale))
     )
 
  
@@ -1400,7 +1400,7 @@
     ((N1 (RESTR ?new) (CLASS ?c) (SORT ?sort) 
       (QUAL -) (relc -) (subcat ?subcat) (n-sing-already +)  ;; stop this happening more than once
       )
-     -n-sing-hyphen-n1-> 
+     -n-sing-hyphen-n1-> .98
      (n1 (AGR 3s) 
         (var ?v1) (sem ?sem) (restr ?modr) 
       (CLASS ?modc) (PRO -) (N-N-MOD -) (COMPLEX -) (SUBCAT -) (GAP -)
@@ -1641,13 +1641,13 @@
     ((N1 (RESTR ?con) (CLASS ?c) (SORT ?sort) (QUAL ?qual) (COMPLEX +)
       (subcat -) (post-subcat -)
       )
-     -N1-appos1> .96
+     -N1-appos1> .98
      (head (N1 (VAR ?v1) (RESTR ?r) (CLASS ?c) (SORT ?sort) (QUAL ?qual) (relc -) (sem ?sem)
 	    (subcat -) (post-subcat -) (complex -) (derived-from-name -) (time-converted -)
 	    )      
       )
      (np (name +) (generated -) (sem ?sem) (class ?lf) (VAR ?v2) (time-converted -))
-     (add-to-conjunct (val (EQ ?v2)) (old ?r) (new ?con)))
+     (add-to-conjunct (val (APPOS-EQ ?v2)) (old ?r) (new ?con)))
 	
    ;; same with comma  the city, avon
     ((N1 (RESTR ?con) (CLASS ?c) (SORT ?sort) (QUAL ?qual) (COMPLEX +) 
@@ -3548,7 +3548,7 @@
              (var ?v) 
              (LF (% PROP (VAR ?v) (CLASS ?reln) 
 	            (CONSTRAINT (& (?!submap (% *PRO*
-						(VAR *) (CLASS (:* ?pro-class ?lex))
+						(VAR *) (CLASS ?pro-class)
 						(SEM ?subcatsem) (CONSTRAINT (& (proform ?lex)))))
 										;;(suchthat ?v)))))
 			           (?!argmap ?argvar)))
@@ -4503,7 +4503,7 @@
       (generated ?generated)
       )
      np-sequence> 
-      (head (NPSEQ (var ?v) (SEM ?s1) (lf ?lf1) (class ?c1) (CASE ?case) (mass ?m1)
+      (head (NPSEQ (var ?v) (SEM ?sem) (lf ?lf1) (class ?c1) (CASE ?case) (mass ?m1)
 		   (generated ?generated1) (separator (? p w::punc-slash w::punc-colon w::punc-minus w::punc-en-dash w::punc-minus))
 		   (time-converted ?rule))))
 
@@ -4622,19 +4622,20 @@
     ((ADJP (ARG ?arg) (argument ?a) (sem ?sem) (atype central)
 	   (VAR *) ;(COMPLEX +) -- removed to allow complex adj prenominal modification, e.g. "a natural and periodic state of rest"
 	   (SORT PRED)
-      (LF (% PROP (CLASS ?conj) (VAR *) (sem ?sem) (CONSTRAINT (& (:sequence (?v1 ?v2)))) ;;?members)))
+      (LF (% PROP (CLASS ?class) (VAR *) (sem ?sem) (CONSTRAINT (& (:sequence (?v1 ?v2)) (:operator ?conj))) ;;?members)))
 	     (transform ?transform) (sem ?sem)
 	     )))
           
      -adj-conj1>
-     (ADJP (arg ?arg) (argument ?a) (VAR ?v1) (sem ?s1) (lf ?lf1) (atype central) (post-subcat -)
+     (ADJP (arg ?arg) (argument ?a) (VAR ?v1) (class ?c1) (sem ?s1) (lf ?lf1) (atype central) (post-subcat -)
       (set-modifier -)
       )
      (CONJ (LF ?conj) (but-not -) (but -))
-     (ADJP (arg ?arg)  (argument ?a) (VAR ?v2) (sem ?s2) (lf ?lf2) (atype central) (post-subcat -)
+     (ADJP (arg ?arg)  (argument ?a) (VAR ?v2) (class ?c2) (sem ?s2) (lf ?lf2) (atype central) (post-subcat -)
       (set-modifier -)
       )
      (sem-least-upper-bound (in1 ?s1) (in2 ?s2) (out ?sem))
+     (class-least-upper-bound (in1 ?c1) (in2 ?c2) (out ?class))
      ;;(simple-cons (in1 ?v2) (in2 ?lf1) (out ?members))
      )
 
@@ -4750,7 +4751,7 @@
    
    ;; a seven 
    ((NP (SORT PRED)
-     (var ?v) (Class ONT::ANY-SEM) (sem ($ (? ft f::phys-obj f::abstr-obj))) (case (? cas sub obj -))
+     (var ?v) (Class ONT::ANY-SEM) (sem ($ f::abstr-obj (f::intentional -) (f::information f::information-content))) (case (? cas sub obj -))
      (LF (% Description (status ont::indefinite) (var ?v) (Sort Individual) (lex ?lf)
 	    (Class ONT::ORDERING) (constraint (& (:value ?val))) 
 	    (lex ?l) 
@@ -4771,7 +4772,7 @@
 
    ;;  seven out of ten
    ((NP (SORT PRED)
-     (var ?v) (Class ONT::ANY-SEM) (sem ($ (? ft f::phys-obj f::abstr-obj))) (case (? cas sub obj -))
+     (var ?v) (Class ONT::ANY-SEM) (sem ($ f::abstr-obj (f::intentional -) (f::information f::information-content))) (case (? cas sub obj -))
      (LF (% Description (status ont::indefinite) (var ?v) (Sort Individual) (lex ?lf)
 	    (Class ONT::ORDERING) (constraint (& (:value ?val) (:range ?range)))
 	    (lex ?l)
@@ -4833,7 +4834,8 @@
    ;; certains NAMES (esp in the biology domain) are really treat like mass nouns
 	;;   we need this for constructions wwith modifiers, like "phosphorylated HER3"
     ((n1 (SORT PRED)
-      (var ?v) (Class ?lf) (sem ?sem) (agr ?agr) (case (? cas sub obj -)) (derived-from-name -)
+      (var ?v) (Class ?lf) (sem ?sem) (agr ?agr) (case (? cas sub obj -))
+      (derived-from-name +)  ;; we do this so that this N1 doesn't go through the bare-np rule, since we have the name-np already. But this N1 does allow relative clauses, as in "Ras that is bound to Raf"
       (status ont::name) (lex ?l) (restr ?con) ;(restr (& (w::name-of ?l)))
       (mass mass)
       )

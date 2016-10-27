@@ -31,12 +31,31 @@
 						     :reason '(not enough green blocks SIFT to provide the details) :context context))
 			(list 'report :content (list 'acceptable :what content :context context)))))
 		 ;;(list 'report :content (list 'failure :type 'FAILED-TO-INTERPRET :what content :reason '(SOME-REASON) :context context)
-		 (otherwise
-		  (list 'report :content (list 'acceptable :what content :context context))
-		  )
-		 )))
-	    )))
-	   	     
+		 (ont::create   ;; this is "let's make a N block tower"
+		  (let* ((obj (find-lf-in-context context (find-arg head :affected-result)))
+			 (mod (find-lf-in-context context (find-arg obj :mod)))
+			 (ground (find-lf-in-context context (find-arg mod :ground)))
+			 (size (find-arg ground :amount)))
+		    (format t "~% size= ~S ground=~S mod = ~S" size ground mod)
+		    (if (and (numberp size) (> size 4))
+;		    (if (numberp size)
+;			(if (> size 4)
+			    (list 'report :content (list 'failure :type 'CANNOT-PERFORM :what (second head)
+						     :reason '(not enough blocks SIFT to provide the details) :context context))
+;			  (list 'report :content (list 'accept-with-clarify :what content :reason 'R1
+;						     :context (append '((ONT::RELN R1 :INSTANCE-OF ONT::IDENTIFY :WHAT XX)
+;									(ONT::THE XX :instance-of ONT::PERSON :suchthat XXX)
+;								   (ONT::RELN XXX :instance-of ONT::IS-PERFORMER :figure XX))
+;								      context))))
+		      (list 'report :content (list 'acceptable :what content :context context))
+		  
+		      )))
+		
+		  (otherwise
+		   
+		   (list 'report :content (list 'acceptable :what content :context context))))
+	       )))))
+		  
     ;;(format t "~%========================================~% DUMMY: Received: ~S ~% Sending ~S~%==========================~%" msg result)
     (if reply-with
 	(send-msg (append (list 'tell :receiver sender :content result) (list :in-reply-to reply-with)))

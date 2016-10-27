@@ -308,10 +308,19 @@ public class UpdateCSMHandler extends MessageHandler {
 				goalPlanner.setActiveGoal(goalName);
 			System.out.println("Active goal now: " + goalName);
 		}
-		else
+		else // Do we want to add this if we don't know of the goal?
 		{
-			System.out.println("No such goal or action in system.");
-			return null;
+			KQMLList goalLF = TermExtractor.extractTerm(goalName, (KQMLList)context);
+			if (goalLF == null)
+			{
+				System.out.println("Not a valid goal to add to the system");
+				return null;
+			}
+			Goal newGoal = new Goal(goalLF);
+			goalPlanner.addGoal(newGoal);
+			newGoal.setAccepted();
+			goalPlanner.setActiveGoal(newGoal);
+			System.out.println("Active goal now: " + goalName);
 		}
 		
 		return null;

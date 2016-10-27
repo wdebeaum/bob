@@ -8,7 +8,7 @@
 
 (load #!TRIPS"src;Systems;core;system")
 
-(trips:def-trips-system :drum
+(trips:def-trips-system :bob
   (:old-trips-component :lxm               #!TRIPS"src;LexiconManager;")
   (:dfc-component	:parser            #!TRIPS"src;Parser;")
   (:dfc-component       :im                #!TRIPS"src;NewIM;")
@@ -19,11 +19,15 @@
   (:dfc-component       :dummy		   #!TRIPS"src;Dummy;")   ;; see end of file for loading dummy messages
   )
 
+;; add WebParser to the system when we have its source directory
+(when (probe-file #!TRIPS"src;WebParser")
+  (nconc (assoc :bob trips::*trips-systems*)
+	 (list '(:dfc-component :webparser #!TRIPS"src;WebParser;"))))
 
 (defpackage :wordfinder)
 (setq wordfinder::*use-wordfinder* t)
 
-;; DRUM uses text-tagger
+;; BOB uses text-tagger
 (setq *use-texttagger* t)
   
 ;; Now load the system
@@ -114,9 +118,12 @@
 ;; dialogue manager, eg: textIM, simpleIM, extractIM...
 (setq im::*current-dialog-manager* #'im::SequentialLFTransformIM)   ;;#'im::simpleIM)
 (setq im::*CPS-control* t) ;; the CPS agent will control the sending of additional speech acts from an utterance
-;; how fragmented do we allow the input to be before giving up
-(setq im::*substitute-types-in-pros* t)
+
+;(setq im::*substitute-types-in-pros* t)
+(setq im::*substitute-types-in-pros* nil)
 (setq im::*compute-force-from-tmas* t)
+
+;; how fragmented do we allow the input to be before giving up
 (setq im::*max-allowed-utts-in-turn* 3)
 ;; no domain-specific reasoner
 (setq im::*external-name-resolution* nil)

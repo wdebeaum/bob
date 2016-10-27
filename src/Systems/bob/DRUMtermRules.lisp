@@ -248,16 +248,16 @@
 ;; [not any more] see the -explicit-ref-part rule (we don't want to return both the orignal protein term and the modified "Ras protein" term)
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
-	  ;; robust rule for explicit constructions, e.g., "ras protein"
+	  ;; robust rule for explicit constructions, e.g., "ras protein" --- protein :ASSOC-WITH ras
 	  ;; "pathway" uses -explicit-ref-pathway1/2 rules
 	  ;; "complex" should uses another rule
 	  (((? reln ONT::QUANTIFIER ONT::KIND ONT::A ONT::INDEF-PLURAL ONT::THE ONT::THE-SET ONT::INDEF-SET ONT::BARE ONT::SM ONT::PRO ONT::PRO-SET) ?!obj 
-	    (:* ?!type (? word W::PROTEIN W::GENE W::DRUG W::KINASE W::SITE W::POSITION W::MOLECULE W::DOMAIN W::PROMOTER W::MRNA W::TRANSCRIPT W::PROTEINS W::GENES W::DRUGS W::KINASES W::SITES W::POSITIONS W::MOLECULES W::DOMAINS W::PROMOTESR W::MRNAS W::TRANSCRIPTS))  ; mutation comes out as a verb in LIFE-TRANSFORMATION with AFFECTED protein (we get a TRANSFORM event for this)
+	    (:* ?!type (? word W::PROTEIN W::GENE W::DRUG W::KINASE W::SITE W::POSITION W::MOLECULE W::DOMAIN W::PROMOTER W::MRNA W::TRANSCRIPT W::RECEPTOR-TYROSINE-KINASE W::PROTEINS W::GENES W::DRUGS W::KINASES W::SITES W::POSITIONS W::MOLECULES W::DOMAINS W::PROMOTESR W::MRNAS W::TRANSCRIPTS W::RECEPTOR-TYROSINE-KINASES))  ; mutation comes out as a verb in LIFE-TRANSFORMATION with AFFECTED protein (we get a TRANSFORM event for this)
 	    :ASSOC-WITHS (?!name))
 	   ((? reln1 ONT::QUANTIFIER ONT::KIND ONT::A ONT::INDEF-PLURAL ONT::THE ONT::THE-SET ONT::INDEF-SET ONT::BARE ONT::SM ONT::PRO ONT::PRO-SET) ?!name 
 ;	    (:* (? type1 ONT::CHEMICAL ONT::MOLECULAR-PART) ?!w) :DRUM ?code)
 	    ; this is to avoid mapping to "kinase domain"
-	    (:* (? type1 ONT::CHEMICAL ONT::MOLECULAR-PART ONT::MUTATION) (? !w W::PROTEIN W::GENE W::DRUG W::KINASE W::SITE W::POSITION W::MOLECULE W::DOMAIN W::PROMOTER W::MRNA W::TRANSCRIPT W::PROTEINS W::GENES W::DRUGS W::KINASES W::SITES W::POSITIONS W::MOLECULES W::DOMAINS W::PROMOTESR W::MRNAS W::TRANSCRIPTS)) :DRUM ?code)
+	    (:* (? type1 ONT::CHEMICAL ONT::MOLECULAR-PART ONT::MUTATION) (? !w W::PROTEIN W::GENE W::DRUG W::KINASE W::SITE W::POSITION W::MOLECULE W::DOMAIN W::PROMOTER W::MRNA W::TRANSCRIPT W::RECEPTOR-TYROSINE-KINASE W::PROTEINS W::GENES W::DRUGS W::KINASES W::SITES W::POSITIONS W::MOLECULES W::DOMAINS W::PROMOTESR W::MRNAS W::TRANSCRIPTS W::RECEPTOR-TYROSINE-KINASES)) :DRUM ?code)
 	   -explicit-ref1>
 	   100
 	   (ONT::TERM ?!obj ?!type
@@ -280,17 +280,78 @@
 	   |#
 	   )
 
+	  (((? reln ONT::QUANTIFIER ONT::KIND ONT::A ONT::INDEF-PLURAL ONT::THE ONT::THE-SET ONT::INDEF-SET ONT::BARE ONT::SM ONT::PRO ONT::PRO-SET) ?!obj 
+	    (:* ?!type (? word W::PROTEIN W::GENE W::DRUG W::KINASE W::SITE W::POSITION W::MOLECULE W::DOMAIN W::PROMOTER W::MRNA W::TRANSCRIPT W::RECEPTOR-TYROSINE-KINASE W::PROTEINS W::GENES W::DRUGS W::KINASES W::SITES W::POSITIONS W::MOLECULES W::DOMAINS W::PROMOTESR W::MRNAS W::TRANSCRIPTS W::RECEPTOR-TYROSINE-KINASES))  ; mutation comes out as a verb in LIFE-TRANSFORMATION with AFFECTED protein (we get a TRANSFORM event for this)
+	    :ASSOC-WITHS (?!name))
+	   ((? reln1 ONT::QUANTIFIER ONT::KIND ONT::A ONT::INDEF-PLURAL ONT::THE ONT::THE-SET ONT::INDEF-SET ONT::BARE ONT::SM ONT::PRO ONT::PRO-SET) ?!name 
+;	    (:* (? type1 ONT::CHEMICAL ONT::MOLECULAR-PART) ?!w) :DRUM ?code)
+	    ; this is to avoid mapping to "kinase domain"
+	    (? type1 ONT::CHEMICAL ONT::MOLECULAR-PART ONT::MUTATION) :SEQUENCE ?!seq :OPERATOR -)  ; only type, no w
+	   -explicit-ref1-mseq>
+	   100
+	   (ONT::TERM ?!obj ?!type
+	    ;:name ?!w
+	    ;:BASE ?!name  
+	    ;:drum ?code    
+	    :M-SEQUENCE ?!seq
+	    :rule -explicit-ref1-mseq
+	    ; we don't zero out :ASSOC-WITH here because there might be other :ASSOC-WITH in there
+	    )
+	   #|
+	   ; this extraction has to go first because otherwise for some reason -EXPLICIT-REF1X is fired (to extract the :BASE ?!name)
+	   ; but if this extraction goes first, ?!obj is not substituted at the next level.  The second extraction here is just appended and it results in two ?!obj TERMs and duplicate event extractions
+	   ; if we leave out this extraction, the system correctly tries to extract ?!name, but the rule with the largest cover is -EXPLICIT-REF1X
+	   ; so we commented out -EXPLICIT-REF1X temporarily
+	   (ONT::TERM ?!name ?type1   
+	    :name ?!w
+	    :drum ?code    
+	    :rule -explicit-ref1-base
+	    )
+	   |#
+	   )
 
-	  ;; robust rule for explicit constructions, e.g., "the protein Erk"  Erk :ASSOC-WITH protein
+	  (((? reln ONT::QUANTIFIER ONT::KIND ONT::A ONT::INDEF-PLURAL ONT::THE ONT::THE-SET ONT::INDEF-SET ONT::BARE ONT::SM ONT::PRO ONT::PRO-SET) ?!obj 
+	    (:* ?!type (? word W::PROTEIN W::GENE W::DRUG W::KINASE W::SITE W::POSITION W::MOLECULE W::DOMAIN W::PROMOTER W::MRNA W::TRANSCRIPT W::RECEPTOR-TYROSINE-KINASE W::PROTEINS W::GENES W::DRUGS W::KINASES W::SITES W::POSITIONS W::MOLECULES W::DOMAINS W::PROMOTESR W::MRNAS W::TRANSCRIPTS W::RECEPTOR-TYROSINE-KINASES))  ; mutation comes out as a verb in LIFE-TRANSFORMATION with AFFECTED protein (we get a TRANSFORM event for this)
+	    :ASSOC-WITHS (?!name))
+	   ((? reln1 ONT::QUANTIFIER ONT::KIND ONT::A ONT::INDEF-PLURAL ONT::THE ONT::THE-SET ONT::INDEF-SET ONT::BARE ONT::SM ONT::PRO ONT::PRO-SET) ?!name 
+;	    (:* (? type1 ONT::CHEMICAL ONT::MOLECULAR-PART) ?!w) :DRUM ?code)
+	    ; this is to avoid mapping to "kinase domain"
+	    (? type1 ONT::CHEMICAL ONT::MOLECULAR-PART ONT::MUTATION) :SEQUENCE ?!seq :OPERATOR ?!op)
+	   -explicit-ref1-lseq>
+	   100
+	   (ONT::TERM ?!obj ?!type
+	    ;:name ?!w
+	    ;:BASE ?!name  
+	    ;:drum ?code    
+	    :LOGICALOP-SEQUENCE ?!seq
+	    :OPERATOR ?!op
+	    :rule -explicit-ref1-lseq
+	    ; we don't zero out :ASSOC-WITH here because there might be other :ASSOC-WITH in there
+	    )
+	   #|
+	   ; this extraction has to go first because otherwise for some reason -EXPLICIT-REF1X is fired (to extract the :BASE ?!name)
+	   ; but if this extraction goes first, ?!obj is not substituted at the next level.  The second extraction here is just appended and it results in two ?!obj TERMs and duplicate event extractions
+	   ; if we leave out this extraction, the system correctly tries to extract ?!name, but the rule with the largest cover is -EXPLICIT-REF1X
+	   ; so we commented out -EXPLICIT-REF1X temporarily
+	   (ONT::TERM ?!name ?type1   
+	    :name ?!w
+	    :drum ?code    
+	    :rule -explicit-ref1-base
+	    )
+	   |#
+	   )
+
+	  
+	  ;; robust rule for explicit constructions, e.g., "the protein Erk" --- Erk :ASSOC-WITH protein
 	  ;; "the pathway Ras/Raf parses the same as the Ras/Raf pathway", so no need for another rule?
 	  ;; "the complex Raf-Raf" doesn't parse correctly
 	  (((? reln ONT::QUANTIFIER ONT::KIND ONT::A ONT::INDEF-PLURAL ONT::THE ONT::THE-SET ONT::INDEF-SET ONT::BARE ONT::SM ONT::PRO ONT::PRO-SET) ?!obj 
 ;	    (:* (? type ONT::CHEMICAL ONT::MOLECULAR-PART) ?!w) :DRUM ?code
 	    ; this is to avoid mapping to "kinase domain"
-	    (:* (? type ONT::CHEMICAL ONT::MOLECULAR-PART ONT::MUTATION) (? !w W::PROTEIN W::GENE W::DRUG W::KINASE W::SITE W::POSITION W::MOLECULE W::DOMAIN W::PROMOTER W::MRNA W::TRANSCRIPT W::PROTEINS W::GENES W::DRUGS W::KINASES W::SITES W::POSITIONS W::MOLECULES W::DOMAINS W::PROMOTESR W::MRNAS W::TRANSCRIPTS)) :DRUM ?code
+	    (:* (? type ONT::CHEMICAL ONT::MOLECULAR-PART ONT::MUTATION) (? !w W::PROTEIN W::GENE W::DRUG W::KINASE W::SITE W::POSITION W::MOLECULE W::DOMAIN W::PROMOTER W::MRNA W::TRANSCRIPT W::RECEPTOR-TYROSINE-KINASE W::PROTEINS W::GENES W::DRUGS W::KINASES W::SITES W::POSITIONS W::MOLECULES W::DOMAINS W::PROMOTESR W::MRNAS W::TRANSCRIPTS W::RECEPTOR-TYROSINE-KINASES)) :DRUM ?code
 	    :ASSOC-WITHS (?!name))	    
 	   ((? reln1 ONT::QUANTIFIER ONT::KIND ONT::A ONT::INDEF-PLURAL ONT::THE ONT::THE-SET ONT::INDEF-SET ONT::BARE ONT::SM ONT::PRO ONT::PRO-SET) ?!name 
-	    (:* ?!type1 (? word W::PROTEIN W::GENE W::DRUG W::KINASE W::SITE W::POSITION W::MOLECULE W::DOMAIN W::PROMOTER W::MRNA W::TRANSCRIPT W::PROTEINS W::GENES W::DRUGS W::KINASES W::SITES W::POSITIONS W::MOLECULES W::DOMAINS W::PROMOTESR W::MRNAS W::TRANSCRIPTS))  ; mutation comes out as a verb in LIFE-TRANSFORMATION with AFFECTED protein (we get a TRANSFORM event for this)
+	    (:* ?!type1 (? word W::PROTEIN W::GENE W::DRUG W::KINASE W::SITE W::POSITION W::MOLECULE W::DOMAIN W::PROMOTER W::MRNA W::TRANSCRIPT W::RECEPTOR-TYROSINE-KINASE W::PROTEINS W::GENES W::DRUGS W::KINASES W::SITES W::POSITIONS W::MOLECULES W::DOMAINS W::PROMOTESR W::MRNAS W::TRANSCRIPTS W::RECEPTOR-TYROSINE-KINASES))  ; mutation comes out as a verb in LIFE-TRANSFORMATION with AFFECTED protein (we get a TRANSFORM event for this)
 	    )
 	   -explicit-ref1-rev>
 	   100
@@ -307,6 +368,75 @@
 	    )
 	   )
 
+	  ;; robust rule for explicit constructions, e.g., "the protein Erk"  protein :APPOS-EQ Erk
+	  ;; "the pathway Ras/Raf parses the same as the Ras/Raf pathway", so no need for another rule?
+	  ;; "the complex Raf-Raf" doesn't parse correctly
+	  (((? reln ONT::QUANTIFIER ONT::KIND ONT::A ONT::INDEF-PLURAL ONT::THE ONT::THE-SET ONT::INDEF-SET ONT::BARE ONT::SM ONT::PRO ONT::PRO-SET) ?!obj 
+;	    (:* (? type ONT::CHEMICAL ONT::MOLECULAR-PART) ?!w) :DRUM ?code
+	    ; this is to avoid mapping to "kinase domain"
+	    (:* (? type ONT::CHEMICAL ONT::MOLECULAR-PART ONT::MUTATION) (? !w W::PROTEIN W::GENE W::DRUG W::KINASE W::SITE W::POSITION W::MOLECULE W::DOMAIN W::PROMOTER W::MRNA W::TRANSCRIPT W::RECEPTOR-TYROSINE-KINASE W::PROTEINS W::GENES W::DRUGS W::KINASES W::SITES W::POSITIONS W::MOLECULES W::DOMAINS W::PROMOTESR W::MRNAS W::TRANSCRIPTS W::RECEPTOR-TYROSINE-KINASES)) :DRUM ?code
+	    )	    
+	   ((? reln1 ONT::QUANTIFIER ONT::KIND ONT::A ONT::INDEF-PLURAL ONT::THE ONT::THE-SET ONT::INDEF-SET ONT::BARE ONT::SM ONT::PRO ONT::PRO-SET) ?!name 
+	    (:* ?!type1 (? word W::PROTEIN W::GENE W::DRUG W::KINASE W::SITE W::POSITION W::MOLECULE W::DOMAIN W::PROMOTER W::MRNA W::TRANSCRIPT W::RECEPTOR-TYROSINE-KINASE W::PROTEINS W::GENES W::DRUGS W::KINASES W::SITES W::POSITIONS W::MOLECULES W::DOMAINS W::PROMOTESR W::MRNAS W::TRANSCRIPTS W::RECEPTOR-TYROSINE-KINASES))  ; mutation comes out as a verb in LIFE-TRANSFORMATION with AFFECTED protein (we get a TRANSFORM event for this)
+	    :APPOS-EQ ?!obj
+	    )
+	   -explicit-ref1-appos>
+	   100
+	   (ONT::TERM ?!name ?!type1
+	    :name ?!w
+	    :BASE ?!obj
+	    :drum ?code    
+	    :rule -explicit-ref1-appos
+	    )
+	   )
+
+	  ;; robust rule for explicit constructions, e.g., "the proteins Ras and Raf"  protein :APPOS-EQ a sequence
+	  ;; "the pathway Ras/Raf parses the same as the Ras/Raf pathway", so no need for another rule?
+	  ;; "the complex Raf-Raf" doesn't parse correctly
+	  (((? reln ONT::QUANTIFIER ONT::KIND ONT::A ONT::INDEF-PLURAL ONT::THE ONT::THE-SET ONT::INDEF-SET ONT::BARE ONT::SM ONT::PRO ONT::PRO-SET) ?!obj 
+;	    (:* (? type ONT::CHEMICAL ONT::MOLECULAR-PART) ?!w) :DRUM ?code
+	    ; this is to avoid mapping to "kinase domain"
+	    (? type ONT::CHEMICAL ONT::MOLECULAR-PART ONT::MUTATION) :SEQUENCE ?!seq :OPERATOR -
+	    )	    
+	   ((? reln1 ONT::QUANTIFIER ONT::KIND ONT::A ONT::INDEF-PLURAL ONT::THE ONT::THE-SET ONT::INDEF-SET ONT::BARE ONT::SM ONT::PRO ONT::PRO-SET) ?!name 
+	    (:* ?!type1 (? word W::PROTEIN W::GENE W::DRUG W::KINASE W::SITE W::POSITION W::MOLECULE W::DOMAIN W::PROMOTER W::MRNA W::TRANSCRIPT W::RECEPTOR-TYROSINE-KINASE W::PROTEINS W::GENES W::DRUGS W::KINASES W::SITES W::POSITIONS W::MOLECULES W::DOMAINS W::PROMOTESR W::MRNAS W::TRANSCRIPTS W::RECEPTOR-TYROSINE-KINASES))  ; mutation comes out as a verb in LIFE-TRANSFORMATION with AFFECTED protein (we get a TRANSFORM event for this)
+	    :APPOS-EQ ?!obj
+	    )
+	   -explicit-ref1-appos-mseq>
+	   100
+	   (ONT::TERM ?!name ?!type1
+	    :M-SEQUENCE ?!seq
+	    ;:name ?!w
+	    ;:BASE ?!obj
+	    ;:drum ?code    
+	    :rule -explicit-ref1-appos-mseq
+	    )
+	   )
+
+	  ;; robust rule for explicit constructions, e.g., "the proteins Ras and Raf"  protein :APPOS-EQ a sequence
+	  ;; "the pathway Ras/Raf parses the same as the Ras/Raf pathway", so no need for another rule?
+	  ;; "the complex Raf-Raf" doesn't parse correctly
+	  (((? reln ONT::QUANTIFIER ONT::KIND ONT::A ONT::INDEF-PLURAL ONT::THE ONT::THE-SET ONT::INDEF-SET ONT::BARE ONT::SM ONT::PRO ONT::PRO-SET) ?!obj 
+;	    (:* (? type ONT::CHEMICAL ONT::MOLECULAR-PART) ?!w) :DRUM ?code
+	    ; this is to avoid mapping to "kinase domain"
+	    (? type ONT::CHEMICAL ONT::MOLECULAR-PART ONT::MUTATION) :SEQUENCE ?!seq :OPERATOR ?!op
+	    )	    
+	   ((? reln1 ONT::QUANTIFIER ONT::KIND ONT::A ONT::INDEF-PLURAL ONT::THE ONT::THE-SET ONT::INDEF-SET ONT::BARE ONT::SM ONT::PRO ONT::PRO-SET) ?!name 
+	    (:* ?!type1 (? word W::PROTEIN W::GENE W::DRUG W::KINASE W::SITE W::POSITION W::MOLECULE W::DOMAIN W::PROMOTER W::MRNA W::TRANSCRIPT W::RECEPTOR-TYROSINE-KINASE W::PROTEINS W::GENES W::DRUGS W::KINASES W::SITES W::POSITIONS W::MOLECULES W::DOMAINS W::PROMOTESR W::MRNAS W::TRANSCRIPTS W::RECEPTOR-TYROSINE-KINASES))  ; mutation comes out as a verb in LIFE-TRANSFORMATION with AFFECTED protein (we get a TRANSFORM event for this)
+	    :APPOS-EQ ?!obj
+	    )
+	   -explicit-ref1-appos-lseq>
+	   100
+	   (ONT::TERM ?!name ?!type1
+	    :LOGICALOP-SEQUENCE ?!seq
+	    :OPERATOR ?!op
+	    ;:name ?!w
+	    ;:BASE ?!obj
+	    ;:drum ?code    
+	    :rule -explicit-ref1-appos-lseq
+	    )
+	   )
+	  
 	  ;; robust rule for "SOS1's RasGEF domain"
 	  ;; "domain" :ASSOC-WITH RasGEF :ASSOC-POSS SOS1  (Note: the :ASSOC-WITH is the domain but could be tagged as CELL-LINE (e.g., SH2) or PROTEIN (e.g., RASGEF, RBD))
 	  ;; added MUTATION to ?type1 (SOS1's G12V site)
@@ -462,7 +592,7 @@
 	  ;; Note: I think the unknown word must be capitalized and be preceded by "the"
 	  ;; works somewhat for, e.g., Ib-V-IX complex
 	  (((? reln ONT::QUANTIFIER ONT::KIND ONT::A ONT::INDEF-PLURAL ONT::THE ONT::THE-SET ONT::INDEF-SET ONT::BARE ONT::SM ONT::PRO ONT::PRO-SET) ?!obj 
-	    (:* ?!type (? word W::PROTEIN W::GENE W::DRUG W::KINASE W::SITE W::POSITION W::MOLECULE W::DOMAIN W::PROMOTER W::MRNA W::TRANSCRIPT W::PROTEINS W::GENES W::DRUGS W::KINASES W::SITES W::POSITIONS W::MOLECULES W::DOMAINS W::PROMOTERS W::MRNAS W::TRANSCRIPTS))
+	    (:* ?!type (? word W::PROTEIN W::GENE W::DRUG W::KINASE W::SITE W::POSITION W::MOLECULE W::DOMAIN W::PROMOTER W::MRNA W::TRANSCRIPT W::RECEPTOR-TYROSINE-KINASE W::PROTEINS W::GENES W::DRUGS W::KINASES W::SITES W::POSITIONS W::MOLECULES W::DOMAINS W::PROMOTERS W::MRNAS W::TRANSCRIPTS W::RECEPTOR-TYROSINE-KINASES))
 	    :ASSOC-WITHS (?!name))
 ;	   (?reln1 ?!name (:* (? type1 ONT::REFERENTIAL-SEM) ?w) :NAME-OF ?!name1 :DRUM ?code)
 	   (?reln1 ?!name (:* (? type1 ONT::REFERENTIAL-SEM) ?!w) :NAME-OF ?!name1 :DRUM -)   ;; make sure it is not a known term; no :DRUM info
@@ -475,7 +605,7 @@
 	    )
 	   )
 
-	  ;; robust rule for pronouns, e.g., it, itself
+	  ;; robust rule for pronouns, e.g., it, itself, we
 	  (((? reln ONT::PRO ONT::PRO-SET) ?!obj (:* ?!type ?!w) :PROFORM ?!pro
 	    )
 	   -robustPro>

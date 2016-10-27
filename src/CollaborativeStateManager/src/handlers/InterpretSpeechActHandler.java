@@ -111,6 +111,22 @@ public class InterpretSpeechActHandler extends MessageHandler{
 		return failureMessage(what, newContext,failureReason, adoptContentList);
 	}
 	
+	private KQMLList missingGoal()
+	{
+		KQMLList failureReason = new KQMLList();
+		failureReason.add("MISSING-GOAL");
+	
+		return failureMessage(what, context,failureReason);
+	}
+	
+	private KQMLList missingGoal(String otherWhat)
+	{
+		KQMLList failureReason = new KQMLList();
+		failureReason.add("MISSING-GOAL");
+	
+		return failureMessage(otherWhat, context,failureReason);
+	}
+	
 	private KQMLList noEventsInContext()
 	{
 		KQMLList failureReason = new KQMLList();
@@ -181,6 +197,7 @@ public class InterpretSpeechActHandler extends MessageHandler{
 		}
 		
 		Action action = new Action(assertionRelnContent);
+		action.setActionType("ASSERTION");
 		if (contributesToGoal != null)
 			action.setContributesTo(contributesToGoal);
 		goalPlanner.addGoal(action,contributesToGoal.getVariableName());
@@ -262,6 +279,27 @@ public class InterpretSpeechActHandler extends MessageHandler{
 					return missingGoalToModify(what,context);
 				}
 				break;
+			case "ANSWER":
+				KQMLObject toObject = asList.getKeywordArg(":TO");
+				if (toObject != null)
+				{
+					if (!goalPlanner.hasGoal(toObject.stringValue()))
+						return missingGoal(toObject.stringValue());
+					goalPlanner.setCompleted(goalPlanner.getGoal(toObject.stringValue()));
+					proposeAdoptContent = answerContent(what, toObject.stringValue());
+				}
+				else if (activeGoal != null)
+				{
+					
+					goalPlanner.setCompleted(goalPlanner.getActiveGoal());
+					proposeAdoptContent = answerContent(what, activeGoal);
+					
+				}
+				else
+				{
+					return missingActiveGoal();
+				}
+				
 			}
 		}
 		else if (activeGoal == null)
@@ -362,7 +400,7 @@ public class InterpretSpeechActHandler extends MessageHandler{
     	conditionalContent.add(newConditionalId);
     	conditionalContent.add(":instance-of");
     	// TODO Determine if causal or conditional
-    	conditionalContent.add("CONDITIONAL");
+    	conditionalContent.add("ONT::COND");
     	
 
     	KQMLObject conditionObject = innerContent.getKeywordArg(":CONDITION");
@@ -498,5 +536,24 @@ public class InterpretSpeechActHandler extends MessageHandler{
     	adopt.add(goal);
     	
     	return adopt;
+    }
+    
+    private KQMLList answerContent(String what, String query)
+    {
+    	KQMLList answer = new KQMLList();
+    	
+    	answer.add("ADOPT");
+    	answer.add(":what");
+    	answer.add(what);
+    	answer.add(":as");
+    	
+    	KQMLList goal = new KQMLList();
+    	goal.add("ANSWER");
+    	goal.add(":TO");
+    	goal.add(query);
+    	
+    	answer.add(goal);
+    	
+    	return answer;
     }
 }

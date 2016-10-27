@@ -28,6 +28,7 @@ public class GoalPlanner {
 		goalConnections = new HashMap<Goal,Goal>();
 		variableGoalMapping = new HashMap<String,Goal>();
 		privateGoal = null;
+		activeGoal = null;
 	}
 	
 	public boolean addGoal(Goal goal, String parentVariableName)
@@ -162,8 +163,11 @@ public class GoalPlanner {
 		}
 		Goal parent = oldGoal.getParent();
 		newGoal.setParent(parent);
-		if (oldGoal == activeGoal)
+		if (oldGoal == activeGoal || activeGoal == null)
+		{
+			System.out.println("Set goal: " + newGoal.getVariableName() + " as active goal");
 			activeGoal = newGoal;
+		}
 		removeGoal(oldGoal.getVariableName());
 		if (parent == null)
 			addGoal(newGoal,null);
