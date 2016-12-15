@@ -328,7 +328,7 @@ ONT::INTERACT
 					    (UPDATE-CSM (V FAILURE))
 					    (GENERATE :content (V FAILURE) :context ?context)
 					    )
-				 :destination 'process-user-response-to-problem)
+				 :destination 'segmentend)
 
 				(transition
 				 :description "BA fails to identify the goal, and no guess. Right now we just prompt the user
