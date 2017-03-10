@@ -2,6 +2,7 @@
 ;;;; w::break
 ;;;;
 
+#|
 (define-words :pos W::n
  :words (
   (w::break
@@ -14,6 +15,7 @@
   ;; crack of the whip, crack of dawn
 )
 ))
+|#
 
 (define-words :pos W::v :templ AGENT-AFFECTED-XP-TEMPL
  :words (
@@ -36,8 +38,8 @@
    (wordfeats (W::morph (:forms (-vb) :past W::broke :pastpart W::broken :ing W::breaking :nom w::break)))
    (SENSES
     ((meta-data :origin "verbnet-2.0" :entry-date 20060315 :change-date 20090601 :comments nil :vn ("cheat-10.6") :wn ("break%2:42:04"))
-     (LF-PARENT ONT::remove-from)
-     (TEMPL agent-source-affected-optional-templ)
+     (LF-PARENT ONT::stop)
+     (TEMPL agent-effect-affected-objcontrol-templ)
      (PREFERENCE 0.96)
      (example "She finally broke herself of smoking cigarettes")
      )
@@ -55,7 +57,7 @@
      )
    
     ((LF-PARENT ONT::render-ineffective)
-     (meta-data :origin calo :entry-date 20040908 :change-date nil :comments caloy2 :vn ("break-45.1") :wn ("break%2:29:04" "break%2:30:00" "break%2:30:10" "break%2:30:15" "break%2:35:00" "break%2:38:11" "break%2:41:08"))
+     (meta-data :origin calo :entry-date 20040908 :change-date nil :comments caloy2 :vn ("break-45.1") :wn ("break%2:29:04" "break%2:30:00" "break%2:30:05" "break%2:30:10" "break%2:30:15" "break%2:35:00" "break%2:38:11" "break%2:41:08"))
      (example "the browser broke")
      (SEM (F::Aspect F::bounded) (F::Time-span F::atomic))
      (TEMPL affected-TEMPL)

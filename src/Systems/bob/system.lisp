@@ -98,7 +98,7 @@
 	(parser::*filter-and-preparse-input* t)   ;; enable preparsing (e.g., for sequences)
 	((parser::customize-cost-table 
 	  '((ont::SA_QUERY 1.2) 
-	     (ont::SA_IDENTIFY 2) 
+	     (ont::SA_IDENTIFY 1.3) 
 	     (ont::SA_pred-fragment 2) 
 	     (ont::SA_request 1) 
 	     (ont::SA_YN-QUESTION 1) 

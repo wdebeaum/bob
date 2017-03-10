@@ -8,12 +8,12 @@
   (W::DOWN
    (SENSES
     ((meta-data :origin monroe :entry-date 20060824 :change-date nil :comments nil :wn ("down%3:00:00"))
-     (LF-PARENT ONT::FALLEN-val)
+     (LF-PARENT ONT::inactive-down)
      (example "the lines are down")
      (templ predicative-only-adj-templ)
      )
     ((meta-data :origin trips :entry-date 20101231 :change-date nil :comments nil)
-     (LF-PARENT ONT::FALLEN-VAL)
+     (LF-PARENT ONT::inactive-down)   
      (example "they have lines down")
      (preference .98)
      (TEMPL postpositive-ADJ-TEMPL)
@@ -22,6 +22,7 @@
    )
 ))
 
+#|
 (define-words :pos W::ADV
  :words (
    ((W::down w::to)
@@ -40,30 +41,33 @@
     )
    )
 ))
+|#
 
 (define-words :pos W::ADV
  :tags (:base500)
  :words (
   (W::DOWN
    (SENSES
-    ((LF-PARENT ONT::direction)
+    ((LF-PARENT ONT::direction-down)
      (example "he walked down the road/ down the wall")
      (TEMPL BINARY-CONSTRAINT-S-TEMPL)
      )
-    ((LF-PARENT ONT::DIRECTION)
+    ((LF-PARENT ONT::DIRECTION-down)
      (example "pan the camera down" "pan down the camera")
      (TEMPL PARTICLE-TEMPL)
      )
-    ((LF-PARENT ONT::SCALE-RELATION)
+    ;;  this is definitely not a binary SCALE-RELATION -- thinking just using DIRECTION sense for now
+    #||((LF-PARENT ONT::SCALE-RELATION)
      (TEMPL BINARY-CONSTRAINT-S-or-NP-TEMPL)
      (example "his weight / the temperature is down")
      (SYNTAX (W::ALLOW-DELETED-COMP +) (w::degree-adv +))
      (meta-data :origin cardiac :entry-date 20080428 :change-date nil :comments nil)
-     )
+     )||#
     )
    )
 ))
 
+#|
 (define-words :pos W::ADV
  :words (
  ((W::DOWN w::of)
@@ -78,6 +82,7 @@
    )
 ))
 
+
 (define-words :pos W::ADV
  :words (
  ((W::down w::from)
@@ -90,4 +95,4 @@
     )
    )
 ))
-
+|#

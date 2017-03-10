@@ -47,11 +47,19 @@ public class OntologyReader {
 				    			parentList.add(parent.toUpperCase().trim());
 				    	}
 				    	
-				    	goals.put(goal.toUpperCase(), parentList);
-				    	System.out.print(goal.toUpperCase() + ":" );
-				    	for (String parent : parentList)
-				    		System.out.print(parent + ",");
-				    	System.out.println();
+				    	if (parentList.size() == 0)
+				    	{
+				    		goals.put(goal.toUpperCase(), null);
+				    		System.out.println(goal.toUpperCase());
+				    	}
+				    	else
+				    	{
+					    	goals.put(goal.toUpperCase(), parentList);
+					    	System.out.print(goal.toUpperCase() + ":" );
+					    	for (String parent : parentList)
+					    		System.out.print(parent + ",");
+					    	System.out.println();
+				    	}
 			    	}
 			    	else
 			    	{
@@ -133,6 +141,11 @@ public class OntologyReader {
 		return result;
 	}
 	
+	public List<String> getParentGoals(String goalType)
+	{
+		return goals.get(goalType);
+	}
+	
 	public void readEventOntologyFromFile(String filename)
 	{
 		InputStream in = null;
@@ -182,4 +195,8 @@ public class OntologyReader {
 		return models.contains(term);
 	}
 	
+	public boolean isRootGoal(String goalType)
+	{
+		return getRootGoals().contains(goalType);
+	}
 }

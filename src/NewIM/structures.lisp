@@ -138,7 +138,7 @@
 (defstruct referent
   id         ;; the ID (indexing into the LF-store)
   name       ;; the :name-of slot in  the LF if it has one (for proper names)
-  role       ;; the grammatical role of this expression if it exists
+  role       ;; the grammatical role and event for this expression if it exists
   lf-type    ;; The LF type
   num        ;; individual or set
   exclusions ;; IDs of object that this could not refer to (generally reflexivity contraints)
@@ -151,7 +151,8 @@
   lf        ;; the LF just for ease of processing since its identical to whats in the LFstore
   start
   end
-  sem)
+  sem
+  )
 
 (defstruct ref-hyp
   id        ;; the ID of the object that this is a hypothesis for

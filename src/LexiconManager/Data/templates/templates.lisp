@@ -65,14 +65,17 @@
     
       (AGENT-goal-XP-TEMPL
        (ARGUMENTS
-	(LSUBJ (% W::NP) ONT::AGENT)
+	(LSUBJ  (% W::NP) ONT::AGENT)
 	(LOBJ (:parameter xp (:default (% W::NP))) ONT::RESULT)
 	))
 
       (AGENT-goal-optional-TEMPL
        (ARGUMENTS
-	(LSUBJ (% W::NP) ONT::AGENT)
-	(LOBJ (:parameter xp (:default (% W::NP))) ONT::RESULT optional)
+	(LSUBJ (% W::NP (W::lex ?lsubjlex) (W::sem ?lsubjsem) (W::var ?lsubjvar)) ONT::AGENT)
+	(LCOMP (:parameter xp (:default (% W::ADVBL))
+			  (:required (W::argument (% W::np (W::sem ?lsubjsem) 
+					     (W::lex ?lsubjlex) (W::var ?lsubjvar)))))
+	      ONT::RESULT optional)
 	))
 
       (theme-goal-XP-TEMPL
@@ -120,7 +123,13 @@
 	(LOBJ (:parameter xp (:default (% W::NP  (w::sort (? !xx W::unit-measure))))) ONT::AFFECTED1)
 	))
 
-      (AFFECTED-affected-as-comp-TEMPL
+       (AFFECTED1-affected-TEMPL
+       (ARGUMENTS
+	(LSUBJ (% W::NP (w::sort (? !xx W::unit-measure))) ONT::affected1)
+	(LOBJ (:parameter xp (:default (% W::NP  (w::sort (? !xx W::unit-measure))))) ONT::AFFECTED)
+	))
+
+       (AFFECTED-affected-as-comp-TEMPL
        (ARGUMENTS
 	(LSUBJ (% W::NP (w::sort (? !xx W::unit-measure))) ONT::affected)
 	(LCOMP (:parameter xp (:default (% W::pp (W::ptype W::with)))) ONT::AFFECTED1)
@@ -696,13 +705,15 @@
 	(LSUBJ (% W::NP) ONT::AGENT)
 	(LOBJ (:parameter xp (:default (% W::NP))) ONT::PATH)
 	))
-      
+
+      #| ; there is another AGENT-SOURCE-affected-OPTIONAL-TEMPL further down
       (AGENT-SOURCE-affected-OPTIONAL-TEMPL
        (ARGUMENTS
 	(LSUBJ (% W::NP) ONT::AGENT)
 	(LOBJ (% W::NP) ONT::SOURCE)
 	(LCOMP (:parameter xp (:default (% W::pp (W::ptype W::of)))) ONT::affected OPTIONAL)
 	))
+      |#
 
       (AGENT-AFFECTED-EFFECT-OPTIONAL-TEMPL
        (ARGUMENTS
@@ -782,6 +793,14 @@
 	       ONT::RESULT)
 	))
 
+      (AGENT-RESULT-AFFECTED-TEMPL
+       (ARGUMENTS
+	(LSUBJ (% W::NP) ONT::agent)
+	(LOBJ (:parameter xp (:default (% W::ADVBL (W::lf (% ?p (w::class (? x ont::goal-reln ont::position-reln ont::source-reln)))) (w::arg ?dobjvar) (w::particle +))))
+	       ONT::RESULT)
+	(LCOMP (% W::NP (W::lex ?dobjlex) (W::var ?dobjvar)) ONT::affected)
+	))
+      
       (AGENT-AFFECTED-EFFECT-loc-objcontrol-TEMPL
        (ARGUMENTS
 	(LSUBJ (% W::NP) ONT::agent)
@@ -805,10 +824,40 @@
        (ARGUMENTS
 	(LSUBJ (% W::NP) ONT::agent)
 	(LOBJ (% W::NP) ONT::affected)
-	(LCOMP (:parameter xp (:default (% W::ADVBL (W::lf (% ?p (w::class (? x ont::goal-reln ont::position-reln))))))
+	(LCOMP (:parameter xp (:default (% W::ADVBL (W::lf (% ?p (w::class (? x ont::goal-reln ont::position-reln ont::source-reln))))))
+			   (:required (W::argument (% W::np (W::sem ?objsem) 
+					     (W::lex ?objlex) (W::var ?objvar)))))
+	       ONT::RESULT optional)
+	))
+
+     ; this is AGENT-AFFECTED-goal-optional-TEMPL with the arg mapped to the dobj
+     ; (need to sort out the entries using AGENT-AFFECTED-goal-optional-TEMPL and AGENT-AFFECTED-goal-TEMPL)
+     (AGENT-AFFECTED-goal-optional-new-TEMPL
+       (ARGUMENTS
+	(LSUBJ (% W::NP) ONT::agent)
+	(LOBJ (% W::NP (W::lex ?dobjlex) (W::var ?dobjvar)) ONT::affected)
+	(LCOMP (:parameter xp (:default (% W::ADVBL (W::lf (% ?p (w::class (? x ont::goal-reln ont::position-reln ont::source-reln)))) (w::arg ?dobjvar)))
 			   )
 	       ONT::RESULT optional)
 	))
+
+      (AGENT-AFFECTED-source-optional-TEMPL
+       (ARGUMENTS
+	(LSUBJ (% W::NP) ONT::agent)
+	(LOBJ (% W::NP) ONT::affected)
+	(LCOMP (:parameter xp (:default (% W::ADVBL (W::lf (% ?p (w::class (? x ont::source-reln))))))
+			   )
+	       ONT::source optional)
+	))
+
+	(AGENT-AFFECTED-source-TEMPL
+	 (ARGUMENTS
+	  (LSUBJ (% W::NP) ONT::agent)
+	  (LOBJ (% W::NP) ONT::affected)
+	  (LCOMP (:parameter xp (:default (% W::ADVBL (W::lf (% ?p (w::class (? x ont::source-reln))))))
+			     )
+		 ONT::source)
+	  ))
 
       (AGENT-AFFECTED-loc-optional-TEMPL
        (ARGUMENTS
@@ -875,7 +924,18 @@
 
       (neutral-PRED-xp-TEMPL
        (ARGUMENTS
-	(LSUBJ (% W::NP (W::var ?subjvar) (W::lex ?lsubjlex)) ONT::neutral)
+	(LSUBJ (% W::NP (W::var ?subjvar) (W::sem ?lsubjsem) (W::lex ?lsubjlex)) ONT::neutral)
+    ;;;;;(argument ?lsubj)
+    ;;;;; the arg of the pred will be the subject of the verb
+	(LOBJ (:parameter xp (:default (% W::PRED (W::arg ?subjvar))) (:required (W::filled -)
+					;(W::argument ?lsubj)
+					 (W::argument (% W::np (W::sem ?lsubjsem) (W::lex ?lsubjlex) (W::var ?lsubjvar)))
+										(w::arg ?subjvar) (W::gap ?gap))) ONT::FORMAL)
+	))
+
+       (experiencer-PRED-xp-TEMPL
+       (ARGUMENTS
+	(LSUBJ (% W::NP (W::var ?subjvar) (W::sem ?lsubjsem) (W::lex ?lsubjlex)) ONT::experiencer)
     ;;;;;(argument ?lsubj)
     ;;;;; the arg of the pred will be the subject of the verb
 	(LOBJ (:parameter xp (:default (% W::PRED (W::arg ?subjvar))) (:required (W::filled -)
@@ -888,8 +948,8 @@
        (ARGUMENTS
 	(LSUBJ (% W::NP (W::var ?subjvar) (W::lex ?lsubjlex)) ONT::AFFECTED)
        ;;;;; the arg of the pred will be the subject of the verb
-	(LOBJ (:parameter xp (:default (% W::PRED (W::arg ?subjvar))) (:required(W::filled -) (W::argument ?lsubj) 
-										(W::gap ?gap))) ONT::RESULT)
+	(LOBJ (:parameter xp (:default (% W::PRED (W::arg ?subjvar))) (:required (W::filled -) (W::argument ?lsubj) 
+										 (W::gap ?gap))) ONT::FORMAL)
 	))
 
 
@@ -898,9 +958,9 @@
 	(LSUBJ (% W::NP (W::var ?subjvar) (W::lex ?lsubjlex)) ONT::agent)
     ;;;;; the arg of the pred will be the subject of the verb
 	(LOBJ (:parameter xp (:default (% W::PRED (W::arg ?subjvar))) 
-			  (:required (W::filled -) 
+			  (:required (W::filled -) ;;(w::argument ?lsubj)
 				     (W::argument (% W::np (W::sem ?lsubjsem) (W::lex ?lsubjlex)
-						     (W::var ?lsubjvar))) 
+						     (W::var ?subjvar))) 
 				     (W::gap ?gap))) ONT::RESULT)
 	))
       
@@ -1223,13 +1283,7 @@
 	(LCOMP (:parameter xp (:default (% W::pp (W::ptype W::from)))) ONT::SOURCE optional)
 	))
 
-      (AGENT-AFFECTED-SOURCE-OPTIONAL-TEMPL
-       (ARGUMENTS
-	(LSUBJ (% W::NP) ONT::AGENT)
-	(LOBJ (% W::NP) ONT::AFFECTED)
-	(LCOMP (:parameter xp (:default (% W::pp (W::ptype W::from)))) ONT::SOURCE OPTIONAL)
-	))
-
+      
  (affected-AFFECTED-SOURCE-OPTIONAL-TEMPL
        (ARGUMENTS
 	(LSUBJ (% W::NP) ONT::affected)
@@ -1270,14 +1324,7 @@
 	(LCOMP (:parameter xp (:default (% W::pp (W::ptype (? pt w::to))))) ONT::FORMAL)
 	))
       
-      (AGENT-affected-SOURCE-TEMPL
-       (ARGUMENTS
-	(LSUBJ (% W::NP) ONT::AGENT)
-	(LOBJ (% W::NP) ONT::affected)
-	(LCOMP (:parameter xp (:default (% W::pp (W::ptype W::from)))) ONT::SOURCE)
-	))
-      
-      (AGENT-result-CO-AGENT-OPTIONAL-TEMPL
+            (AGENT-result-CO-AGENT-OPTIONAL-TEMPL
        (ARGUMENTS
 	(LSUBJ (% W::NP) ONT::AGENT)
 	(LIOBJ (% W::NP) ONT::result)
@@ -1346,8 +1393,15 @@
       (AGENT-GOAL-affected-TEMPL
        (ARGUMENTS
 	(LSUBJ (% W::NP) ONT::AGENT)
-	(LOBJ (% W::NP) ONT::result)
+	(LOBJ (% W::NP) ONT::affected-result)
 	(LCOMP (:parameter xp (:default (% W::pp (W::ptype W::with)))) ONT::affected OPTIONAL)
+	))
+
+      (AGENT-SOURCE-affected-optional-TEMPL
+       (ARGUMENTS
+	(LSUBJ (% W::NP) ONT::AGENT)
+	(LOBJ (% W::NP) ONT::affected-result)
+	(LCOMP (:parameter xp (:default (% W::pp (W::ptype W::of)))) ONT::affected OPTIONAL)
 	))
       
 
@@ -1921,6 +1975,12 @@
     (LOBJ (:parameter xp (:default (% W::NP))) ont::formal optional)
     ))
 
+(affected-scale-XP-optional-TEMPL
+   (ARGUMENTS
+    (LSUBJ (% W::NP) ONT::affected)
+    (LOBJ (:parameter xp (:default (% W::NP))) ont::scale optional)
+    ))
+
 (affected-neutral-optional-TEMPL
    (ARGUMENTS
     (LSUBJ (% W::NP) ONT::affected)
@@ -1949,6 +2009,13 @@
    (ARGUMENTS
     (LSUBJ (% W::NP (W::lex ?lsubjlex) (W::sem ?lsubjsem) (W::var ?lsubjvar)) ONT::experiencer)
     (LCOMP (:parameter xp (:default (% W::cp (W::ctype W::s-to))) (:required(W::subj (% W::np (W::sem ?lsubjsem) 
+                    (W::lex ?lsubjlex) (W::var ?lsubjvar))))) ont::formal)
+    ))
+
+  (agent-effect-SUBJCONTROL-TEMPL
+   (ARGUMENTS
+    (LSUBJ (% W::NP (W::lex ?lsubjlex) (W::sem ?lsubjsem) (W::var ?lsubjvar)) ONT::agent)
+    (LCOMP (:parameter xp (:default (% W::cp (W::ctype W::s-to))) (:require d(W::subj (% W::np (W::sem ?lsubjsem) 
                     (W::lex ?lsubjlex) (W::var ?lsubjvar))))) ont::formal)
     ))
 
@@ -2115,7 +2182,7 @@
 (neutral-EFFECT-SUBJCONTROL-TEMPL
    (ARGUMENTS
     (LSUBJ (% W::NP (W::lex ?lsubjlex) (W::sem ?lsubjsem) (W::var ?lsubjvar)) ONT::neutral)
-    (LCOMP (:parameter xp (:default (% W::cp (W::ctype W::s-to))) 
+    (LCOMP (:parameter xp (:default (% W::cp (W::ctype W::s-to)))
 		       (:required (W::subj (% W::np (W::sem ?lsubjsem) 
 					     (W::lex ?lsubjlex) (W::var ?lsubjvar))))) ONT::FORMAL)
     ))
@@ -2203,6 +2270,13 @@
    (ARGUMENTS
     (LSUBJ (% W::NP) ONT::neutral)
     (LOBJ (:parameter xp (:default (% W::NP))) ONT::neutral1)
+    (LCOMP (:parameter xp2 (:default(% W::ADJP (w::set-modifier -)))) ont::formal optional)
+    ))
+
+(experiencer-neutral-adj-predicate-optional-templ		
+   (ARGUMENTS
+    (LSUBJ (% W::NP) ONT::experiencer)
+    (LOBJ (:parameter xp (:default (% W::NP))) ONT::neutral)
     (LCOMP (:parameter xp2 (:default(% W::ADJP (w::set-modifier -)))) ont::formal optional)
     ))
 
@@ -2317,7 +2391,9 @@
     ))
   
   (quan-mass-templ   ;; e.g., much (water), most of the water, most of the truck
-   (SYNTAX (W::MASS W::MASS) (W::QOF (% W::PP (W::PTYPE W::OF) (W::AGR W::3S))));;(W::MASS W::MASS))))
+   (SYNTAX (W::MASS W::MASS)  (W::status w::SM)
+	   (W::QOF (% W::PP (W::PTYPE W::OF) (W::AGR W::3S)))
+	  )
    (ARGUMENTS
     ))
 
@@ -2340,7 +2416,7 @@
   (quan-than-comp  ;; e.g., more than five, more than that
    (SYNTAX (W::QCOMP (% W::PP (W::PTYPE W::THAN) (W::GAP -)))
 			;;(W::SEM ($ F::ABSTR-OBJ (F::INFORMATION F::DATA)))))
-  	   (W::QOF (% W::PP (W::PTYPE W::OF) (W::AGR ?agr1) (W::MASS ?m)))
+  	   (W::QOF (% W::PP (W::PTYPE W::OF) (W::AGR ?agr1) (W::MASS ?m))) 
    ))
   
   (quan-cardinality-templ
@@ -2471,12 +2547,12 @@
     (ARGUMENT (% W::NUMBER) ONT::FIGURE)
     ))
 
-   ;; exactly five
-     (NUMBER-OPERATOR-POST-TEMPL
-        (SYNTAX(W::SORT W::OPERATOR) (W::ATYPE W::POST) (W::MASS W::COUNT))
-          (ARGUMENTS
-	   (ARGUMENT (% W::NUMBER) ONT::FIGURE)
-	   ))
+;; exactly five
+(NUMBER-OPERATOR-POST-TEMPL
+ (SYNTAX(W::SORT W::OPERATOR) (W::ATYPE W::POST) (W::MASS W::COUNT))
+ (ARGUMENTS
+  (ARGUMENT (% W::NUMBER) ONT::FIGURE)
+  ))
   
   ;;;;; operators that can modifier both quanitifers (e.g., almost all) and numbers
   (QUAN-OPERATOR-TEMPL
@@ -2848,7 +2924,16 @@
 
 ;;;;;  PARTICLES
   (PARTICLE-templ
-   (SYNTAX (W::SORT W::PRED) (W::ATYPE W::POST) (W::PARTICLE +))
+   (SYNTAX (W::SORT W::PRED) (W::ATYPE W::POST) (W::PARTICLE +)
+	   (W::particle-role-map W::result))
+   (ARGUMENTS
+    (ARGUMENT (% W::NP) ONT::FIGURE)
+    )
+   )
+
+  (PARTICLE-manner-templ
+   (SYNTAX (W::SORT W::PRED) (W::ATYPE W::POST) (W::PARTICLE +)
+	   (W::particle-role-map W::manner))
    (ARGUMENTS
     (ARGUMENT (% W::S) ONT::FIGURE)
     )
@@ -3463,16 +3548,16 @@
     ))
 
   ;; quiet enough for all
-  (postpositive-adv-optional-xp-templ
-   (SYNTAX (W::SORT W::PRED) (W::ALLOW-DELETED-COMP +) (W::ATYPE W::postpositive) (W::ARG ?arg))
+  (post-adv-optional-xp-templ
+   (SYNTAX (W::SORT W::PRED) (W::ALLOW-DELETED-COMP +) (W::ATYPE W::post) (W::ARG ?arg))
    (ARGUMENTS
     (ARGUMENT (% (? W::argcat W::ADVBL W::ADJP)  (w::set-modifier -) (W::sort ?sort)) ONT::FIGURE)
     (subcat (:parameter xp (:default (% W::pp (W::ptype W::for)))) ONT::STANDARD optional)
     ))
 
  ;; quiet enough to sing a song
-  (postpositive-adv-xp-templ
-   (SYNTAX (W::SORT W::PRED) (W::ALLOW-DELETED-COMP +) (W::ATYPE W::postpositive) (W::ARG ?arg))
+  (post-adv-xp-templ
+   (SYNTAX (W::SORT W::PRED) (W::ALLOW-DELETED-COMP +) (W::ATYPE W::post) (W::ARG ?arg))
    (ARGUMENTS
     (ARGUMENT (% (? W::argcat W::ADVBL W::ADJP)  (w::set-modifier -) (W::sort ?sort)) ONT::FIGURE)
     (subcat (:parameter xp (:default (% W::cp))) ONT::STANDARD)
@@ -3658,6 +3743,7 @@
   (compar-than-templ 
    (SYNTAX (w::compar-op +) (w::ground-oblig -))
    (arguments
+    (ARGUMENT (% W::NUMBER) ONT::FIGURE) 
     (subcat (% w::PP (w::ptype w::than)) ont::ground)))
 
   

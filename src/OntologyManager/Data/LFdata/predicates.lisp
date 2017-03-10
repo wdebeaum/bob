@@ -110,6 +110,7 @@
 
 ;; out, over
 (define-type ONT::location-distance-modifier
+    :arguments ((:required ONT::FIGURE (F::SITUATION (F::TYPE ONT::EVENT-OF-ACTION))))
  :parent ONT::PREDICATE
  )
 
@@ -187,7 +188,7 @@
 ;;             (:REQUIRED ONT::VAL (F::Situation (F::aspect F::dynamic)))
 	     ;; purposes don't have to be dynamic -- e.g. to store something, to remember, etc.
 ;	     (:REQUIRED ONT::GROUND ((? xx F::Situation f::abstr-obj f::phys-obj) (F::scale (? !sc ont::duration-scale))))
-	     (:REQUIRED ONT::GROUND ((? xx F::Situation f::abstr-obj f::phys-obj) (F::scale -)))
+	     (:REQUIRED ONT::GROUND ((? xx F::Situation f::abstr-obj f::phys-obj) (f::type (? !t ONT::ORGANISM)) (F::scale -)))
 	     ;; a separate role because it will be lower priority
 ;	     (:required ont::obj-val (f::abstr-obj)) ;; needed for non-situation ont::vals -- e.g., hit return for more results
 	    ;; (:required ont::REASON (f::abstr-obj)) ;; needed for non-situation ont::vals -- e.g., hit return for more results
@@ -244,8 +245,17 @@
 ;; I cleared the roads with Charlie
 (define-type ONT::ACCOMPANIMENT
  :parent ONT::PREDICATE
- :arguments ((:ESSENTIAL ONT::FIGURE (F::Situation (f::aspect f::dynamic)))
+ :arguments ((:ESSENTIAL ONT::FIGURE (F::Situation  (f::type ont::event-of-action)
+						    (f::aspect f::dynamic)))
              (:REQUIRED ONT::GROUND (F::Phys-obj (F::origin F::living) (F::intentional +)))
+             )
+ )
+
+(define-type ONT::WITH-INSTRUMENT
+ :parent ONT::PREDICATE
+ :arguments ((:ESSENTIAL ONT::FIGURE (F::Situation (f::type ont::event-of-action)
+						   (f::aspect f::dynamic)))
+             (:REQUIRED ONT::GROUND (F::Phys-obj (F::origin F::artifact) (F::intentional -)))
              )
  )
 
@@ -260,8 +270,8 @@
 ;; under/over/above/below 5 pounds/dollars/feet etc.
 (define-type ONT::SCALE-RELATION
  :parent ONT::PREDICATE
- :arguments ((:ESSENTIAL ONT::FIGURE ((? s F::Phys-obj F::abstr-obj F::situation)))
-             (:REQUIRED ONT::GROUND (F::abstr-obj (f::scale ?!sc)))
+ :arguments ((:ESSENTIAL ONT::FIGURE) ;(F::abstr-obj (f::type ont::domain)))  ; I am.../The height is...
+             (:REQUIRED ONT::GROUND (F::abstr-obj (f::scale (? !t ont::duration-scale)))) ;(f::scale ?!sc) )) ; to exclude time related senses e.g., TIME-CULMINATION-REL and TIME-DEADLINE-REL for "within"
              )
  )
 
@@ -309,10 +319,9 @@
              )
  )
 
-;; (f::intentional -) allows "travel by car" but not "travel by hemingway"
 (define-type ONT::manner
  :parent ONT::SITUATION-MODIFIER
- :arguments ((:ESSENTIAL ONT::FIGURE (F::situation))
+ :arguments ((:ESSENTIAL ONT::FIGURE (F::situation (f::type ont::event-of-action)))
              (:REQUIRED ONT::GROUND ((? at F::abstr-obj F::situation f::phys-obj) (f::intentional -))) ;; don't want times to work here
              )
  )
@@ -354,18 +363,18 @@
 
 ;; in that event
 (define-type ONT::situated-in
- :parent ONT::SITUATION-MODIFIER
- :arguments (;(:ESSENTIAL ONT::OF (F::Situation))
-             ;(:REQUIRED ONT::val (F::situation))
-	     (:ESSENTIAL ONT::FIGURE (F::Situation))
-             (:REQUIRED ONT::GROUND (F::situation))
+ :parent ONT::SITUATION-OBJECT-MODIFIER
+ :arguments ((:ESSENTIAL ONT::FIGURE ((? xxx F::Situation 
+					 F::PHYS-OBJ)))
+	   	     ;; SITUATED-IN shouldn't be used for scales!
+	     (:REQUIRED ONT::GROUND (F::situation (F::type (? t ONT::SITUATION-ROOT))))
              )
  )
 
 ;; out of the meeting
 (define-type ONT::situated-out
  :parent ONT::SITUATION-MODIFIER
- :arguments ((:ESSENTIAL ONT::FIGURE (F::Situation))
+ :arguments ((:ESSENTIAL ONT::FIGURE ((? xxx F::Situation F::PHYS-OBJ)))
              (:REQUIRED ONT::GROUND (F::situation))
              )
  )

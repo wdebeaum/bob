@@ -7,7 +7,7 @@
 
 use lib "./Perl";
 use TextTagger::Util qw(lisp_intern);
-use TextTagger::Normalize qw(unspell_greek_letters normalize uncapitalize $dash_re);
+use TextTagger::Normalize qw(unspell_greek_letters normalize uncapitalize $dash_re $greek_re);
 use File::Path qw(make_path);
 
 use strict vars;
@@ -25,11 +25,12 @@ sub uncapitalize_each_word {
 
 sub add_entries {
   my ($term, $code, $concept_name, $status) = @_;
+  $code =~ s/^C//;
   push @{$normalized_to_unnormalized_to_entries{normalize($term)}{$term}},
-      "NCIT:$code", $concept_name, $status;
+       [$code, $concept_name, $status];
   my $greek = unspell_greek_letters($term);
   push @{$normalized_to_unnormalized_to_entries{normalize($greek)}{$greek}},
-      "NCIT:$code", $concept_name, $status
+       [$code, $concept_name, $status]
     if ($greek ne $term);
 }
 
@@ -65,7 +66,7 @@ close FLAT
 # and remove the "(wt) Allele" part of the name.
 #
 
-for my $id (%id_to_name) {
+for my $id (keys %id_to_name) {
   my $name = $id_to_name{$id};
   if ($name =~ /(?:$dash_re| )\w+ allele$/ and exists($id_to_parents{$id})) {
     my $prefix = $`;
@@ -100,6 +101,52 @@ for my $code (keys %id_to_name) {
 }
 
 #
+# Add entries for "FOO" derived from "FOO gene" or "FOO protein" where "FOO"
+# looks like an abbreviation and doesn't already have an entry.
+#
+
+# add entries first to this table, so we don't mistake entries we added earlier
+# this way for entries already in the original table
+my %new_n2un2e = ();
+
+for my $normalized (keys %normalized_to_unnormalized_to_entries) {
+  if ($normalized =~ / (gene|protein)$/) {
+    my $unnormalized_to_entries =
+      $normalized_to_unnormalized_to_entries{$normalized};
+    for my $unnormalized (keys %{$unnormalized_to_entries}) {
+      my $prefix = $unnormalized;
+      $prefix =~ s/ (gene|protein)$//i;
+      if ($unnormalized =~ / ([Gg]ene|[Pp]rotein)$/ and # no all-caps PROTEIN
+	  $prefix =~ /^([0-9A-Z]|$dash_re|$greek_re)+$/) {
+	my $normalized_prefix = normalize($prefix);
+	unless (
+	  exists($normalized_to_unnormalized_to_entries{$normalized_prefix}) and
+	  exists($normalized_to_unnormalized_to_entries{$normalized_prefix}{$prefix})
+	) {
+	  my $entries = ($new_n2un2e{$normalized_prefix}{$prefix} ||= []);
+	  my @old_ids = map { $_->[0] } @$entries;
+	  my $new_entries = $unnormalized_to_entries->{$unnormalized};
+	  for my $new_entry (@$new_entries) {
+	    my $new_id = $new_entry->[0];
+	    push @$entries, $new_entry
+	      unless (grep { $_ eq $new_id } @old_ids);
+	  }
+	}
+      }
+    }
+  }
+}
+
+# add entries from temporary table to final table
+for my $n (keys %new_n2un2e) {
+  my $un2e = ($normalized_to_unnormalized_to_entries{$n} ||= {});
+  my $new_un2e = $new_n2un2e{$n};
+  for my $un (keys %{$new_un2e}) {
+    $un2e->{$un} = $new_un2e->{$un};
+  }
+}
+
+#
 # write main output
 #
 
@@ -112,7 +159,11 @@ for my $normalized (sort keys %normalized_to_unnormalized_to_entries) {
     } else {
       print "\t,";
     }
-    print join("\t", '', $unnormalized, @{$normalized_to_unnormalized_to_entries{$normalized}{$unnormalized}});
+    print join("\t", '', $unnormalized,
+      map { ("NCIT:C$_->[0]", $_->[1], $_->[2]) } # flatten and add NCIT:C pref.
+      sort { $a->[0] <=> $b->[0] } # sort by (numeric part of) ID
+      @{$normalized_to_unnormalized_to_entries{$normalized}{$unnormalized}}
+    );
   }
   print "\n";
 }

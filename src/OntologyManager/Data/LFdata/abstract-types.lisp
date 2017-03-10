@@ -62,6 +62,7 @@
 					;	     (:optional ONT::Purpose-implicit ((? pi f::phys-obj f::abstr-obj f::situation)))
 	     (:optional ONT::REASON ((? pi f::phys-obj f::abstr-obj f::situation)))
 	     (:OPTIONAL ONT::GROUND)
+	     (:optional ont::standard)
 	     (:optional ont::norole)
              )
  )
@@ -72,6 +73,21 @@
  :arguments ((:ESSENTIAL ONT::FIGURE (F::phys-obj (f::intentional +) (f::type ont::organism))
 	     ))
  )
+
+(define-type ONT::dead
+ :parent ONT::living-val
+ :wordnet-sense-keys  ("dead%3:00:01"  "dead%3:00:02")
+ :arguments ((:ESSENTIAL ONT::FIGURE (F::phys-obj (f::intentional +) (f::type ont::organism))
+	     ))
+ )
+
+(define-type ONT::alive
+ :parent ONT::living-val
+ :wordnet-sense-keys  ("live%3:00:00")
+ :arguments ((:ESSENTIAL ONT::FIGURE (F::phys-obj (f::intentional +) (f::type ont::organism))
+	     ))
+ )
+
 
 (define-type ONT::behavioral-property
  :parent ONT::property-val
@@ -175,8 +191,13 @@
              )
  )
 
+;;;;;;;;;;;;;;;
+; the group-object-abstr hierarchy is a duplicate of group-object in phys-object 
+; (Note: ONT::SHEET-abstr and ONT::QUANTITY-abstr are under GROUP-OBJECT-ABSTR too.)
+; (Note 2: wordnet mappings are identical in the two hierarchies.)
+;;;;;;;;;;;;;;;
 
-(define-type ont::group-object
+(define-type ont::group-object-abstr
  :wordnet-sense-keys ("mathematical_group%1:09:00" "group%1:09:00" "chemical_group%1:27:00" "radical%1:27:00" "group%1:27:00" "group%1:03:00" "grouping%1:03:00")
   :parent ont::abstract-object-nontemporal
 ;  :sem (F::Abstr-obj (f::group +)) ; group feature not defined for abstract objects
@@ -184,161 +205,169 @@
               )
   )
 
-(define-type ONT::system
+(define-type ONT::system-abstr
   :wordnet-sense-keys ("system%1:06:00" "system%1:14:00")
   :comment "An interconnected group of objects, abstract or physical"
- :parent ONT::group-object
+ :parent ONT::group-object-abstr
  )
 
-(define-type ONT::formation
- :parent ONT::group-object
+
+(define-type ONT::formation-abstr
+ :parent ONT::group-object-abstr
  )
 
-(define-type ONT::row-formation
+(define-type ONT::row-formation-abstr
  :wordnet-sense-keys ("row%1:14:00" "row%1:17:00")
- :parent ONT::formation
+ :parent ONT::formation-abstr
+ :arguments ((:OPTIONAL ONT::FIGURE (F::phys-obj))  ; to distinguish between steps as steps in a plan and steps in a staircase
+             )
+ )
+
+(define-type ONT::column-formation-abstr
+ :wordnet-sense-keys ("pile%1:14:00" "column%1:14:00" "column%1:25:02")
+ :parent ONT::formation-abstr
  :arguments ((:OPTIONAL ONT::FIGURE (F::phys-obj))  ; to distinguish between steps as steps in a plan and steps in a staircase
              )
  )
 
 ;; crowd, audience
-(define-type ont::social-group
+(define-type ont::social-group-abstr
  :wordnet-sense-keys ("social_group%1:14:00")
-  :parent ont::group-object
+  :parent ont::group-object-abstr
   :sem (F::Abstr-obj (F::information F::information-content) (f::intentional +) (F::Object-Function F::Occupation) (F::Container -))
   :arguments ((:OPTIONAL ONT::FIGURE ((? lof f::phys-obj f::abstr-obj))))
   )
 
 ;; swift 20110928 crew defined for obtw demo
-(define-type ont::crew
-    :parent ont::social-group
+(define-type ont::crew-abstr
+    :parent ont::social-group-abstr
     )
 
-(define-type ONT::organization
+(define-type ONT::organization-abstr
  :wordnet-sense-keys ("organization%1:14:00" "organisation%1:14:00")
- :parent ONT::social-group
+ :parent ONT::social-group-abstr
  )
 
 ;; these subtypes came about because of generation issues
 ;; commerce, finance, business, marketing
-(define-type ONT::enterprise
- :parent ONT::organization
+(define-type ONT::enterprise-abstr
+ :parent ONT::organization-abstr
  )
 
 ;; institution
-(define-type ONT::institution
- :parent ONT::organization
+(define-type ONT::institution-abstr
+ :parent ONT::organization-abstr
  )
 
 ;; an institution created for conduction business
 ;; company
-(define-type ONT::company
- :parent ONT::institution
+(define-type ONT::company-abstr
+ :parent ONT::institution-abstr
  )
 
 ;; google, amazon, isp
-(define-type ONT::internet-organization
- :parent ONT::organization
+(define-type ONT::internet-organization-abstr
+ :parent ONT::organization-abstr
  )
 
 ;; bank
-(define-type ONT::financial-institution
- :parent ONT::institution
+(define-type ONT::financial-institution-abstr
+ :parent ONT::institution-abstr
  )
 
 ;; apple, ibm, hp
-(define-type ONT::electronics-company
- :parent ONT::company
+(define-type ONT::electronics-company-abstr
+ :parent ONT::company-abstr
  )
 
 ;; officemax, officedepot
-(define-type ONT::office-supply-company
- :parent ONT::company
+(define-type ONT::office-supply-company-abstr
+ :parent ONT::company-abstr
  )
 
 ;; fetch, gnu
-(define-type ONT::software-company
- :parent ONT::company
+(define-type ONT::software-company-abstr
+ :parent ONT::company-abstr
  )
 
 ;; court
-(define-type ONT::legal-organization
- :parent ONT::organization
+(define-type ONT::legal-organization-abstr
+ :parent ONT::organization-abstr
  )
 
 ;; market
-(define-type ONT::financial-organization
- :parent ONT::organization
+(define-type ONT::financial-organization-abstr
+ :parent ONT::organization-abstr
  )
 
 ;; government, gsa, darpa
-(define-type ONT::federal-organization
+(define-type ONT::federal-organization-abstr
  :wordnet-sense-keys ("government%1:14:00" "authorities%1:14:00" "regime%1:14:00")
- :parent ONT::organization
+ :parent ONT::organization-abstr
  )
 
 ;; ieee
-(define-type ONT::professional-organization
- :parent ONT::organization
+(define-type ONT::professional-organization-abstr
+ :parent ONT::organization-abstr
  )
 
 ;; ansi
-(define-type ONT::regulatory-organization
- :parent ONT::organization
+(define-type ONT::regulatory-organization-abstr
+ :parent ONT::organization-abstr
  )
 
-(define-type ONT::airline
- :parent ONT::enterprise
- )
-
-;; affiliate, partner, subsidiary
-(define-type ONT::affiliate
- :parent ONT::company
+(define-type ONT::airline-abstr
+ :parent ONT::enterprise-abstr
  )
 
 ;; affiliate, partner, subsidiary
-(define-type ONT::supplier
- :parent ONT::company
+(define-type ONT::affiliate-abstr
+ :parent ONT::company-abstr
+ )
+
+;; affiliate, partner, subsidiary
+(define-type ONT::supplier-abstr
+ :parent ONT::company-abstr
  )
 
 ;; sri
-(define-type ONT::research-institution
- :parent ONT::company
+(define-type ONT::research-institution-abstr
+ :parent ONT::company-abstr
  )
 
 ;; university, college
-(define-type ONT::academic-institution
-    :parent ONT::research-institution
+(define-type ONT::academic-institution-abstr
+    :parent ONT::research-institution-abstr
  )
 
 ;; fedex, ups
-(define-type ONT::shipping-company
- :parent ONT::company
+(define-type ONT::shipping-company-abstr
+ :parent ONT::company-abstr
  )
 
-(define-type ONT::military-group
+(define-type ONT::military-group-abstr
  :wordnet-sense-keys ("military_unit%1:14:00" "military_force%1:14:00" "military_group%1:14:00" "force%1:14:01")
- :parent ONT::social-group
+ :parent ONT::social-group-abstr
  )
 
-(define-type ONT::collection
+(define-type ONT::collection-abstr
  :wordnet-sense-keys ("collection%1:14:00" "aggregation%1:14:00" "accumulation%1:14:00" "assemblage%1:14:01")
- :parent ONT::group-object
+ :parent ONT::group-object-abstr
  )
 
-(define-type ONT::sequence
+(define-type ONT::sequence-abstr
  :wordnet-sense-keys ("ordering%1:14:00" "order%1:14:00" "ordination%1:14:00")
- :parent ONT::group-object
+ :parent ONT::group-object-abstr
  )
 
-(define-type ONT::linear-grouping
+(define-type ONT::linear-grouping-abstr
  :wordnet-sense-keys ("line%1:14:01")
- :parent ONT::sequence
+ :parent ONT::sequence-abstr
  )
 
-(define-type ONT::combination
+(define-type ONT::combination-abstr
  :wordnet-sense-keys ("combination%1:14:00")
- :parent ONT::group-object
+ :parent ONT::group-object-abstr
  )
 
 
@@ -506,7 +535,7 @@
 (define-type ont::psychological-property-val
     :parent ont::animal-property-val
     :arguments ( ;; stimulus is what provokes the emotion - I am afraid of dogs / storms
-		(:optional ont::stimulus ((? stm f::phys-obj f::situation f::abstr-obj)))
+		;;(:optional ont::stimulus ((? stm f::phys-obj f::situation f::abstr-obj)))
 		;; the object that is involved in a situation, but which is not a stimulus directly
 		;; for example, I am afraid for her, for the project
 		;;(:optional ont::formal (f::situation f::phys-obj f::abstr-obj)))
@@ -582,6 +611,7 @@
 (define-type ONT::age-VAL
   :parent ONT::temporal
   :sem (F::abstr-obj (F::scale ont::age-scale))
+;  :sem (F::abstr-obj (F::scale ont::duration-scale))
  )
 
 ;; for adjectives concerning a linear dimension: tall, fat, short, thick
@@ -689,63 +719,81 @@
 
 (define-type ONT::green
  :parent ONT::color-VAL
+ :sem (F::Abstr-obj (F::scale ONT::GREEN*1--07--00))
  )
 
 (define-type ONT::yellow
  :parent ONT::color-VAL
+ :sem (F::Abstr-obj (F::scale ONT::YELLOW*1--07--00))
  )
 
 (define-type ONT::orange
  :parent ONT::color-VAL
- )
+  :sem (F::Abstr-obj (F::scale ONT::ORANGE*1--07--00))
+  )
 
 (define-type ONT::purple
  :parent ONT::color-VAL
+  :sem (F::Abstr-obj (F::scale ONT::PURPLE*1--07--00))
  )
 
 (define-type ONT::black
  :parent ONT::color-VAL
+  :sem (F::Abstr-obj (F::scale ONT::BLACKNESS*1--07--00))
  )
 
 (define-type ONT::brown
  :parent ONT::color-VAL
+  :sem (F::Abstr-obj (F::scale ONT::BROWNNESS*1--07--00))
  )
 
 (define-type ONT::white
  :parent ONT::color-VAL
+  :sem (F::Abstr-obj (F::scale ONT::white*1--07--00))
  )
 
 (define-type ONT::gold
  :parent ONT::color-VAL
+  :sem (F::Abstr-obj (F::scale ONT::gold*1--07--00))
  )
 
 (define-type ONT::silver
  :parent ONT::color-VAL
+  :sem (F::Abstr-obj (F::scale ONT::silver*1--07--00))
  )
 
 (define-type ONT::magenta
  :parent ONT::color-VAL
+  :sem (F::Abstr-obj (F::scale ONT::magenta*1--07--00))
  )
 
 (define-type ONT::pink
  :parent ONT::color-VAL
+  :sem (F::Abstr-obj (F::scale ONT::pink*1--07--00))
  )
 
 (define-type ONT::tan
  :parent ONT::color-VAL
  )
 
-(define-type ONT::grey
- :parent ONT::color-VAL
- )
-
 (define-type ONT::gray
  :parent ONT::color-VAL
+  :sem (F::Abstr-obj (F::scale ONT::greyness*1--07--00))
  )
 
 (define-type ONT::SHAPE-VAL
   :parent ONT::spatial
- :sem (F::Abstr-obj (F::MEasure-function F::VALUE))
+ :sem (F::Abstr-obj (F::Measure-function F::VALUE))
+ )
+
+(define-type ONT::round-val
+ :parent ONT::shape-VAL
+  :sem (F::Abstr-obj (F::scale ONT::roundness*1--07--00))
+ )
+
+(define-type ONT::square-val
+ :parent ONT::shape-VAL
+  :sem (F::Abstr-obj (F::scale ONT::squareness*1--07--00))
  )
 
 ;; smooth, rough, soft, hard
@@ -753,6 +801,23 @@
  :parent ONT::tangible-PROPERTY-VAL
  :sem (F::Abstr-obj (F::MEasure-function F::VALUE))
  )
+
+(define-type ONT::soft-VAL
+ :parent ONT::texture-VAL
+ :sem (F::Abstr-obj (F::scale ONT::softness*1--07--00))
+ )
+
+(define-type ONT::hard-VAL
+ :parent ONT::texture-VAL
+ :sem (F::Abstr-obj (F::scale ONT::hardness*1--07--00))
+ )
+
+(define-type ONT::smooth-VAL
+ :parent ONT::texture-VAL
+ :sem (F::Abstr-obj (F::scale ONT::smoothness*1--07--00))
+ )
+
+
 
 
 ;; loud, soft, quiet
@@ -974,13 +1039,13 @@
 ;; familiar, known
 (define-type ont::familiarity-val
   :parent ont::property-val
-  :arguments ((:optional ont::stimulus))
+  ;;:arguments ((:optional ont::stimulus))
   )
 
 ;; unfamiliar, unknown
 (define-type ont::unfamiliarity-val
   :parent ont::property-val
-  :arguments ((:optional ont::stimulus))
+  ;;:arguments ((:optional ont::stimulus))
   )
 
 ;; typical, normal, usual
@@ -1041,11 +1106,6 @@
              )
  )
 
-(define-type ONT::FALLEN-VAL
- :parent ONT::configuration-PROPERTY-VAL
- :sem (F::Abstr-obj (F::gradability -))
- )
-
 ;; higher-level type for evaluation
 (define-type ont::evaluation-attribute-val
   :parent ont::property-val
@@ -1084,6 +1144,28 @@
 ;; delicious, zesty, spicy, salty...
 (define-type ONT::TASTE-VAL
  :parent ONT::tastable-property-val
+ :sem (F::Abstr-obj (F::scale ONT::tastefulness*1--07--00xs))
+ )
+
+(define-type ONT::SWEET-VAL
+ :parent ONT::taste-val
+ :sem (F::Abstr-obj (F::scale ONT::sweetness*1--07--00))
+ )
+
+(define-type ONT::bitter-VAL
+ :parent ONT::taste-val
+ :sem (F::Abstr-obj (F::scale ONT::bitter*1--07--00))
+ )
+
+
+(define-type ONT::tart-VAL
+ :parent ONT::taste-val
+ :sem (F::Abstr-obj (F::scale ONT::tartness*1--07--00))
+ )
+
+(define-type ONT::sour-VAL
+ :parent ONT::taste-val
+ :sem (F::Abstr-obj (F::scale ONT::sourness*1--07--00))
  )
 
 ;; beautiful, ugly
@@ -1448,6 +1530,7 @@
 ;;; A domain is a single-valued function
 (define-type ONT::DOMAIN
  :parent ONT::ABSTRACT-object
+ :wordnet-sense-keys ("attribute%1:03:00")
  :comment "Nouns that name domain/scales, and can serve as relational nouns (e.g., the COLOR of the box)"
  :arguments ((:REQUIRED ONT::FIGURE)
 	     (:optional ont::GROUND)
@@ -1495,11 +1578,13 @@
 ;; comfort, discomfort
 (define-type ONT::comfortableness
  :parent ONT::non-measure-ordered-domain
+ :wordnet-sense-keys ("discomfort%1:26:00" "discomfort%1:12:00")
  )
 
 ;; security, privacy
 (define-type ONT::confidentiality
- :parent  ONT::NON-MEASURE-ORDERED-DOMAIN
+    :wordnet-sense-keys ("privacy%1:07:00" "privacy%1:26:02")
+    :parent  ONT::NON-MEASURE-ORDERED-DOMAIN
  )
 
 ;; protection, insurance
@@ -1509,13 +1594,15 @@
 
 ;; severity, intensity
 (define-type ONT::intensity
- :parent  ONT::NON-MEASURE-ORDERED-DOMAIN
+    :wordnet-sense-keys ("intensity%1:07:00" "intensity%1:07:03")
+    :parent  ONT::NON-MEASURE-ORDERED-DOMAIN
  )
 
 ;; priority
 (define-type ONT::importance
- :parent  ONT::NON-MEASURE-ORDERED-DOMAIN
- )
+    :wordnet-sense-keys ("importance%1:26:00" "importance%1:07:00")
+    :parent  ONT::NON-MEASURE-ORDERED-DOMAIN
+    )
 
 ;; custom, habit, practice, tradition
 (define-type ONT::practice
@@ -1523,8 +1610,9 @@
  )
 
 ;; layer (of ozone, chocolate), sheet (of ice, paper), slice
-(define-type ont::sheet
-  :parent ont::non-measure-ordered-domain
+(define-type ont::sheet-abstr
+;  :parent ont::non-measure-ordered-domain
+  :parent ONT::GROUP-OBJECT-abstr
   )
 
 (define-type ONT::MEASURE-UNIT
@@ -1542,10 +1630,10 @@
  )
 
 ;; a number/amount/quantity of X
-(define-type ONT::QUANTITY
+(define-type ONT::QUANTITY-abstr
  :wordnet-sense-keys ("measure%1:03:00" "quantity%1:03:00" "amount%1:03:00")
 ; :parent ONT::DOMAIN-PROPERTY
- :parent ONT::GROUP-OBJECT
+ :parent ONT::GROUP-OBJECT-abstr
  :arguments ((:ESSENTIAL ONT::FIGURE)
              )
  )
@@ -1679,7 +1767,7 @@
 (define-type ONT::LENGTH-UNIT
  :wordnet-sense-keys ("linear_measure%1:23:00" "linear_unit%1:23:00" "week%1:28:00" "hebdomad%1:28:00")
  :parent ONT::tangible-unit
- :sem (F::Abstr-obj (F::Scale Ont::length))
+ :sem (F::Abstr-obj (F::Scale ONT::LINEAR-D)) ; Ont::length))  ; e.g., km: not just length but could also be width, height, etc
  )
 
 ;; acre, sqare feet
@@ -1866,25 +1954,25 @@
 ;; width
 (define-type ONT::width-scale
  :wordnet-sense-keys ("width%1:07:00" "diameter%1:07:00")
-;; :sem (F::Abstr-obj (F::Scale Ont::width))
+ :sem (F::Abstr-obj (F::Scale Ont::width-scale))
  :parent ONT::linear-d
  )
 
 ;; height
 (define-type ONT::height-scale
-;; :sem (F::Abstr-obj (F::Scale Ont::height-scale))
+    :sem (F::Abstr-obj (F::Scale Ont::height-scale))
  :parent ONT::linear-d
  )
 
 ;; depth
-(define-type ONT::depth
-;; :sem (F::Abstr-obj (F::Scale Ont::depth))
+(define-type ONT::depth-scale
+    :sem (F::Abstr-obj (F::Scale Ont::depth-scale))
  :parent ONT::linear-d
  )
 
 ;; thickness
 (define-type ONT::thickness
-;; :sem (F::Abstr-obj (F::Scale Ont::thickness))
+ :sem (F::Abstr-obj (F::Scale Ont::thickness))
  :parent ONT::linear-d
  )
 
@@ -1980,7 +2068,8 @@
 
 (define-type ONT::ASSETS
  :wordnet-sense-keys ("assets%1:21:00")
- :parent ONT::MEASURE-DOMAIN
+; :parent ONT::MEASURE-DOMAIN
+ :parent ONT::FUNCTION-OBJECT
  :sem (F::Abstr-obj (F::Scale Ont::money-scale))
  :arguments ((:REQUIRED ONT::FIGURE ((? fot F::phys-obj F::situation)))
              (:ESSENTIAL ONT::GROUND (F::abstr-obj (F::measure-function F::value) (F::scale ont::money-scale)))
@@ -2018,7 +2107,7 @@
 
 
 (define-type ONT::Physical-discrete-domain
- :wordnet-sense-keys ("conformation%1:07:00" "contour%1:07:00" "configuration%1:07:00" "form%1:07:01" "shape%1:07:00" "shape%1:03:00" "form%1:03:00")
+ :wordnet-sense-keys ("form%1:07:01" "shape%1:03:00" "form%1:03:00")
  :parent ONT::DISCRETE-DOMAIN
  :arguments ((:REQUIRED ONT::FIGURE (F::Phys-obj))
              )
@@ -2189,7 +2278,8 @@
 
 ;; confidence, authority, trust
 (define-type ont::assurance
-  :parent ont::non-measure-ordered-domain
+    :wordnet-sense-keys ("trust%1:26:00")
+    :parent ont::non-measure-ordered-domain
   )
 
 ;; gist, essence, substance
@@ -2235,7 +2325,7 @@
  )
 
 (define-type ONT::attribute
- :wordnet-sense-keys ("dimension%1:09:00" "attribute%1:09:00" "property%1:09:00" "property%1:07:00" "holding%1:21:00" "belongings%1:21:00" "property%1:21:00" "attribute%1:03:00")
+ :wordnet-sense-keys ("dimension%1:09:00" "attribute%1:09:00" "property%1:09:00" "property%1:07:00" "holding%1:21:00" "belongings%1:21:00" "property%1:21:00")
  :parent ont::abstract-object-nontemporal
  :arguments ((:OPTIONAL ONT::FIGURE ((? lo f::phys-obj f::abstr-obj)))
              )
@@ -2362,7 +2452,7 @@
 
 ;; idea
 (define-type ONT::mental-object
- :wordnet-sense-keys ("cognition%1:03:00" "knowledge%1:03:00" "noesis%1:03:00" "grounds%1:10:00" "reason%1:10:00")
+ :wordnet-sense-keys ("cognition%1:03:00" "noesis%1:03:00" "grounds%1:10:00" "reason%1:10:00")
  :parent ONT::mental-construction
 ;; :sem (F::Abstr-obj (F::container +))
  :arguments ((:OPTIONAL ONT::FIGURE) ;(f::situation (f::information f::mental-construct) (f::cause f::mental)))
@@ -2370,6 +2460,12 @@
 	     (:optional ont::FORMAL (f::situation))
              )
  )
+
+(define-type ONT::knowledge-belief
+    :wordnet-sense-keys ("knowledge%1:03:00")
+    :parent ONT::mental-construction
+    :arguments ((:OPTIONAL ONT::FIGURE) ;(f::situation (f::information f::mental-construct) (f::cause f::mental)))
+		))
 
 (define-type ONT::FEELING
     :wordnet-sense-keys ("feeling%1:03:00" "bother%1:09:00" "worry%1:09:00" "sorrow%1:09:00" "distress%1:12:02" "restlessness%1:12:00")
@@ -2467,7 +2563,8 @@
 
 ;; lottery, contest
 (define-type ont::competition
-  :parent ont::process
+  :wordnet-sense-keys ("competition%1:11:00")
+  :parent ont::event-defined-by-activity
   )
 
 ;; game
@@ -2485,6 +2582,10 @@
 (define-type ONT::athletic-game
  :wordnet-sense-keys ("athletics%1:04:00" "sport%1:04:00")
  :parent ONT::sport
+ )
+
+(define-type ONT::court-game
+ :parent ONT::athletic-game
  )
 
 ;; chess
@@ -2580,8 +2681,15 @@
  )
 
 (define-type ont::language
+    :wordnet-sense-keys ("language%1:10:00")
  :parent ont::linguistic-object
  )
+
+
+(define-type ont::question
+    :wordnet-sense-keys ("question%1:10:00")
+    :parent ont::linguistic-object
+    )
 
 ;; prefix, suffix
 (define-type ont::linguistic-component
@@ -2601,12 +2709,14 @@
 
 ;;; there is ont::graphic-symbol; this should be related somehow
 (define-type ONT::punctuation
- :parent ONT::linguistic-object
+    :wordnet-sense-keys ("punctuation%1:10:00")
+    :parent ONT::linguistic-object
  )
 
 ;; letters of the alphabet
 (define-type ONT::letter-symbol
- :parent ONT::linguistic-object
+    :wordnet-sense-keys ("letter%1:10:01")
+    :parent ONT::linguistic-object
 ; :sem (F::Abstr-obj (F::information F::data))
  )
 
@@ -2756,13 +2866,12 @@
 ;;; ----------------------------------------------------------
 
 (define-type ONT::CONSTRAINT
- :wordnet-sense-keys ("control%1:04:00" "restriction%1:09:00" "limitation%1:09:00")
- :wordnet-sense-keys ("control%1:04:00" "restriction%1:09:00" "limitation%1:09:00")
- :parent ONT::SITUATION
- :arguments ((:OPTIONAL ONT::FIGURE)
-;	     (:optional ont::associated-information)
-             )
- )
+    :wordnet-sense-keys ( "restriction%1:09:00" "limitation%1:09:00")
+    :parent ONT::SITUATION
+    :arguments ((:OPTIONAL ONT::FIGURE)
+		(:optional ont::formal)
+		)
+    )
 
 (define-type ONT::NAME
  :parent ONT::IDENTIFICATION
@@ -3262,16 +3371,17 @@
 
 (define-type ONT::HEIGHT-VAL
     :sem (F::Abstr-obj (F::Scale Ont::height-scale))
+    :wordnet-sense-keys ("high%3:00:02" "high%3:00:01" "tall%3:00:00")
     :parent ONT::linear-dimension
     )
 
-(define-type ONT::HIGH-VAL
+#||(define-type ONT::HIGH-VAL
  :parent ONT::linear-dimension
  :wordnet-sense-keys ("high%3:00:02" "high%3:00:01" "tall%3:00:00")
-)
+)||#
 
 (define-type ONT::LOW-VAL
- :parent ONT::linear-dimension
+ :parent ONT::height-val
  :wordnet-sense-keys ("low%3:00:02" "low%3:00:01")
 )
 
@@ -3691,35 +3801,100 @@
 
 (define-type ONT::activity-val
     :comment "predicates relating to whether something is acting as intended for some process"
-  :parent ONT::property-val
- )
+    :parent ONT::property-val
+    :sem (F::Abstr-obj (F::gradability -))
+    :arguments ((:required ONT::FIGURE ((? lof f::phys-obj)
+					   (f::type (? !t2 ont::location))
+					   (F::object-function F::provides-service)))
+	      ))
 
 (define-type ONT::active
  :parent ONT::activity-VAL
  :comment "operating as intended wrt some process"
  ; Words: (W::ACTIVE W::BUSY)
  :wordnet-sense-keys ("busy%3:00:00" "active%3:00:03" "active%3:00:06" "busy%5:00:01:active:06")
- ; Antonym: ONT::INACTIVE (W::PASSIVE W::IDLE)
-  :arguments ((:required ONT::FIGURE ((? lof f::phys-obj))))
+ 
  )
+
+(define-type ONT::ACTIVE-ON
+    :parent ONT::ACTIVE
+    :comment "operating as intended, typically due to some switching on/off"
+    :wordnet-sense-keys ("on%3:00:02")
+    :arguments ((:required ONT::FIGURE (f::phys-obj 
+					(f::type (? !t2 ont::location))
+					(F::object-function F::provides-service-on-off))))
+    )
+
+(define-type ONT::ACTIVE-up
+    :parent ONT::ACTIVE
+    :comment "operating as intended, typically for ongoing available services using up/down"
+    :wordnet-sense-keys ("functioning%3:00:00")
+    :arguments ((:required ONT::FIGURE (f::phys-obj 
+					(f::type (? !t2 ont::location))
+					(F::object-function F::provides-service-up-down))))
+    )
+
+(define-type ONT::ACTIVE-open
+    :parent ONT::ACTIVE
+    :comment "operating as intended, typically a physcal location with operating hours"
+     :wordnet-sense-keys ("OPEN%3:00:02")
+    :arguments ((:required ONT::FIGURE (f::phys-obj 
+					(f::type (? !t2 ont::location))
+					(F::object-function F::provides-service-open-closed))))
+    )
 
 (define-type ONT::INACTIVE
  :parent ONT::activity-VAL
  :comment "not operating as intended wrt some process"
-:wordnet-sense-keys ("passive%3:00:01" "idle%3:00:00")
+ :wordnet-sense-keys ("passive%3:00:01" "idle%3:00:00")
  ; Antonym: ONT::active (W::ACTIVE W::BUSY)
  )
 
+(define-type ONT::INACTIVE-OFF
+    :parent ONT::INACTIVE
+    :comment "not operating as intended, typically due to some switching on/off"
+    :wordnet-sense-keys ("off%3:00:01")
+    :arguments ((:required ONT::FIGURE (f::phys-obj 
+					(f::type (? !t2 ont::location))
+					(F::object-function F::provides-service-on-off))))
+    )
+
+(define-type ONT::INACTIVE-down
+    :parent ONT::INACTIVE
+    :comment "not operating is intended, typically for ongoing available services using up/down"
+    :wordnet-sense-keys ("inoperative%3:00:00")
+    :arguments ((:required ONT::FIGURE (f::phys-obj 
+					(f::type (? !t2 ont::location))
+					(F::object-function F::provides-service-up-down))))
+    )
+
+(define-type ONT::INACTIVE-closed
+    :parent ONT::INACTIVE
+    :comment "not operating as intended,  typically a physcal location with operating hours"
+    :wordnet-sense-keys ("closed%3:00:01")
+    :arguments ((:required ONT::FIGURE (f::phys-obj 
+					(f::type (? !t2 ont::location))
+					(F::object-function F::provides-service-open-closed))))
+    )
+
 (define-type ONT::NOT-IN-WORKING-ORDER-VAL
  :parent ONT::inactive
- :comment "broken/not-operational"
- :sem (F::Abstr-obj (F::gradability -))
+ :comment "broken/not-operational more permanently - needs fixing, not switching on"
  )
+
+(define-type ONT::IN-WORKING-ORDER-VAL
+ :parent ONT::activity-val
+ :comment "operational but not necessarily on"
+
+ )
+
+
 
 (define-type ONT::dependence-val
  :parent ONT::property-val
  :arguments ((:optional ONT::GROUND ((? lof f::phys-obj f::abstr-obj))))  ;;  independent/dependent of X
  )
+
 
 (define-type ONT::DEPENDENT
  :parent ONT::dependence-val
@@ -3910,6 +4085,8 @@
 
 (define-type ONT::inadequate
  :parent ONT::ENOUGH-VAL
+ :arguments ((:required ONT::GROUND (f::phys-obj (f::type ont::material)))
+	     (:required ONT::FIGURE ((? xx  F::phys-obj abstr-obj))))
  ; Words: (W::SHORT W::INADEQUATE W::INSUFFICIENT)
  :wordnet-sense-keys ("inadequate%5:00:00:insufficient:00" "insufficient%3:00:00")
  ; Antonym: ONT::ADEQUATE (W::SUFFICIENT W::ADEQUATE W::ENOUGH)
@@ -4063,7 +4240,8 @@
 
 (define-type ont::age-scale
 ;  :parent ont::scale
-  :parent ont::linear-scale
+;  :parent ont::linear-scale
+  :parent ont::duration-scale
   )
 
 (define-type ont::other-scale

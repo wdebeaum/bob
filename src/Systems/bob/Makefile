@@ -10,10 +10,15 @@ $(IMAGE):: ../../TextTagger/drum-dsl-resources.lisp ../../TextTagger/drum-mappin
 
 CSM_DATA = events goals models
 
+SYS_DATA_DIR = $(etcdir)/bob
+
 install:: install-configs install-data
 
 install-configs:: TextTagger-*.conf
 	$(INSTALL_DATA) $^ $(etcdir)
 
-install-data:: ${CSM_DATA}
-	$(INSTALL_DATA) $^ $(etcdir)
+install-data:: ${CSM_DATA} | ${SYS_DATA_DIR}
+	$(INSTALL_DATA) $^ ${SYS_DATA_DIR}
+
+${SYS_DATA_DIR}:
+	mkdir -p $@

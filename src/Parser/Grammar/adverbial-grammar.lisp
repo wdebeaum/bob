@@ -21,7 +21,7 @@
     ((ADVBL (ARG ?arg) (LF (% PROP (CLASS ?lf) (VAR ?v) (constraint ?newc);(CONSTRAINT (& (?!argmap ?arg)))
                               (sem ?sem) (transform ?transform)))
             ;;(SORT CONSTRAINT)
-      (role ?lf) (particle ?p)
+      (role ?lf) (particle ?p) (particle-role-map ?prm)
       ;; Myrosia 10/25/03 - this is just a stupid trick to make these go into vp-post-role rules
       ;; which ask for subcatsem
       ;; needs to be cleaned up with better role handling in the grammar
@@ -32,7 +32,7 @@
                 (VAR ?v) (SUBCAT -) (LF ?lf) (implicit-arg -) (constraint ?con)
 		(sem ($ F::ABSTR-OBJ (F::intensity ?ints) (F::orientation ?orient) (F::Scale ?scale)))
 		(comparative -) (prefix -)
-		(particle ?p)
+		(particle ?p) (particle-role-map ?prm)
 		)
       )
      (append-conjuncts (conj1 ?con) (conj2 (& (?!argmap ?arg)  (scale ?scale)
@@ -399,7 +399,7 @@
      (ADJP VAR ATYPE SORT ARG COMP-OP PRED ARGUMENT lex headcat transform post-subcat) 
      (NUMBER VAR AGR lex headcat transform)
      (VP vform var agr neg sem subj iobj dobj comp3 part cont gap class subjvar lex headcat transform subj-map tma aux template)
-     (VP- vform var agr neg sem subj iobj dobj comp3 part cont gap class subjvar lex headcat transform subj-map tma aux passive passive-map template)
+     (VP- vform var agr neg sem subj iobj dobj dobjvar comp3 part cont gap class subjvar lex headcat transform subj-map tma aux passive passive-map template)
      (S vform neg cont stype gap sem subjvar dobjvar var  lex headcat transform subj)
      (N1 case VAR AGR MASS SEM Changeagr class reln sort lex headcat transform set-restr)
      (NP case VAR AGR MASS SEM Changeagr class reln sort lex headcat transform status)
@@ -487,8 +487,9 @@
 		(ellipsis -)
 		))
 
-     (advbl (ATYPE POST) (ARGUMENT (% S (sem ?sem))) (GAP -)
+     (advbl (particle -) (ATYPE POST) (ARGUMENT (% S (sem ?sem) (subjvar ?subjvar))) (GAP -)
       ;;(subjvar ?subjvar)   ;Not sure why this was here - maybe for purpose clauses. Leaving it in causes many parses to fail as the SUBJVAR in the new VP is wrecked
+     ;; the SUBJVAR is required in the argument to be able to pass in the subject for things like "the dog walked barking".
       (ARG ?v) (VAR ?mod)
       (role ?advrole) 
       )
@@ -504,6 +505,7 @@
      (head (vp- (VAR ?v) 
 		(seq -)  ;;  post mods to conjoined VPs is very rare
 		(DOBJ (% NP (Var ?npvar) (sem ?sem)))
+		(COMP3 (% -))
 		(constraint ?con) (tma ?tma) (result-present -)
 		;;(subjvar ?subjvar)
 		;;(aux -)   c.f., It had gone bad
@@ -521,14 +523,16 @@
      (add-to-conjunct (val (RESULT ?mod)) (old ?con) (new ?new))
      )
 
-        ((vp- (constraint ?new) (tma ?tma) (class (? class ONT::EVENT-OF-CAUSATION)) (var ?v)
+    ;;  resultative construction using adjectives with intransitives: e.g., the water froze solid
+    ((vp- (constraint ?new) (tma ?tma) (class (? class ONT::EVENT-OF-CAUSATION)) (var ?v)
          ;;(LF (% PROP (constraint ?new) (class ?class) (sem ?sem) (var ?v) (tma ?tma)))
+      (SUBJ (% NP (Var ?npvar) (LEX ?LEX) (sem ?sem)))
       (advbl-needed -) (complex +) (result-present +) (subjvar ?subjvar)(GAP ?gap)
       )
      -vp-result-with-intransitive> .98   ;;  want to prefer explicitly subcategorized attachments
      (head (vp- (VAR ?v) 
 		(seq -)  ;;  post mods to conjoined VPs is very rare
-		(DOBJ -)
+		(DOBJVAR -)  ; cannot use (dobj -) because dobj is (% - (W::VAR -)) 
 		(SUBJ (% NP (Var ?npvar) (LEX ?LEX) (sem ?sem)))
 		(constraint ?con) (tma ?tma) (result-present -)
 		;;(subjvar ?subjvar)
@@ -537,7 +541,8 @@
 		(ellipsis -)
 		))
      (adjp (ARGUMENT (% NP (sem ?sem))) 
-      (SEM ($ f::abstr-obj (F::type (? ttt ONT::path))))
+;      (SEM ($ f::abstr-obj (F::type (? ttt ONT::path))))
+      (SEM ($ f::abstr-obj (F::type (? ttt ont::position-reln ont::domain-property))))
       (GAP -)
       ;; (subjvar ?subjvar)
       (SET-MODIFIER -)  ;; mainly eliminate numbers 
@@ -548,13 +553,80 @@
      )
 
      
-
-      ;;  resultative construction using adverbs: e.g., sweep the dust into the corner
+    ;;  resultative construction using adverbs: e.g., I walked to the store
     ((vp- (constraint ?new) (tma ?tma) (class (? class ONT::EVENT-OF-CAUSATION)) (var ?v)
          ;;(LF (% PROP (constraint ?new) (class ?class) (sem ?sem) (var ?v) (tma ?tma)))
-      (advbl-needed -) (complex +) (result-present +) (subjvar ?subjvar)(GAP ?gap)
+;      (advbl-needed -) (complex +) (result-present +) (GAP ?gap)
+      (SUBJ (% NP (Var ?npvar) (sem ?sem) (lex ?lex)))
+      (subjvar ?npvar)
+      (advbl-needed -) (complex +) (GAP ?gap)
       )
-     -vp-result-advbl>  
+     -vp-result-advbl-intransitive>  
+     (head (vp- (VAR ?v) 
+		(seq -)  ;;  post mods to conjoined VPs is very rare
+		(DOBJVAR -)  ; cannot use (dobj -) because dobj is (% - (W::VAR -)) 
+		(SUBJ (% NP (Var ?npvar) (sem ?sem) (lex ?lex)))  
+		(subjvar ?npvar)
+		(constraint ?con) (tma ?tma) (result-present -)
+		;;(aux -) 
+		(gap ?gap)
+		(ellipsis -)
+		))
+
+     (advbl (ARGUMENT (% NP ;; (? xxx NP S)  ;; we want to eliminate V adverbials, he move quickly  vs he moved into the dorm
+			 (sem ?sem) (var ?npvar)))
+      (GAP -)
+      ;; (subjvar ?subjvar)
+      (SEM ($ f::abstr-obj (F::type (? ttt ont::path ont::position-reln))))
+;      (SEM ($ f::abstr-obj (F::type (? ttt ont::position-reln ont::goal-reln ont::direction-reln))))
+      (SET-MODIFIER -)  ;; mainly eliminate numbers 
+      (ARG ?npvar) (VAR ?mod)
+      ;;(role ?advrole) 
+      )
+     (add-to-conjunct (val (mod ?mod)) (old ?con) (new ?new))  ; do not change the mod to RESULT!  TRANSIENT-RESULT also uses this rule
+     )
+
+    
+    ;;  resultative construction using adverbs: e.g., sweep the dust into the corner
+    ;; only allow one of these
+    ((vp- (constraint ?new) (tma ?tma) (class (? class ONT::EVENT-OF-CAUSATION)) (var ?v)
+         ;;(LF (% PROP (constraint ?new) (class ?class) (sem ?sem) (var ?v) (tma ?tma)))
+;      (advbl-needed -) (complex +) (result-present +) (GAP ?gap)
+      (advbl-needed -) (complex +) (GAP ?gap) (result-present +)
+      )
+     -vp-result-advbl-no-particle>  
+     (head (vp- (VAR ?v) 
+		(seq -)  ;;  post mods to conjoined VPs is very rare
+		(DOBJ (% NP (Var ?npvar) (sem ?sem)))
+		(COMP3 (% -))
+		(constraint ?con) (tma ?tma) (result-present -)
+		;;(subjvar ?subjvar)
+		;;(aux -) 
+		(gap ?gap)
+		(ellipsis -)
+		))
+
+     (advbl (ARGUMENT (% NP ;; (? xxx NP S)  ;; we want to eliminate V adverbials, he move quickly  vs he moved into the dorm
+			 (sem ?sem))) (GAP -)
+      ;; (subjvar ?subjvar)
+      (SEM ($ f::abstr-obj (F::type (? ttt ont::path ont::position-reln))))
+	      ;;(F::type (? !ttt1 ont::position-as-extent-reln ont::position-w-trajectory-reln )))) ; take the trajectory senses instead of the position-as-extent-reln senses of words such as "across"
+;      (SEM ($ f::abstr-obj (F::type (? ttt ont::position-reln ont::goal-reln ont::direction-reln))))
+      (SET-MODIFIER -)  ;; mainly eliminate numbers 
+      (ARG ?npvar) (VAR ?mod)
+      ;;(role ?advrole) 
+      )
+     (add-to-conjunct (val (mod ?mod)) (old ?con) (new ?new))  ; do not change the mod to RESULT!  TRANSIENT-RESULT also uses this rule
+     )
+
+    ;; put the box down in the corner
+    ;;  we can allow two RESULTS if the first one is a particle
+     ((vp- (constraint ?new) (tma ?tma) (class (? class ONT::EVENT-OF-CAUSATION)) (var ?v)
+         ;;(LF (% PROP (constraint ?new) (class ?class) (sem ?sem) (var ?v) (tma ?tma)))
+;      (advbl-needed -) (complex +) (result-present +) (GAP ?gap)
+      (advbl-needed -) (complex +) (GAP ?gap) ;(result-present +)
+      )
+     -vp-result-advbl-particle>  
      (head (vp- (VAR ?v) 
 		(seq -)  ;;  post mods to conjoined VPs is very rare
 		(DOBJ (% NP (Var ?npvar) (sem ?sem)))
@@ -566,9 +638,10 @@
 		))
 
      (advbl (ARGUMENT (% NP ;; (? xxx NP S)  ;; we want to eliminate V adverbials, he move quickly  vs he moved into the dorm
-			 (sem ?sem))) (GAP -)
+			 (sem ?sem))) (GAP -) (particle +)
       ;; (subjvar ?subjvar)
-      (SEM ($ f::abstr-obj (F::type (? ttt ONT::position-reln ont::path))))
+      (SEM ($ f::abstr-obj (F::type (? ttt ont::path ont::position-reln))))
+;      (SEM ($ f::abstr-obj (F::type (? ttt ont::position-reln ont::goal-reln ont::direction-reln))))
       (SET-MODIFIER -)  ;; mainly eliminate numbers 
       (ARG ?npvar) (VAR ?mod)
       ;;(role ?advrole) 
@@ -576,9 +649,9 @@
      (add-to-conjunct (val (RESULT ?mod)) (old ?con) (new ?new))
      )
 
-;; to kill by immersing in water
- ((vp- (constraint ?new) (tma ?tma) (class ?class) (sem ?sem) (var ?v)
-         ;;(LF (% PROP (constraint ?new) (class ?class) (sem ?sem) (var ?v) (tma ?tma)))
+    ;; to kill by immersing in water
+    ((vp- (constraint ?new) (tma ?tma) (class ?class) (sem ?sem) (var ?v)
+      ;;(LF (% PROP (constraint ?new) (class ?class) (sem ?sem) (var ?v) (tma ?tma)))
       (advbl-needed -) (complex +) (GAP ?!gap)
       )
      -adv-ganged-gap-vp-post> 
@@ -728,17 +801,18 @@
     ;; TEST: The dog at the store.
     ;; TEST: The route from the house to the store.
     ((N1 (RESTR ?new) (POSTADVBL +) (COMPLEX +)) 
-     -adv-np-post> .98
+     -adv-np-post> 
      (head (N1 (VAR ?v1) ;; (POSTADVBL -) 
 	    (SEM ?argsem)  (RESTR ?restr) ;;(gerund -)   Have to allow gerunds e.g., the debating at the house.
 	    (post-subcat -) (SORT PRED)
 	    (no-postmodifiers -) ;; exclude "the same path as the battery" and advbl attaching to "path"
-	    (particle -)  ;; exclude particles as they should attach to the verb
 	    
 	    ))
      (advbl (ATYPE POST)
       (ARGUMENT (% NP (sem ?argsem) (constraint ?c)  ))
+      (SEM ($ f::abstr-obj (F::type (? ttt ont::predicate))))
       (arg ?v1) (VAR ?mod) (WH -) (GAP -)
+      (particle -)  ;; exclude particles as they should attach to the verb
       )
      (add-to-conjunct (val (MODS ?mod)) (old ?restr) (new ?new))
      )
@@ -912,7 +986,7 @@
       (add-to-conjunct (val (MODS ?advbv)) (old ?con) (new ?newc))
      
       )
-
+#||
     ;;   more/as/so ADJP than/as/that 
     ;;   e.g., more sensitive than that
     ((ADJP (LF (% PROP (CLASS ?lf) (VAR ?v) (CONSTRAINT ?newc) (sem ?sem)))
@@ -951,7 +1025,7 @@
      ;;(np (var ?vnp))
      (add-to-conjunct (val (& (figure ?arg) (ground ?vg) (?sc-map ?vsc))) (old ?con) (new ?newc))
      )
-
+||#
     
 
     ;;  as ADJ as-PP
@@ -1050,7 +1124,9 @@
      (S (var ?vs))
      (add-to-conjunct (val (ground ?vs)) (old ?con) (new ?newc))
      )
-||#
+     ||#
+
+     #|
     ;; TEST: red enough
     ((ADJP (LF (% PROP (CLASS ?c) (VAR ?v) (CONSTRAINT ?newc) (sem ?sem)))
            (val ?val) (agr ?agr) (mass ?mass) (var ?v) (ARG ?arg) (gap ?gap)
@@ -1068,6 +1144,7 @@
      (add-to-conjunct (val (MODS ?advbv)) (old ?con) (new ?newc))
      
      )
+|#
 
     ;;  ADV modification
     ;; TEST: very quickly 
@@ -1173,6 +1250,20 @@
 		      ))
      )
 
+    ;; TEST: more than five (trucks)
+    ((number (agr ?agr) (VAR ?v) (MASS ?mn) (lf ?lf) (sem ?sem) (premod +) ;;(val ?val)
+	     (nobarespec +) ; this can't be a specifier -- that goes through the cardinality rules
+	     (restr (& (mods (% *PRO* (status ont::F) (class ?lfa) (var ?v1) 
+				(constraint (& (FIGURE ?v) 
+					       (GROUND (% *PRO* (status ont::indefinite) (var *) (class ont::number) (constraint (& (value ?val)))))))))))
+	     )
+     -advbl-bare-number-pre-than>
+     (adv (VAR ?v1) (argument (% number)) (Mass ?m) (lf ?lfa))
+     (word (lex w::than))
+     (head (number (VAR ?v) (lf ?lf) (lex ?l) (agr ?agr) (MASS ?mn) (sem ?sem) (val ?val) (premod -)
+		      ))
+     )
+    
     ;; TEST: eight or so
     ((number (agr ?agr) (VAR ?v) (MASS ?mn) (lf ?lf) (sem ?sem) (premod +) ;;(val ?val)
 	     (nobarespec +) ; this can't be a specifier -- that goes through the cardinality rules
@@ -1336,18 +1427,18 @@
    ;; TEST: walk a short distance
    ;; TEST: The market fell three percent
    ((advbl (arg ?arg) ;;(role (:* ONT::distance W::quantity)) 
-     (var *)
+     (var *) (subj ?anysubj)
 	   (sort binary-constraint)
 	   (LF (% PROP (VAR *) (CLASS ONT::extent-predicate) (sem ?sem)
 		  (CONSTRAINT (& (FIGURE ?arg) (scale ?scale) (GROUND ?v)))))
 	   (atype (? x W::PRE W::POST))
-     (argument (% W::S
+     (argument (% W::S (subjvar ?anysubj)
                           ;; W::NP
 			  ;; W::VP)
-		  (SEM (? SEM8044 ($ F::event-of-change))))) ;;SITUATION (F::trajectory +)))))))
+		  (SEM ($ F::situation (f::type (? xx ont::event-of-action)))))) ;;SITUATION (F::trajectory +)))))))
      )
     -distance-np-advbl> .97
-    (head (np (var ?v) (sort unit-measure) (sem ?sem) 
+    (head (np (var ?v) (sort unit-measure) (sem ?sem)  
 	      (bare -) ;; we suppress this rule for distances without a specific amount (e.g., "miles")
 	      ;; the semantic restriction is not sufficient to prevent measure-unit phrases such as "a bit" or "a set" as distances so using the lfs to restrict
 	      (lf (% description (constraint (& (scale ?scale)))))
@@ -1362,7 +1453,7 @@
       ;; TEST: Barking, the dog chased the cat.
    ;; TEST: The dog chased the cat barking.
    ((advbl (arg ?arg) (sem ($ f::abstr-obj (f::information -) (f::intentional -)))
-     (argument (% S (sem ($ f::situation (f::aspect f::dynamic))))) 
+     (argument (% S (sem ($ f::situation (f::aspect f::dynamic))) (subjvar ?!subjvar) (subj ?!subj))) 
      (sort pred) (gap -) (atype (? atp pre post))
      (role ONT::MANNER) (var **)
      (LF (% PROP (CLASS ONT::IMPLICIT-OVERLAP) (VAR **) 
@@ -1372,8 +1463,10 @@
     -vp-ing-advbl> .98
     (head (vp (vform ing) (var ?v) (gap -) (aux -) (advbl-necessary -)
 	   (constraint ?con)  (transform ?transform) (class ?class)
-	   (subj (% np (sem ?subjsem)))
-	   (subjvar (% *PRO* (VAR *) (gap -) (sem ?subjsem)))
+	   (subj (% np (sem ?subjsem) (gap -)))
+	   ;(subjvar (% *PRO* (VAR *) (gap -) (sem ?subjsem)))
+	   (subjvar ?!subjvar)
+	   (subj ?!subj)
 	   ))
     )
 #||   I don't think we can distinguish RESULT well from temporal overlap
@@ -1416,7 +1509,7 @@
        (LF (% PROP (var *) (CLASS ONT::EXCLUSIVE) 
 	        (Constraint (& (FIGURE ?arg) (GROUND ?v)))))
       (ATYPE w::post) (focus ?v)
-      (ARGUMENT (% (? x W::VP W::S)))
+      (ARGUMENT (% (? x W::VP W::S) (subjvar ?subjv)))
       (SEM ?sem))
      -myself-as-advbl> .98
      (head (np  (var ?v) (REFL +) (PRO +)
@@ -1430,7 +1523,7 @@
 	        (Constraint (& (FIGURE ?arg) (GROUND ?v)))))
       (ATYPE (? xx w::post w::pre w::pre-vp)) (focus ?v)
       (lex ?hlex) (headcat ?hcat)
-      (ARGUMENT (% (? x W::VP W::S)))
+      (ARGUMENT (% (? x W::VP W::S) (subjvar ?subjv)))
       (SEM ?sem))
      -by-myself-as-advbl> .98
      (word (lex by))
@@ -1443,8 +1536,9 @@
        (LF (% PROP (var *) (CLASS ONT::EXCLUSIVE) 
 	        (Constraint (& (FIGURE ?arg) (GROUND ?v)))))
       (ATYPE (? xx w::post w::pre w::pre-vp)) (focus ?v)
-      (lex ?hlex) (headcat ?hcat)
-      (ARGUMENT (% (? x W::VP W::S)))
+      (lex ?hlex) (headcat ?hcat) 
+      
+      (ARGUMENT (% (? x W::VP W::S) (subjvar ?subjv)))
       (SEM ?sem))
      -all-by-myself-as-advbl> .98
      (word (lex all))

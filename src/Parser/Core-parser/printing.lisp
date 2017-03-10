@@ -3,7 +3,8 @@
 ;;;
 ;;; Author:  James Allen <james@cs.rochester.edu>
 ;;;
-;;; Time-stamp: <Wed Jul 20 09:30:35 EDT 2016 jallen>
+
+;;; Time-stamp: <Tue Feb 28 10:08:21 EST 2017 jallen>
 
 (in-package "PARSER")
 
@@ -869,7 +870,7 @@ usually not be 0 for speech. Also it finds one path quickly in order to set the 
   (pprint-logical-block (stream nil :prefix ":(" :suffix ")")
     (cond 
      ;; A hack! always assumes arrays are sems. 
-     ((arrayp values)
+     ((and (arrayp values) (not (stringp values)))
       (let* ((vallist (build-list-from-sem-array values));;(remove-packages (build-list-from-sem-array values)))
 	     )
 	;; Now we go to write features
@@ -890,6 +891,8 @@ usually not be 0 for speech. Also it finds one path quickly in order to set the 
 	  (pprint-exit-if-list-exhausted)
 	  (write-char #\Space stream) 
 	  (pprint-newline :fill stream))))
+     ((stringp values)
+      )
      (t
       (format-term values features stream))))
   )
@@ -1225,16 +1228,18 @@ usually not be 0 for speech. Also it finds one path quickly in order to set the 
 	    (if (eql (list-length reduced-val) 0)
 		nil
 		(if (eql (list-length reduced-val) 1)
-		    (if (null (car val))
+		    (car val)
+		    #||(if (null (car val))    ;; this is commented out as it generates stuff that not a valif LF form at times
 			nil
 			(if negated
 			    (list 'ONT::NOT (car reduced-val))
-			    (car val)))
+			    (car val)))||#
 		    (if (eq (car val) '$)
 			(mapcar #'clean-out-vars reduced-val)
-			(if negated
+			(car val)))))
+			#||(if negated
 			    (list 'ONT::NOT (cons 'ont::or reduced-val))
-			    (cons 'ONT::or reduced-val))))))
+			    (cons 'ONT::or reduced-val))))))||#
 	  val)))
    ((consp expr)
     (mapcar #'clean-out-vars expr))
@@ -1868,12 +1873,23 @@ usually not be 0 for speech. Also it finds one path quickly in order to set the 
       old-role-name))
 
 (defun return-first-refinement (new-names old-role-name existing-roles)
-  (if new-names
-      (if (not (or (eq (car new-names) old-role-name) (member (car new-names) existing-roles)))
-	  (car new-names)
-	  (return-first-refinement (cdr new-names) old-role-name existing-roles))
-      old-role-name))
-					    
+  (let ((really-new-names (remove-if #'(lambda (x)
+				  (eq x old-role-name)) new-names)))
+    (cond 
+      ;; first case checks for relational roles that we can have multiple versions of
+      ((member (car really-new-names)
+		   '(:result :source :transient-result))
+	   (car really-new-names))
+      ;; otherwise we look for first one that doesn't already exist
+      ((member (car really-new-names) existing-roles)
+       (return-first-refinement really-new-names old-role-name existing-roles))
+      ;; otherwise, the first one is the answer
+      (really-new-names 
+       (car really-new-names))
+      ;; none left, retrn original name
+      (t old-role-name))))
+
+      					    
 						
 (setq *role-mapping-table*
       '(
@@ -1885,32 +1901,33 @@ usually not be 0 for speech. Also it finds one path quickly in order to set the 
 	(ont::motion
 	 ((ont::pos-as-containment-reln) :location)
 	 ((ont::to-loc ont::position-reln ont::goal-reln ont::direction-reln) :result)
-	 ((ont::from-loc ont::from) :source)
-	 
+	 ((ont::source-reln) :source)
+	 ((ont::obj-in-path ont::trajectory) :transient-result)
 	 )
 	(ont::put
 	 ((ont::to-loc ont::position-reln ont::goal-reln  ont::direction-reln) :result)
-	 ((ont::from-loc ont::from) :source)
+	 ((ont::source-reln) :source)
 	 )
 	(ont::apply-force
 	 ((ont::to-loc ont::position-reln ont::goal-reln  ont::direction-reln) :result)
-	 ((ont::from-loc ont::from) :source)
+	 ((ont::source-reln) :source)
+	 ((ont::obj-in-path ont::trajectory) :transient-result)
 	 )
 	(ont::giving
 	 ((ont::to-loc) :result)
-	 ((ont::from-loc ont::from) :source)
+	 ((ont::source-reln) :source)
 	 )
 	(ont::acquire 
 	  ((ont::to-loc ont::position-reln ont::goal-reln  ont::direction-reln) :result)
-	 ((ont::from-loc ont::from) :source)
+	 ((ont::source-reln) :source)
 	 )
 	(ont::joining 
 	  ((ont::goal-reln) :result)  ; into
-	 ((ont::from-loc ont::from) :source)
+	 ((ont::source-reln) :source)
 	 )
 	(ont::change
 	  ((ont::to-loc ont::goal-reln ont::direction-reln) :result)
-	  ((ont::from-loc ont::from) :source))
+	  ((ont::source-reln) :source))
 	(ont::phys-object 
 	 ((ont::position-reln ) :location))
 	 ;;((ont::assoc-with) :assoc-with))
@@ -1920,6 +1937,7 @@ usually not be 0 for speech. Also it finds one path quickly in order to set the 
 	 ((ont::degree-modifier) :degree)
 	 )
 	(ont::situation-root
+	 ((ont::goal-reln) :result)
 	 ((ont::reason ont::purpose) :reason)
 	 ((ont::therefore) :result)
 	 ((ont::extent-predicate) :extent)
@@ -1933,10 +1951,10 @@ usually not be 0 for speech. Also it finds one path quickly in order to set the 
 	 ((ont::pos-condition) :condition)
 	 ;;((ont::goal-reln) :goal)
 	 ((ont::position-reln ) :location)
-	 ((ont::accompaniment) :partner)
+	 ((ont::accompaniment) :agent1)
 	 ((ont::by-means-of) :method)
 	 ((ont::beneficiary) :beneficiary)
-	 ((ont::from-loc ont::from) :source)
+	 ((ont::source-reln) :source)
 	 ((ont::manner ont::abstract-object-property ) :manner)
 	 ((ont::likelihood ont::qualification) :qualification)
 	 )

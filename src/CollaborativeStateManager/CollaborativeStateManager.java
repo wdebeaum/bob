@@ -14,7 +14,6 @@ package TRIPS.CollaborativeStateManager;
 
 import handlers.*;
 import extractors.*;
-
 import plans.*;
 
 import java.io.BufferedReader;
@@ -26,7 +25,6 @@ import java.io.InputStreamReader;
 import java.io.File;
 import java.util.*;
 import java.math.*;
-
 
 import TRIPS.KQML.*;
 import TRIPS.TripsModule.StandardTripsModule;
@@ -42,7 +40,9 @@ public class CollaborativeStateManager extends StandardTripsModule  {
     private String hostName;
     private OntologyReader ontologyReader;
     private GoalPlanner goalPlanner;
+    private ReferenceHandler referenceHandler;
     private final String BASE_DIRECTORY = System.getenv("TRIPS_BASE");
+    private String DATA_DIRECTORY = BASE_DIRECTORY + File.separator + "etc";
     
     //
     // 3. You should provide the following two constructors,
@@ -79,6 +79,8 @@ public class CollaborativeStateManager extends StandardTripsModule  {
     //    End by calling ready() to tell the facilitator that the module
     //    is ready to receive messages.
     //
+    
+    
 
     /**
      * StandardTripsModule initialization method.
@@ -87,14 +89,17 @@ public class CollaborativeStateManager extends StandardTripsModule  {
     public void init() {
 	// Unless overriden by parameters...
 	name = "CSM";
+	
 	// Perform standard initializations
 	super.init();
-	
-	goalPlanner = new GoalPlanner();
+	handleParameters();
+	referenceHandler = new ReferenceHandler();
+	goalPlanner = new GoalPlanner(referenceHandler);
 	ontologyReader = new OntologyReader();
-	ontologyReader.readEventOntologyFromFile(BASE_DIRECTORY + File.separator + "etc" + File.separator + "events");
-	ontologyReader.readGoalOntologyFromFile(BASE_DIRECTORY +File.separator + "etc" + File.separator + "goals");
-	ontologyReader.readModelOntologyFromFile(BASE_DIRECTORY +File.separator + "etc" + File.separator + "models");
+	ontologyReader.readEventOntologyFromFile(DATA_DIRECTORY + File.separator + "events");
+	ontologyReader.readGoalOntologyFromFile(DATA_DIRECTORY + File.separator + "goals");
+	ontologyReader.readModelOntologyFromFile(DATA_DIRECTORY + File.separator + "models");
+	
 	// Subscriptions
 	try {
 	    KQMLPerformative perf =
@@ -168,6 +173,16 @@ public class CollaborativeStateManager extends StandardTripsModule  {
 	ready();
     }
 
+    /*
+     * Handles command-line parameters.
+     */
+    protected void handleParameters() {
+        String value;
+	if ((value = getParameter("-data")) != null) {
+	    DATA_DIRECTORY = value;
+	}
+    }
+    
     //
     // 5. You need handlers for any messages you expect to receive.
     //    Look at TRIPS.TripsModule.TripsModule for a list of these
@@ -184,6 +199,7 @@ public class CollaborativeStateManager extends StandardTripsModule  {
      */
     @Override
     public void receiveTell(KQMLPerformative msg, Object contentobj) {
+    	
 		if (!(contentobj instanceof KQMLList)) {
 		    errorReply(msg, "content was not a list");
 		    return;
@@ -248,9 +264,22 @@ public class CollaborativeStateManager extends StandardTripsModule  {
 		{
 			KQMLObject replyWith = msg.getParameter(":REPLY-WITH");
 			InterpretSpeechActHandler isah = new InterpretSpeechActHandler(msg, content, 
+													referenceHandler,
 													goalPlanner, ontologyReader);
 
-			KQMLList responseContent = isah.process();
+			
+			KQMLList responseContent = null;
+			try {
+				responseContent = isah.process();
+			}
+			catch (RuntimeException re)
+			{
+				re.printStackTrace();
+				KQMLPerformative replyMessage = new KQMLPerformative("SORRY");
+				KQMLString comment = new KQMLString("Exception in CSM");
+				replyMessage.setParameter(":COMMENT", comment);
+				reply(msg, replyMessage);
+			}
 			if (responseContent != null)
 			{
 				sendContentViaPerformative("TELL", "DAGENT", responseContent, replyWith);
@@ -261,8 +290,20 @@ public class CollaborativeStateManager extends StandardTripsModule  {
 		{
 			KQMLObject replyWith = msg.getParameter(":REPLY-WITH");
 			
-			TakeInitiativeHandler tih = new TakeInitiativeHandler(msg, content, goalPlanner, ontologyReader);
-			KQMLList responseContent = tih.process();
+			TakeInitiativeHandler tih = new TakeInitiativeHandler(msg, content, referenceHandler,
+															goalPlanner, ontologyReader);
+			KQMLList responseContent = null;
+			try {
+				responseContent = tih.process();
+			}
+			catch (RuntimeException re)
+			{
+				re.printStackTrace();
+				KQMLPerformative replyMessage = new KQMLPerformative("SORRY");
+				KQMLString comment = new KQMLString("Exception in CSM");
+				replyMessage.setParameter(":COMMENT", comment);
+				reply(msg, replyMessage);
+			}
 			if (responseContent != null)
 			{
 				sendContentViaPerformative("TELL", "DAGENT", responseContent, replyWith);
@@ -272,8 +313,19 @@ public class CollaborativeStateManager extends StandardTripsModule  {
 		else if (content0.equalsIgnoreCase("update-csm"))
 		{
 			KQMLObject replyWith = msg.getParameter(":REPLY-WITH");	
-			UpdateCSMHandler uch = new UpdateCSMHandler(msg, content, goalPlanner);
-			KQMLList responseContent = uch.process();
+			UpdateCSMHandler uch = new UpdateCSMHandler(msg, content, referenceHandler, goalPlanner);
+			KQMLList responseContent = null;
+			try {
+				responseContent = uch.process();
+			}
+			catch (RuntimeException re)
+			{
+				re.printStackTrace();
+				KQMLPerformative replyMessage = new KQMLPerformative("SORRY");
+				KQMLString comment = new KQMLString("Exception in CSM");
+				replyMessage.setParameter(":COMMENT", comment);
+				reply(msg, replyMessage);
+			}
 			if (responseContent != null)
 			{
 				sendContentViaPerformative("TELL", "DAGENT", responseContent, replyWith);
@@ -283,8 +335,20 @@ public class CollaborativeStateManager extends StandardTripsModule  {
 		else if (content0.equalsIgnoreCase("query-csm"))
 		{
 			KQMLObject replyWith = msg.getParameter(":REPLY-WITH");
-			QueryCSMHandler qch = new QueryCSMHandler(msg, content);
-			KQMLList responseContent = qch.process();
+			QueryCSMHandler qch = new QueryCSMHandler(msg, content, referenceHandler,
+														goalPlanner, ontologyReader);
+			KQMLList responseContent = null;
+			try {
+				responseContent = qch.process();
+			}
+			catch (RuntimeException re)
+			{
+				re.printStackTrace();
+				KQMLPerformative replyMessage = new KQMLPerformative("SORRY");
+				KQMLString comment = new KQMLString("Exception in CSM");
+				replyMessage.setParameter(":COMMENT", comment);
+				reply(msg, replyMessage);
+			}
 			if (responseContent != null)
 			{
 				sendContentViaPerformative("TELL", "DAGENT", responseContent, replyWith);
@@ -307,9 +371,9 @@ public class CollaborativeStateManager extends StandardTripsModule  {
     	if (receiver == null)
     		receiver = "NIL";
     	if (content == null)
-    		content = new KQMLString("NIL");
+    		content = new KQMLList();
     	if (replyWith == null)
-    		replyWith = new KQMLString("NIL");
+    		replyWith = new KQMLList();
 		KQMLPerformative performative = new KQMLPerformative(performativeType);
 		performative.setParameter(":RECEIVER", receiver);
 		performative.setParameter(":CONTENT", content);
@@ -382,7 +446,7 @@ public class CollaborativeStateManager extends StandardTripsModule  {
 	private void resetSystem()
 	{
 		
-		goalPlanner = new GoalPlanner();
+		goalPlanner = new GoalPlanner(referenceHandler);
 	}
     
 	
@@ -399,6 +463,8 @@ public class CollaborativeStateManager extends StandardTripsModule  {
 			dispatcher.shutdown();
 		}
 	}
+	
+	
 	
 	private void shutdown()
 	{

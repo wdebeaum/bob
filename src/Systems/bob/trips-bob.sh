@@ -25,47 +25,50 @@ TRIPS_PORT_DEFAULT=6200
 TRIPS_SYSNAME=bob
 TRIPS_SYSNAME_ALLCAPS=`echo $TRIPS_SYSNAME | tr "[:lower:]" "[:upper:]"`
 
-# on Macs DISPLAY is set automatically, but is not a value we'd want to use
-#if test ! -z "$DISPLAY"; then
-#    TRIPS_DISPLAY=$DISPLAY;
-#fi
 
 #############################################################################
 #
 # Command-line
 
-usage='trips-bob [-debug true] [-port 6200] [-display tty] [-nouser] [-nolisp] [-tt-mode bob] [-tt-conf FILE] [-batch LISP-FILE] [-logdir DIR] [-graphviz-display true]'
+usage='trips-$TRIPS_SYSNAME [-debug] [-port 6200] [-logdir DIR] [-nouser] [-nolisp] [-nocsm] [-nochat] [-tt-mode bob] [-tt-conf FILE] [-batch LISP-FILE] [-graphviz-display true] [-showgen] [-showtraffic] [-display tty]'
 
-logdir=''
 debug=false
 port=''
+logdir=''
 display=''
-nolisp=''
-nocsm=''
-nochat=''
 graphviz_display=false
 batch=''
 tt_mode=$TRIPS_SYSNAME
 tt_conf=''
-nouser=''
 channel=Desktop
-nogen=false
+nospeechout=t
+nochat=''
 nobeep=''
+# dev options
+nouser=''
+nolisp=''
+nocsm=''
+showgen=false
+showtraffic=''
 
 while test ! -z "$1"; do
     case "$1" in
 	-port)		port="$2";	shift;;
-	-tt-mode)      	tt_mode="$2";	shift;;
-	-tt-conf)	tt_conf="$2";	shift;;
 	-display)	display="$2";	shift;;
 	-logdir)	logdir="$2";	shift;;
-	-debug)		debug="$2";	shift;;
+	-debug)		debug=t;;
+	-nodebug)	debug='';;
 	-nouser)	nouser=t;;
-        -nobeep)        nobeep=t;;
-        -nogen)         nogen=t;;
 	-nolisp)	nolisp=t;;
 	-nocsm)		nocsm=t;;
 	-nochat)	nochat=t;;
+	-nospeechout)	nospeechout=t;;
+	-nobeep)	nobeep=t;;
+	-quiet)		nobeep=t;;
+	-showgen)	showgen=t;;
+	-showtraffic)	showtraffic=t;;
+	-tt-mode)	tt_mode="$2";	shift;;
+	-tt-conf)	tt_conf="$2";	shift;;
 	-graphviz-display)	graphviz_display="$2";	shift;;
 	-batch)		batch="$2";	shift;;
 	-help|-h|-\?)
@@ -92,8 +95,7 @@ TRIPS_SOCKET=${TRIPS_HOST_DEFAULT}:${TRIPS_PORT}
 export TRIPS_SOCKET
 port_opt="-connect $TRIPS_SOCKET"
 
-# set default character encoding to UTF-8 since the test paragraphs have
-# multibyte characters
+# set default character encoding to UTF-8
 export LC_ALL=en_US.UTF-8
 export JAVA_TOOL_OPTIONS=-Dfile.encoding=UTF-8
 
@@ -112,11 +114,6 @@ else
 fi
 original_cwd=`pwd`
 cd "$logdir" || exit 1
-
-#############################################################################
-#
-# Here we go...
-#
 
 # Clean up any child process when we die
 # Note [LG, 2011/03/11]: We used to use pkill to kill subprocesses. Turns out 
@@ -141,11 +138,17 @@ rkill() {
     kill -9 $1 > /dev/null 2>&1
 }
 
+#############################################################################
+#
+# Here we go...
+#
+
 # The following will be sent to the facilitator (via stdin) once it starts
 cat - <<_EOF_ >/tmp/trips$$
 (register :name init)
 (tell :content (status ready))
 _EOF_
+
 if test "$display" != "tty" -a -z "$nouser" -a -z "$nochat"; then
 cat - <<_EOF_ >>/tmp/trips$$
 (request
@@ -163,62 +166,64 @@ cat - <<_EOF_ >>/tmp/trips$$
                   -channel $channel
                   -title "$TRIPS_SYSNAME_ALLCAPS: Chat"
                   -beep $beep_kbd
-		  -showGenerate $nogen
+		  -showGenerate $showgen
 		  $port_opt)))
 _EOF_
 fi
 
-# SpeechOut
-# We don't use speech-out at all (run SpeechOutNot for transcript)
+# Conceptualizer
 cat - <<_EOF_ >>/tmp/trips$$
 (request
  :receiver facilitator
  :content (start-module
-           :name speech-out
-           :class TRIPS.SpeechOutNot.SpeechOutNot
-           :urlclasspath ("$TRIPS_BASE/etc/java/TRIPS.SpeechOutNot.jar"
-                          "$TRIPS_BASE/etc/java/TRIPS.TripsModule.jar"
-                          "$TRIPS_BASE/etc/java/TRIPS.KQML.jar"
-                          "$TRIPS_BASE/etc/java/TRIPS.util.jar")
-	   :argv ($port_opt)
-))
-_EOF_
-
-# Conceptualizer
-cat - <<_EOF_ >>/tmp/trips$$
-(request
-    :receiver facilitator
-    :content (start-module
-    :name Conceptualizer
-    :class TRIPS.Conceptualizer.Conceptualizer
-    :urlclasspath ("$TRIPS_BASE/etc/java/TRIPS.Conceptualizer.jar"
-                "$TRIPS_BASE/etc/java/TRIPS.TripsModule.jar"
-                "$TRIPS_BASE/etc/java/TRIPS.KQML.jar"
-                "$TRIPS_BASE/etc/java/TRIPS.util.jar"
-                "$TRIPS_BASE/etc/java/json-simple-1.1.1.jar"
-                "$TRIPS_BASE/etc/java/jblas-1.2.3.jar"
-                "$TRIPS_BASE/src/Conceptualizer/src")
-    :argv ($port_opt $TRIPS_SYSNAME)))
+	:name Conceptualizer
+	    :class TRIPS.Conceptualizer.Conceptualizer
+	:urlclasspath ("$TRIPS_BASE/etc/java/TRIPS.Conceptualizer.jar"
+		       "$TRIPS_BASE/etc/java/TRIPS.TripsModule.jar"
+		       "$TRIPS_BASE/etc/java/TRIPS.KQML.jar"
+		       "$TRIPS_BASE/etc/java/TRIPS.util.jar"
+		       "$TRIPS_BASE/etc/java/json-simple-1.1.1.jar"
+		       "$TRIPS_BASE/etc/java/jblas-1.2.3.jar"
+		       "$TRIPS_BASE/src/Conceptualizer/src")
+	:argv ($port_opt $TRIPS_SYSNAME)))
 _EOF_
 
 # CSM
 if test -z "$nocsm"; then
 cat - <<_EOF_ >>/tmp/trips$$
 (request
-    :receiver facilitator
-    :content (start-module
-    :name CSM
-    :class TRIPS.CollaborativeStateManager.CollaborativeStateManager
-    :urlclasspath ("$TRIPS_BASE/etc/java/TRIPS.CollaborativeStateManager.jar"
-                "$TRIPS_BASE/etc/java/TRIPS.TripsModule.jar"
-                "$TRIPS_BASE/etc/java/TRIPS.KQML.jar"
-                "$TRIPS_BASE/etc/java/TRIPS.util.jar"
-                "$TRIPS_BASE/src/CollaborativeStateManager/src")
-    :argv ($port_opt $TRIPS_SYSNAME)))
+  :receiver facilitator
+  :content (start-module
+	:name CSM
+	:class TRIPS.CollaborativeStateManager.CollaborativeStateManager
+	:urlclasspath ("$TRIPS_BASE/etc/java/TRIPS.CollaborativeStateManager.jar"
+		       "$TRIPS_BASE/etc/java/TRIPS.TripsModule.jar"
+		       "$TRIPS_BASE/etc/java/TRIPS.KQML.jar"
+		       "$TRIPS_BASE/etc/java/TRIPS.util.jar"
+		       "$TRIPS_BASE/src/CollaborativeStateManager/src")
+	:argv ($port_opt
+	   -data "$TRIPS_BASE/etc/$TRIPS_SYSNAME")))
 _EOF_
 fi
 
-# Modules not started by the java process have to start *after* the
+
+# SpeechOut
+# We don't use speech-out at all (run SpeechOutNot to convert SAY to SPOKEN)
+cat - <<_EOF_ >>/tmp/trips$$
+(request
+ :receiver facilitator
+ :content (start-module
+	   :name speech-out
+	   :class TRIPS.SpeechOutNot.SpeechOutNot
+	   :urlclasspath ("$TRIPS_BASE/etc/java/TRIPS.SpeechOutNot.jar"
+			  "$TRIPS_BASE/etc/java/TRIPS.TripsModule.jar"
+			  "$TRIPS_BASE/etc/java/TRIPS.KQML.jar"
+			  "$TRIPS_BASE/etc/java/TRIPS.util.jar")
+	   :argv ($port_opt)
+))
+_EOF_
+
+# Modules not started by the Facilitator have to start *after* the
 # Facilitator so they can connect, so we use the form (sleep 5; foo) &
 # to start them
 
@@ -228,14 +233,12 @@ self_pid=$$
 # FIXME lots of sbcl-specific stuff here
 if test -z "$nolisp"; then
   if test -z "$batch"; then
-    ( sleep 5;
-      $TRIPS_BASE/bin/trips-bob-lisp --dynamic-space-size 4096 \
-    ) 2>&1 | tee lisp.log &
+    ( sleep 5; $TRIPS_BASE/bin/trips-$TRIPS_SYSNAME-lisp ) 2>&1 | tee lisp.log &
   else
     (sleep 5; sbcl \
       --dynamic-space-size 4096 \
       --disable-debugger \
-      --eval "(setf *default-pathname-defaults* #P\"$TRIPS_BASE/src/Systems/bob/\")" \
+      --eval "(setf *default-pathname-defaults* #P\"$TRIPS_BASE/src/Systems/$TRIPS_SYSNAME/\")" \
       --load test.lisp \
       --eval "(progn \
 	(setf *default-pathname-defaults* #P\"$logdir/\") \
@@ -273,7 +276,7 @@ fi
 
 # set display option for facilitator
 if test -n "$nouser"; then
-    display='tty'
+    display='none'
 fi
 if test -n "$display"; then
     display_opt="-display $display"
@@ -281,13 +284,19 @@ else
     display_opt=''
 fi
 
+# set traffic option for facilitator
+if test -z "$showtraffic"; then
+    traffic_opt="-notraffic"
+else
+    traffic_opt=''
+fi
+
 # Launch facilitator and send initial messages via stdin
 cat /tmp/trips$$ |\
- $TRIPS_BASE/bin/Facilitator -port $TRIPS_PORT -title $TRIPS_SYSNAME_ALLCAPS -geometry 260x600-0+0 -notraffic $display_opt >facilitator.err 2>&1 &
-facilitatorPID=$!
+ $TRIPS_BASE/bin/Facilitator -port $TRIPS_PORT -title $TRIPS_SYSNAME_ALLCAPS -geometry 260x600-0+0 $traffic_opt $display_opt >facilitator.err 2>&1 &
 
 # Wait for Facilitator to die
-wait $facilitatorPID
+wait $!
 
 # Bye
 exit 0

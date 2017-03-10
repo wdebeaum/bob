@@ -24,6 +24,7 @@ LISP_MODULES = \
 	NewIM \
 	BasicDialogueAgent \
 	ChannelKB \
+	AlarmClock \
 	DeepSemLex/code/lib
 #	DiscourseContext
 
