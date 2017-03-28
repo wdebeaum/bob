@@ -271,8 +271,15 @@ fi
   $TRIPS_BASE/bin/TextTagger $port_opt -config-file $tt_conf \
   2>&1 | tee TextTagger.err ) &
 
+# Start EKBAgent
+( sleep 5; \
+  $TRIPS_BASE/bin/EKBAgent $port_opt  \
+  2>&1 | tee EKBAgent.err ) &
+
 # Start Graphviz
-(sleep 5; $TRIPS_BASE/bin/Graphviz $port_opt -display-enabled $graphviz_display 2>&1 | tee Graphviz.err) &
+(sleep 5; \
+ $TRIPS_BASE/bin/Graphviz $port_opt -display-enabled $graphviz_display \
+ 2>&1 | tee Graphviz.err) &
 
 # set display option for facilitator
 if test -n "$nouser"; then

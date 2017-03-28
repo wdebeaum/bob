@@ -47,6 +47,7 @@ OTHER_PROGRAMS = \
 	Graphviz \
 	TextPP \
 	TextTagger \
+	EKB \
 	Tools
 
 DATA = \

@@ -332,6 +332,9 @@ public class GoalPlanner {
 	// Sets the goal to the first subgoal
 	public Goal startOver()
 	{
+		if (activeGoal == null)
+			return null;
+		
 		while (activeGoal.getParent() != null && activeGoal.getParent().getParent() != null)
 		{
 			activeGoal = activeGoal.getParent();
