@@ -8,7 +8,7 @@ include ../Makefile-common
 
 $(IMAGE):: ../../TextTagger/drum-dsl-resources.lisp ../../TextTagger/drum-mappings.lisp
 
-CSM_DATA = events goals models
+CSM_DATA = events goals models goals-par
 
 SYS_DATA_DIR = $(etcdir)/bob
 

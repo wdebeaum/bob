@@ -48,13 +48,15 @@ public class GoalPlanner {
 	
 	public boolean addGoal(Goal goal, String parentVariableName)
 	{
-		System.out.println("Adding goal with id " + goal.getId() + 
-				" and varname " + goal.getVariableName());
+
 		if (goal == null)
 		{
 			System.out.println("Tried to add a null goal");
 			return false;
 		}
+		
+		System.out.println("Adding goal with id " + goal.getId() + 
+				" and varname " + goal.getVariableName());
 		
 		if (hasGoal(goal.getVariableName()))
 		{
