@@ -196,7 +196,8 @@
 (define-type ONT::owe
  :wordnet-sense-keys ("owe%2:40:01")
  :parent ONT::state-of-being
- :arguments ((:OPTIONAL ONT::formal1 ((? rcp F::Phys-obj f::abstr-obj)))
+ :arguments ((:OPTIONAL ONT::neutral1 ((? rcp F::Phys-obj f::abstr-obj)))
+	     (:optional ont::neutral2 )
              )
   )
 
@@ -254,7 +255,7 @@
   :wordnet-sense-keys ("make%2:38:05" "take%2:38:05" "travel%2:38:00" "go%2:38:00" "move%2:38:03"  "move%2:38:01" "locomote%2:38:00" "ascend%2:38:10" "be_active%2:29:00" "draw%2:35:13" "go%2:42:06" "jaunt%2:38:00" "move%2:38:00" "move%2:38:02" "move_out%2:41:00" "wreathe%2:38:00" "mobilize%2:30:00" "go%2:33:00" "transport%1:04:01" "relocation%1:04:00")
  :parent ont::motion
  :sem (F::SITUATION (F::CONTAINER -) (F::Locative -) (F::trajectory +))
- :arguments ((:OPTIONAL ONT::agent (F::Phys-obj (:required (f::origin (? org f::human f::non-human-animal)))
+ :arguments ((:OPTIONAL ONT::agent (F::Phys-obj ;(:required (f::origin (? org f::human f::non-human-animal))) ; other things move too, for example Ras
 					       (:default (F::Mobility F::Self-Moving))))
 ;             (:OPTIONAL ONT::purpose (F::Situation (F::Cause F::Agentive) (F::Aspect F::Dynamic)))
 	     (:OPTIONAL ONT::REASON (F::Situation (F::Cause F::Agentive) (F::Aspect F::Dynamic)))
@@ -2542,7 +2543,7 @@
  :parent ONT::cause-effect
  :sem (F::Situation (F::Aspect F::Dynamic))
  :arguments ( ;; run the script/program
-	     (:essential ont::agent (F::PHYS-OBJ (f::intentional +) (F::type ont::human)))
+	     (:essential ont::agent (F::PHYS-OBJ (f::intentional +) (F::origin F::human)))
 	     (:optional ont::neutral ((? thm f::abstr-obj f::situation) (f::type (? tt ONT::PROCEDURE ONT::EVENT-OF-ACTION ))))
 	     )
  )
@@ -2580,7 +2581,9 @@
 (define-type ONT::afford
  :wordnet-sense-keys ("afford%2:34:00")
  :parent ONT::expensiveness
- )
+  :arguments ((:optional ONT::neutral1 ((? sc F::phys-obj F::abstr-obj)))
+	      )
+  )
 
 (define-type ONT::COSTS
  :wordnet-sense-keys ("cost%2:42:00" "be%2:42:09")
@@ -2773,6 +2776,7 @@
   :comment "the part remaining is the good part"
   :arguments ((:OPTIONAL ONT::Agent)
 	      (:OPTIONAL ONT::AFFECTED1)
+	      (:optional ont::source)
 	      )
  )
 

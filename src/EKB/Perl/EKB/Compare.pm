@@ -1,6 +1,6 @@
 # Compare.pm
 #
-# Time-stamp: <Fri Mar 24 15:20:33 CDT 2017 lgalescu>
+# Time-stamp: <Fri Apr 21 13:19:54 CDT 2017 lgalescu>
 #
 # Author: Lucian Galescu <lgalescu@ihmc.us>,  4 May 2016
 #
@@ -46,6 +46,8 @@
 # 2017/03/24 v2.1.0	lgalescu
 # - Added option to ignore sentence diffs (assumes they are identical even
 #   when they're not).
+# 2017/04/21 v2.1.1	lgalescu
+# - Fixed bug.
 
 # TODO (in order of importance):
 # - try to find node "substitutions"
@@ -58,7 +60,7 @@
 
 package EKB::Compare;
 
-$VERSION = '2.0.2';
+$VERSION = '2.1.1';
 
 use strict 'vars';
 use warnings;
@@ -1273,7 +1275,7 @@ sub _options_to_string {
       }
       sprintf("%s => %s", $opt, $val);
     }
-    sort @Options;
+    sort keys %options;
   return $result;
 }
 
