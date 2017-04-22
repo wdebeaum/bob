@@ -1,9 +1,9 @@
 # Drum.pm
 #
-# Time-stamp: <Fri Apr 21 13:21:39 CDT 2017 lgalescu>
+# Time-stamp: <Fri Apr 21 23:22:15 CDT 2017 lgalescu>
 #
 # Author: Lucian Galescu <lgalescu@ihmc.us>,  1 Jun 2016
-# $Id: Drum.pm,v 1.8 2017/04/21 18:23:45 lgalescu Exp $
+# $Id: Drum.pm,v 1.10 2017/04/22 04:23:54 lgalescu Exp $
 #
 
 #----------------------------------------------------------------
@@ -53,6 +53,10 @@
 #   PRODUCE events.
 # 2017/04/21 v1.9.1	lgalescu
 # - Minor fixes.
+# 2017/04/21 v1.10.0	lgalescu
+# - Updated to current style of the (still evolving) EKB interface.
+# - Bug fix.
+# - Now checking inevent references in pseudoargs, as well.
 
 #----------------------------------------------------------------
 # Usage:
@@ -60,7 +64,7 @@
 
 package EKB::Reasoner::Drum;
 
-$VERSION = '1.9.0';
+$VERSION = '1.10.0';
 
 use strict 'vars';
 use warnings;
@@ -140,7 +144,7 @@ sub default_options {
 
       my $r_id = $r->getAttribute('id');
 
-      my @args = get_children_by_name_regex($r, qr{^arg});
+      my @args = $ekb->assertion_args($r);
       my $count = 0;
       foreach my $arg (@args) {
 	my $a_id = $arg->getAttribute('id');
@@ -151,41 +155,6 @@ sub default_options {
 	$count++;
       }
       return $count;
-    }
-   },
-   
-   {
-    ## delete empty relations (no arguments of any kind) with no referrers
-    # < X:EVENT()|CC()|EPI()|MODALITY()
-    # > - X
-    # WARNING: removes assertions
-    name => "EKR:RemoveBareReln",
-    constraints => [],
-    repeat => 1,
-    handler => sub  {
-      my ($rule, $ekb, $r) = @_;
-
-      $ekb->is_relation($r)
-	or return 0;
-
-      my $r_id = $r->getAttribute('id');
-
-      # check for args
-      my @args = get_children_by_name_regex($r, qr{^arg|site|location|from-location|to-location|cell-line});
-      return 0 unless (scalar(@args) == 0);
-	
-      # check for referrers (excluding self-reference)
-      my @referrers =
-	grep { $_->getAttribute('id') ne $r_id }
-	$ekb->find_referrers($r_id);
-      return 0 unless (scalar(@referrers) == 0);
-
-      INFO("Rule %s matches %s",
-	   $rule->name, $r_id);
-	
-      $ekb->remove_assertion($r);
-
-      return 1;
     }
    },
    
@@ -202,7 +171,7 @@ sub default_options {
       my $c_id = $c->getAttribute('id');
 
       # check for args
-      my @args = get_children_by_name_regex($c, qr{^arg});
+      my @args = $ekb->assertion_args($c);
       return 0 if (scalar(@args) >= 2);
 
       # check for referrers (excluding self-reference)
@@ -221,6 +190,42 @@ sub default_options {
    },
 
    {
+    ## delete empty relations (no arguments of any kind) with no referrers
+    # < X:EVENT()|CC()|EPI()|MODALITY()
+    # > - X
+    # WARNING: removes assertions
+    name => "EKR:RemoveBareReln",
+    constraints => [],
+    repeat => 1,
+    handler => sub  {
+      my ($rule, $ekb, $r) = @_;
+
+      $ekb->is_relation($r)
+	or return 0;
+
+      my $r_id = $r->getAttribute('id');
+
+      # check for args
+      my @args = ( $ekb->assertion_args($r),
+		   $ekb->assertion_pseudoargs($r) );
+      return 0 unless (scalar(@args) == 0);
+	
+      # check for referrers (excluding self-reference)
+      my @referrers =
+	grep { $_->getAttribute('id') ne $r_id }
+	$ekb->find_referrers($r_id);
+      return 0 unless (scalar(@referrers) == 0);
+
+      INFO("Rule %s matches %s",
+	   $rule->name, $r_id);
+	
+      $ekb->remove_assertion($r);
+
+      return 1;
+    }
+   },
+   
+   {
     ## delete ONT::PRODUCE events that duplicate :RES relations
     # < E ont::produce :affected-result Y
     # < E1 * :res|:result:affected-result Y
@@ -236,11 +241,7 @@ sub default_options {
 
       # < E1 * :res|:result:affected-result Y
       my @referrers =
-	grep { get_child_node_regex_attr($_, qr{^arg},
-					 { 'role' => [OP_OR,
-						      ':RES',
-						      ':RESULT',
-						      ':AFFECTED-RESULT'] } ) }
+	grep { $ekb->assertion_args($_, '[@role=":RES" or @role=":RESULT" or @role=":AFFECTED-RESULT"]') }
 	grep { $_->getAttribute('id') ne $e_id }
 	$ekb->find_referrers($y_id, 'EVENT');
       return 0 if (scalar(@referrers) == 0);
@@ -252,7 +253,7 @@ sub default_options {
       INFO "Rule %s matches %s (ref in: %s)",
 	$rule->name(), $e_id, join(",", map {$_->getAttribute('id')} @referrers );
 	
-      $e->parentNode->removeChild($e);
+      $ekb->remove_assertion($e);
 
       return 1;
     }
@@ -298,7 +299,7 @@ sub default_options {
       my $count = 0;
       foreach my $e_id (@e_ids) {
 	my $e = $ekb->get_assertion($e_id);
-	my @args = $e ? get_children_by_name_regex($e, qr{^arg}) : ();
+	my @args = ( $ekb->assertion_args($e), $ekb->assertion_pseudoargs($e) );
 	next if any { $_->getAttribute('id') eq $t_id } @args;
 
 	INFO "Rule %s matches term %s (inevent: %s)",
@@ -896,7 +897,7 @@ sub default_options {
 				   } })
 	    &&
 	    # < ! E/arg*[result:*]
-	    ! get_child_node_regex_attr($_, qr{^arg}, { role => ':RESULT' } )
+	    ! $ekb->assertion_args($_, '[@role=":RESULT"]')
 	  }
 	map { $ekb->get_assertion($_) }
 	map { $_->getAttribute('id') }
@@ -989,7 +990,7 @@ sub default_options {
 				   } })
 	    &&
 	    # < ! E/arg*[result:*]
-	    ! get_child_node_regex_attr($_, qr{^arg}, { role => ':RESULT' } )
+	    ! $ekb->assertion_args($_, '[@role=":RESULT"]')
 	  }
 	map { $ekb->get_assertion($_) }
 	map { $_->getAttribute('id') }
@@ -1111,7 +1112,7 @@ sub default_options {
 	  )
 	  &&
 	  # < ! E/arg*[result:*]
-	  ! get_child_node_regex_attr($_, qr{^arg}, { role => ':RESULT' } )
+	  ! $ekb->assertion_args($_, '[@role=":RESULT"]')
 	}
 	map { $ekb->get_assertion($_, 'EVENT') }
 	map { $_->getAttribute('id') }
@@ -1296,7 +1297,7 @@ sub default_options {
 				   } })
 	    &&
 	    # < ! E/arg*[result:*]
-	    ! get_child_node_regex_attr($_, qr{^arg}, { role => ':RESULT' } )
+	    ! $ekb->assertion_args($_, '[@role=":RESULT"]')
 	  }
 	map { $ekb->get_assertion($_) }
 	map { $_->getAttribute('id') }
@@ -1463,7 +1464,7 @@ sub default_options {
 				   } })
 	    &&
 	    # < ! E/arg*[result:*]
-	    ! get_child_node_regex_attr($_, qr{^arg}, { role => ':RESULT' } )
+	    ! $ekb->assertion_args($_, '[@role=":RESULT"]')
 	  }
 	map { $ekb->get_assertion($_) }
 	map { $_->getAttribute('id') }
@@ -1569,7 +1570,7 @@ sub default_options {
       $ont_bioents->is_a($y_type, 'ONT::MACROMOLECULAR-COMPLEX')
 	or return 0;
       # < ! E :result 
-      get_child_node_regex_attr($e, qr{^arg}, { role => ":RESULT" } )
+      $ekb->assertion_args($e, '[@role=":RESULT"]')
 	and return 0;
 
       INFO "Rule %s matches event %s (agent:%s, affected-result:%s)", 
@@ -1638,7 +1639,7 @@ sub default_options {
       $ont_bioents->is_a($y_type, 'ONT::MACROMOLECULAR-COMPLEX')
 	or return 0;
       # < ! E :result 
-      get_child_node_regex_attr($e, qr{^arg}, { role => ":RESULT" } )
+      $ekb->assertion_args($e, '[@role=":RESULT"]')
 	and return 0;
 
       INFO "Rule %s matches event %s (agent:%s, affected-result:%s)", 
@@ -1706,7 +1707,7 @@ sub default_options {
 	or return 0;
 
       # < ! arg*(result:*)
-      get_child_node_regex_attr($e, qr{^arg}, { role => ":RESULT" } )
+      $ekb->assertion_args($e, '[@role=":RESULT"]')
 	and return 0;
 
       # < T/type is_a <bio_entity>
@@ -1860,7 +1861,7 @@ sub default_options {
 	or return 0;
 
       # < ! arg*(result:*)
-      get_child_node_regex_attr($e, qr{^arg}, { role => ":RESULT" } )
+      $ekb->assertion_args($e, '[@role=":RESULT"]')
 	and return 0;
 
       # < T/type is_a <bio_entity>
@@ -2028,7 +2029,7 @@ sub default_options {
 	or return 0;
 
       # < ! arg*(result:*)
-      get_child_node_regex_attr($e, qr{^arg}, { role => ":RESULT" } )
+      $ekb->assertion_args($e, '[@role=":RESULT"]')
 	and return 0;
 
       # < X/type is_a <bio_entity>
@@ -2211,7 +2212,7 @@ sub default_options {
       $ont_events->is_a($e_type, "ONT::PTM")
 	or return 0;
       # < ! E/arg*[result:*]
-      get_child_node_regex_attr($e, qr{^arg}, { role => ":RESULT" } )
+      $ekb->assertion_args($e, '[@role=":RESULT"]')
 	and return 0;
       # < X/type is_a ONT::MOLECULAR-PART
       my $x_arg = get_child_node($e, "arg2");
@@ -2311,7 +2312,7 @@ sub default_options {
       $ont_bioents->is_a($x_type, 'ONT::MOLECULAR-PART')
 	or return 0;
       # < ! E/arg*[result:*]
-      get_child_node_regex_attr($e, qr{^arg}, { role => ":RESULT" } )
+      $ekb->assertion_args($e, '[@role=":RESULT"]')
 	and return 0;
       # < ! X/features/inevent/event[id=E]
       $x->findnodes('features/inevent/event[@id="'.$e_id.'"]')
@@ -2412,7 +2413,7 @@ sub default_options {
       $ont_bioents->is_a($x_type, 'ONT::MOLECULAR-PART')
 	or return 0;
       # < ! E/arg*[result:*]
-      get_child_node_regex_attr($e, qr{^arg}, { role => ":RESULT" } )
+      $ekb->assertion_args($e, '[@role=":RESULT"]')
 	and return 0;
       # < ! X//inevent/event[E]
       $x->findnodes('features/inevent/event[@id="'.$e_id.'"]')

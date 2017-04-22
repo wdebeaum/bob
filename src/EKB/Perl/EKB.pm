@@ -1,9 +1,9 @@
 # EKB.pm
 #
-# Time-stamp: <Fri Apr 21 15:08:11 CDT 2017 lgalescu>
+# Time-stamp: <Fri Apr 21 23:22:07 CDT 2017 lgalescu>
 #
 # Author: Lucian Galescu <lgalescu@ihmc.us>,  3 May 2016
-# $Id: EKB.pm,v 1.24 2017/04/21 20:08:44 lgalescu Exp $
+# $Id: EKB.pm,v 1.26 2017/04/22 04:23:53 lgalescu Exp $
 #
 
 #----------------------------------------------------------------
@@ -87,6 +87,11 @@
 # - &make_assertion now creates an id, if not given
 # - new utility function for parsing attribute/properties arguments
 # - improved &add_complex_r method
+# 2017/04/21 v1.13.0	lgalescu
+# - some cleanup
+# - added XPath filter to &assertion_args. made &get_children_by_name_regex and
+#   &get_child_node_regex_attr obsolete.
+
 
 # TODO:
 # - maybe split off XML Node extensions into a separate package (EKB::EKBNode?)
@@ -1091,6 +1096,7 @@ sub clean_assertion {
   my ($self, $a) = @_;
   # remove unnecessary attributes
   $a->removeAttribute('lisp');
+  DEBUG 2, "Cleaning up: %s", $a;
   # remove unnecessary stuff from args & pseudoargs
   map { $self->_clean_arg($_) } ( $self->assertion_args($a),
 				  $self->assertion_pseudoargs($a) );
@@ -1157,7 +1163,7 @@ sub make_assertion {
       # for my $frame (-3..0) {
       # 	my @cntxt = caller(-$frame);
       # 	ERROR "Trace [%d]: %s", -$frame, Dumper(\@cntxt);
-      }
+      # }
       return undef;
     };
   my ($attributes, @properties) = _parse_node_args(@content);
@@ -1493,23 +1499,14 @@ sub add_arg {
     ERROR "Cannot add argument to node: %s", $a;
     return;
   }
-  # find all args (only if a position is given!)
+  # if a position is given, we heuristically make sure there is no clash 
   if (defined $pos) {
-    $pos = $pos // 1;
     while ($a->exists("./arg${pos}")) {
       $pos++;
     }
-  } else {
-    $pos = "";
   }
-  # make new arg node
-  my $argNode = make_arg($role => $argId, $pos);
-  # we want to insert it in the appropriate place
-  my @args = get_children_by_name_regex($a, qr{^arg});
-  # TODO: what if this is the first arg?
-  my $lastArg = $args[-1] // undef;
-  no warnings "uninitialized";	# supress warnings if $lastArg == undef
-  $a->insertAfter($argNode, $lastArg);
+  # make new arg node and add it to the assertion
+  $a->appendChild(make_arg($role => $argId, $pos));
 }
 
 =head2 add_feature( $a, $feature, $value )
@@ -1619,11 +1616,32 @@ sub is_relation {
 }
 
 
+=head2 assertion_args( $a, $filter )
+
+Returns list of (main) arguments for relational assertion $a.
+
+If $a is not a relational assertion, it returns an empty list.
+
+If the optional $filter argument is given, it must be an XPath predicate. The
+result will be only those arguments matching the filter.
+
+=cut
+
 sub assertion_args {
-  my ($self, $a) = @_;
+  my ($self, $a, $filter) = @_;
   return () unless $self->is_relation($a);
-  return get_children_by_name_regex($a, qr{^arg});
+  my @args = $a->findnodes('./*[starts-with(name(),"arg")]' . ($filter // ""));
+  DEBUG 2, "Args: %s", join(",", @args);
+  return @args;
 }
+
+=head2 assertion_pseudoargs( $a )
+
+Returns list of pseudo-arguments (or satellite arguments) for relational assertion $a.
+
+If $a is not a relational assertion, it returns an empty list.
+
+=cut
 
 sub assertion_pseudoargs {
   my ($self, $a) = @_;
@@ -1749,26 +1767,22 @@ sub get_children_by_name {
 }
 
 # get child nodes whose tag name matches a regex
-# FIXME: i think the only reason we need this is because of arg slots!
-# they ought to be normalized and ths should probably become obsolete
-# FIXME: at any rate, as a first step, i should add a get_relation_args()
-# function instead of relying on this low-level function
+# OBSOLETE as of 2017/04/21 -- will delete in a month
 sub get_children_by_name_regex {
   my ($node, $tagRegex) = @_;
-  my @children = $node->childNodes();
-  my @result;
-  foreach my $child (@children) {
-    if ($child->nodeName =~ $tagRegex) {
-      push @result, $child;
-    }
+  { my ($package, $filename, $line, $callsub) = caller(1);
+    WARN "get_children_by_name_regex is now obsolete. Called from: $callsub at $filename:$line";
   }
-  return @result;
+  return grep { $_->nodeName =~ $tagRegex } $node->childNodes();
 }
 
 # get child node with matching type and given attributes (optional)
-# TODO: maybe return as list?
+# OBSOLETE as of 2017/04/21 -- will delete in a month
 sub get_child_node_regex_attr {
   my ($node, $slot, $conds) = @_;
+  { my ($package, $filename, $line, $callsub) = caller(1);
+    WARN "get_children_by_name_regex is now obsolete. Called from: $callsub at $filename:$line";
+  }
   my @cNodes = get_children_by_name_regex($node, $slot);
   return undef if scalar(@cNodes) == 0;
   DEBUG 3, "cNodes:\n%s", join("\n", @cNodes);
