@@ -200,15 +200,6 @@
  ; Antonym: ONT::correct (W::PROPER W::CORRECT W::ACCURATE)
 )
 
-(define-type ont::questionability-val
- :parent ont::information-property-val 
-)
-
-(define-type ont::questionable-val
- :parent ont::questionability-val
- :wordnet-sense-keys ("problematic%5:00:00:questionable:00" "funny%5:00:00:questionable:00" "questionable%3:00:00")
-)
-
 (define-type ont::validity-val
  :parent ont::information-property-val 
 )
@@ -1655,6 +1646,7 @@
 ;; hungry, sleepy
 (define-type ont::body-property-val
  :parent ont::body-related-property-val 
+ :arguments ((:ESSENTIAL ONT::FIGURE (F::Phys-obj (f::origin (? org f::human f::non-human-animal)))))
  :comment "properties having to do with human/animal body conditions or states"
 )
 
@@ -1739,13 +1731,14 @@
 ;; mute, deaf, blind
 (define-type ont::has-medical-condition
   :parent ont::body-related-property-val
-  :arguments ((:essential ONT::FIGURE (F::phys-obj (F::origin F::human) (F::intentional +))))
+  :arguments ((:essential ONT::FIGURE (F::phys-obj (f::origin (? org f::human f::non-human-animal)) (F::intentional +))))
   :wordnet-sense-keys ("deaf%3:00:00" "blind%3:00:00" "mute%5:00:01:inarticulate:00")
   )
 
 ;; healthy or ailing
 (define-type ont::healthiness-val
   :parent ont::body-related-property-val
+  :arguments ((:ESSENTIAL ONT::FIGURE (F::Phys-obj (f::origin (? org f::human f::non-human-animal)))))
 )
 
 (define-type ont::healthy-val
@@ -1993,25 +1986,6 @@
  :parent ont::rw-status-val 
 )
 
-;; useful vs. useless
-(define-type ont::usefulness-val
- :parent ont::can-be-done-val 
-)
-
-(define-type ont::useful
- :parent ont::usefulness-val 
- :wordnet-sense-keys ("useful%3:00:00" "utilitarian%5:00:00:useful:00" "functional%3:00:02" "functional%5:00:00:practical:00" "practical%3:00:00" "functional%3:00:00" "practical%5:00:00:applied:00" )
- ; Words: (W::USEFUL W::PRACTICAL W::FUNCTIONAL)
- ; Antonym: ONT::useless (W::USELESS W::IMPRACTICAL)
-)
-
-(define-type ont::useless
- :parent ont::usefulness-val 
- :wordnet-sense-keys ("impractical%3:00:00" "useless%3:00:00" )
- ; Words: (W::USELESS W::IMPRACTICAL)
- ; Antonym: ONT::USEFUL (W::USEFUL W::PRACTICAL W::FUNCTIONAL)
-)
-
 ;; tenatative vs. settled/finalized
 (define-type ont::is-finalized-val
  :parent ont::process-val 
@@ -2129,6 +2103,10 @@
  :comment "the word itself describes the purpose of the task, e.g., exploratory - task for exploration; startup - task for starting something"
 )
 
+(define-type ont::startup-val
+ :parent ont::task-purpose-val 
+)
+
 (define-type ont::exploratory-val
  :parent ont::task-purpose-val 
  :wordnet-sense-keys ("preliminary%5:00:00:exploratory:00" "exploratory%3:00:00" )
@@ -2151,14 +2129,54 @@
  :comment "outcome of the process"
 )
 
+(define-type ont::process-evaluation-val
+ :parent ont::process-val
+ :comment "evaluation properties of processes"
+)
+
 ;; productive
 (define-type ont::productivity-val
- :parent ont::process-val 
+ :parent ont::process-evaluation-val
 )
 
 (define-type ont::productive-val
  :parent ont::productivity-val 
  :wordnet-sense-keys ("productive%3:00:00" "productive%5:00:00:fruitful:00" "fruitful%3:00:00" )
+)
+
+;; useful vs. useless
+(define-type ont::usefulness-val
+ :parent ont::process-evaluation-val
+)
+
+(define-type ont::useful
+ :parent ont::usefulness-val 
+ :wordnet-sense-keys ("useful%3:00:00" "utilitarian%5:00:00:useful:00" "functional%5:00:00:practical:00" "practical%3:00:00" "functional%3:00:00" "practical%5:00:00:applied:00" )
+ ; Words: (W::USEFUL W::PRACTICAL W::FUNCTIONAL)
+ ; Antonym: ONT::useless (W::USELESS W::IMPRACTICAL)
+)
+
+(define-type ont::useless
+ :parent ont::usefulness-val 
+ :wordnet-sense-keys ("impractical%3:00:00" "useless%3:00:00" )
+ ; Words: (W::USELESS W::IMPRACTICAL)
+ ; Antonym: ONT::USEFUL (W::USEFUL W::PRACTICAL W::FUNCTIONAL)
+)
+
+;; effective vs. ineffective
+(define-type ont::effectiveness-val
+ :parent ont::process-evaluation-val
+ :comment "evaluation attributes dealing with the effectiveness or efficacy of something"
+)
+
+(define-type ont::effective-val
+ :parent ont::effectiveness-val
+ :wordnet-sense-keys ("effective%3:00:00" "effective%5:00:00:efficacious:00")
+)
+
+(define-type ont::not-effective-val
+ :parent ont::effectiveness-val
+ :wordnet-sense-keys ("ineffective%3:00:00" "toothless%5:00:00:ineffective:00")
 )
 
 ;; persistence
@@ -2746,6 +2764,11 @@
 (define-type ont::mild-val
  :parent ont::severity-val 
  :wordnet-sense-keys ("mild%3:00:00" "slight%3:00:00" )
+)
+
+(define-type ont::moderate-val
+ :parent ont::severity-val 
+ :wordnet-sense-keys ("moderate%3:00:00")
 )
 
 ;; 
@@ -3336,6 +3359,11 @@
  :wordnet-sense-keys ("skeptical%5:00:00:incredulous:00" "doubtful%5:00:00:uncertain:02")
 )
 
+(define-type ont::questionable-val
+ :parent ont::uncertain
+ :wordnet-sense-keys ("problematic%5:00:00:questionable:00" "funny%5:00:00:questionable:00" "questionable%3:00:00")
+)
+
 ;; (un)interested
 (define-type ont::interest-val
  :parent ont::psychological-property-val 
@@ -3446,6 +3474,7 @@
 ;; happy, sad, gloomy...
 (define-type ont::emotional-val
  :parent ont::psychological-property-val 
+ :arguments ((:ESSENTIAL ONT::FIGURE (F::Phys-obj (f::origin (? org f::human f::non-human-animal)))))
  :comment "state of having a particular emotion"
 )
 
@@ -3645,7 +3674,7 @@
 ;; associated with - words that pertain to another word
 (define-type ont::associated-with-val
  :parent ont::property-val
- :comment "words that pertain to another word" 
+ :comment "adjectives that classify the noun that it is pertaining to" 
 )
 
 ;; commercial, retail, wholesale
@@ -3773,6 +3802,42 @@
              )
  )
 
+(define-type ONT::VERTICAL
+ :parent ONT::ORIENTATION-VAL
+ ; Words: (W::STRAIGHT W::VERTICAL W::PERPENDICULAR)
+:wordnet-sense-keys ("erect%3:00:00" "vertical%3:00:00" "vertical%3:00:00" "perpendicular%3:00:00")
+ ; Antonym: ONT::HORIZONTAL (W::PARALLEL W::HORIZONTAL)
+ )
+
+(define-type ONT::HORIZONTAL
+ :parent ONT::ORIENTATION-VAL
+ ; Words: (W::PARALLEL W::HORIZONTAL)
+:wordnet-sense-keys ("horizontal%3:00:00" "horizontal%3:00:00" "parallel%3:00:00")
+ ; Antonym: ONT::VERTICAL (W::STRAIGHT W::VERTICAL W::PERPENDICULAR)
+)
+
+(define-type ont::diagonal-val
+ :parent ont::orientation-val
+ :wordnet-sense-keys ("diagonal%5:00:00:inclined:01" "diagonal%5:00:02:oblique:00")
+)
+
+(define-type ont::inverted-val
+ :parent ont::orientation-val
+ :wordnet-sense-keys ("inverted%5:00:00:turned:00")
+)
+
+(define-type ont::2D-orientation-val
+ :parent ont::orientation-val
+)
+
+(define-type ont::landscape-val
+ :parent ont::2D-orientation-val
+)
+
+(define-type ont::portrait-val
+ :parent ont::2D-orientation-val
+)
+
 (define-type ONT::SHAPE-VAL
   :parent ONT::spatial
  :sem (F::Abstr-obj (F::Measure-function F::VALUE))
@@ -3862,19 +3927,6 @@
              )
  )||#
 
-(define-type ONT::VERTICAL
- :parent ONT::ORIENTATION-VAL
- ; Words: (W::STRAIGHT W::VERTICAL W::PERPENDICULAR)
-:wordnet-sense-keys ("erect%3:00:00" "vertical%3:00:00" "vertical%3:00:00" "perpendicular%3:00:00")
- ; Antonym: ONT::HORIZONTAL (W::PARALLEL W::HORIZONTAL)
- )
-
-(define-type ONT::HORIZONTAL
- :parent ONT::ORIENTATION-VAL
- ; Words: (W::PARALLEL W::HORIZONTAL)
-:wordnet-sense-keys ("horizontal%3:00:00" "horizontal%3:00:00" "parallel%3:00:00")
- ; Antonym: ONT::VERTICAL (W::STRAIGHT W::VERTICAL W::PERPENDICULAR)
- )
 
 (define-type ONT::LEFT
  :parent ONT::LOCATION-VAL
@@ -3993,6 +4045,7 @@
 
 (define-type ONT::number-related-property-val
  :parent ONT::quantity-related-property-val
+ :wordnet-sense-keys("numerical%5:00:00:quantitative:00" "numerical%3:01:00")
  )
 
 ;; single, dual, lone, twin, only
