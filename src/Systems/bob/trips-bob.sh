@@ -30,7 +30,7 @@ TRIPS_SYSNAME_ALLCAPS=`echo $TRIPS_SYSNAME | tr "[:lower:]" "[:upper:]"`
 #
 # Command-line
 
-usage='trips-$TRIPS_SYSNAME [-debug] [-port 6200] [-logdir DIR] [-nouser] [-nolisp] [-nocsm] [-nochat] [-tt-mode bob] [-tt-conf FILE] [-batch LISP-FILE] [-graphviz-display true] [-showgen] [-showtraffic] [-display tty]'
+usage='trips-$TRIPS_SYSNAME [-debug] [-port 6200] [-logdir DIR] [-nouser] [-nolisp] [-nocsm] [-noekb] [-nochat] [-tt-mode bob] [-tt-conf FILE] [-batch LISP-FILE] [-graphviz-display true] [-showgen] [-showtraffic] [-display tty]'
 
 debug=false
 port=''
@@ -50,6 +50,7 @@ nolisp=''
 nocsm=''
 showgen=false
 showtraffic=''
+ekb_agent_options=''
 
 while test ! -z "$1"; do
     case "$1" in
@@ -62,6 +63,8 @@ while test ! -z "$1"; do
 	-nolisp)	nolisp=t;;
 	-nocsm)		nocsm=t;;
 	-nochat)	nochat=t;;
+	-noekb)		noekb=t;;
+	-ekb-agent-options)	ekb_agent_options="$2";	shift;;
 	-nospeechout)	nospeechout=t;;
 	-nobeep)	nobeep=t;;
 	-quiet)		nobeep=t;;
@@ -272,9 +275,11 @@ fi
   2>&1 | tee TextTagger.err ) &
 
 # Start EKBAgent
+if test -z "$noekb"; then
 ( sleep 5; \
-  $TRIPS_BASE/bin/EKBAgent $port_opt  \
+  $TRIPS_BASE/bin/EKBAgent $port_opt $ekb_agent_options \
   2>&1 | tee EKBAgent.err ) &
+fi
 
 # Start Graphviz
 (sleep 5; \

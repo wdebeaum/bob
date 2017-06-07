@@ -10,6 +10,7 @@ public class OntologyReader {
 
 	private HashMap<String,String> events; // Event type -> parent
 	private HashMap<String,ArrayList<String>> goals;
+	private ArrayList<String> goalOrdering;
 	private HashMap<String,ArrayList<String>> actGoalSuggestionMapping;
 	private HashSet<String> models;
 	
@@ -18,6 +19,7 @@ public class OntologyReader {
 		events = new HashMap<String, String>();
 		goals = new HashMap<String, ArrayList<String>>();
 		actGoalSuggestionMapping = new HashMap<String, ArrayList<String>>();
+		goalOrdering = new ArrayList<String>();
 		models = new HashSet<String>();
 	}
 	

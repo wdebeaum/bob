@@ -228,6 +228,7 @@
       ;; WH Questions 
       ;;   e.g. what is the budget
 
+      #|
       ; This rule might not fire any more.  "What is the budget?" is matched by -roleQ1-rev
       ((ONT::SPEECHACT ?!a ONT::SA_WH-QUESTION :FOCUS ?!ff :CONTENT ?!rr)
        (ONT::WH-TERM ?!ff ?foc-type)
@@ -243,6 +244,7 @@
        -roleQ1-rev>
        (ONT::ASK-WHAT-IS :who *USER* :to *ME* :what ?!dd :aspect ?foc-type)
        )
+      |#
 
       ;;  What next?
       ((ONT::SPEECHACT ?!a ONT::SA_WH-QUESTION :FOCUS ?!ff :CONTENT ?!rr)
@@ -253,14 +255,23 @@
        )
       
       ;; e.g., What budget are we using?
-      
+
+      #|
       ((ONT::SPEECHACT ?!a ONT::SA_WH-QUESTION :FOCUS ?!ff :CONTENT ?!rr)
        (ONT::WH-TERM ?!ff ?!type :ASSOC-WITH ?a)
        -standardQ>
        (ONT::ASK-WHAT-IS :who *USER* :to *ME* :what ?!ff)
        (ONT::THE ?!ff ?!type :suchthat ?!rr :ASSOC-WITH ?a)
 	)
-     
+      |#
+
+      ((ONT::SPEECHACT ?!a ONT::SA_WH-QUESTION :FOCUS ?!ff :CONTENT ?!rr)
+       (ONT::WH-TERM ?!ff ?!type)
+       -standardQ>
+       (ONT::ASK-WHAT-IS :who *USER* :to *ME* :what ?!ff :suchthat ?!rr)
+	)
+      
+      
    ;; conditional questions: is ERK activated if we add Serafinabib?
 
      ((ONT::SPEECHACT ?!a ONT::SA_YN-QUESTION :CONTENT ?!rr)
