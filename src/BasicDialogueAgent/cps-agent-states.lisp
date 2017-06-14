@@ -35,7 +35,7 @@
 		     (ont::eval (find-attr :result ?goal :feature ACTIVE-GOAL))
 		     -propose-goal>
 		     (RECORD CPS-HYPOTHESIS (PROPOSE :content ?!what :context ?akrl-context :active-goal ?goal))
-		     (INVOKE-BA :msg (INTERPRET-SPEECH-ACT
+		     (INVOKE-CSM :msg (INTERPRET-SPEECH-ACT
 				      :content (PROPOSE :content ?!what
 							:context ?akrl-context
 							:active-goal ?goal)))
@@ -54,7 +54,7 @@
 		     (ont::eval (find-attr :result ?goal :feature ACTIVE-GOAL))
 		     -modify-goal>
 		     (RECORD CPS-HYPOTHESIS (PROPOSE :content ?!what :context ?akrl-context :active-goal ?goal))
-		     (INVOKE-BA :msg (INTERPRET-SPEECH-ACT
+		     (INVOKE-CSM :msg (INTERPRET-SPEECH-ACT
 				      :content (PROPOSE :content ?!what
 							;:as (MODIFY :of ?goal)
 							:as (MODIFICATION)
@@ -72,7 +72,7 @@
 		     (ont::eval (find-attr :result ?goal :feature ACTIVE-GOAL))
 		     -propose-goal-via-question>
 		     (RECORD CPS-HYPOTHESIS (ONT::ASK-WHAT-IS :content ?!what :context ?akrl-context :active-goal ?goal))
-		     (INVOKE-BA :msg (INTERPRET-SPEECH-ACT
+		     (INVOKE-CSM :msg (INTERPRET-SPEECH-ACT
 				      :content (ONT::ASK-WHAT-IS :content ?!what
 								 :suchthat ?!st
 								 :context ?akrl-context
@@ -90,7 +90,7 @@
 		     (ont::eval (find-attr :result ?goal :feature ACTIVE-GOAL))
 		     -ask-question>
 		     (RECORD CPS-HYPOTHESIS (ONT::ASK-IF :content ?!what :context ?akrl-context :active-goal ?goal))
-		     (INVOKE-BA :msg (INTERPRET-SPEECH-ACT
+		     (INVOKE-CSM :msg (INTERPRET-SPEECH-ACT
 				      :content (ONT::ASK-IF :content ?!what
 							    :context ?akrl-context
 							    :active-goal ?goal)))
@@ -181,7 +181,7 @@ ONT::INTERACT
 		     (ont::eval (find-attr :result ?goal :feature ACTIVE-GOAL))
 		     -propose-test>
 		     (RECORD CPS-HYPOTHESIS (ONT::ASK-CONDITIONAL-IF :content ?!what :condition ?!test :context ?akrl-context :active-goal ?goal))
-		     (INVOKE-BA :msg (INTERPRET-SPEECH-ACT
+		     (INVOKE-CSM :msg (INTERPRET-SPEECH-ACT
 				      :content (ONT::ASK-CONDITIONAL-IF :content ?!what
 									:condition ?!test
 									:context ?akrl-context
@@ -199,7 +199,7 @@ ONT::INTERACT
 		     (ont::eval (find-attr :result ?goal :feature ACTIVE-GOAL))
 		     -refine-goal-with-assertion>
 		     (RECORD CPS-HYPOTHESIS (ASSERTION :content ?!root :context ?akrl-context :active-goal ?goal))
-		     (INVOKE-BA :msg (INTERPRET-SPEECH-ACT
+		     (INVOKE-CSM :msg (INTERPRET-SPEECH-ACT
 				      :content (ASSERTION :content ?!root
 							  :context ?akrl-context
 							  :active-goal ?goal)))
@@ -313,17 +313,17 @@ ONT::INTERACT
 		     ;(ont::eval (generate-AKRL-context :what ?ans :result ?akrl-context)) ; no context
 		     (ont::eval (find-attr :result ?goal :feature ACTIVE-GOAL))
 		     -user-response1b-askif-yes> 
-		     (RECORD CPS-HYPOTHESIS (ANSWER :content ?ans :context nil :active-goal ?goal))
-		     (INVOKE-BA :msg (INTERPRET-SPEECH-ACT
+		     (RECORD CPS-HYPOTHESIS (ANSWER :content ONT::TRUE :context nil :active-goal ?goal))
+		     (INVOKE-CSM :msg (INTERPRET-SPEECH-ACT
 				      :content (ANSWER :content ONT::TRUE
 							:context nil
 							:active-goal ?goal)))
 		     )
-	  :destination 'what-next-initiative
+	  :destination 'handle-csm-response
 	  )
 
 	 (transition
-	  :description "yes as an answer to an ask-if (could also be an ask-wh)"
+	  :description "no as an answer to an ask-if (could also be an ask-wh)"
 	  :pattern '((ONT::SPEECHACT ?!sa ONT::ANSWER :WHAT (? ans ONT::NEG))
 		     (ont::eval (find-attr :result (?prop :content ?!content :context ?!context) 
 				 :feature PROPOSAL-ON-TABLE))
@@ -331,13 +331,13 @@ ONT::INTERACT
 		     ;(ont::eval (generate-AKRL-context :what ?ans :result ?akrl-context)) ; no context
 		     (ont::eval (find-attr :result ?goal :feature ACTIVE-GOAL))
 		     -user-response1b-askif-no> 
-		     (RECORD CPS-HYPOTHESIS (ANSWER :content ?ans :context nil :active-goal ?goal))
-		     (INVOKE-BA :msg (INTERPRET-SPEECH-ACT
+		     (RECORD CPS-HYPOTHESIS (ANSWER :content ONT::FALSE :context nil :active-goal ?goal))
+		     (INVOKE-CSM :msg (INTERPRET-SPEECH-ACT
 				      :content (ANSWER :content ONT::FALSE
 							:context nil
 							:active-goal ?goal)))
 		     )
-	  :destination 'what-next-initiative
+	  :destination 'handle-csm-response
 	  )
 
 	 (transition
@@ -386,7 +386,7 @@ ONT::INTERACT
 		     (ont::eval (find-attr :result ?goal :feature ACTIVE-GOAL))
 		     -user-response4>
 		     (RECORD CPS-HYPOTHESIS (ANSWER :content ?!ans :context ?akrl-context :active-goal ?goal))
-		     (INVOKE-BA :msg (INTERPRET-SPEECH-ACT
+		     (INVOKE-CSM :msg (INTERPRET-SPEECH-ACT
 				      :content (ANSWER :content ?!ans
 							:context ?akrl-context
 							:active-goal ?goal)))
@@ -403,7 +403,7 @@ ONT::INTERACT
 		     (ont::eval (find-attr :result ?goal :feature ACTIVE-GOAL))
 		     -user-response4b>
 		     (RECORD CPS-HYPOTHESIS (ANSWER :content ?!ans :context ?akrl-context :active-goal ?goal))
-		     (INVOKE-BA :msg (INTERPRET-SPEECH-ACT
+		     (INVOKE-CSM :msg (INTERPRET-SPEECH-ACT
 				      :content (ANSWER :content ?!ans
 							:context ?akrl-context
 							:active-goal ?goal)))
@@ -970,7 +970,7 @@ ONT::INTERACT
 		     (RECORD NEXT-CPS-HYPOTHESIS nil)
 		     (GENERATE :content (ONT::EVALUATION :content (ONT::GOOD)))
 		     ;;  Now we try to reinterpret the original utterance that caused the clarification
-		     (INVOKE-BA :msg (INTERPRET-SPEECH-ACT
+		     (INVOKE-CSM :msg (INTERPRET-SPEECH-ACT
 				      :content ?new-cps-hyp)))
 	  :destination 'handle-CSM-response)
 

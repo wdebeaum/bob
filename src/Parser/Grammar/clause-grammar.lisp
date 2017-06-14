@@ -426,7 +426,7 @@
    ;; test: what will chase the cat?
    ((utt (lf (% speechact (var *) (class ont::sa_wh-question) (constraint (& (content ?v) (focus ?foc)))))
          (var *) (qtype ?type) (punctype ?p))
-    -decl-wh-question1> .96
+    -decl-wh-question1> .98
     (head (s (stype (? st decl imp)) (wh q) (gap -) (wh-var ?foc) (var ?v) (advbl-needed -))))
    
    
@@ -1722,7 +1722,7 @@
    ;; test: the dog was given (me)
    ((v (vform passive) (passive +)
      (subj ?!dobj) (subj-map ?dobj-map) 
-     (dobj (% -)) (agent-map ?subj-map)
+     (dobj (% -)) (agent-map ?subj-map) (agent-sem ?subjsem)
      (iobj ?iobj) (iobj-map ?iobj-map)
      (comp3 ?comp3) (part ?part) (comp3-map ?comp-map)
 ;     (prefix ?prefix)
@@ -1731,6 +1731,7 @@
     -v-passive> 1.0 
     (head (v (vform pastpart) (lex (? !lx been)) ;; exclude be
 	   (subj ?subj) (subj-map ?subj-map) ;; please don't remove - this is needed for trips-tflex conversion
+	   (subj (% ?s (sem ?subjsem)))
 	   (dobj ?!dobj) (dobj-map ?dobj-map) (exclude-passive -)
 	   (iobj ?iobj) (iobj-map ?iobj-map)
 	   (comp3 ?comp3) (comp3-map ?comp-map)
@@ -1738,23 +1739,26 @@
 ;	   (prefix ?prefix)
 	   (restr ?prefix)
 	   )))
-   
+
    ;; test:  the dog is taken care of
    ((v (vform passive)  (passive +)
-     (subj (% np (lex ?subjlex) (sem ?dobjsem) (var ?dobjvar) (agr ?dobjagr)))
+     (subj (% np (lex ?dobjlex) (sem ?dobjsem) (var ?dobjvar) (agr ?dobjagr)))
      (subj-map ?dobj-map) 
-     (dobj (% prep (lex ?pt))) (dobj-map -)
+     ;(dobj (% prep (lex ?pt)))
+     (dobj (% -)) 
+     (dobj-map -)
      (iobj ?iobj) (iobj-map ?iobj-map)
      (comp3 ?comp3) (part ?part) (comp3-map ?comp-map)
      )
     -v-passive-pp> 1.0
     (head (v (vform pastpart) (lex (? !lx been)) (exclude-passive -);; exclude be
 	   (subj (% np (lex ?subjlex) (sem ($ ?!type))))
-	   (dobj (% pp (ptype ?pt) (sem ?dobjsem) (var ?dobjvar) (agr ?dobjagr)))
+	   (dobj (% pp (ptype ?pt) (lex ?dobjlex) (sem ?dobjsem) (var ?dobjvar) (agr ?dobjagr)))
 	   (dobj-map ?dobj-map)
 	   (iobj ?iobj) (iobj-map ?iobj-map)
 	   (comp3 ?comp3) (comp3-map ?comp-map)
 	   (part ?part)))
+    (prep (lex ?pt))
     )
 
    ;; test: the dog was given me by him
@@ -1764,9 +1768,9 @@
        (subj ?!dobj) (subj-map ?dobj-map) 
      ;;       (dobj (% -)) 
      (dobj ?comp3) (dobj-map ?comp3-map)     
-       (iobj ?iobj) (iobj-map ?iobj-map)
-       (comp3 (% pp (ptype by) (sem ?!subj-sem))) (comp3-map ?subj-map)
-       (part ?part)) 
+     (iobj ?iobj) (iobj-map ?iobj-map)
+     (comp3 (% pp (ptype by) (sem ?!subj-sem))) (comp3-map ?subj-map)
+     (part ?part)) 
     -v-passive-by> 1.0
     (head (v (vform pastpart) (lex (? !lx been)) (exclude-passive -);; exclude be
 	     (subj (% np (lex ?subjlex) (sem ?!subj-sem) (agr ?subjagr) (sem ($ ?!type))))
@@ -1775,7 +1779,8 @@
 	     (iobj ?iobj) 	  
 	     (comp3 ?comp3) (comp3-map ?comp3-map)
 	     (part ?part)))
-)
+    )
+   
    ;; test: i was given the dog
    ;;  passive form with indirect object
    ((v (vform passive)  (passive +)
@@ -1809,6 +1814,41 @@
 	   (iobj ?!iobj) 
 	   (comp3 ?comp3) (comp3-map (% -))
 	   (part ?part))))
+
+   ;; the dog was computer generated.  It is FDA approved.
+   ((vp- (vform passive)  (passive +)
+     (subj-map ?subj-map) (subj ?subj)
+     ;;(dobj (% np (sem ?sem) (var ?v-n) (agr ?a) (lex ?lex) (gap -) (RESTR ?nr))) 
+     ;;(dobj-map ?subj-map)
+     (class ?class)
+     (iobj ?iobj) (iobj-map ?iobj-map)
+     (subjvar ?subjvar)
+     ;;(comp3 ?comp3) (comp3-map ?comp3-map)
+     (constraint (& (?ag-map ?v-n) ;(ont::agent ?v-n)
+			   ;;(% *PRO* (class ?nc) (status ont::bare) (constraint ?nr) (var ?v-n)))
+		    (?subj-map ?subjvar)
+		    (?dobj-map  ?dobjvar)
+		    (?iobj-map ?iobjvar)))
+		    
+     (part ?part)) 
+    -v-passive+prenom-subj> 
+    (np (sort ?sort) (LF (% description (status (? x ont::bare ont::name)))) ;;(RESTR ?nr) (status ?status) 
+     (complex -) (gerund -) (var ?v-n) 
+     (sem ?sem) (relc -) (abbrev -) (gap -) (agr ?a) (lex ?lex)
+     )
+    (head (v (vform passive) (lex (? !lx been)) (exclude-passive -);; exclude be
+	     (lf ?class) (agent-map ?ag-map) (agent-sem ?sem)
+	     (subj (% np (lex ?subjlex) (sem ?!subj-sem) (agr ?subjagr) (var ?subjvar) (sem ($ ?!type))))
+	     (subj-map ?subj-map) (iobj-map ?iobj-map)
+	     ;;(dobj ?!dobj) 
+	     (dobj-map ?dobj-map) (dobj (% ?s3 (agr ?dobjagr) (case (? dcase obj -)) (var ?dobjvar) (sem ?dobjsem) (gap ?gap)))
+	     (iobj ?iobj)  (iobj (% ?s2  (case (? icase obj -)) (var ?iobjvar) (sem ?iobjsem) (gap -)))     
+	     (comp3 (% -));; (comp3-map ?comp3-map)
+	     (part ?part)
+	     (restr ?con)
+	     ))
+    )
+    
    
    ;;;   ;;  e.g., terminal 1 is separated by a gap from a positive terminal
    ;;; "by" comes before a subcategorized pp argument
@@ -2278,7 +2318,7 @@
      (gap (% ?!s3 (case ?dcase) (agr ?dagr) (var ?dobjvar) (sem ?dobjsem) (gap -)))
      (advbl-needed ?avn)
      )
-    -s-ynq-be-gap> 0.97
+    -s-ynq-be-gap> 0.96  ;; downgrade this until we find an example that needs this rule!!  Why do we not require the V to be ONT::BE or ONT::EQUAL????
     (head (v (aux -)
 	   
 	   (var ?v) ;; propagate up explicitly because not a head feature	   
@@ -2786,16 +2826,14 @@
 	)
      -lets-imp> 1.0 ;; get let's to go through this rule instead of command-imp2
      (word (lex let))
-     (np (lex us))
+     (np (lex us) (var ?npvar))
      (head (vp (gap  -) (sem ?sem)
 	       (sem ($ f::situation (f::aspect (? aspc f::dynamic f::stage-level))))
 	       (var ?v) (aux -) (tma ?tma)
 	       (constraint ?con)
-	       (subj (% np (var (% *pro* (status ont::pro-set) (class (:* ont::person w::us)) (var *) (sem ?subjsem) (constraint (& (proform us)))))
-			(sem ($ f::phys-obj (f::form f::object) (f::intentional +)))
+	       (subj (% np (var ?npvar)
 			(sem ?subjsem)))
-	       (subjvar (% *pro* (var *) (status ont::pro-set)
-			   (class (:* ont::person w::us)) (sem ?subjsem) (constraint (& (proform us)))))
+	       (subjvar ?npvar)
 	       (class ?c)
 	       (vform base) (postadvbl ?pa) (main ?ma)
 	    (transform ?transform)
@@ -3158,7 +3196,7 @@
 	   (vform ?vform)
 	   (agr ?a)
 	   (sem ($ f::situation (f::aspect ?aspect) (f::time-span ?time)))
-	   (subj ?subj) (subj (% ?s1 (var ?subjvar) (sem ?subjsem) (agr ?a) (gap -)))
+	   (subj ?subj) (subj (% ?s1 (lex ?subjlex) (var ?subjvar) (sem ?subjsem) (agr ?a) (gap -)))
 	   (iobj (% -)) (part (% -)) (dobj (% -))
 	   (comp3 ?comp) 
 	   (comp3 (% vp- (class ?class)  (constraint ?con1) (tma ?tma1) (var ?var)

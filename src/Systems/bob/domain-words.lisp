@@ -28,6 +28,7 @@
 ; for paper 1
 ;;;;;;;;;;;;;;;;;;;;;;;;
 
+#|
 (define-words :pos W::n 
 :words (
  (w::RTK
@@ -65,3 +66,4 @@
    )
 ))
 
+|#
