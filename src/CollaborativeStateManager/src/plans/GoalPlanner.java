@@ -550,7 +550,6 @@ public class GoalPlanner {
 		else if (type.equalsIgnoreCase("QUERY-IN-CONTEXT"))
 		{
 			newGoal = new Query(act,getGoal(parent),context);
-			//newGoal = new Query(goalLF,getGoal(parent),context);
 			addGoal(newGoal,parent);
 			
 		}

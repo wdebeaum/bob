@@ -8,7 +8,7 @@
 (parser::augment-grammar
   '((headfeatures
 	 ;;lex headcat removed --me
-     (PP KIND MASS NAME agr SEM SORT PRO SPEC CLASS transform gap)
+     (PP KIND MASS NAME agr SEM SORT PRO SPEC CLASS transform gap gerund)
      ;;(ADVBLS FOCUS VAR SEM SORT ATYPE ARG SEM ARGUMENT NEG TO QTYPE lex transform)
      (ADVBL VAR SORT ARGSORT ATYPE SEM ARGUMENT lex headcat transform neg result-only)
      (ADV SORT ATYPE CONSTRAINT SA-ID PRED NEG TO LEX HEADCAT SEM ARGUMENT SUBCAT IGNORE transform)
@@ -726,6 +726,7 @@
     ;; imperative:
     ;; TEST: After you get approval, purchase it.
     ;; after I get a raise, how about a seventeen inch flat screen (how-about)
+    ;; if the dog barks, will the cat run away
     ((S (LF ?newlf) (PREADVBL +)
        (tma ?tma)
         )
@@ -736,7 +737,7 @@
             )
      (head (S (VAR ?v) (LF ?lf) (LF (% prop (constraint ?con))) (SEM ?argsem) (aux -)
 	      (wh -) ;; while possible, its very unlikely
-	      (tma ?tma) (stype (? stp decl imp how-about))
+	      (tma ?tma) ;;(stype (? stp decl imp how-about))
 	      )
            )
      (add-to-conjunct (val (MODS ?mod)) (old ?con) (new ?newcon))
@@ -830,7 +831,7 @@
     ((N1 (RESTR ?new) (POSTADVBL +) (COMPLEX +)) 
      -adv-np-event-post>   ;; event nominals allows result adverbials
      (head (N1 (VAR ?v1) ;; (POSTADVBL -) 
-	       (SEM ($ (f::situation (F::event-of-change))))
+	       (SEM ($ f::situation (F::type ont::event-of-change)))
 	       (RESTR ?restr) ;;(gerund -)   Have to allow gerunds e.g., the debating at the house.
 	       (post-subcat -) (SORT PRED)
 	       (no-postmodifiers -) ;; exclude "the same path as the battery" and advbl attaching to "path"

@@ -44,14 +44,15 @@
 |#
 
 ; return all roles
-(setq *roles-to-emit* nil)			    
+;(setq *roles-to-emit* nil)			    
 
 
 ;(setq *extraction-rules* '(bobRules))
 
-(reset-im-rules 'bobRules)  ;; this allows you to edit this file and reload it without having to reload the entire system
+;(reset-im-rules 'bobRules)  ;; this allows you to edit this file and reload it without having to reload the entire system
 
-(mapcar #'(lambda (x) (add-im-rule x 'bobRules))  ;; sets of rules are tagged so they can be managed independently 
+; put this in with the drum_ev rules
+(mapcar #'(lambda (x) (add-im-rule x 'drum)) ;'bobRules))  ;; sets of rules are tagged so they can be managed independently 
 	'(
 
 	  ; X activates Y, Y activates Z, Z activates W
@@ -86,7 +87,7 @@
            )
 |#
 
-	  ; use 
+	  ; use (arbitrary AFFECTED as long as the AGENT is a person)
           (((? reln0 ONT::F ONT::QUANTIFIER ONT::KIND ONT::A ONT::INDEF-PLURAL ONT::THE ONT::THE-SET ONT::INDEF-SET ONT::BARE ONT::SM ONT::PRO ONT::PRO-SET) ?ev
             (:* (? type ONT::USE) ?!w) :AGENT ?!ag :AFFECTED ?!obj :DRUM ?code)
            (?reln1 ?!ag  (? t1 ONT::PERSON))
@@ -94,13 +95,14 @@
            60
            (ONT::EVENT ?ev ?type
             :rule -rule1b
-	    :AGENT -
+	    ;:AGENT -
+	    :AGENT ?!ag
             :AFFECTED ?!obj
             :DRUM ?code
             )
            )
 	  
-	  ; build
+	  ; build (arbitrary AFFECTED-RESULT as long as the AGENT is a person)
 	  ; Note: CREATE is used for ACTIVATE too, but this rule takes precedence because it is at an earlier extraction phase (and it also has a higher priority)
           (((? reln0 ONT::F ONT::QUANTIFIER ONT::KIND ONT::A ONT::INDEF-PLURAL ONT::THE ONT::THE-SET ONT::INDEF-SET ONT::BARE ONT::SM ONT::PRO ONT::PRO-SET) ?ev
             (:* (? type ONT::CREATE) ?!w) :AGENT ?!ag :AFFECTED-RESULT ?!obj :DRUM ?code)
@@ -109,7 +111,8 @@
            60
            (ONT::EVENT ?ev ?type
             :rule -rule1c
-;	    :AGENT -
+	    ;:AGENT -  ; need to zero this out because otherwise it will go through the regular PRODUCE rule with AGENT only (and eliminate the AFFECTED-RESULT there)
+	    :AGENT ?!ag
             :AFFECTED-RESULT ?!obj
             :DRUM ?code
             )
@@ -134,6 +137,7 @@
            )
 
 
+	  #|
 	  ; This is not used any more
 	  ; pancreatic cancer
 	  (((? reln ONT::QUANTIFIER ONT::KIND ONT::A ONT::INDEF-PLURAL ONT::THE ONT::THE-SET ONT::INDEF-SET ONT::BARE ONT::SM ONT::PRO ONT::PRO-SET) ?!obj 
@@ -173,6 +177,7 @@
             :rule -rule-rollback
             )
            )
+|#
 
 	  
 #|

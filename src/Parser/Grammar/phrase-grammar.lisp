@@ -428,7 +428,7 @@
 	(sem ?nsem) (subcat ?subcat) (SET-RESTR ?sr)
 	(comparative ?com)
 	(complex -) ;(complex ?cmpl)
-	(post-subcat -) (gap ?gap)
+	(post-subcat -) (gap ?gap) (allow-deleted-comp ?adc)
 	    (dobj ?dobj)
 	    (subj ?subj)
       	    (comp3 ?comp3)
@@ -447,7 +447,7 @@
     (head (N (RESTR ?r) (VAR ?v) (SEM ?nsem) (CLASS ?c) (SET-RESTR ?sr) (gap ?gap)
 	      (SORT ?sort) (relc -) ;;(relc ?relc) "-" to avoid the ambiguity "the [[red book] which I saw]" "the [red [book which I saw]]"  
 	      (subcat ?subcat) (complex -) (lf ?lf)
-	      (post-subcat -)
+	      (post-subcat -) (allow-deleted-comp ?adc)
 	      (PRO -) (postadvbl -) ;; to avoid the ambiguity "the [[red truck] at Avon]" "the [red [truck at Avon]]"
 	    (dobj ?dobj)   ; for nominalizations
 	    (subj ?subj)
@@ -469,7 +469,7 @@
 	(sem ?nsem) (subcat ?subcat) (SET-RESTR ?sr)
 	(comparative ?com)
 	(complex -) ;(complex ?cmpl)
-	(post-subcat -) (gap ?gap)
+	(post-subcat -) (gap ?gap) (allow-deleted-comp ?adc)
 	    (dobj ?dobj)
 	    (subj ?subj)
       	    (comp3 ?comp3)
@@ -487,7 +487,7 @@
     (head (N (RESTR ?r) (VAR ?v) (SEM ?nsem) (CLASS ?c) (SET-RESTR ?sr) (gap ?gap)
 	      (SORT ?sort) (relc -) ;;(relc ?relc) "-" to avoid the ambiguity "the [[red book] which I saw]" "the [red [book which I saw]]"  
 	      (subcat ?subcat) (complex -) (lf ?lf)
-	      (post-subcat -)
+	      (post-subcat -) (allow-deleted-comp ?adc)
 	      (PRO -) (postadvbl -) ;; to avoid the ambiguity "the [[red truck] at Avon]" "the [red [truck at Avon]]"
 	    (dobj ?dobj)   ; for nominalizations
 	    (subj ?subj)
@@ -596,39 +596,41 @@
    
    ;; relational nouns without filled PP-of    
    ;; e.g., the brother, the hand, the side
-   ;; Takes a RELN and puts in a dummy arg to make it a pred on
-   ;; a value: e.g., distance -> (Distance <of something> ?arg)) 
-   ;; uses special structure *PRO* for the implicit arg
-   ;; NOTE: it is crucial to have (SUBCAT -) there, or the N1 will never undergo n-n modification!
+     ;; NOTE: it is crucial to have (SUBCAT -) there, or the N1 will never undergo n-n modification!
    
    ((N1 (sort pred) (class ?lf) (var ?v)
      ;; (restr (& (?smap (% *PRO* (var *) (sem ?argsem) (constraint (& (ROLE-VALUE-OF ?v) (fills-ROLE ?lf)))))))  ;; to be done in IM now
-      (RESTR (& (scale ?sc)))
+      (RESTR ?con) ;(RESTR (& (scale ?sc)))
      (qual -) (postadvbl -) (subcat -)
      )
     -N1-reln1> .995
-    (head (n  (sort reln) (lf ?lf) (allow-deleted-comp +)
+    (head (n  (sort reln) (lf ?lf) (allow-deleted-comp +) (RESTR ?r)
 	   (sem ?ssem)  (SEM ($ ?type (f::scale ?sc)))
 	   (subcat (% ?argcat (sem ?argsem)))
 	   (subcat-map ?smap)
-	   (subcat-map (? !smap ont::GROUND)) ;; disallow ont::val here
+	   (subcat-map (? !smap ont::GROUND)) 
 	   ))
+    (add-to-conjunct (val (:scale ?sc)) (old ?r) (new ?con))
+
     )
 
     ;; relational nouns with filled PP-of complements  e.g., distance of the route
     ;; but this is not for e.g., distance of 5 miles -- filled pp-of unit measures should go through n1-reln4
     ;; NOTE: it is crucial to have (SUBCAT -) there, or the N1 will never undergo n-n modification!
     ((N1 (sort pred) (var ?v) (class ?lf) (qual -) (COMPLEX +)
-      (restr (& (?smap ?v1) (scale ?sc))) (gap ?gap)
+	 (RESTR ?con) ;(restr (& (?smap ?v1) (scale ?sc)))
+	 (gap ?gap)
       (subcat -)
       )
      -N1-reln3>
-     (head (n (sort reln) (lf ?lf)
+     (head (n (sort reln) (lf ?lf) (RESTR ?r)
 	      (subcat ?!subcat)
 	      (subcat (% ?scat (var ?v1) (sem ?ssem) (lf ?lf2) (gap ?gap) )) ;;(sort (? srt pred individual set comparative reln))))
 	      (SEM ($ ?type (f::scale ?sc)))
 	      (subcat-map ?smap)))
      ?!subcat
+     (add-to-conjunct (val (?smap ?v1)) (old ?r) (new ?con1))
+     (add-to-conjunct (val (scale ?sc)) (old ?con1) (new ?con))
      )
   
    ;; there are a few relational nouns with two complements  e.g., ratio of the length to the height
@@ -1748,7 +1750,8 @@
       (subcat -) (post-subcat -)
       )
      -N1-appos1> .98
-     (head (N1 (VAR ?v1) (RESTR ?r) (CLASS ?c) (SORT ?sort) (QUAL ?qual) (relc -) (sem ?sem)
+     (head (N1 (VAR ?v1) (RESTR ?r) (CLASS ?c) (sort (? !sort unit-measure)) ;(SORT ?sort) 
+	       (QUAL ?qual) (relc -) (sem ?sem)
 	    (subcat -) (post-subcat -) (complex -) (derived-from-name -) (time-converted -)
 	    )      
       )
@@ -3311,7 +3314,7 @@
 	    (generated -)
 	    (agent-nom -) ;; no agent in agentivenominalizations
 	    ))
-     (pp (ptype ?subjpreps) (sem ?subjsem) (gap -) (var ?dv))
+     (pp (ptype ?subjpreps) (sem ?subjsem) (gap -) (var ?dv) (gerund -))  ;; gerund PP is probably BY-MEANS-OF
      (add-to-conjunct (val (& (?!subjmap ?dv))) (old ?restr) (new ?newrestr)))
 
 
@@ -4706,7 +4709,7 @@
     )
     
         ;; sequences in the bio domain especially can become an NP
-     ((NP (ATTACH ?a) (var *) (agr 3p) (SEM ?sem)  
+     ((NP (ATTACH ?a) (var *) (agr 3p) (SEM ?sem) (class ?c1)
       (LF (% Description (status ont::definite) (var *) 
 	     (class ?c1)
 	     (constraint (& (sequence ?lf1)))
@@ -4716,7 +4719,7 @@
       (COMPLEX +) (SORT PRED)
       (generated ?generated)
       )
-     np-sequence> 
+     np-sequence> 1
       (head (NPSEQ (var ?v) (SEM ?sem) (lf ?lf1) (class ?c1) (CASE ?case) (mass ?m1)
 		   (generated ?generated1) (separator (? p w::punc-slash w::punc-colon w::punc-minus w::punc-en-dash w::punc-minus))
 		   (time-converted ?rule))))
@@ -5144,7 +5147,7 @@
    ;; certains NAMES (esp in the biology domain) are really treat like mass nouns
 	;;   we need this for constructions wwith modifiers, like "phosphorylated HER3"
     ((n1 (SORT PRED)
-      (var ?v) (Class ?lf) (sem ?sem) (agr ?agr) (case (? cas sub obj -))
+      (var ?v) (Class ?lf) (sem ?sem) (agr 3s) (case (? cas sub obj -))
       (derived-from-name +)  ;; we do this so that this N1 doesn't go through the bare-np rule, since we have the name-np already. But this N1 does allow relative clauses, as in "Ras that is bound to Raf"
       (status ont::name) (lex ?l) (restr ?con) ;(restr (& (w::name-of ?l)))
       (mass mass)
@@ -5152,7 +5155,7 @@
      -n1-from-name> 1
      (head (name (lex ?l) (sem ?sem) 
 		 (sem ($ (? type f::PHYS-OBJ f::situation) (f::type (? x ont::molecular-part ont::cell-part ont::chemical ont::physical-process ont::organization))))
-		 (var ?v) (agr ?agr) (lf ?lf) (class ?class)
+		 (var ?v) (agr 3s) (lf ?lf) (class ?class)
 	    (full-name ?fname) (time-converted ?tc)
 	    ;; swift 11/28/2007 removing gname rule & passing up generated feature (instead of restriction (generated -))
 	    (generated -)  (transform ?transform) (title -)

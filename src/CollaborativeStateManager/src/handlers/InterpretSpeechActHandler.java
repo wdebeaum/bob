@@ -163,19 +163,6 @@ public class InterpretSpeechActHandler extends MessageHandler implements Runnabl
 		}
 		
 		String initiativeAgent = null;
-		
-//		if (agentObject != null)
-//		{
-//			initiativeAgent = agentObject.stringValue();
-//		}
-//		else if (neutralObject != null)
-//		{
-//			initiativeAgent = neutralObject.stringValue();
-//		}
-
-//		System.out.println("Agent: " + initiativeAgent);
-        
-		//Goal replacementGoal = new Goal(currentAcceptedGoal);
 		Elaboration elaboration = null;
 		if (eventTerm != null)
 		{
@@ -183,10 +170,6 @@ public class InterpretSpeechActHandler extends MessageHandler implements Runnabl
 			referenceHandler.addReference(elaboration.getKQMLTerm());
 		}
 
-        //referenceHandler.addReference(replacementGoal.getKQMLTerm());
-		//replacementGoal.setInitiativeAgent(initiativeAgent, (KQMLList)context);
-		//KQMLList answer = goalPlanner.modify(elaboration,
-			//	currentAcceptedGoal.getVariableName());
 		KQMLList answerContent = queryToAnswer.answerContent(what, (KQMLList)context);
 		
 		
@@ -194,15 +177,6 @@ public class InterpretSpeechActHandler extends MessageHandler implements Runnabl
 		newContext.addAll((KQMLList)context);
 		if (currentAcceptedGoal != null)
 			newContext.addAll(currentAcceptedGoal.getAdditionalContext());
-//        if (replacementGoal != null)
-//        {
-//            
-//            KQMLList replacementContext = referenceHandler.generateContextForTerm(replacementGoal.getKQMLTerm());
-//            
-//            newContext.addAll(replacementContext);
-//            
-//            newContext.addAll(replacementGoal.getOriginalContext());
-//        }
 		
         if (elaboration != null)
         {
@@ -487,20 +461,6 @@ public class InterpretSpeechActHandler extends MessageHandler implements Runnabl
 				else if (term.getKeywordArg(":INSTANCE-OF").stringValue().equalsIgnoreCase("ONT::EXECUTE"))
 				{
 					// Now we'll just return it as an elaboration of the goal under discussion
-					
-//                    System.out.println("Execute message found. Changing initiative.");
-//					KQMLObject agentSymbolObject = term.getKeywordArg(":AGENT");
-//                    
-//					if (agentSymbolObject != null)
-//					{
-//						String agentSymbol = agentSymbolObject.stringValue();
-//						System.out.println("Agent: " + agentSymbol);
-//                        Goal goalToModify = goalPlanner.getGoalUnderDiscussion();
-//						replacementGoal = new Goal(goalToModify);
-//                        referenceHandler.addReference(replacementGoal.getKQMLTerm());
-//						replacementGoal.setInitiativeAgent(agentSymbol, (KQMLList)context);
-//						proposeAdoptContent = goalPlanner.modify(replacementGoal,goalToModify.getVariableName());
-//					}
 					if (goalPlanner.getGoalUnderDiscussion() == null)
 						return missingActiveGoal(ActType.PROPOSE);
 					proposeAdoptContent = adoptContent(IDHandler.getNewID(),what,"ELABORATION",goalPlanner.getGoalUnderDiscussion().getId());
@@ -634,18 +594,7 @@ public class InterpretSpeechActHandler extends MessageHandler implements Runnabl
 		if (currentAcceptedGoal != null)
 			activeGoal = currentAcceptedGoal.getVariableName();
 		
-//		if (activeGoal == null && currentAcceptedGoal == null)
-//		{
-//			return missingActiveGoal();
-//		}
-		
 		String newId = IDHandler.getNewID();
-		KQMLList askAdoptContent;
-//		if (((KQMLList)whatLF).getKeywordArg(":instance-of").stringValue().
-//				equalsIgnoreCase("ONT:MEDICATION"))
-//			askAdoptContent = adoptContent(newId,"SUBGOAL",activeGoal);
-//		else
-		
 		
 		
     	KQMLList askRelnContent = new KQMLList();
@@ -661,7 +610,6 @@ public class InterpretSpeechActHandler extends MessageHandler implements Runnabl
     		Goal newGoal = new Goal(askRelnContent,(KQMLList)context);
     		newGoal.addContext((KQMLList)context);
     		goalPlanner.addGoal(newGoal);
-    		askAdoptContent = adoptContent(newGoal.getId(),newId, "GOAL", null);
     		
     	}
     	else
@@ -669,7 +617,6 @@ public class InterpretSpeechActHandler extends MessageHandler implements Runnabl
     		Goal newGoal = new Goal(askRelnContent,(KQMLList)context);
     		newGoal.addContext((KQMLList)context);
     		goalPlanner.addGoal(newGoal, activeGoal);
-    		askAdoptContent = adoptContent(newGoal.getId(),newId, "SUBGOAL", currentAcceptedGoal.getId());
     	}
     	
     	KQMLList whatTerm = TermExtractor.extractTerm(what, (KQMLList)context);

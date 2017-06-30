@@ -203,10 +203,10 @@ sub read_from_terms2 {
 	    $name =~ / activity$/ and $matched_variant !~ / activity$/i) {
 	  # special case for GO molecular_function terms with "activity" removed
 	  $lftypes = ['PROTEIN'];
-	} elsif ($id =~ /^(?:CHEBI|CVCL):/ and
+	} elsif ($id =~ /^CVCL:/ and
 		 $match->{'surely-depluralized'}
 		) {
-	  # skip morphed CHEBI and CVCL terms
+	  # skip morphed CVCL terms
 	} elsif ($id =~ /^(BE|BTO|CHEBI|CO|EFO|GO|MI|NCIT|UO|SO|ORPHANET):/) { # ontologies with hierarchies
 	  push @mapped_ids, $id
 	    unless (exists($mapped_id_to_matches_with_status{$id}));
@@ -249,10 +249,10 @@ sub read_from_terms2 {
 	} elsif ($id =~ /^XFAM::\|?PF/) { # ONT type depends on $tp
 	  if ($tp eq 'Family') {
 	    $lftypes = ['PROTEIN-FAMILY'];
+	    push @dbxrefs, get_dbxrefs($id);
 	  } else { # Domain, Repeat, Motif
 	    $lftypes = ['MOLECULAR-DOMAIN'];
 	  }
-	  push @dbxrefs, get_dbxrefs($id);
 	} elsif ($id =~ /^MESH:/) { # everything (that we get) is a drug
 	  $lftypes = ['PHARMACOLOGIC-SUBSTANCE'];
 	} elsif ($id =~ /^CVCL:/) { # everything's a cell line
@@ -846,21 +846,44 @@ sub tag_protein_sites_and_mutations {
 	type => 'aa-site',
 	'index' => $tag->{lex}
       };
+      my $new_tag = +{
+	type => 'sense',
+	lex => $output_tags[-1]{lex} . ' ' . $tag->{lex}, # FIXME get dash
+	start => $output_tags[-1]{start},
+	end => $tag->{end},
+	lftype => ['MOLECULAR-SITE']
+      };
       # only include amino acid parts of DSI if it's a specific one
-      unless (grep { $_ eq lc($output_tags[-1]{lex}) } @generic_aa_words) {
+      if (grep { $_ eq lc($output_tags[-1]{lex}) } @generic_aa_words) {
+	# if the word before the number is a generic AA, look for a previous
+	# specific one too
+	if (defined($output_tags[-2]) and
+	    $output_tags[-2]{end} + 1 == $output_tags[-1]{start} and
+	    $output_tags[-2]{lftype}[0] eq 'AMINO-ACID' and
+	    (not grep {
+	      $_->{start} == $output_tags[-2]{end} and
+	      $_->{end} == $output_tags[-1]{start} and
+	      $_->{lex} !~ /^$dash_re$/
+	    } @input_tags) and
+	    (not grep { $_ eq lc($output_tags[-2]{lex}) } @generic_aa_words)
+	   ) {
+	  $new_tag->{start} = $output_tags[-2]{start};
+	  $new_tag->{lex} = $output_tags[-2]{lex} . ' ' . $new_tag->{lex}; # FIXME get dash
+	  $dsi = +{
+	    %{$output_tags[-2]{'domain-specific-info'}},
+	    %$dsi
+	  };
+	}
+      } else {
+	# if the word before the number is a specific AA already, include its
+	# DSI
 	$dsi = +{
 	  %{$output_tags[-1]{'domain-specific-info'}},
 	  %$dsi
 	};
       }
-      push @output_tags, +{
-	type => 'sense',
-	lex => $output_tags[-1]{lex} . ' ' . $tag->{lex}, # FIXME get dash
-	start => $output_tags[-1]{start},
-	end => $tag->{end},
-	lftype => ['MOLECULAR-SITE'],
-	'domain-specific-info' => $dsi
-      };
+      $new_tag->{'domain-specific-info'} = $dsi;
+      push @output_tags, $new_tag;
     }
     next unless (defined($lftype));
     push @output_tags, +{
