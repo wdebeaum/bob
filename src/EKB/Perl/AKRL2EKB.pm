@@ -1,6 +1,6 @@
 # ARKL2EKB.pm
 #
-# Time-stamp: <Mon May  8 18:12:15 CDT 2017 lgalescu>
+# Time-stamp: <Mon Jul 31 10:02:11 CDT 2017 lgalescu>
 #
 # Author: Roger Carff <rcarff@ihmc.us>, 9 Mar 2017
 #
@@ -278,7 +278,7 @@ sub add_arg
 
 =head2 add_child_with_id_attribute ($child, $id, $ekb, $node, $akrlList)
 
-Helper method which add a child node with an attribute id to the provided node,
+Helper method which adds a child node with an attribute id to the provided node,
 if the id is defined.  Also, if the id is defined, it is recursively processed
 as another AKRL object.
 
@@ -289,9 +289,14 @@ sub add_child_with_id_attribute
     my ($child, $id, $ekb, $node, $akrlList) = @_;
     if (defined ($id))
     {
+        my $res = addEKBAssertion($id, $ekb, $akrlList);
+        if (!defined ($res))
+        {
+            return undef;
+        }
         my $childNode = make_node($child, { id => removePackage($id) });
-        $ekb->modify_assertion($node, $childNode);
-        addEKBAssertion($id, $ekb, $akrlList);
+#        $ekb->modify_assertion($node, $childNode);
+        EKB::add_child($node, $childNode);
         return $childNode;
     }
     return undef;
@@ -941,6 +946,16 @@ sub createEKBTerm
         add_feature_smart($termFeatures{$feature}, $akrl->getValueForKey($feature), $ekb, $term, $akrlList)
     }
 
+    # Add assoc-with terms.
+    my $assocWith = $akrl->getValuesAsArrayForKey(":ASSOC-WITH");
+    if (defined ($assocWith))
+    {
+        foreach my $val (@$assocWith)
+        {
+            add_child_with_id_attribute ('assoc-with', $val, $ekb, $term, $akrlList);
+        }
+    }
+
     # process any DRUM AA Sites features
     processDRUMAASites($term, $ekb, parseDRUMAASites($akrl->getValueForKey(":drum")));
 
@@ -1020,7 +1035,10 @@ sub addEKBAssertion
             $ekbTerm = createEKBTerm($ekb, $akrl, $akrlList);
         }
     }
-
+    else
+    {
+	WARN("AKRL term not mappable to an EKB assertion: $indicator");
+    }
     return $ekbTerm;
 }
 
