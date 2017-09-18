@@ -1,7 +1,7 @@
 package TextTagger::Drum;
 require Exporter;
 @ISA = qw(Exporter);
-@EXPORT_OK = qw(init_drum_tagger tag_drum_terms);
+@EXPORT_OK = qw(init_drum_tagger tag_drum_terms fini_drum_tagger);
 
 use IPC::Open2;
 use TextTagger::Util qw(structurally_equal remove_duplicates union lisp_intern match2tag word_is_in_trips_lexicon);
@@ -43,6 +43,18 @@ sub init_drum_tagger {
     $mirna_species{$abbr} = $species;
   }
   close MS;
+}
+
+sub fini_drum_tagger {
+  close($terms_in);
+  close($terms_out);
+  close($dbxrefs_in);
+  close($dbxrefs_out);
+  close($protmods_in);
+  close($protmods_out);
+  waitpid $terms_pid, 0;
+  waitpid $dbxrefs_pid, 0;
+  waitpid $protmods_pid, 0;
 }
 
 # given an ID, look up the other IDs linked to it by database cross-references
@@ -979,24 +991,48 @@ sub tag_protein_sites_and_mutations {
 }
 
 # see http://en.wikipedia.org/wiki/MicroRNA#Nomenclature
+# and http://mirbase.org/
 sub tag_mirnas {
   my ($self, $input_text, @input_tags) = @_;
   # scan input text for miRNAs
   my @output_tags = ();
   while ($input_text =~ /
           (?<! \pL | $dash_re )
-	  (?: ( [a-z]{3,4} ) $dash_re )? # species abbrevation
-	  ( mir ) # capitalization here indicates subtype
-	  $dash_re?
-	  ( \d+ # major ID number
-	    [a-z]? # minor ID letter
-	    (?: $dash_re \d+ )? # gene otherwise identical miRNAs came from
-	    (?: \* | $dash_re (?: [35]p | a?s ) )? # which arm
+	  (?: ( [a-z][0-9a-z]{2,4} ) $dash_re )? # species abbrevation
+	  (?:
+	    # extra-special case for "bantam"
+	    ( bantam
+	      (?: $dash_re? ( [a-z] $dash_re? \d+ ) )?
+	      ( \* | $dash_re (?: [35]p | a?s ) )? # which arm
+	    ) |
+	    # "mir" part (with some exceptions)
+	    (?: ( let | lin | lsy ) |
+		(?:
+		  mi(?:cro)?rna |
+		  ( mir ) # capitalization here indicates subtype
+		)
+		# extra name part
+		(?: $dash_re? (
+		  bart | bf | bhrf | hsur | iab | k12 | llt | rl1 | ro | rr |
+		  tar | ul | us | [a-z]
+		) )?
+	    )
+	    $dash_re?
+	    # number part
+	    ( \d+ # major ID number
+	      [a-z]{0,2} # minor ID letter(s)
+	      (?: $dash_re \d+ )? # gene otherwise identical miRNAs came from
+	      ( \* | $dash_re (?: [35]p | a?s ) )? # which arm
+	    )
 	  )
 	  (?! \pL | \d )
 	/gxi) {
-    my ($species_abbr, $mir, $number) = ($1, $2, $3);
-#    print STDERR Data::Dumper->Dump([$species_abbr, $mir, $number],[qw(species_abbr mir number)]);
+    my ($species_abbr, $bantam, $bantam_number, $bantam_arm, $not_mir, $mir, $extra_name, $number, $arm) =
+      ($1, $2, $3, $4, $5, $6, $7, $8, $9);
+#    print STDERR Data::Dumper->Dump(
+#      [$species_abbr, $bantam, $bantam_number, $bantam_arm, $not_mir, $mir, $extra_name, $number, $arm],
+#      [qw(species_abbr bantam bantam_number bantam_arm not_mir mir extra_name number arm)]
+#    );
     my $species;
     if (defined($species_abbr)) {
       next unless (exists($mirna_species{$species_abbr}));
@@ -1007,17 +1043,35 @@ sub tag_mirnas {
     }
     my $subtype;
     my $lftype;
-    if ($mir eq 'miR') {
-      $subtype = 'mature';
-      $lftype = 'MOLECULE';
-    } elsif ($mir eq 'mir') {
-      $subtype = 'precursor-or-primary';
-      $lftype = 'MOLECULE';
-    } elsif ($mir eq 'MIR') {
-      $subtype = 'gene';
-      $lftype = 'GENE';
+    if (defined($bantam)) {
+      $subtype = 'mature' if (defined($bantam_arm));
+      $number = "bantam-$bantam_number$bantam_arm";
+      $lftype = 'RNA';
     } else {
-      next;
+      $subtype = 'mature' if (defined($arm));
+      $lftype = 'RNA';
+      if (defined($extra_name)) {
+	$number = "$extra_name-$number";
+      }
+      if (defined($not_mir)) {
+	$number = "$not_mir-$number";
+      } elsif (defined($mir)) {
+	if ($mir eq 'miR') {
+	  $subtype = 'mature';
+	  $lftype = 'RNA';
+	} elsif ($mir eq 'mir') {
+	  $subtype = 'precursor-or-primary';
+	  $lftype = 'RNA';
+	} elsif ($mir eq 'MIR') {
+	  $subtype = 'gene';
+	  $lftype = 'GENE';
+	} else { # wrong case pattern, it's not a mirna after all
+	  next;
+	}
+      }
+      # normalize number (downcase letters and turn dashes into ASCII)
+      $number = lc($number);
+      $number =~ s/$dash_re/-/g;
     }
     push @output_tags, +{
       type => 'sense',
@@ -1026,7 +1080,7 @@ sub tag_mirnas {
       'domain-specific-info' => +{
 	domain => 'drum',
 	type => 'mirna',
-	'sub-type' => $subtype,
+	( defined($subtype) ? ('sub-type' => $subtype) : () ),
 	number => $number,
 	( defined($species) ? (species => $species) : () )
       }
@@ -1087,13 +1141,17 @@ sub score_match {
   } else {
     die "Unrecognized term status: $m->{status}";
   }
+  # we really like bioentities
+  if ($pkg eq 'BE') {
+    $status_score++;
+  }
 
   print STDERR Data::Dumper->Dump([$status_score, $depluralized, $variant_score],[qw(status_score depluralized variant_score)]) if ($debug);
   my $final_score = ((((0
-    ) * 6 + $status_score
+    ) * 7 + $status_score
     ) * 3 + $depluralized
     ) * 2 + $variant_score
-    ) / 35.0; # product of the coefficients -1
+    ) / 41.0; # product of the coefficients -1
   print STDERR "Drum::score_match returning $final_score\n" if ($debug);
   return $final_score;
 }
@@ -1102,6 +1160,7 @@ push @TextTagger::taggers, {
   name => "drum",
   init_function => \&init_drum_tagger,
   tag_function => \&tag_drum_terms,
+  fini_function => \&fini_drum_tagger,
   output_types => ['sense'],
   input_text => 1,
   input_types => ['word'],

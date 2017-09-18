@@ -26,13 +26,13 @@
 	    :rule -simple-ref-modA1
 	    ))
 |#
-	  ;; basic terms (not conjunctions) with selected mod (e.g., prefixes auto-, mono-, trans-)
+	  ;; basic terms (not conjunctions) with selected mod (e.g., prefixes auto-, mono-, trans-, homo-, hetero-)
 	  ((ONT::TERM ?!obj 
 	    ;(? t1 ONT::MUTATION ONT::CHEMICAL ONT::MOLECULAR-PART ONT::CELL-PART ONT::BODY-PART ONT::SIGNALING-PATHWAY ONT::PHYS-OBJECT ONT::MENTAL-CONSTRUCTION ONT::AWARENESS ONT::INFORMATION-FUNCTION-OBJECT) 
 	    ?t1
 	    :MODS (?!modA) )
 	   ; leave out ONT::INCLUSIVE (for co-)  (by the way, co- is now :MANNER, but it does not need to be returned)
-            (ONT::F ?!modA (? tmp ONT::MANNER-REFL ONT::SAME ONT::DIFFERENT ONT::CARDINALITY-VAL ONT::TRAJECTORY))  
+            (ONT::F ?!modA (? tmp ONT::MANNER-REFL ONT::SAME ONT::DIFFERENT ONT::NUM-PREFIX-VAL ONT::TRAJECTORY))  ; num-prefix-val used to be cardinality-val
 	   -simple-ref-modA2>
 	   100
 	   (ONT::TERM ?!obj ?t1
@@ -330,6 +330,8 @@ ONT::INHIBIT-EFFECT ONT::CAUSE-COME-FROM ONT::REMOVE-FROM ONT::RENDER-INEFFECTIV
 	    :rule -simple-ref-modBP
 	    ))
 
+	  #|
+	  ;; commented out to avoid "immune system pathway" from using this rule
 	  ;; basic terms (not conjunctions) for BODY-PART (e.g., in the nucleus)  *maybe this parse doesn't come out any more
 	  ((ONT::TERM ?!obj 
 	    (? t1 ONT::MUTATION ONT::BIOLOGICAL-PROCESS ONT::CHEMICAL ONT::MOLECULAR-PART ONT::CELL-PART ONT::BODY-PART ONT::SIGNALING-PATHWAY ONT::MUTANT-OBJ ONT::WILDTYPE-OBJ ONT::MEDICAL-DISORDERS-AND-CONDITIONS) :ASSOC-WITHS (?!modBP) )
@@ -340,6 +342,7 @@ ONT::INHIBIT-EFFECT ONT::CAUSE-COME-FROM ONT::REMOVE-FROM ONT::RENDER-INEFFECTIV
 	    :LOC ?!modBP
 	    :rule -simple-ref-modBP2
 	    ))
+	  |#
 
 	  ;; basic terms (not conjunctions) for BODY-PART (e.g., in the nucleus) 
 	  ;; *maybe this doesn't work any more either* :LOC has changed to :LOCATION (see -simple-ref-modBP4)  *** seem to have changed back to :LOC! ***
@@ -421,6 +424,19 @@ ONT::INHIBIT-EFFECT ONT::CAUSE-COME-FROM ONT::REMOVE-FROM ONT::RENDER-INEFFECTIV
 	    :LOC -   ; zero out :LOC so it wouldn't be emitted
 	    :rule -simple-ref-modCL-gd
 	    ))
+
+	  ((ONT::TERM ?!obj 
+	    (? t1 ONT::MUTATION ONT::BIOLOGICAL-PROCESS ONT::CHEMICAL ONT::MOLECULAR-PART ONT::CELL-PART ONT::BODY-PART ONT::SIGNALING-PATHWAY ONT::MUTANT-OBJ ONT::WILDTYPE-OBJ ONT::MEDICAL-DISORDERS-AND-CONDITIONS) :LOCATION ?!modL )
+	   (ONT::F ?!modL (? tmp ONT::IN-LOC ONT::AT-LOC ONT::ON) :GROUND ?!modBP)	   
+            (ONT::TERM ?!modBP (? tmp2 ONT::CELL-LINE))
+	   -simple-ref-modCL2-gd>
+	   100
+	   (ONT::TERM ?!obj ?t1
+	    :CELL-LINE ?!modBP
+	    :LOC -   ; zero out :LOC so it wouldn't be emitted
+	    :rule -simple-ref-modCL2-gd
+	    ))
+	  
 	  
 	  ; Ras localizes to/in the nucleus
           ((;(? reln0  ONT::F ONT::QUANTIFIER ONT::KIND ONT::A ONT::INDEF-PLURAL ONT::THE ONT::THE-SET ONT::INDEF-SET ONT::BARE ONT::SM ONT::PRO ONT::PRO-SET)

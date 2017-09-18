@@ -40,11 +40,6 @@
     :parent ONT::MOLECULAR-PART
     )
 
-(define-type ONT::residue
-;    :parent ONT::MOLECULE
-    :parent ONT::MOLECULAR-PART
-    )
-
 ;; DRUM
 (define-type ONT::BIOLOGICAL-ROLE
 ;    :parent ONT::MOLECULE
@@ -156,7 +151,7 @@
 (define-type ONT::GEO-OBJECT
     :wordnet-sense-keys ("location%1:03:00")
     :parent ONT::phys-OBJECT
-    :sem (F::Phys-obj (F::form F::geographical-object))
+    :sem (F::Phys-obj (F::form F::geographical-object) (F::container +))
 		      ;;(:default (F::object-function F::spatial-object)))
     )
 
@@ -386,6 +381,12 @@
     :wordnet-sense-keys ("amino_acid%1:27:00")
     :Parent ont::chemical
     )
+
+(define-type ONT::residue
+;    :parent ONT::MOLECULE
+;    :parent ONT::MOLECULAR-PART
+    :parent ONT::CHEMICAL
+  )
 
 ;; UMLS
 (define-type ont::pharmacologic-substance
@@ -1341,7 +1342,7 @@
 (define-type ONT::Corner
     :parent ONT::LOCATION-by-description
     :wordnet-sense-keys ("corner%1:15:02" "corner%1:06:00")
-    :sem (F::Phys-obj (F::spatial-abstraction (? sa1 F::spatial-point)))
+    :sem (F::Phys-obj (F::spatial-abstraction (? sa1 F::spatial-point)) (f::container +))
     :arguments ((:OPTIONAL ONT::FIGURE (F::PHYS-OBJ (F::FORM F::OBJECT) (F::SPATIAL-ABSTRACTION (? SA F::STRIP F::SPATIAL-REGION))))
 		)
     )
@@ -1735,7 +1736,7 @@
 (define-type ONT::body-part
     :wordnet-sense-keys ("body_part%1:08:00" "organ%1:08:00" )
     :parent ONT::anatomy
-    :sem (F::Phys-obj (F::origin F::living) (f::intentional -) (f::form f::object) (f::object-function f::body-part))
+    :sem (F::Phys-obj (F::origin F::living) (f::intentional -) (f::form f::object) (f::object-function f::body-part) (f::container +))
  ;;; too strong, but better than unconstrained
     :arguments ((:OPTIONAL ONT::FIGURE (F::Phys-obj (F::origin F::living) (f::form f::object)))
 		)
