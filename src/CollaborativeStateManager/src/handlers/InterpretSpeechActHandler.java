@@ -412,16 +412,16 @@ public class InterpretSpeechActHandler extends MessageHandler implements Runnabl
     	askRelnContent.add(":neutral");
     	askRelnContent.add(what);
 
+    	
+	Goal newGoal = new Goal(askRelnContent,(KQMLList)context);
     	if (activeGoal == null)
     	{
-    		Goal newGoal = new Goal(askRelnContent,(KQMLList)context);
     		newGoal.addContext((KQMLList)context);
     		goalPlanner.addGoal(newGoal);
     		
     	}
     	else
     	{
-    		Goal newGoal = new Goal(askRelnContent,(KQMLList)context);
     		newGoal.addContext((KQMLList)context);
     		goalPlanner.addGoal(newGoal, activeGoal);
     	}
@@ -439,7 +439,7 @@ public class InterpretSpeechActHandler extends MessageHandler implements Runnabl
     	KQMLList askWhatIsContent = new KQMLList();
     	askWhatIsContent.add("ASK-WH");
     	askWhatIsContent.add(":ID");
-    	askWhatIsContent.add(id);
+    	askWhatIsContent.add(newGoal.getId());
     	askWhatIsContent.add(":WHAT");
     	askWhatIsContent.add(what);
     	
@@ -496,7 +496,7 @@ public class InterpretSpeechActHandler extends MessageHandler implements Runnabl
     	askWhatIsContent.add(queryInContext);
     	
     	KQMLList contextToSend = new KQMLList();
-    	//contextToSend.add(askRelnContent);
+    	contextToSend.add(askRelnContent);
     	contextToSend.addAll((KQMLList)context);
     	if (conditional)
     		contextToSend.add(conditionalContent);

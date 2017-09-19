@@ -80,7 +80,7 @@ public class GoalPlanner {
 			goalConnections.put(goal,getGoal(upperCaseParentVariableName));
 			variableGoalMapping.put(goal.getVariableName().toUpperCase(),goal);
 			idGoalMapping.put(goal.getId(), goal);
-			if (activeGoal != null && parentVariableName == null)
+			if (activeGoal != null && parentVariableName == null && getTopLevelGoals().size() > 1)
 			{
 				System.out.println("Active goal is now ambiguous after adding new "
 						+ "top level goal");
@@ -568,27 +568,27 @@ public class GoalPlanner {
 		}
         else
         {
-        	Set<Goal> topLevelGoals = getTopLevelGoals();
-        	int numberOfNewPossibleGoals = 0;
-        	Goal lastAcceptableGoal = null;
-        	for (Goal g : topLevelGoals)
-        	{
-        		if (!g.isFailed() && !g.isCompleted())
-        		{
-        			numberOfNewPossibleGoals++;
-        			lastAcceptableGoal = g;
-        		}
-        	}
-        	
-        	if (numberOfNewPossibleGoals == 0)
-        		activeGoal = null;
-        	else if (numberOfNewPossibleGoals == 1)
-        		activeGoal = lastAcceptableGoal;
-        	else
-        	{
-        		activeGoal = null;
-        		ambiguousActiveGoal = true;
-        	}
+	        	Set<Goal> topLevelGoals = getTopLevelGoals();
+	        	int numberOfNewPossibleGoals = 0;
+	        	Goal lastAcceptableGoal = null;
+	        	for (Goal g : topLevelGoals)
+	        	{
+	        		if (!g.isFailed() && !g.isCompleted())
+	        		{
+	        			numberOfNewPossibleGoals++;
+	        			lastAcceptableGoal = g;
+	        		}
+	        	}
+	        	
+	        	if (numberOfNewPossibleGoals == 0)
+	        		activeGoal = null;
+	        	else if (numberOfNewPossibleGoals == 1)
+	        		activeGoal = lastAcceptableGoal;
+	        	else
+	        	{
+	        		activeGoal = null;
+	        		ambiguousActiveGoal = true;
+	        	}
         }
 	}
 	
@@ -704,12 +704,13 @@ public class GoalPlanner {
             KQMLObject parentObject = asList.getKeywordArg(":OF");
             if (parentObject == null)
             	parentObject = asList.getKeywordArg(":GOAL");
-			if (parentObject != null)
+			if (!KQMLUtilities.isKQMLNull(parentObject))
                 parent = parentObject.stringValue();
 		}
 		
-		if (parent == null)
+		if (parent == null && !type.equalsIgnoreCase("QUERY-IN-CONTEXT"))
 		{
+			// Queries can have no parent
 			if (activeGoal != null)
 				parent = activeGoal.getVariableName();
 			else
@@ -753,7 +754,13 @@ public class GoalPlanner {
 			if (goalIdObject != null)
 				newGoal.setId(goalIdObject.stringValue());
 			//newGoal = new Query(goalLF,getGoal(parent),context);
-			addGoal(newGoal,parent);
+			
+			Goal oldGoal = getGoal(newGoal.getId());
+			if (oldGoal!= null)
+				replaceGoal(newGoal,oldGoal);
+			else
+				addGoal(newGoal,parent);
+			
 			
 			// Hacky crap
 			String query = null;
