@@ -402,7 +402,7 @@ public class GoalPlanner {
 		HashSet<Goal> ambiguousGoals = new HashSet<Goal>();
 		for (Entry<Goal,Goal> e : goalConnections.entrySet())
 		{
-			if (e.getValue() == null)
+			if (e.getValue() == null && !e.getKey().isCompleted() && !e.getKey().isFailed())
 				ambiguousGoals.add(e.getKey());
 		}
 		
@@ -696,6 +696,12 @@ public class GoalPlanner {
 			type = "ASK-IF";
 			System.out.println("This is a question");
 		}
+		else if (act.get(0).stringValue().equalsIgnoreCase("ANSWER"))
+		{
+			type = "ANSWER";
+			System.out.println("This is an answer");
+			return false;
+		}
 		String parent = null;
 		if (asObject != null && !type.equalsIgnoreCase("ASSERTION"))
 		{
@@ -744,10 +750,7 @@ public class GoalPlanner {
 			if (cpsa.equalsIgnoreCase("ACCEPT"))
 				replaceGoal(newGoal,getGoal(parent));
 		}
-		else if (type.equalsIgnoreCase("ANSWER"))
-		{
-			// TODO: Something here?
-		}
+
 		else if (type.equalsIgnoreCase("QUERY-IN-CONTEXT"))
 		{
 			newGoal = new Query(act,getGoal(parent),context);

@@ -20,8 +20,14 @@ my ($aspell_in, $aspell_out, $aspell_pid);
 
 sub init_misspellings {
   my $self = shift;
+  # give aspell back its own local-data-dir setting (see note in Makefile)
+  open $aspell_in, "-|", $TextTagger::Config::ASPELL, 'config', 'local-data-dir';
+  my $local_data_dir = <$aspell_in>;
+  close $aspell_in;
+  chomp $local_data_dir;
   $aspell_pid = open2($aspell_in, $aspell_out,
 		      $TextTagger::Config::ASPELL, 'pipe', '--encoding=utf-8',
+		      "--local-data-dir=$local_data_dir",
 		      ($self->{aspell_dict} ?
 		        ('--master=' . $self->{aspell_dict}) : ()));
   binmode $aspell_in, ':utf8';
