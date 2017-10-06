@@ -375,6 +375,11 @@ public class InterpretSpeechActHandler extends MessageHandler implements Runnabl
 		if (proposeAdoptContent == null)
 		{
 			Goal testSelect = goalPlanner.getGoalByDescription(term, context);
+			if (testSelect != null) { // disabling it for now
+			    System.out.println("This goal may be the same as " + testSelect);
+			    System.out.println("... but I'll ignore that!");
+			    testSelect = null;
+			}
 			if (testSelect != null)
 			{
 				proposeAdoptContent = Messages.selectContent(testSelect.getId(),
