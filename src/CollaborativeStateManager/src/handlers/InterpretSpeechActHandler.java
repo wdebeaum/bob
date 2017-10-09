@@ -573,27 +573,28 @@ public class InterpretSpeechActHandler extends MessageHandler implements Runnabl
     	
     	askRelnContent.add(queryInContext);
 
-    	
-    	KQMLList queryGoalContent = new KQMLList();
-    	queryGoalContent.add("ont::RELN");
-    	queryGoalContent.add(newId);
-    	queryGoalContent.add(":instance-of");
-    	queryGoalContent.add("ONT::QUERY-MODEL");
-    	queryGoalContent.add(":neutral");
-    	queryGoalContent.add(what);
+    	if (false) { // LG 2017/10/09 DISABLED -- this creates bogus goals in the planner!
+	    KQMLList queryGoalContent = new KQMLList();
+	    queryGoalContent.add("ont::RELN");
+	    queryGoalContent.add(newId);
+	    queryGoalContent.add(":instance-of");
+	    queryGoalContent.add("ONT::QUERY-MODEL");
+	    queryGoalContent.add(":neutral");
+	    queryGoalContent.add(what);
 
-    	if (activeGoal == null)
-    	{
-    		Goal newGoal = new Goal(queryGoalContent,(KQMLList)context);
-    		newGoal.addContext((KQMLList)context);
-    		goalPlanner.addGoal(newGoal);
-    	}
-    	else
-    	{
-    		Goal newGoal = new Goal(queryGoalContent,(KQMLList)context);
-    		newGoal.addContext((KQMLList)context);
-    		goalPlanner.addGoal(newGoal, activeGoal);
-    	}
+	    if (activeGoal == null)
+		{
+		    Goal newGoal = new Goal(queryGoalContent,(KQMLList)context);
+		    newGoal.addContext((KQMLList)context);
+		    goalPlanner.addGoal(newGoal);
+		}
+	    else
+		{
+		    Goal newGoal = new Goal(queryGoalContent,(KQMLList)context);
+		    newGoal.addContext((KQMLList)context);
+		    goalPlanner.addGoal(newGoal, activeGoal);
+		}
+	}
 
     	KQMLList contextToSend = new KQMLList();
     	contextToSend.addAll((KQMLList)context);

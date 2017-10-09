@@ -95,6 +95,12 @@ public class GoalPlanner {
 		
 		referenceHandler.addReference(goal.getKQMLTerm());
 		underDiscussion = goal;
+
+		// LG: debug info
+		System.out.println("Current goals:");
+		for (Goal g : idGoalMapping.values()) {
+		    System.out.println("\t" + g);
+		}
 		
 		return true;
 	}
@@ -672,7 +678,7 @@ public class GoalPlanner {
 			goalLF.add(goalName);
 			goalLF.add(":INSTANCE-OF");
 			goalLF.add("DUMMY-GOAL");
-			System.out.println("Not a valid goal to add to the system. Creating DUMMY-GOAL.");
+			System.out.println(goalIdObject + ": Not a valid goal to add to the system. Creating DUMMY-GOAL.");
 			//return false;
 		}
 		
@@ -689,12 +695,12 @@ public class GoalPlanner {
 		else if (act.get(0).stringValue().equalsIgnoreCase("ASK-WH"))
 		{
 			type = "ASK-WH";
-			System.out.println("This is a question");
+			System.out.println("This is a ASK-WH question");
 		}
 		else if (act.get(0).stringValue().equalsIgnoreCase("ASK-IF"))
 		{
 			type = "ASK-IF";
-			System.out.println("This is a question");
+			System.out.println("This is a ASK-IF question");
 		}
 		else if (act.get(0).stringValue().equalsIgnoreCase("ANSWER"))
 		{
@@ -806,8 +812,8 @@ public class GoalPlanner {
 				return false;
 			}
 			System.out.println("Proposed goal has: ");
-			System.out.println("ID: " + newGoal.getId());
-			System.out.println("What: " + newGoal.getVariableName());
+			System.out.println("\tID: " + newGoal.getId());
+			System.out.println("\tWhat: " + newGoal.getVariableName());
 		}
 		return true;
 	}
