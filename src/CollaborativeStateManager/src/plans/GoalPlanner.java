@@ -99,7 +99,11 @@ public class GoalPlanner {
 		// LG: debug info
 		System.out.println("Current goals:");
 		for (Goal g : idGoalMapping.values()) {
-		    System.out.println("\t" + g);
+		    String activeFlag="";
+		    if ((activeGoal != null) &&
+			(activeGoal.getVariableName().equalsIgnoreCase(g.getVariableName())))
+			activeFlag="*";
+		    System.out.println("\t" + activeFlag + g);
 		}
 		
 		return true;
