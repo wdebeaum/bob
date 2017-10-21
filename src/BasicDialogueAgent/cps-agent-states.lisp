@@ -229,8 +229,9 @@ ONT::INTERACT
 	  :destination 'handle-csm-response
 	  :trigger t)
 
+	 #|
 	 (transition
-	  :description "cancel/revert/scratch it/this/that/the building of the staircase; forget it "
+	  :description "cancel/scratch it/this/that/the building of the staircase; forget it "
 	  :pattern '((ONT::SPEECHACT ?!sa (? x ONT::CANCEL) :what ?what)
 		     (ont::eval (generate-AKRL-context :what ?what :result ?akrl-context))
 		     (ont::eval (find-attr :result ?goal :feature ACTIVE-GOAL))
@@ -244,6 +245,21 @@ ONT::INTERACT
 	  :destination 'handle-csm-response
 	  :trigger t)
 	 
+	 (transition
+	  :description "cancel (no arguments)"
+	  :pattern '((ONT::SPEECHACT ?!sa (? x ONT::CANCEL) :what -)
+		     ;(ont::eval (generate-AKRL-context :what ?what :result ?akrl-context))
+		     (ont::eval (find-attr :result ?goal :feature ACTIVE-GOAL))
+		     -cancel2>
+		     (RECORD CPS-HYPOTHESIS (ABANDON :content - :context - :active-goal ?goal))
+		     (INVOKE-CSM :msg (INTERPRET-SPEECH-ACT
+				      :content (ABANDON :content -
+							:context -
+							:active-goal ?goal)))
+		     )
+	  :destination 'handle-csm-response
+	  :trigger t)
+	 |#
 	 
 	 (transition
 	  :description "default"
