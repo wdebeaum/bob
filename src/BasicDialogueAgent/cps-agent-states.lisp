@@ -228,6 +228,22 @@ ONT::INTERACT
 		     )
 	  :destination 'handle-csm-response
 	  :trigger t)
+
+	 (transition
+	  :description "cancel/revert/scratch it/this/that/the building of the staircase; forget it "
+	  :pattern '((ONT::SPEECHACT ?!sa (? x ONT::CANCEL) :what ?what)
+		     (ont::eval (generate-AKRL-context :what ?what :result ?akrl-context))
+		     (ont::eval (find-attr :result ?goal :feature ACTIVE-GOAL))
+		     -cancel>
+		     (RECORD CPS-HYPOTHESIS (ABANDON :content ?what :context ?akrl-context :active-goal ?goal))
+		     (INVOKE-CSM :msg (INTERPRET-SPEECH-ACT
+				      :content (ABANDON :content ?what
+							:context ?akrl-context
+							:active-goal ?goal)))
+		     )
+	  :destination 'handle-csm-response
+	  :trigger t)
+	 
 	 
 	 (transition
 	  :description "default"
