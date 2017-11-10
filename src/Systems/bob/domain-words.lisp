@@ -24,6 +24,33 @@
    )
 ))
 
+(define-words :pos W::v 
+ :words (
+  (W::target
+   (wordfeats (W::morph (:forms (-vb) :past w::targeted :ing w::targeting)))
+   (SENSES
+    ((lf-parent ont::TRANSPORT)
+     (EXAMPLE "protein targeting")
+     (TEMPL agent-affected-GOAL-templ (xp (% W::ADVBL (w::lf (% w::prop (w::class (? x ont::goal-reln ont::source-reln)))))))
+     )
+    )
+   )
+))
+
+(define-words :pos W::v :templ AGENT-THEME-XP-TEMPL
+ :words (
+  (W::sort
+   (SENSES
+    ((lf-parent ont::TRANSPORT)
+     (example "protein sorting")
+     ;(TEMPL agent-affected-xp-templ)
+     (TEMPL agent-affected-GOAL-templ (xp (% W::ADVBL (w::lf (% w::prop (w::class (? x ont::goal-reln ont::source-reln)))))))
+     )
+
+    )
+   )
+))
+
 ;;;;;;;;;;;;;;;;;;;;;;;;
 ; TFTA
 ;;;;;;;;;;;;;;;;;;;;;;;;
