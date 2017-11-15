@@ -227,8 +227,8 @@
 	((possessor (LF ONT::DEFINITE) (AGR ?agr) (ARG ?arg) (MASS ?m)
 	  (RESTR (& (assoc-poss
 		     (% *PRO* (VAR ?v) (SEM ?sem)
-			(STATUS ont::PRO) (class ?lf) (constraint (& (proform ?lex)))))))
-	  (NObareSpec +) (WH (? wh Q -)) (wh-var ?v))	 
+			(STATUS *WH-TERM*) (class ?lf) (constraint (& (proform ?lex)))))))
+	  (NObareSpec +) (WH Q) (wh-var ?v))	 
 	 -possessive3-Q> 1
 	 (head (PRO (CASE POSS) (WH Q)
 		    (STATUS ont::PRO-DET) (SEM ?sem) (VAR ?v) (LF ?lf) (lex ?lex) (input ?i))))
@@ -2400,6 +2400,7 @@
 				  (scale ?sc))) (old ?restr) (new ?constr))
 	 )
 
+  
    ;;  special case: "a mile"
 
 	((NP (LF (% description (STATUS ONT::INDEFINITE)
@@ -2559,7 +2560,7 @@
 	       ))
      (case ?case)
      (SORT PRED)
-     (MASS mass)
+     (MASS mass) (AGR ?agr)
      (VAR *) (WH ?w));; must move WH feature up by hand here as it is explicitly specified in a daughter.
     -np-spec-of-mass-indef-pp>
     (SPEC (LF ?spec) (ARG ?v) (VAR ?specvar) (name-spec -) (mass mass) 
@@ -3562,6 +3563,7 @@
 		(restr ?restr)
 		(subj (% NP (var ?v1)))
 		(subj-map ?!subjmap)
+		(dobj-map -)
 		(comp3 ?comp3)
 		(comp3-map ?comp-map)
 		(agent-nom -)

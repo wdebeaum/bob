@@ -39,6 +39,7 @@
 ;;(load "CPS-actions.lisp")
 
 ;;;; extractor rules
+(load "preprocessRules.lisp")
 (load "DRUMtermRules.lisp")
 (load "DRUMtermRules_add.lisp")
 (load "DRUMRules_ev.lisp")

@@ -142,7 +142,7 @@
 
 ; bobRules is before drum so that the domain specific EVENT rules take precedence (and also because bobRules also contains TERM extractions) (and also because CREATE is matched for both the BOB-specific CREATE event and for the general drum ACTIVATE)
 ; now add bobrules to drum instead since we need to preserve the AGENT pronoun + non-molecular AFFECTED-RESULT
-(setq im::*extraction-sequence* '((im::drumterms) (im::drumtermsAdd) ;(im::bobRules)
+(setq im::*extraction-sequence* '((im::preprocessRules) (im::drumterms) (im::drumtermsAdd) ;(im::bobRules)
 				  (im::drum) (im::drum_ev_add) (im::drummod) (im::drumCC) (im::drumMisc) (im::emptyRules)))
 (setq im::*substitute-terms-in-extraction* t)
 (setq im::*roles-to-emit* nil)
@@ -150,7 +150,7 @@
 (dagent::trace-on 1)
 (setq dagent::*silent-failures* nil)
 (setq dagent::*disabled-wizard* t)     ;; no wizard
-(setq dagent::*using-alarms* nil) 
+(setq dagent::*using-alarms* t) 
 
 ; just the default user
 (setq dagent::*users* (list (cons "desktop" (dagent::make-user :name "desktop" :channel-id 'dagent::desktop))))
