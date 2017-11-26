@@ -886,11 +886,11 @@
       )
      -N1-subcat1>
      (Head (N (VAR ?v) (lf ?LF)
-	    (SORT ?sort) (ARGUMENT-MAP ?am)
+	    ;(SORT ?sort) (ARGUMENT-MAP ?am)
+	    (SORT (? !sort reln)) (ARGUMENT-MAP ?am) ; reln should go through n1-reln3
 	    (SUBCAT ?!subcat) 
 	    (subcat-map ?!subcatmap)
 	    (SUBCAT (% ?xx (var ?v1) (gap ?gap) (sem ?subcatsem) (postadvbl -)))
-	    	    
 	    ))
      ?!subcat
      (compute-complex (arg0 ?v1) (arg1 ?complex))
@@ -1126,6 +1126,7 @@
 	     (CONSTRAINT ?newc)
 	     (transform ?transform)
 	     ))
+      (sem ?sem)
       (gap -) (wh -) (argument ?argument)
       )
      -adv-compar-object-deleted>
@@ -1359,6 +1360,41 @@
 	       ))
     )
 
+   ; most beautifully
+   ((ADV (LF (:* ?pred ?lftype))
+     (VAR ?v) (comparative +)
+     (allow-deleted-comp +) ;(allow-post-n1-subcat +) ;(ALLOW-POST-N1-SUBCAT ?xx)
+     ;(SUBCAT-MAP ?subcat-map)
+     ;(subcat  ?subcat)
+     (SUBCAT-MAP ?ground-smap)
+     (subcat  ?ground-subcat)
+     ;(comp-ptype ?pt)
+     (ground-oblig ?go)
+     (ground-subcat ?ground-subcat)
+     ;(ATYPE CENTRAL)
+     (ATYPE ?atype)
+     (SORT PRED)
+     ;(sem ($ F::ABSTR-OBJ (f::scale ?scale)))
+     (sem ?sem)
+     (transform ?transform) (argument-map ont::figure) (argument ?argument)  (arg ?arg)
+     )
+     -more-adv-compar> 1.0
+    (ADV (lf (:* ?pred ?xx)) (comparative (? cmp + superl))
+     (ground-oblig ?go) (SUBCAT ?ground-subcat) (SUBCAT-MAP ?ground-smap))
+    (head (ADV (LF (:* ?lftype ?w)) (var ?v) 
+	       (SUBCAT2 -) (post-subcat -)(VAR ?v) (comparative -)
+	       (SUBCAT ?subcat) 
+	       (subcat-map ?subcat-map)
+	       ;(ATYPE central)
+	       (ATYPE ?atype)
+	       (argument ?argument) (arg ?arg)
+	       (SORT PRED)
+	       ;;(sem ($ F::ABSTR-OBJ (f::scale ?scale)))
+	       (sem ?sem)
+	       (transform ?transform)
+	       ))
+    )
+   
    ; get FUNCTN into SCALE
    ((ADJ (LF (:* ?lftype ?w)) ;(LF (:* ?pred ?lftype))
      (VAR ?v) (comparative +)

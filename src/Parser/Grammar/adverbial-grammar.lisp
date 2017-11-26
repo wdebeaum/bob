@@ -501,7 +501,7 @@
       (ARG ?v) (VAR ?mod)
       (role ?advrole)
       ;(SEM ($ f::abstr-obj (F::type (? !ttt ont::position-reln))))
-      (SEM ($ f::abstr-obj (F::type (? !ttt ont::path ont::conventional-position-reln ont::direction ont::complex-ground-reln ont::back ont::front ont::left-of ont::off ont::orients-to ont::right-of ;ont::pos-as-containment-reln
+      (SEM ($ f::abstr-obj (F::type (? !ttt ont::path ont::conventional-position-reln ont::direction ont::complex-ground-reln ont::back ont::front ont::left-of ont::off ont::orients-to ont::right-of ;ont::pos-as-containment-reln ; e.g. "decrease in Mexico"
 				       ont::pos-directional-reln ont::pos-distance ont::pos-wrt-speaker-reln ont::resulting-object))))
       )
      (add-to-conjunct (val (MODS ?mod)) (old ?lf) (new ?new))
@@ -658,7 +658,8 @@
       ;; (subjvar ?subjvar)
 			 (sem ?asem)
 			 (SEM ($ f::abstr-obj
-				 (F::type (? ttt ont::path ont::conventional-position-reln ont::direction ont::complex-ground-reln ont::back ont::front ont::left-of ont::off ont::orients-to ont::right-of ont::pos-as-containment-reln ont::pos-directional-reln ont::pos-distance ont::pos-wrt-speaker-reln ont::resulting-object))))
+				 (F::type (? ttt ont::path ont::conventional-position-reln ont::direction ont::complex-ground-reln ont::back ont::front ont::left-of ont::off ont::orients-to ont::right-of ;ont::pos-as-containment-reln ; we allowed "in" for some reason, but I don't remember the example!
+					     ont::pos-directional-reln ont::pos-distance ont::pos-wrt-speaker-reln ont::resulting-object))))
 					;(F::type (? ttt ont::path ont::position-reln))))
 	      ;;(F::type (? !ttt1 ont::position-as-extent-reln ont::position-w-trajectory-reln ont::on ont::at-loc )))) ; take the trajectory senses instead of the position-as-extent-reln senses of words such as "across"
 ;      (SEM ($ f::abstr-obj (F::type (? ttt ont::position-reln ont::goal-reln ont::direction-reln))))
@@ -691,7 +692,10 @@
      (advbl (ARGUMENT (% NP ;; (? xxx NP S)  ;; we want to eliminate V adverbials, he move quickly  vs he moved into the dorm
 			 (sem ?sem))) (GAP -) (particle +)
       ;; (subjvar ?subjvar)
-      (SEM ($ f::abstr-obj (F::type (? ttt ont::path ont::position-reln))))
+			 (SEM ($ f::abstr-obj
+				 (F::type (? ttt ont::path ont::conventional-position-reln ont::direction ont::complex-ground-reln ont::back ont::front ont::left-of ont::off ont::orients-to ont::right-of ;ont::pos-as-containment-reln ; we allowed "in" for some reason, but I don't remember the example!
+					     ont::pos-directional-reln ont::pos-distance ont::pos-wrt-speaker-reln ont::resulting-object))))
+				 ;(F::type (? ttt ont::path ont::position-reln))))
 ;      (SEM ($ f::abstr-obj (F::type (? ttt ont::position-reln ont::goal-reln ont::direction-reln))))
       (sem ?asem)
       (SET-MODIFIER -)  ;; mainly eliminate numbers 
@@ -867,7 +871,7 @@
 	    ))
      (advbl (ATYPE POST) 
       (result-only -)  ;; only allow adverbials that may be interpreted as something other than a result
-      (ARGUMENT (% NP (sem ?argsem) (constraint ?c)  ))
+      (ARGUMENT (% NP (sem ?argsem) (constraint ?c) (var ?v1) ))
       (SEM ($ f::abstr-obj (F::type (? ttt ont::predicate ont::position-reln))))
       (arg ?v1) (VAR ?mod) (WH -) (GAP -)
       (particle -)  ;; exclude particles as they should attach to the verb
@@ -1509,9 +1513,11 @@
    ;; TEST: The market fell three percent
    ((advbl (arg ?arg) ;;(role (:* ONT::distance W::quantity)) 
      (var *) (subj ?anysubj)
-	   (sort binary-constraint)
+	   (sort binary-constraint) (sem ?sem)
 	   (LF (% PROP (VAR *) (CLASS ONT::extent-predicate) (sem ?sem)
-		  (CONSTRAINT (& (FIGURE ?arg) (scale ?scale) (GROUND ?v)))))
+		  ;(CONSTRAINT (& (FIGURE ?arg) (scale ?scale) (GROUND ?v)))
+		  (CONSTRAINT ?newcon)
+		  ))
 	   (atype (? x W::PRE W::POST))
      (argument (% W::S (subjvar ?anysubj)
                           ;; W::NP
@@ -1522,12 +1528,14 @@
     (head (np (var ?v) (sort unit-measure) (sem ?sem)  
 	      (bare -) ;; we suppress this rule for distances without a specific amount (e.g., "miles")
 	      ;; the semantic restriction is not sufficient to prevent measure-unit phrases such as "a bit" or "a set" as distances so using the lfs to restrict
-	      (lf (% description (constraint (& (scale ?scale)))))
-	      (sem ($ f::abstr-obj (f::scale (? sc ont::scale ont::measure-domain))))
+	      ;(lf (% description (constraint (& (scale ?scale)))))
+	      (lf (% description (constraint ?con)))
+	      (sem ($ f::abstr-obj (f::scale (? sc ont::scale ont::measure-scale)))) ;ont::measure-domain))))
 	      (class  ont::quantity);;(? lft ont::angle-unit ont::length-unit ont::percent ont::distance))
 	      ;; well, 'he walked miles before he reached water'; 'he crawled inches to the next exit' ...; and this restriction prevents the non-unit NPs so if it's reinstated we need two rules
 ;	      (lf (% description (sort set))) ;; this restriction is needed to prevent bare measure units as adverbials
 	      ))
+    (add-to-conjunct (val (& (FIGURE ?arg) (GROUND ?v))) (old ?con) (new ?newcon))
     )
 
       ;; ing VPs as adverbials
