@@ -1,6 +1,6 @@
 # EKBAgent.pm
 #
-# Time-stamp: <Wed Oct  4 16:26:47 CDT 2017 lgalescu>
+# Time-stamp: <Tue Mar  6 00:10:20 CST 2018 lgalescu>
 #
 # Author: Lucian Galescu <lgalescu@ihmc.us>, 13 Feb 2017
 #
@@ -136,6 +136,7 @@ use KQML::KQML;
 use EKB;
 use EKB::Compare;
 use EKB::Reasoner::Drum;
+use EKB::Reasoner::CWMS;
 
 use AKRL::AKRLList;
 use AKRL2EKB;
@@ -257,6 +258,14 @@ sub receive_request {
 
   eval {
   if ($verb eq 'do-ekb-inference') {
+    # get reasoner
+    my $domain = $content->{':domain'};
+    unless (defined($domain)) {
+      ERROR ":domain parameter missing";
+      $self->reply_to_msg($msg, "(reply :content (failure :reason \"The :domain parameter is missing.\"))");
+      return;
+    }
+    $domain = KQML::KQMLStringAtomAsPerlString($domain);
     # get EKB file
     my $ekb_file = $content->{':ekb'};
     unless (defined($ekb_file)) {
@@ -271,7 +280,8 @@ sub receive_request {
     # is pub EKB?
     # so far, this was an external parameter; i think i should make it part of the EKB encoding itself!!! [FIXME]
     # do inference
-    my $result = $self->do_inference($ekb_file,
+    my $result = $self->do_inference($domain,
+				     $ekb_file,
 				     { return_string => $return_string});
     if ($result) {
       $self->reply_to_msg($msg,
@@ -385,10 +395,11 @@ sub receive_sorry {
   DEBUG (2, "Received a SORRY: $content->{':result'} [from] $sender.");
 }
 
-# runs DRUM reasoner over an EKB file, saves the result into another EKB file
+# runs the specified domain reasoner over an EKB file, saves the result into
+# another EKB file
 # returns the resulting EKB file on success, and undef on error.
 sub do_inference {
-  my ($self, $ekb_file, $opts) = @_;
+  my ($self, $domain, $ekb_file, $opts) = @_;
 
   # ingest source EKB
   my $ekb = EKB->new($ekb_file)
@@ -396,9 +407,13 @@ sub do_inference {
   ## FIXME: we'll probably want to always normalize! but maybe we should've
   ## done this already for the original EKB?!?
   $ekb->normalize();
-  # run DRUM reasoner
+  # open the proper reasoner
   ## FIXME: what about options?!?
-  my $reasoner = EKB::Reasoner::Drum->new($ekb);
+  my $reasoner =
+    ($domain eq "DRUM") ? EKB::Reasoner::Drum->new($ekb) :
+    ($domain eq "CWMS") ? EKB::Reasoner::CWMS->new($ekb) :
+    EKB::Reasoner->new($ekb);
+  # run reasoner
   $reasoner->run();
   # make and set result EKB file path
   my $dir = dirname($ekb_file);

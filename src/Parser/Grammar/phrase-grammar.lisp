@@ -2479,12 +2479,13 @@
 		   (post-subcat -)
 		))
 	 (pp (ptype in) (gap -)
-	  (sem ($ f::abstr-obj (F::type (? xx ont::domain)))))
+	  (sem ($ f::abstr-obj (F::type (? xx ont::domain)) (f::scale ?unit-sc))))
 	 ;;(class-greatest-lower-bound (in1 ?unit-sc) (in2 ?explicit-sc) (out ?sc))
          (add-to-conjunct (val (& (value ?num))) (old ?r) (new ?newr))
 	 (add-to-conjunct (val (& (amount (% *PRO* (status ont::indefinite) (class ont::NUMBER) (VAR ?nv) (constraint ?newr)))
 				  (unit ?c)
-				  (scale (? xx ont::domain)))) (old ?restr) (new ?constr))
+				  (scale ?unit-sc)))
+	  (old ?restr) (new ?constr))
 	 )
 
    ;;  NP with SPECS that subcategorize for "of" PP's that are count and definite
@@ -4461,13 +4462,13 @@
 	     (Lex ?lex)
 	     (constraint (& (proform ?lex)))
 	     (sem ?sem)))
-      (mass ?m)
+      (mass ?m) (expletive ?exp)
       )
      -np-pro-noagr>
      (head (pro (SEM ?sem) (AGR ?agr) (VAR ?v) (case ?case)
 	    (LEX ?lex) (VAR ?v) (WH -) (lf ?c)
-	    (mass ?m) (sing-lf-only +)
-	    (status ?status)
+	    (mass ?m) ;(sing-lf-only +) 
+	    (status ?status) (expletive ?exp)
 	    (poss -) ;; Added by myrosia 2003/11/02 to avoid "our" as NP
 	    )))
     
@@ -5039,9 +5040,10 @@
 		    (nomobjpreps ?nop)
 		    (nomsubjpreps ?nsp)
 		    ))
-	 (n (lf ?ratelf) (sem ($ (? t F::ABSTR-OBJ F::SITUATION)
+	 (n (lf ?ratelf) (sem ($ (? t F::ABSTR-OBJ F::SITUATION F::TIME)  ; (planting) date
 				 ;(f::type (? x ONT::DOMAIN ONT::ACTING))))) ; ACTING: activity
-				 (f::type (? x ONT::DOMAIN ONT::ACTIVITY-EVENT ONT::ABILITY-EVENT ONT::LEVEL ONT::QUANTITY))))) ; rate, height, activity, level, amount
+				 (f::type (? x ONT::DOMAIN ONT::ACTIVITY-EVENT ONT::ABILITY-EVENT ONT::LEVEL ONT::QUANTITY
+					     ONT::time-object))))) ; rate, height, activity, level, amount, (planting) date
 	 )
 
     ;; this rule then inserts the rate/activity predicate once the arguments have been attached
