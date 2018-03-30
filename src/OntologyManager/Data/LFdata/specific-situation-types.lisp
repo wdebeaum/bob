@@ -1234,7 +1234,8 @@
 
 ;; look up
 (define-type ONT::look-up
- :parent ONT::seek
+  :wordnet-sense-keys ("look_up%2:32:00")
+  :parent ONT::seek
  )
 
 
@@ -3301,7 +3302,8 @@
  )
 
 (define-type ONT::listing
- :parent ONT::visual-display
+; :parent ONT::visual-display
+ :parent ONT::representative
  :sem (F::Situation (F::Cause F::Agentive))
  :arguments ((:OPTIONAL ONT::Agent)
              )

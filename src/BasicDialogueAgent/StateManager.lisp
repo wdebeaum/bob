@@ -1222,12 +1222,16 @@
       
 
 (defun prep-parser-if-necessary (speechact)
-  (case (car speechact)
-    (ASK-IF
-     (send-msg '(request :content (adjust-cost-table :mods ((SA_RESPONSE 1))))))
-    (ASK-WH
-     (send-msg '(request :content (adjust-cost-table :mods ((SA_IDENTIFY 1) (SA_FRAGMENT 1.5))))))
-    ))
+  (let ((act (if (eq (car speechact) 'ONT::PROPOSE)
+		 (find-arg-in-act speechact :content)
+	       speechact)))
+    (case (car act)
+      (ASK-IF
+       (send-msg '(request :content (adjust-cost-table :mods ((SA_RESPONSE 1))))))
+      (ASK-WH
+       (send-msg '(request :content (adjust-cost-table :mods ((SA_IDENTIFY 1) (SA_FRAGMENT 1.5))))))
+      ))
+  )
 					  
 (defun expand-args (msg)
   "this examines the msg for variables that store the CPS state and replaces them with the values"

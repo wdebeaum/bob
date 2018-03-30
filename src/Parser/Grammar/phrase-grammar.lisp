@@ -1710,7 +1710,9 @@
     ;; the LF built in the same way as in n1-qual1
     ;; postpositive adjps alowed to parse "something like a dog"
     ((NP (SORT PRED)
-         (VAR ?v) (SEM ?sem) (lex ?hl) (headcat ?hc) (Class ?c) (AGR ?agr) (WH ?wh) (PRO INDEF)(case ?case)
+      (VAR ?v) (SEM ?sem) (lex ?hl) (headcat ?hc) (Class ?c) (AGR ?agr)
+      ;;(WH ?wh)
+      (PRO INDEF)(case ?case)
          (LF (% Description (status ?status) (var ?v) (Class ?c) (SORT individual)
                 (Lex ?lex)
                 (sem ?sem) 
@@ -1721,7 +1723,9 @@
      -np-anything-adj> .96 ; only use when needed
      (head (pro (SEM ?sem) (AGR ?agr) (VAR ?v) (headcat ?hc) (lex ?hl)
 	        (PRO INDEF) (status ?status) (case ?case)
-	        (VAR ?v) (WH ?wh) (LF ?c)
+	        (VAR ?v)
+		(WH -) ;;  (WH ?wh)   I can't think of a WH pro in this context
+		(LF ?c)
 	        (transform ?transform)
 	    ))
      (ADJP (atype (? at attributive-only central postpositive)) (LF ?qual) (ARG ?v) (VAR ?adjv)
@@ -1763,7 +1767,7 @@
 	    )))
     -np-pro-cp> .96
     (head (np (var ?npvar) (sem ?npsem) 
-	   (PRO (? prp INDEF +))
+	   (PRO INDEF) ;; (? prp INDEF +))  can't allow definite pros here!
 	   (WH -)
 	   (agr ?a) (case ?case)
 	   ;; Myrosia 2009/04/10 Cases like "anything you saw" are handled by indef-pro-desc
@@ -4057,9 +4061,10 @@
 
 	;;   Headless adjective phrases
 	;;  The green, the largest
-	((NP (SORT PRED) (CLASS ?c) (VAR *) (sem ?s) (case (? case SUB OBJ))  (headless +)
-	     (lf (% description (status ?spec) (var *) (sort SET) 
-		    (Class ont::Any-sem) 
+	((NP (SORT PRED) (CLASS ?c) (VAR *) (sem ?s) (case (? case SUB OBJ))  (headless +) (agr (? agr 3s 3p))
+	     (lf (% description (status (? st definite definite-plural)) ;(status ?spec)
+		    (var *) ;(sort SET) 
+		    (Class ont::Any-sem) (agr (? agr 3s 3p))
 		    (constraint ?con)
 		    (sem ?s)
 		    ))
@@ -4067,7 +4072,8 @@
 	  )
 	 -NP-adj-missing-head> .97 ; .96
 	 (head (spec  (poss -) (restr ?restr)
-                      (lf ?spec) (arg *) (agr |3P|) (var ?v)))
+                      (lf ?spec) (arg *) (agr (? agr 3s 3p)) ;(agr |3P|)
+		      (var ?v)))
 	 (ADJP (LF ?l1) (ARG *) (set-modifier -)
 	  (var ?advvar) (ARGUMENT (% NP (sem ?s))))
 	 ;;(cardinality (var ?card))
@@ -4162,24 +4168,25 @@
     ;;  e.g., (show me) who/what arrived, I know who else arrived
    
     ((np (sort wh-desc)  (gap -)  (mass bare) (agr ?a)
-      (sem ?s-sem) ;;(sem ?npsem)
+      (sem ?npsem) ;(sem ?s-sem) ;;(sem ?npsem)  ; should be npsem: e.g., I know *which dog* ate the pizza
       (var ?npvar) (case (? case SUB OBJ))  ;; I think SUB is also OK? isn't it? JFA 3/03
       (lf (% description (status ?status) (VAR ?npvar) (class ?npclass) 
              (constraint ?constraint) (sort ?sort) (WH -)
              (sem ?npsem) (transform ?transform)
              )))
-     -wh-desc2> .7
+     -wh-desc2>
      (head (np (var ?npvar) (sem ?npsem) (wh Q) (agr ?a) ;;(PRO INDEF)
-            (lf (% definite  (class ?npclass) (status ?status)
+            (lf (% description  (class ?npclass) (status ?status)
                    (constraint ?cons) (sort ?sort) (transform ?transform)
                    ))))
      (vp (var ?vpvar) (lf ?lf-s) (subjvar ?npvar) 
-      (gap -) (CLASS (? !class ont::IN-RELATION ont::HAVE-PROPERTY) )     ;;  "what is aspirin" is not a good NP
-      (advbl-needed -) 
-      (subj (% np (sem ?npsem) (var ?npvar)))
+      (gap -) (CLASS (? !class ont::IN-RELATION)) ; ont::HAVE-PROPERTY) )     ;;  "what is aspirin" is not a good NP
+      (advbl-needed -) (agr ?a)
+      (subj (% np (sem ?npsem) (var ?npvar) (agr ?a)))
       (sem ?s-sem)
       )
-     (add-to-conjunct (val (suchthat ?vpvar)) (old ?cons) (new ?constraint))
+     (add-to-conjunct (val (mod ?vpvar)) ;(suchthat ?vpvar))
+		      (old ?cons) (new ?constraint))
      )
     
     ;; wh-term as gap
@@ -5103,14 +5110,14 @@
    
    ;; numbers (only -- number sequences use np-sequenc1e>
    ((NP (SORT PRED)
-     (var ?v) (Class ONT::ANY-SEM) 
-     (sem ($ (? ft f::abstr-obj) (f::container -))) ;;(sem ($ (? ft f::phys-obj f::abstr-obj))) 
+     (var ?v) (class ONT::NUMBER) ;(Class ONT::ANY-SEM) 
+     (sem ($ (? ft f::abstr-obj) (f::container -) (F::scale ont::number) (F::tangible -))) ;;(sem ($ (? ft f::phys-obj f::abstr-obj))) 
      (case (? cas sub obj -))
      (LF (% Description (status ont::number) (var ?v) (Sort Individual) ;(lex ?lf)
 	    (CLASS ONT::NUMBER) ;;(Class ONT::REFERENTIAL-SEM) 
 	    (constraint ?restr) 
-	    (lex ?l) (val ?val) 
-	    (sem ($ (? ft f::abstr-obj) (f::container -))) ; "container -" to discourage it from being used by IN-LOC for "in 2019"
+	    (lex ?l) (val ?val)
+	    (sem ($ (? ft f::abstr-obj) (f::container -) (F::scale ont::number) (F::tangible -))) ; "container -" to discourage it from being used by IN-LOC for "in 2019"
 	    ;; (sem ($ (? ft f::phys-obj f::abstr-obj))) 
 	    (transform ?transform)
 	    ))
@@ -5120,7 +5127,7 @@
      (mass ?mass)
      (constraint ?restr) 
      (nobarespec +) ;; bare numbers can't be specifiers     
-     (agr (? a 3s 3p))
+     (agr 3s)  ; The answer *is* 5.
      )
     -np-number> 0.98
     (head (number (val ?lf) (lex ?l) (val ?val) (range -) (agr (? a 3s 3p));(number-only +)
