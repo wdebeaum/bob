@@ -7,4 +7,10 @@ ONT::BUILD-MODEL => @ASSERTION
 ONT::FIND-TREATMENT =>
 ONT::LEARN =>
 ONT::QUERY-MODEL => ONT::BUILD-MODEL
+
+# show me: 
 ONT::SHOW =>
+
+# find stuff: could be restricted to => ONT::BUILD-MODEL,ONT::FIND-TREATMENT
+ONT::DETERMINE => 
+
