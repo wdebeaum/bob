@@ -128,7 +128,7 @@
 ;; don't use wordnet if we have TRIPS entries  
 (setq  lxm::*use-trips-and-wf-senses* nil) 
 ;; lower bound
-(setq lxm::*domain-score-lower-bound* 0.95)
+(setq lxm::*domain-score-lower-bound* 0.94)
 
 ;;;; LOGGING options
 (setq logging::*logging-enabled* nil)
