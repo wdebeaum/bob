@@ -149,6 +149,47 @@
   (if (not (check-if-bound var)) *success*)
   )
 
+(define-predicate 'w::both-BOUND
+  #'(lambda (args)
+      (both-bound args)))
+
+(defun both-bound (args)
+  "succeeds only if the two constits are both non null"
+  (let ((subcat (get-fvalue args 'w::subcat))
+	(subcat2  (get-fvalue args 'w::subcat2)))
+    (if (and (non-null-constit subcat) (non-null-constit subcat2))
+	*success*
+	)))
+
+(defun non-null-constit (x)
+  (cond ((var-p x)
+	 (if (constit-p (var-values x))
+	     (let ((var (get-value (var-values x) 'w::var)))
+	       (not (or (var-p var)
+			(eq var '-))))
+	     nil))
+	(t (format t "~% SUBCAT is not a var: ~S" x))))
+		  
+		   
+(define-predicate 'w::combine-foot-features
+  #'(lambda (args)
+      (combine-foot-features args)))
+
+(defun combine-foot-features (args)
+  "succeeds only if the two constits are both non null"
+  (let ((feat (get-fvalue args 'w::feat))
+	(val1 (get-fvalue args 'w::val1))
+	(val2 (get-fvalue args 'w::val2))
+	(result (get-fvalue args 'w::result)))
+    (if (and val1 (not (eq val1 '-)))
+	(if (and val2 (not (eq val2 '-)))
+	    (if (eq val1 val2)
+		(match-vals 'w::sem val1 result))
+	    (match-vals 'w::sem val1 result))
+	(match-vals 'w::sem val2 result)))
+  )
+
+
 (define-predicate 'w::recompute-atype
   #'(lambda (args)
       (recompute-atype args)))

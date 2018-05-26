@@ -23,6 +23,15 @@
 	    )
           )
 
+	  ; change REFERENTIAL-SEM-TMP back to REFERENTIAL-SEM
+          ((ONT::TERM ?ev ONT::REFERENTIAL-SEM-TMP)
+           -refSem-rev>
+           100
+	   (ONT::TERM ?ev ONT::REFERENTIAL-SEM
+	    :rule -refSem-rev
+	    )
+          )
+	  
 #|
 	  ;;;;;;;;;;;; normalizing role names ;;;;;;;;;;;;
           (((? reln ONT::EVENT) ?ev ?type :RESULT_DRUM ?!res) 

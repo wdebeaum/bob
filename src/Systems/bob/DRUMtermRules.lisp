@@ -767,7 +767,7 @@
 
 	  ; what, which, who (but not "what protein")
 	  ; note: the type might be replaced by coref type
-	  (((? reln ONT::WH-TERM) ?!obj
+	  (((? reln ONT::WH-TERM ONT::WH-TERM-SET) ?!obj
 	    ;(:* ?!type ?!w) :PROFORM ?!what
 	    ?!type :PROFORM ?!what
 	    )
@@ -779,6 +779,28 @@
 	    :rule -robustWhat
 	    )
 	   )
+
+	  ; extract REFERENTIAL-SEMs that are not in any subtype
+	  ; lower priority than -noop>
+	  ((?reln ?!obj ONT::REFERENTIAL-SEM)
+	   -refSem>
+	   50
+	   (ONT::TERM ?!obj ONT::REFERENTIAL-SEM-TMP ; this will be put back in -refSem-rev>
+;	    :drum ?code
+	    :rule -refSem
+	    )
+	   )
+
+	  ; extract REFERENTIAL-SEMs that are not in any subtype
+	  ((?reln ?!obj (? t ONT::ABSTRACT-OBJECT ONT::PART ONT::PHYS-OBJECT ONT::SITUATION-ROOT))
+	   -noop>
+	   60
+	   (?reln ?!obj ?t
+;	    :drum ?code
+	    :rule -noop
+	    )
+	   )
+	  
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ; pathways/complexes
