@@ -24,11 +24,21 @@
           )
 
 	  ; change REFERENTIAL-SEM-TMP back to REFERENTIAL-SEM
-          ((ONT::TERM ?ev ONT::REFERENTIAL-SEM-TMP)
+          ((ONT::TERM ?ev ONT::REFERENTIAL-SEM-TMP :spec ?!spec :word -)
            -refSem-rev>
            100
-	   (ONT::TERM ?ev ONT::REFERENTIAL-SEM
+	   (?!spec ?ev ONT::REFERENTIAL-SEM
 	    :rule -refSem-rev
+	    )
+          )
+
+	  ; change REFERENTIAL-SEM-TMP back to REFERENTIAL-SEM
+          ((ONT::TERM ?ev ONT::REFERENTIAL-SEM-TMP :spec ?!spec :word ?!w)
+           -refSem-rev2>
+           100
+	   (?!spec ?ev (:* ONT::REFERENTIAL-SEM ?!w)
+	    :rule -refSem-rev2
+	    :word -
 	    )
           )
 	  

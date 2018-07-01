@@ -567,7 +567,7 @@
    (SYNTAX(W::sort W::other-reln) (W::AGR (? a W::3s W::3p)) (W::CASE (? cas W::sub W::obj)) (w::allow-deleted-comp -) (W::MASS W::COUNT))
    (ARGUMENTS
     (ARGUMENT (% W::NP (W::sort (? !sort W::unit-measure))) ONT::FIGURE)
-    (SUBCAT (:parameter xp (:default (% W::PP (W::ptype W::of) (W::sort (? s w::unit-measure))))) ONT::EXTENT)
+    (SUBCAT (:parameter xp (:default (% W::PP (W::ptype W::of) (W::sort (? s w::unit-measure))))) ONT::EXTENT optional)
     ))
 
   ;; level of five; bare number subcat
@@ -625,7 +625,15 @@
     (ARGUMENT  (:parameter xp1 (:default (% W::PP (W::ptype w::of)))) ONT::agent)
     (SUBCAT (:parameter xp2 (:default (% W::PP (W::ptype w::on)))) ONT::affected)
     ))
-  
+
+  (reln-agent-affected-optional-templ
+   (SYNTAX(W::sort W::other-reln)  (W::CASE (? cas W::sub W::obj)) ;(w::allow-deleted-comp +)
+	  (W::MASS W::COUNT))
+   (ARGUMENTS
+    (SUBCAT  (:parameter xp1 (:default (% W::PP (W::ptype w::of)))) ONT::agent optional)
+    (SUBCAT2 (:parameter xp2 (:default (% W::PP (W::ptype w::on)))) ONT::affected optional)
+    ))
+
   ;; relationship, relation
   (reln-between-neutral-templ
    (SYNTAX(W::sort W::other-reln)  (W::CASE (? cas W::sub W::obj)) (w::allow-deleted-comp +) (W::MASS W::COUNT))
@@ -700,7 +708,7 @@
    (ARGUMENTS
     
     ;;;;;; !!!! Fix this - as we handle nominalizations, this will have to be split into multiple templates with appropriate roles
-    (SUBCAT (% W::PP (W::ptype W::of)) NOROLE)
+    (SUBCAT (% W::PP (W::ptype W::of)) ONT::NOROLE)
     ))
   
   ;;;;; letters are count nouns but have irregular plurals e.g., a's

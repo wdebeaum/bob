@@ -78,6 +78,33 @@
 ))
 
 ;;;;;;;;;;;;;;;;;;;;;;;;
+; BOB 
+;;;;;;;;;;;;;;;;;;;;;;;;
+
+; Are there common upstreams of MAPK1 and AKT1?
+(define-words :pos W::n
+:words (
+ (w::upstream
+   (SENSES
+    ((LF-PARENT ONT::predecessor)
+     (TEMPL other-reln-templ)
+     )
+    )
+   )
+))
+
+(define-words :pos W::n
+:words (
+ (w::downstream
+   (SENSES
+    ((LF-PARENT ONT::successor)
+     (TEMPL other-reln-templ)
+     )
+    )
+   )
+))
+
+;;;;;;;;;;;;;;;;;;;;;;;;
 ; for paper 1
 ;;;;;;;;;;;;;;;;;;;;;;;;
 

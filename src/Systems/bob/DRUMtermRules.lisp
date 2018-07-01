@@ -791,6 +791,17 @@
 	    )
 	   )
 
+	  ; use this one instead of -refSem> if there is a ?!w
+	  ((?reln ?!obj (:* ONT::REFERENTIAL-SEM ?!w))
+	   -refSem2>
+	   55 ; higher priority than -refSem>
+	   (ONT::TERM ?!obj ONT::REFERENTIAL-SEM-TMP ; this will be put back in -refSem-rev>
+;	    :drum ?code
+	    :rule -refSem2
+	    :word ?!w
+	    )
+	   )
+	  
 	  ; extract REFERENTIAL-SEMs that are not in any subtype
 	  ((?reln ?!obj (? t ONT::ABSTRACT-OBJECT ONT::PART ONT::PHYS-OBJECT ONT::SITUATION-ROOT))
 	   -noop>

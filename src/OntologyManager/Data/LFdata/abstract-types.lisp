@@ -636,7 +636,7 @@
 (define-type ONT::angle-UNIT
  :wordnet-sense-keys ("angular_unit%1:23:00")
  :parent ONT::formal-UNIT
- :sem (F::Abstr-obj (F::Scale Ont::Linear-scale))
+ :sem (F::Abstr-obj (F::Scale Ont::Linear-extent-scale))
  :arguments ((:ESSENTIAL ONT::FIGURE (F::situation (f::trajectory +)))
              )
  )
@@ -651,7 +651,7 @@
 (define-type ONT::LEVEL
   :comment "words that act as predicates that return the value on a scale/domain: What is the X on this scale?  Note: We exclude words that are identical to the names of the scales they pertain to (e.g., What is the height on the height scale?)"
  :wordnet-sense-keys ("level%1:26:00" "level%1:07:00")
- :sem (F::Abstr-obj (F::Scale Ont::LINEAR-SCALE))
+ :sem (F::Abstr-obj (F::Scale Ont::LINEAR-extent-SCALE))
 ; :parent ONT::ordered-DOMAIN
  :parent ONT::ABSTRACT-OBJECT
  :arguments ((:ESSENTIAL ONT::FIGURE ((? of f::phys-obj F::Abstr-obj))) ;; noise, water
@@ -769,7 +769,7 @@
 
 ;; information
 (define-type ONT::information
- :wordnet-sense-keys ("information%1:10:00" "info%1:10:00" "indication%1:10:00")
+ :wordnet-sense-keys ("information%1:09:00" "information%1:10:00" "info%1:10:00" "indication%1:10:00")
  :parent ONT::information-function-object
  :arguments ((:optional ONT::formal (F::prop))) ; copied from ONT::MESSAGE
  )
@@ -866,7 +866,13 @@
  )
 
 (define-type ONT::commercial-activity
- :wordnet-sense-keys ("finance%1:04:00" "commerce%1:04:00" "base%1:06:06")
+ :wordnet-sense-keys ("finance%1:04:00" "commerce%1:04:00")
+ :parent ONT::activity
+ :sem (F::situation (F::cause (? cause F::agentive F::force)))
+ )
+
+(define-type ONT::agriculture
+ :wordnet-sense-keys ("agriculture%1:04:01")
  :parent ONT::activity
  :sem (F::situation (F::cause (? cause F::agentive F::force)))
  )
@@ -1010,6 +1016,11 @@
     :arguments ((:OPTIONAL ONT::FIGURE) ;(f::situation (f::information f::mental-construct) (f::cause f::mental)))
 		(:optional ont::FORMAL (f::situation)))
     )
+
+(define-type ONT::doctrine
+ :wordnet-sense-keys("doctrine%1:09:00" "ideology%1:09:01")
+ :parent ONT::knowledge-belief
+)
 
 (define-type ONT::understanding
  :wordnet-sense-keys("understanding%1:09:01" "comprehension%1:09:00")
@@ -1344,15 +1355,15 @@
  :arguments (
 	     ;(:REQUIRED ONT::FIGURE (F::Abstr-obj (F::Scale Ont::money-scale) (f::object-function f::currency)))
 	     (:REQUIRED ont::FIGURE ((? lo f::phys-obj f::abstr-obj)))
-	     (:REQUIRED ONT::GROUND (F::Abstr-obj (F::Scale Ont::money-scale) (f::object-function f::currency)))
-	      )
-  )
+	     (:REQUIRED ONT::EXTENT (F::Abstr-obj (F::Scale Ont::money-scale) (f::object-function f::currency)))
+	     )
+ )
 
 ;; unique lf for price
 (define-type ONT::PRICE
  :parent ONT::VALUE-COST
   :arguments ((:REQUIRED ont::FIGURE ((? lo f::phys-obj f::abstr-obj)))
-	      (:REQUIRED ONT::GROUND (F::Abstr-obj (F::Scale Ont::money-scale) (f::object-function f::currency)))
+	      (:REQUIRED ONT::EXTENT (F::Abstr-obj (F::Scale Ont::money-scale) (f::object-function f::currency)))
              )
  )
 
@@ -1375,14 +1386,14 @@
 ;; bill, tab
 (define-type ONT::ACCOUNT-PAYABLE
  :wordnet-sense-keys ("bill%1:10:01" "account%1:10:02" "invoice%1:10:00")
- :wordnet-sense-keys ("bill%1:10:01" "account%1:10:02" "invoice%1:10:00")
  :parent ONT::ACCOUNT
  :sem (F::Abstr-obj (f::scale ont::money-scale))
  )
 
 ;; lack, shortage
 (define-type ONT::LACK
-  :parent ont::situation
+ :wordnet-sense-keys ("deficiency%1:07:00" "shortage%1:07:00")
+ :parent ont::situation
  :arguments ((:REQUIRED ONT::FIGURE)
              )
  )
@@ -1571,79 +1582,79 @@
  :wordnet-sense-keys ("other%3:00:00" "another%3:00:00")
  )
 
-(define-type ont::scale
-  :sem (F::Abstr-obj (F::Scale ?!sc))
-  :parent ont::abstract-object
-  :arguments ((:ESSENTIAL ONT::figure)
-		)
-  )
+;(define-type ont::scale
+;  :sem (F::Abstr-obj (F::Scale ?!sc))
+;  :parent ont::abstract-object
+;  :arguments ((:ESSENTIAL ONT::figure)
+;		)
+;  )
 
-(define-type ont::any-scale
-  :parent ont::scale
-  )
-
-(define-type ont::number-scale
-  :parent ont::scale
-  )
-
-(define-type ont::size-scale
-  :parent ont::scale
-  )
-
-(define-type ont::sound-scale
-  :parent ont::scale
-  )
-
-(define-type ont::weight-scale
-;  :parent ont::size-scale
-  :parent ont::scale
-  )
-
-(define-type ont::linear-scale
-;  :parent ont::size-scale
-  :parent ont::scale
-  )
-
-(define-type ont::area-scale
-;  :parent ont::size-scale
-  :parent ont::scale
-  )
-
-(define-type ont::volume-scale
-;  :parent ont::size-scale
-  :parent ont::scale
-  )
-
-(define-type ont::temperature-scale
-  :parent ont::scale
-  )
-
-(define-type ont::money-scale
-;  :parent ont::size-scale
-  :parent ont::scale
-  )
-
-(define-type ont::luminosity-scale
-  :parent ont::scale
-  )
-
-(define-type ont::time-measure-scale
-  :sem (F::Abstr-obj (F::Scale Ont::time-measure-scale))
+;(define-type ont::any-scale
 ;  :parent ont::scale
-  :parent ont::linear-scale
-  )
+;  )
 
-(define-type ont::duration-scale
-  :parent ont::time-measure-scale
-  )
-
-(define-type ont::age-scale
+;(define-type ont::number-scale
 ;  :parent ont::scale
+;  )
+
+;(define-type ont::size-scale
+;  :parent ont::scale
+;  )
+
+;(define-type ont::sound-scale
+;  :parent ont::scale
+;  )
+
+;(define-type ont::weight-scale
+;;  :parent ont::size-scale
+;  :parent ont::scale
+;  )
+
+;(define-type ont::linear-scale
+;;  :parent ont::size-scale
+;  :parent ont::scale
+;  )
+
+;(define-type ont::area-scale
+;;  :parent ont::size-scale
+;  :parent ont::scale
+;  )
+
+;(define-type ont::volume-scale
+;;  :parent ont::size-scale
+;  :parent ont::scale
+;  )
+
+;(define-type ont::temperature-scale
+;  :parent ont::scale
+;  )
+
+;(define-type ont::money-scale
+;;  :parent ont::size-scale
+;  :parent ont::scale
+;  )
+
+;(define-type ont::luminosity-scale
+;  :parent ont::scale
+;  )
+
+;(define-type ont::time-measure-scale
+;  :sem (F::Abstr-obj (F::Scale Ont::time-measure-scale))
+;;  :parent ont::scale
 ;  :parent ont::linear-scale
-  :parent ont::duration-scale
-  )
+;  )
 
-(define-type ont::other-scale
-  :parent ont::scale
-  )
+;(define-type ont::duration-scale
+;  :parent ont::time-measure-scale
+;  )
+
+;(define-type ont::age-scale
+;;  :parent ont::scale
+;;  :parent ont::linear-scale
+;  :parent ont::duration-scale
+;  )
+
+;(define-type ont::other-scale
+;  :parent ont::scale
+;  )
 
