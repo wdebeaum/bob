@@ -3255,7 +3255,10 @@
 
 (define-type ONT::change-magnitude
  :wordnet-sense-keys ("change_magnitude%2:30:00" "change_intensity%2:39:00")
- :arguments ((:essential ONT::scale (f::abstr-obj (F::scale ont::domain)))
+ :arguments (;(:essential ont::affected (F::abstr-obj (f::type ont::ordered-domain) (f::scale ont::domain)))
+	     ;(:essential ont::affected (F::abstr-obj (f::scale ont::domain))) ; e.g., rainfall is physobj; flood is situation 
+	     (:essential ont::affected)
+	     (:essential ONT::scale (f::abstr-obj (F::scale ont::domain)))
 	     (:optional  ONT::result ((? cau2 F::situation F::Abstr-obj f::phys-obj) (F::type (? !t ont::in-loc ont::at-loc))))) 
  :parent ONT::adjust
  )
@@ -3604,7 +3607,7 @@
     :parent ont::control-manage
     :arguments ((:REQUIRED ONT::Agent ((? aff F::situation F::phys-obj)))
 		(:required ont::affected ((? aff F::situation F::phys-obj)
-					  (F::type (? typ ont::device ont::located-event)))))
+					  (F::type (? typ ont::device ont::located-event ont::molecular-part)))))
     :comment "control, influence, or regulate a process"
     )
 

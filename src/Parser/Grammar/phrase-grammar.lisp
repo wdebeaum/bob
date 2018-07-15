@@ -2590,12 +2590,12 @@
         ((NP (LF (% Description (STATUS ONT::BARE) (VAR ?v) (SORT INDIVIDUAL)
 	            (CLASS ?c) (CONSTRAINT ?r) (sem ?sem) (transform ?transform)))
              ;(SORT PRED)
-	     (VAR ?v) (SORT ?sort)
+	     (VAR ?v) (SORT ?!sort)
              (BARE-NP +) (name-or-bare ?nob)
 	     (simple +)
 	     )
          -bare-singular> .98
-         (head (N1 (SORT ?sort) (MASS  count) (gerund -) ;;(complex -) 
+         (head (N1 (SORT (? !sort substance-unit)) (MASS  count) (gerund -) ;;(complex -) 
 		   (name-or-bare ?nob) 
 		   (derived-from-name -)  ;; names already can become NPs by simpler derivations
 		(AGR 3s) (VAR ?v) (CLASS ?c) (RESTR ?r) (rate-activity-nom -) (agent-nom -)
@@ -2859,7 +2859,7 @@
      (case ?case)
      (SORT PRED)
      (MASS mass) (agr 3s)
-     (VAR *) (WH ?w));; must move WH feature up by hand here as it is explicitly specified in a daughter.
+     (VAR *) (WH ?w) (wh-var *));; must move WH feature up by hand here as it is explicitly specified in a daughter.
      -np-spec-of-def-sing-pp>
     (SPEC (LF ?spec) (ARG ?v) (VAR ?specvar) (name-spec -) (mass mass) (POSS -);;myrosia 12/27/01 added mass restriction to spec
      (WH ?w)
@@ -2877,18 +2877,19 @@
 
    ;;  NP with SPECS that subcategorize for "of" PP's that are plural
    ;; 25% of the trucks, most of the people
-   ((NP (LF (% description (status ont::indefinite-plural) (VAR *) (CLASS ?c) (CONSTRAINT ?newr)
+   ((NP (LF (% description (status ?newspec) ;(status ont::indefinite-plural)
+	       (VAR *) (CLASS ?c) (CONSTRAINT ?newr)
 	       (sem ?sem)  (transform ?transform) 
                 ))
-     (case ?case) (agr 3p)
+     (case ?case) (agr (? agr 3s 3p)) ; none/which of the trucks *is* red
      (SORT PRED)
      (MASS count)
-     (VAR *) (WH ?w));; must move WH feature up by hand here as it is explicitly specified in a daughter.
+     (VAR *) (WH ?w) (wh-var *));; must move WH feature up by hand here as it is explicitly specified in a daughter. ; ?wh-var is set to the arg, which is "the trucks" for "which of the trucks".  We want * here ("which")
      -np-spec-of-def-plur-pp>
     (SPEC (LF ?spec) (ARG ?v) (VAR ?specvar) (name-spec -) (POSS -);;myrosia 12/27/01 added mass restriction to spec
      (WH ?w) (mass count)
      (RESTR ?restr)
-     (SUBCAT (% PP (Ptype ?ptp) (agr |3S|) (SEM ?sem))))
+     (SUBCAT (% PP (Ptype ?ptp) (agr |3P|) (SEM ?sem))))
     (head 
      (PP  (VAR ?v) (mass count) (ptype ?ptp)
 	  (KIND -) (GAP -) (agr 3p)
@@ -2897,6 +2898,8 @@
 		  )))
     
     (append-conjuncts (conj1 (& (REFSET ?v) (size ?card))) (conj2 ?restr) (new ?newr))
+    (recompute-spec (spec ?spec) (agr 3p) (result ?newspec))
+
     )
 #||
    ;;  NP with SPECS that subcategorize for "of" PP's that are plural
@@ -4385,28 +4388,30 @@
 
 (parser::augment-grammar	 
   '((headfeatures
-     (N1 sem lf lex headcat transform set-restr refl abbrev rate-activity-nom); agent-nom)
+     (N1 lf lex headcat transform set-restr refl abbrev rate-activity-nom); agent-nom)
      )
 
     ;; this rule handles agentive nominalizations, wraps an "agent" around the event nominalization
     ((N1 (SORT PRED)
       (gap -) (var *) (agr ?agr)
-      (sem ?sem) (mass count)
+      (sem ?subjsem) (mass count)
       (case (? case sub obj -)) ;; noms aren't case marked, allow any value except posessive
-      (class ont::referential-sem)
+      (class ont::referential-sem) ;;?lf)
       (agent-nom -) (complex ?complex)
-      (restr (& (mod
+      (restr (& (suchthat
 		 (% *pro* (status F) (class ?class) (constraint ?restr) (var ?v))))
       
 	     ))
      -agentnom1> 1
      (head (n1  (agent-nom +) (complex ?complex)
-		(var ?v) (gap -) (aux -) (agr ?agr) (sort pred)
+		(var ?v) (gap -) (aux -)
+	     (agr ?agr) (sort pred)
 		(sem ?sem)  (sem ($ F::SITUATION)) ; (f::type ont::event-of-change)))
 		(class ?class) (transform ?transform)
 		(restr ?restr) 
 		(subj (% NP (var *) (sem ?subjsem)))
 		))
+     ;;(compute-ont-type-from-sem (sem ?subjsem) (lf ?lf))     need to fix bug in SEMS that are variables
      )
 ))
     

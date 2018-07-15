@@ -62,6 +62,8 @@
 	((setf (parser::number-parses-desired parser::*chart*) 1))
 	;; disfavor speech acts not common in text
 	(parser::*filter-and-preparse-input* t)   ;; enable preparsing (e.g., for sequences)
+	;; required for WebParser
+	(parser::*include-parse-tree-in-messages* '(w::lex))
 	((parser::customize-cost-table 
 	  '((ont::SA_QUERY 1.2) 
 	     (ont::SA_IDENTIFY 1.3) 
