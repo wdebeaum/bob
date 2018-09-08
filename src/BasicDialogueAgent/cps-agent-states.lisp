@@ -457,6 +457,7 @@ ONT::INTERACT
 	  :pattern '((ONT::SPEECHACT ?!sa (? t ONT::ANSWER ONT::IDENTIFY ONT::REQUEST-COMMENT) :what ?!ans)
 		     ;(?!spec ?!ans (? !t ONT::SITUATION-ROOT)) 
 		     (?!spec ?!ans (? !t ONT::EVENT-OF-CHANGE)) ; allow EVENT-TYPE but exclude commands 
+		     (ont::eval (find-attr :result ?!query :feature QUERY-ON-TABLE)) ; must have an outstanding query
 		     (ont::eval (generate-AKRL-context :what ?!ans :result ?akrl-context))
 		     (ont::eval (find-attr :result ?goal :feature ACTIVE-GOAL))
 		     -user-response4b>
@@ -1744,7 +1745,7 @@ ONT::INTERACT
 	  :description "what next"
 	  :pattern '((ONT::WH-TERM ?!sa ONT::REFERENTIAL-SEM :proform w::WHAT)
 		     ;; ((? sp ONT::F ONT::EVENT) ?s1 ONT::SEQUENCE-VAL)
-		     (ONT::F ?s1 ONT::SEQUENCE-VAL)
+		     (ONT::F ?s1 ONT::SEQUENCE-POSITION)
 		     (ont::eval (find-attr :result ?!result :feature ACTIVE-GOAL))   ; we assume there is an ACTIVE-GOAL
 		     (ont::eval (find-attr :result ?context :feature ACTIVE-CONTEXT))
 		     -what-next>

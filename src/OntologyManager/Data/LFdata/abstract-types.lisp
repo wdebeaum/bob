@@ -95,6 +95,11 @@
  :wordnet-sense-keys ("flavor%1:09:00")
 )
 
+(define-type ont::perceivable-sound-property
+ :parent ont::perceivable-property
+ :wordnet-sense-keys ("sound%1:07:00" "sound%1:09:00" "sound%1:19:00" "sound%1:11:00")
+)
+
 (define-type ONT::grouping
     :comment "a  classification, category, variety of things. Not a set of objects!"
     :parent ONT::version
@@ -702,7 +707,7 @@
  )
 
 (define-type ONT::ASSETS
- :wordnet-sense-keys ("assets%1:21:00" "resource%1:21:00")
+ :wordnet-sense-keys ("assets%1:21:00" "resource%1:21:00" "reserve%1:21:00")
 ; :parent ONT::MEASURE-DOMAIN
  :parent ONT::FUNCTION-OBJECT
  :sem (F::Abstr-obj (F::Scale Ont::money-scale))
@@ -749,7 +754,7 @@
 (define-type ONT::information-function-object
  :parent ONT::FUNCTION-OBJECT
  :wordnet-sense-keys ("communication%1:03:00" "criminal_record%1:10:00" )
- :sem (F::Abstr-obj (F::information F::information-content) (F::intentional -) (F::container +))
+ :sem (F::Abstr-obj (F::information F::information-content) (F::intentional -) (F::container +) (F::mobility f::movable)) ; movable: spread the news
  :arguments (
 ;	     (:optional ONT::Associated-information)
 	     )
@@ -884,7 +889,7 @@
  )
 
 (define-type ONT::trouble
- :wordnet-sense-keys ("impairment%1:11:00" "harm%1:11:01" "damage%1:11:00" "problem%1:09:00" "trouble%1:09:00" "trouble%1:11:00")
+ :wordnet-sense-keys ("impairment%1:11:00" "harm%1:11:01" "damage%1:11:00" "problem%1:09:00" "trouble%1:09:00" "trouble%1:11:00" "disorder%1:26:00")
  :parent ont::situation
  :arguments ((:OPTIONAL ONT::assoc-with)
              )
@@ -1011,7 +1016,7 @@
 )
 
 (define-type ONT::knowledge-belief
-    :wordnet-sense-keys ("knowledge%1:03:00")
+    :wordnet-sense-keys ("knowledge%1:03:00" "wisdom%1:07:00")
     :parent ONT::mental-construction
     :arguments ((:OPTIONAL ONT::FIGURE) ;(f::situation (f::information f::mental-construct) (f::cause f::mental)))
 		(:optional ont::FORMAL (f::situation)))
@@ -1029,11 +1034,11 @@
 
 (define-type ont::opinion
  :parent ONT::knowledge-belief
- :wordnet-sense-keys ("opinion%1:10:01" "viewpoint%1:09:00" "belief%1:09:00" "opinion%1:09:00")
+ :wordnet-sense-keys ("opinion%1:10:01" "viewpoint%1:09:00" "belief%1:09:00" "opinion%1:09:00" )
 )
 
 (define-type ont::concept-notion
-    :wordnet-sense-keys ("thought%1:09:01" "notion%1:09:00" "concept%1:09:00" "conceptualization%1:09:00")
+    :wordnet-sense-keys ("thought%1:09:01" "notion%1:09:00" "concept%1:09:00" "conceptualization%1:09:00" "proposition%1:10:00")
     :parent ONT::mental-construction
     :arguments ((:OPTIONAL ONT::FIGURE)
                 )
@@ -1349,8 +1354,7 @@
 
 ;;
 (define-type ONT::VALUE-COST
- :wordnet-sense-keys ("change%1:21:02" "return%1:21:00" "issue%1:21:00" "take%1:21:00" "takings%1:21:00" "proceeds%1:21:00" "yield%1:21:00" "payoff%1:21:02")
- :wordnet-sense-keys ("change%1:21:02" "return%1:21:00" "issue%1:21:00" "take%1:21:00" "takings%1:21:00" "proceeds%1:21:00" "yield%1:21:00" "payoff%1:21:02")
+ :wordnet-sense-keys ("change%1:21:02")
  :parent ONT::value
  :arguments (
 	     ;(:REQUIRED ONT::FIGURE (F::Abstr-obj (F::Scale Ont::money-scale) (f::object-function f::currency)))
@@ -1358,6 +1362,16 @@
 	     (:REQUIRED ONT::EXTENT (F::Abstr-obj (F::Scale Ont::money-scale) (f::object-function f::currency)))
 	     )
  )
+
+(define-type ont::expense
+ :wordnet-sense-keys ("cost%1:21:00")
+  :parent ont::value-cost
+  )
+
+(define-type ont::revenue
+ :wordnet-sense-keys ("financial_gain%1:21:00" "return%1:21:00")
+  :parent ont::value-cost
+  )
 
 ;; unique lf for price
 (define-type ONT::PRICE
@@ -1504,9 +1518,10 @@
 ;; changed parent to ont::discipline (from abstract-object)
 ;; 2005.04/20 Added by Myrosia to handle words like algebra, mathematics etc.
 (define-type ONT::science-discipline
- :parent ONT::discipline
- :sem (F::Abstr-obj (F::container +)) ;; why is this container +?
- )
+    :wordnet-sense-keys ("science%1:09:00")
+    :parent ONT::discipline
+    :sem (F::Abstr-obj (F::container +)) ;; why is this container +?
+    )
 
 ;; acid wash
 (define-type ONT::food-prep-process
@@ -1532,7 +1547,7 @@
 ;; We need f::situation counterparts for medical words classified as ont::treatment or ont::diagnostic for i2b2 because we don't have multiple inheritance
 ;; surgery
 (define-type ONT::medical-event
- :wordnet-sense-keys ("care%1:04:01" "attention%1:04:01" "aid%1:04:01" "tending%1:04:00" "regimen%1:09:00::" "regime%1:09:00::")
+ :wordnet-sense-keys ("care%1:04:01" "attention%1:04:01" "aid%1:04:01" "tending%1:04:00" "regimen%1:09:00" "regime%1:09:00" "immunization%1:04:00")
  :parent ONT::event-defined-by-activity
  :sem (F::Situation (F::aspect F::dynamic))
  :arguments ((:OPTIONAL ONT::FIGURE)

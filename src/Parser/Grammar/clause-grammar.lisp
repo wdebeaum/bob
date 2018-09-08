@@ -632,7 +632,9 @@
 	 (lex ?plex)
      (agr ?agr) (case sub) (headcat ?vcomp))
     (head (vp (subj (% np (var ?arg) (sem ?argsem) ;(sem ($ ?!type))
-		       )) (agr ?agr) 
+		       ))
+	      (ellipsis -)
+	      (agr ?agr) 
 	      (gap -)  ;; my guess is there are some eliiptical glosses that motivated allowing a gap here, but i'm deleting it for now(gap ?g) 
 	      (wh -)
 	      (class ?c) (constraint ?con) (vform fin) (tma ?tma)
@@ -2043,7 +2045,10 @@
               (subj-map ?subjvar) (dobj-map ?dobjvar)
 	    (comp3-map ?compvar))))
 
-   
+;   
+; Now we use the expletive template constructions?   
+;   
+#|   
    ;; there transformation - be and exist forms can take there as a subject
    ;; for objects
    ;; test: there exists a dog
@@ -2069,7 +2074,6 @@
 	    (part (% -))
 	    )))   
 
-
     ;; for properties  e.g., there is a man in the corner
    ((v (vform ?vform) (be-there +)
       (subj (% np (lex there) (agr ?agr) (sem ($ -)))) (subj-map -)
@@ -2082,7 +2086,8 @@
      -be-there-sense1> .97
      (head (v (vform ?vform) (be-there -)
 	    (agr ?agr)
-	    (lf ont::have-property) (transform ?transform)
+	    (lf ont::exists) ;(lf ont::have-property)
+	    (transform ?transform)
 	    (lex (? lex be was were been is ^s are))
 	    (sem ?sem)
 	    (subj ?!subj) (subj-map ?subj-map)
@@ -2092,7 +2097,7 @@
 	    (comp3 (% -)) (comp3-map -)
 	    (part (% -))
 	    )))   
-
+|#
    
    ;; a transformation on be to take expletive + filled predicate
    ;; It is...
@@ -2468,7 +2473,7 @@
      (advbl-needed ?avn)
      )
     -s-ynq-be-adv>
-    (head (v (sem ?sem) (aux -)
+    (head (v (aux -)
 	   (lf ?belf)
 	   (subj-map ?subj-map) (dobj-map ?dobj-map) (comp3-map ?comp3-map)
 	   
@@ -2495,11 +2500,55 @@
     (add-to-conjunct (val (tense (? vf past pres fut))) (old ?tma) (new ?newtma))
     ?subj
     (advbl (atype pre-vp) (gap -)  ; pre-vp: Is the block eventually red?
-     (argument (% s (sem ?argsem)))
+     (argument (% s (sem ?sem)))
      (arg ?v) (var ?mod) (role ?advrole) (subcat -))           
     ?dobj
-    ?comp) 
+    ?comp)
 
+      ; Is the pizza cold quickly?
+   ((s (stype ynq) (main +) (aux -) (gap -)
+     (subj (% np (lex ?subjlex) (sem ?subjsem) (var ?subjvar) (agr ?subjagr)))
+     (sort pred) 
+     
+     (var ?v) ;; propagate up explicitly because not a head feature	   
+     (agr ?subjagr) ;; propagate up explicitly because not a head feature
+     (sem ?sem) ;; propagate up explicitly because not a head feature
+     (transform ?transform) ;; propagate up explicitly because not a head feature
+      ;; propagate up explicitly because not a head feature	
+     (subjvar ?subjvar) (dobjvar ?dobjvar)
+     
+     (lf (% prop (var ?v) (class ?belf)
+	    (constraint ?newcon)
+	    (sem ?sem) (tma ?tma)
+	    (transform ?transform)
+	    ))
+     (advbl-needed ?avn)
+     )
+    -s-ynq-be-adv2>
+    (head (s (stype ynq) (main +) (aux -) (gap -)
+	     (subj (% np (lex ?subjlex) (sem ?subjsem) (var ?subjvar) (agr ?subjagr)))
+	     (sort pred) 
+	     
+	     (var ?v) ;; propagate up explicitly because not a head feature	   
+	     (agr ?subjagr) ;; propagate up explicitly because not a head feature
+	     (sem ?sem) ;; propagate up explicitly because not a head feature
+	     (transform ?transform) ;; propagate up explicitly because not a head feature
+	     ;; propagate up explicitly because not a head feature	
+	     (subjvar ?subjvar) (dobjvar ?dobjvar)
+	     
+	     (lf (% prop (var ?v) (class ?belf)
+		    (constraint ?con)
+		    (sem ?sem) (tma ?tma)
+		    (transform ?transform)
+		    ))
+	     (advbl-needed ?avn)
+	     ))
+    (advbl (atype post) (gap -)  ; post: Is the block red eventually?
+     (argument (% s (sem ?sem)))
+     (arg ?v) (var ?mod) (role ?advrole) (subcat -))
+    (add-to-conjunct (val (mod ?mod)) (old ?con) (new ?newcon))
+    )
+#||
    ; Is the pizza cold quickly?
    ((s (stype ynq) (main +) (aux -) (gap -)
      (subj (% np (lex ?subjlex) (sem ?subjsem) (var ?subjvar) (agr ?subjagr)))
@@ -2558,7 +2607,7 @@
      (argument (% s (sem ?argsem)))
      (arg ?v) (var ?mod) (role ?advrole) (subcat -))           
     ) 
-   
+   ||#
    
     ;; conditionals
     ;;; md commented out 2008/16/06 because conditionals are now handled as regular adverbials.
@@ -3910,33 +3959,33 @@
      )
 
         ;;  He talked me deaf.
-      ((vp (lf (% prop (class ONT::CAUSE-EFFECT) (var *) 
-        (constraint (& (agent ?ag) (affected ?npvar) (method ?v) (formal ?mod)))
-        (tma ?tma) 
-        ;(transform ?transf) 
-        (sem ?newsem)
-        ))
+   ((vp (lf (% prop (class ONT::CAUSE-EFFECT) (var *) 
+	       (constraint (& (agent ?ag) (affected ?npvar) (method ?v) (formal ?mod)))
+	       (tma ?tma) 
+					;(transform ?transf) 
+	       (sem ?newsem)
+	       ))
      (tma ?tma) (class ONT::CAUSE-EFFECT) (var *)
-         ;;(LF (% PROP (constraint ?new) (class ?class) (sem ?sem) (var ?v) (tma ?tma)))
-;      (advbl-needed -) (complex +) (result-present +) (GAP ?gap)
-      ;(SUBJ (% NP (Var ?npvar) (sem ?sem) (lex ?lex)))
-      ;(subjvar ?npvar)
-      (advbl-needed -) (complex +) (GAP ?gap)
-      )
+     ;;(LF (% PROP (constraint ?new) (class ?class) (sem ?sem) (var ?v) (tma ?tma)))
+					;      (advbl-needed -) (complex +) (result-present +) (GAP ?gap)
+					;(SUBJ (% NP (Var ?npvar) (sem ?sem) (lex ?lex)))
+					;(subjvar ?npvar)
+     (advbl-needed -) (complex +) (GAP ?gap)
+     )
      -vp-result-adj-intransitive-to-transitive> 0.98  ; prefer the transitive sense if there is one
-     (head (vp (VAR ?v) 
-        (seq -)  ;;  post mods to conjoined VPs is very rare
-        ;(DOBJVAR -)  ; This doesn't work because it could unify with a dobjvar not yet instantiated
-	(dobj (% -)) ; cannot use (dobj -) because dobj is (% - (W::VAR -))
-        ;(SUBJ (% NP (Var ?npvar) (sem ?sem) (lex ?lex)))  
-        ;(subjvar ?npvar)
-        (constraint ?con) (tma ?tma) (result-present -)
-	(subjvar ?ag)
-	(subj-map ONT::AGENT)
-	(COMP3 (% -))
-        ;;(aux -) 
-        (gap ?gap)
-        (ellipsis -)
+    (head (vp (VAR ?v) 
+	      (seq -)  ;;  post mods to conjoined VPs is very rare
+					;(DOBJVAR -)  ; This doesn't work because it could unify with a dobjvar not yet instantiated
+	      (dobj (% -)) ; cannot use (dobj -) because dobj is (% - (W::VAR -))
+					;(SUBJ (% NP (Var ?npvar) (sem ?sem) (lex ?lex)))  
+					;(subjvar ?npvar)
+	      (constraint ?con) (tma ?tma) (result-present -)
+	      (subjvar ?ag)
+	      (subj-map ONT::AGENT)
+	      (COMP3 (% -))
+	      ;;(aux -) 
+	      (gap ?gap)
+	      (ellipsis -)
         ))
      (np (Var ?npvar) (sem ?sem))
      (adjp (ARGUMENT (% NP (sem ?sem) (var ?npvar))) 
@@ -3952,3 +4001,45 @@
 
       )     
  )
+
+;;  Constructions involving nouns that have propositional subcats
+
+(parser::augment-grammar
+ '((headfeatures
+    (s vform agr comp3 cont postadvbl  aux modal lex headcat tma transform subj-map advbl-needed template subj subjvar))
+
+   ;; the news/message arrived that X  ==>   The news that X arrived
+   ;;   also variants such as the news came that ...,
+   ;; and overgeneralizing for now to include things like The goal arose to find the dog, the belief grew that he was lying, the theorem was proved that x equals y
+
+   ((s (stype decl) (var ?v) (subjvar ?npvar) (gap ?g) (focus ?npvar)
+     (lf ?lf)
+     (subj (% np (sem ?npsem) (var ?npvar) (agr ?a) (case (? case sub -)) (lex ?lex)
+	      (pp-word -) (changeagr -) (gap -))
+	   )
+
+     (advbl-needed ?avn)
+     )
+    -news-arrive+that>
+    (np (sem ?npsem) (var ?npvar) (agr ?a) (case (? case sub -)) (lex ?lex) (sort pred)
+     (sem ($ F::abstr-obj  (F::type (? ft ont::information-function-object ont::mental-construction))
+	     (F::information F::information-content)))
+     ;;(lf (% description (constraint ?con)))
+     (subcat ?!subcat) (subcat (% ?xx (var ?sc)))
+     (pp-word -) (changeagr -) (gap -) (expletive ?exp))
+    (head (vp (lf ?lf)
+	      (gap ?g)
+	      (SEM ($ F::situation (f::type (? vtype ONT::ARRIVE ont::come ont::appear ont::grow ont::show))))
+              (template (? !x  lxm::propositional-equal-templ))
+	      (subjvar ?npvar)
+	      (subj (% np (sem ?npsem) (var ?npvar) (agr ?a) (case (? case sub -)) (lex ?lex)
+		       (pp-word -) (changeagr -) (gap -) (expletive ?exp)))
+	      (var ?v) (vform fin) (agr ?a)
+	      (advbl-needed ?avn)
+	      (neg ?neg)
+	      )
+     )
+    ?!subcat
+   ;; (add-to-conjunct (old ?con) (val (Formal ?sc)) (new ?newcon))
+    )
+   ))

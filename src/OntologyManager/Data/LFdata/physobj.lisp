@@ -37,7 +37,7 @@
 
 ;; UMLS
 (define-type ONT::organism
-    :wordnet-sense-keys ("organism%1:03:00" "being%1:03:00")
+    :wordnet-sense-keys ("organism%1:03:00" "being%1:03:00" "life%1:19:00" "life%1:26:00" "life%1:03:00")
     :parent ONT::natural-object
     :sem (F::Phys-obj (F::origin F::living))
     )
@@ -216,10 +216,50 @@
 
 
 (define-type ONT::geo-formation
-    :wordnet-sense-keys ("land%1:17:00" "grassland%1:15:00" "formation%1:17:00")
+    :wordnet-sense-keys ("formation%1:17:00")
     :parent ONT::GEO-OBJECT
     :sem (F::Phys-obj (F::origin F::natural) (F::trajectory -))
     )
+
+(define-type ONT::watershed
+    :wordnet-sense-keys ("watershed%1:15:01" "watershed%1:15:00" )
+    :parent ONT::GEO-OBJECT
+    :sem (F::Phys-obj (F::origin F::natural) (F::trajectory -))
+    )
+
+(define-type ONT::land
+    :wordnet-sense-keys ("land%1:17:00" "grassland%1:15:00" "wetland%1:17:00")
+    :parent ONT::GEO-formation
+    :sem (F::Phys-obj (F::origin F::natural) (F::trajectory -))
+    )
+
+(define-type ONT::mountain
+    :wordnet-sense-keys ("elevation%1:17:00")
+    :parent ONT::GEO-formation
+    :sem (F::Phys-obj (F::origin F::natural) (F::trajectory -))
+    )
+
+(define-type ONT::valley
+    :wordnet-sense-keys ("valley%1:17:00")
+    :parent ONT::GEO-formation
+    :sem (F::Phys-obj (F::origin F::natural) (F::trajectory -))
+    )
+
+(define-type ONT::body-of-water
+    :wordnet-sense-keys ("body_of_water%1:17:00")
+    :parent ONT::GEO-formation
+    :sem (F::Phys-obj (F::origin F::natural) (F::trajectory -))
+    )
+
+(define-type ONT::SHORE
+    :parent ONT::geo-formation
+    :wordnet-sense-keys ("shore%1:17:00")
+    :sem (F::PHYS-OBJ (F::SPATIAL-ABSTRACTION (? SA F::SPATIAL-POINT F::LINE)) (F::MOBILITY F::FIXED))
+    :arguments ((:OPTIONAL ONT::FIGURE (F::Phys-obj (F::form F::Geographical-object) (F::spatial-abstraction (? sao F::STrip F::Spatial-region))))
+		)
+    )
+
+
 
 (define-type ONT::sunken-natural-formation
     :parent ONT::geo-object
@@ -311,6 +351,7 @@
 
 ;; pollution
 (define-type ONT::pollution
+    :wordnet-sense-keys ("pollution%1:26:00" "pollution%1:26:02")
     :parent ONT::atmospheric-phenomenon
     :sem (F::Phys-obj (F::origin F::non-living) (F::trajectory -))
     )
@@ -341,6 +382,11 @@
 
 (define-type ONT::general-structure
     :parent ONT::man-made-structure
+    )
+
+(define-type ONT::bridge
+    :wordnet-sense-keys ("bridge%1:06:00")
+    :parent ONT::general-structure
     )
 
 (define-type ONT::FACILITY
@@ -419,6 +465,26 @@
 ;; UMLS
 (define-type ont::pharmacologic-substance
     :wordnet-sense-keys ("drug%1:06:00")
+    :Parent ont::chemical
+    )
+
+(define-type ont::nutrient
+    :wordnet-sense-keys ("nutrient%1:03:01")
+    :Parent ont::chemical
+    )
+
+(define-type ont::fertilizer
+    :wordnet-sense-keys ("fertilizer%1:27:00")
+    :Parent ont::chemical
+    )
+
+(define-type ont::pesticide
+    :wordnet-sense-keys ("pesticide%1:27:00")
+    :Parent ont::chemical
+    )
+
+(define-type ont::herbicide
+    :wordnet-sense-keys ("herbicide%1:27:00")
     :Parent ont::chemical
     )
 
@@ -514,6 +580,11 @@
     :sem (F::Phys-obj (f::origin f::natural))
     )
 
+(define-type ONT::earth-substance
+    :wordnet-sense-keys ("soil%1:27:01" "soil%1:17:00" "earth%1:27:00")
+    :parent ONT::natural-substance
+    )
+
 (define-type ONT::gas-SUBSTANCE
     :parent ONT::SUBSTANCE
     :wordnet-sense-keys ("gas%1:27:00")
@@ -526,6 +597,12 @@
     :sem (F::Phys-obj (F::form F::Liquid))
     )
 
+(define-type ONT::fuel
+     :wordnet-sense-keys ("fuel%1:27:00")
+    :parent ONT::liquid-SUBSTANCE
+    :sem (F::Phys-obj (F::form F::Liquid) (f::origin f::natural))
+    )
+
 (define-type ONT::natural-LIQUID-SUBSTANCE
     :parent ONT::liquid-SUBSTANCE
     :sem (F::Phys-obj (F::form F::Liquid) (f::origin f::natural))
@@ -534,6 +611,13 @@
 ;; oxygen, hydrogen
 (define-type ONT::natural-gas-SUBSTANCE
     :parent ONT::gas-SUBSTANCE
+    :sem (F::Phys-obj (F::form F::gas) (f::origin f::natural))
+    )
+
+;;air
+(define-type ONT::air
+    :wordnet-sense-keys ("air%1:27:00" "air%1:19:00" "air%1:27:01")
+    :parent ONT::natural-gas-SUBSTANCE
     :sem (F::Phys-obj (F::form F::gas) (f::origin f::natural))
     )
 
@@ -589,14 +673,15 @@
     )
 
 ;; trash, waste
-(define-type ONT::disposable
+(define-type ONT::waste
     :wordnet-sense-keys ("waste%1:27:00" "waste_material%1:27:00" "waste_matter%1:27:00" "waste_product%1:27:00")
     :parent ONT::material
     )
 
 ;; these are marked intentional + because intentional + is a required setting for e.g. motion verbs like walk and run so either that requirement must be removed or animals must be intentional +
 (define-type ONT::ANIMAL
-    :wordnet-sense-keys ("animal%1:03:00" "animate_being%1:03:00" "beast%1:03:00" "brute%1:03:00" "creature%1:03:00" "fauna%1:03:00")
+    :wordnet-sense-keys ("animal%1:03:00" "animate_being%1:03:00" "beast%1:03:00" "brute%1:03:00" "creature%1:03:00" "fauna%1:14:00"
+					  "wildlife%1:14:00")
     :parent ONT::organism ;; umls
     :sem (F::Phys-obj (F::intentional +) (f::form f::solid-object) (F::origin (? o f::human f::non-human-animal)) (F::trajectory -))
     )
@@ -1194,10 +1279,6 @@
     :sem (F::Phys-obj (F::Form F::solid-object) (F::Object-Function F::furniture))
     )
 
-
-
-
-
 ;; anywhere, anyplace, ...
 (define-type ONT::wh-location
     :parent ONT::location
@@ -1219,7 +1300,7 @@
     )
 
 (define-type ONT::loc-as-area
-    :comment " places that occupy space"
+    :comment "places that occupy space"
     :parent ONT::location-by-description
     )
 
@@ -1235,20 +1316,39 @@
 
 ; oil field, wheat field
 (define-type ONT::area-def-by-use
-    :wordnet-sense-keys ("field%1:15:00" "field%1:15:05" "plot%1:15:00")
+    :wordnet-sense-keys ("field%1:15:00" "field%1:15:05" "plot%1:15:00" "pasture%1:15:00")
     :comment "places defined by their function: e.g.,  lot, plot, region, scene, section, site, territory, zone"
     :parent ONT::loc-as-area
     )
 
-; coal mine
+(define-type ONT::workplace
+    :wordnet-sense-keys ("work%1:06:01")
+    :parent ONT::area-def-by-use
+    )
+
 (define-type ONT::mine
     :wordnet-sense-keys ("mine%1:06:01")
-    :parent ONT::area-def-by-use
+    :parent ONT::workplace
+    )
+
+(define-type ONT::fishery
+    :wordnet-sense-keys ("fishery%1:06:00" "fish_farm%1:06:00")
+    :parent ONT::workplace
+    )
+
+(define-type ONT::bakery
+    :wordnet-sense-keys ("bakery%1:06:00")
+    :parent ONT::workplace
+    )
+
+(define-type ONT::lumberyard
+    :wordnet-sense-keys ("lumberyard%1:06:00")
+    :parent ONT::workplace
     )
 
 (define-type ONT::farm
     :wordnet-sense-keys ("farm%1:06:00")
-    :parent ONT::area-def-by-use
+    :parent ONT::workplace
     )
 
 (define-type ONT::loc-defined-by-contrast
@@ -1706,13 +1806,6 @@
 
 ; <
 
-(define-type ONT::SHORE
-    :parent ONT::geo-formation
-    :wordnet-sense-keys ("shore%1:17:00")
-    :sem (F::PHYS-OBJ (F::SPATIAL-ABSTRACTION (? SA F::SPATIAL-POINT F::LINE)) (F::MOBILITY F::FIXED))
-    :arguments ((:OPTIONAL ONT::FIGURE (F::Phys-obj (F::form F::Geographical-object) (F::spatial-abstraction (? sao F::STrip F::Spatial-region))))
-		)
-    )
 
 (define-type ONT::Wheel
     :parent ONT::MANUFACTURED-OBJECT
@@ -2067,7 +2160,7 @@
 
 ;; power
 (define-type ONT::POWER
-    :wordnet-sense-keys ("electricity%1:19:01" "electrical_energy%1:19:00")
+    :wordnet-sense-keys ("electricity%1:19:01" "electrical_energy%1:19:00" "electricity%1:19:00" "energy%1:19:00")
     :parent ONT::substance
     )
 
@@ -2623,6 +2716,7 @@
     )
 
 (define-type ONT::SPICES-HERBS
+    :wordnet-sense-keys ("spice%1:27:00" "spice%1:13:00" "herb%1:13:00")
     :parent ONT::INGREDIENTS
     )
 
@@ -2706,10 +2800,29 @@
               )
   )
 
+
 (define-type ONT::system
   :wordnet-sense-keys ("system%1:06:00" "system%1:14:00")
   :comment "An interconnected group of objects, abstract or physical"
  :parent ONT::group-object
+ )
+
+(define-type ONT::ecosystem
+  :wordnet-sense-keys ("biotic_community%1:14:00" "ecosystem%1:14:00" "biosphere%1:15:00")
+  :comment "An interconnected group of] entities fo5ming an ecosystem"
+ :parent ONT::system
+ )
+
+(define-type ONT::structure
+  :wordnet-sense-keys ("structure%1:07:00")
+  :comment "A collection of objects organized for some purpose" 
+  :parent ONT::system
+  )
+
+(define-type ONT::economic-system
+  :wordnet-sense-keys ("economy%1:14:00" )
+  :comment "An interconnected group of entities forming an economy"
+ :parent ONT::system
  )
 
 (define-type ONT::formation
@@ -2738,6 +2851,11 @@
   :sem (F::phys-obj (f::intentional +) (F::Object-Function F::Occupation)) ; (F::Container -)) GROUP-OBJECT has container +
   :arguments ((:OPTIONAL ONT::FIGURE ((? lof f::phys-obj f::abstr-obj))))
   )
+
+(define-type ont::family-group
+  :wordnet-sense-keys ("family%1:14:02")
+    :parent ont::social-group
+    )
 
 ;; swift 20110928 crew defined for obtw demo
 (define-type ont::crew-phys
@@ -2815,6 +2933,7 @@
 ;; ansi
 (define-type ONT::regulatory-organization
  :parent ONT::organization
+ :wordnet-sense-keys ("organization%1:14:01")
  )
 
 (define-type ONT::airline

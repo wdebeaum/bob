@@ -555,7 +555,7 @@
 (define-type ont::obj-in-path
     :arguments (;(:ESSENTIAL ONT::FIGURE ((? type F::Situation F::phys-obj) (F::type (? path-type ont::motion ont::apply-force ont::route)) (F::trajectory +)))
 		;(:ESSENTIAL ONT::FIGURE ((? type F::phys-obj) ))
-		(:ESSENTIAL ONT::FIGURE ((? type F::Situation F::phys-obj) (F::type (? t F::route F::event-of-change)) )) ; I go to the post office via ...; The route to Avon via...
+		(:ESSENTIAL ONT::FIGURE ((? type F::Situation F::phys-obj) (F::type (? t ont::route ont::event-of-change)) )) ; I go to the post office via ...; The route to Avon via...
 		(:essential ONT::GROUND  (F::Phys-obj (F::form F::object)))) 
     :parent ont::path
     )
@@ -665,6 +665,7 @@
 
 (define-type ONT::direction
     :parent ONT::position-reln
+    :wordnet-sense-keys ("direction%1:15:00")
     :comment "a direction = a spatial relation between the location (FIGURE) of an object and its previous location"
  :arguments ((:ESSENTIAL ONT::FIGURE ((? t F::Phys-obj
 					 F::abstr-obj ; "move the plan up the agenda"?
@@ -1130,6 +1131,17 @@
     :parent ont::time-interval
     )
 
+(define-type ONT::month
+    :comment "time interval of a named month"
+    :parent ont::time-interval
+    )
+
+(define-type ONT::day
+    :comment "time interval of a day"
+    :parent ont::time-interval
+    )
+
+
 ;; ont::time-unit has been moved under ont::measure-unit (with other units pounds, ghz, etc.)
 ;;; Covers all explicit things with date and time counting
 ;; Hours, minutes etc.
@@ -1190,7 +1202,7 @@
 
 (define-type ont::recurring-event
     :comment "events that recur every year (or some time interval)"
-    :wordnet-sense-keys ("day%1:28:01")
+    :wordnet-sense-keys ("day%1:28:01" "season%1:28:01" "season%1:28:02")
     :parent ONT::date-object-on)
 
 

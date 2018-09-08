@@ -440,8 +440,8 @@
      (VP vform var agr neg sem subj iobj dobj comp3 part cont gap class subjvar lex headcat transform subj-map tma aux template)
      (VP- vform var agr neg sem subj iobj dobj dobjvar comp3 part cont gap class subjvar lex headcat transform subj-map tma aux passive passive-map template result)
      (S vform neg cont stype gap sem subjvar dobjvar var  lex headcat transform subj)
-     (N1 case VAR AGR MASS SEM Changeagr class reln sort lex headcat transform set-restr result rate-activity-nom agent-nom) ;added features for nominalizations
-     (NP case VAR AGR MASS SEM Changeagr class reln sort lex headcat transform status)
+     (N1 case VAR AGR MASS SEM Changeagr class reln sort lex headcat transform set-restr result rate-activity-nom agent-nom subcat subcat-map) ;added features for nominalizations
+     (NP case VAR AGR MASS SEM Changeagr class reln sort lex headcat transform status subcat subcat-map)
      (ADVBL SORT ATYPE CONSTRAINT SA-ID PRED NEG TO LEX HEADCAT SEM ARGUMENT SUBCAT IGNORE transform neg)
      (ADV VAR ATYPE SORT ARG PRED ARGUMENT lex headcat transform)
      (UTT headcat lex ended subjvar)
@@ -1639,7 +1639,8 @@
       ;; TEST: Barking, the dog chased the cat.
    ;; TEST: The dog chased the cat barking.
    ((advbl (arg ?arg) (sem ($ f::abstr-obj (f::information -) (f::intentional -)))
-     (argument (% S (sem ($ f::situation (f::aspect f::dynamic))) (subjvar ?!subjvar) (subj ?!subj))) 
+     (argument (% S (sem ($ f::situation (f::aspect f::dynamic))) (subjvar ?!subjvar) (subj ?!subj)
+		  (var ?arg))) 
      (sort pred) (gap -) (atype (? atp pre post))
      (role ONT::MANNER) (var **)
      (LF (% PROP (CLASS ONT::IMPLICIT-OVERLAP) (VAR **) 
@@ -1649,7 +1650,7 @@
     -vp-ing-advbl> .97
     (head (vp (vform ing) (var ?v) (gap -) (aux -) (advbl-necessary -)
 	   (constraint ?con)  (transform ?transform) (class ?class)
-	   (subj (% np (var ?subjvar) (agr ?subjagr) (sem ?subjsem) (gap -)))
+	   (subj (% np (var ?!subjvar) (agr ?subjagr) (sem ?subjsem) (gap -)))
 	   ;(subjvar (% *PRO* (VAR *) (gap -) (sem ?subjsem)))
 	   (subjvar ?!subjvar)
 	   (subj ?!subj)
