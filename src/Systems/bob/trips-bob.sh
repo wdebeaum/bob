@@ -41,6 +41,8 @@ batch=''
 tt_mode=$TRIPS_SYSNAME
 tt_conf=''
 channel=Desktop
+nospeech=t
+nospeechin=t
 nospeechout=t
 nochat=''
 nobeep=''
@@ -65,6 +67,8 @@ while test ! -z "$1"; do
 	-nochat)	nochat=t;;
 	-noekb)		noekb=t;;
 	-ekb-agent-options)	ekb_agent_options="$2";	shift;;
+	-nospeech)	nospeech=t;;
+	-nospeechin)	nospeechin=t;;
 	-nospeechout)	nospeechout=t;;
 	-nobeep)	nobeep=t;;
 	-quiet)		nobeep=t;;
