@@ -1,9 +1,9 @@
 # EKB.pm
 #
-# Time-stamp: <Fri Jun 23 10:07:07 CDT 2017 lgalescu>
+# Time-stamp: <Thu Nov  1 15:42:38 CDT 2018 lgalescu>
 #
 # Author: Lucian Galescu <lgalescu@ihmc.us>,  3 May 2016
-# $Id: EKB.pm,v 1.34 2017/10/04 20:51:56 lgalescu Exp $
+# $Id: EKB.pm,v 1.39 2018/11/01 20:57:31 lgalescu Exp $
 #
 
 #----------------------------------------------------------------
@@ -103,14 +103,22 @@
 # - moved a few methods into package functions
 # 2017/05/15 v1.14.1	lgalescu
 # - added initialization from string
+# 2017/05/22 (r.1.30) rcarff
+# - added make_conjoined_event()
+# - some other minor mods for feature handling
 # 2017/05/25 v1.14.2	lgalescu
 # - slight modification of the format for the 'inevent' feature
 # 2017/05/29 v1.14.3	lgalescu
 # - added a bit more documentation
 # 2017/06/13 v1.14.4	lgalescu
-# - modified normalization: now dangling IDs in arguments are left alone -- they
-#   are required for graphs to look good.
-#
+# - modified normalization: now dangling IDs in arguments are left alone -- 
+#   they are required for graphs to look good.
+# 2018/10/14-19 v1.15.0 (r1.39) lgalescu
+# - added method for setting the timestamp: set_timestamp()
+# - added options for normalization; affects normalize() and clean_assertions()
+# - added method for removing paragraphs: remove_paragraphs()
+# - added method for querying an EKB: query_assertions()
+
 
 # TODO:
 # - maybe split off non-OO extensions for manipulating XML objects into a separate package?
@@ -118,7 +126,7 @@
 
 package EKB;
 
-$VERSION = '1.14.3';
+$VERSION = '1.15.0';
 
 =head1 NAME
 
@@ -138,7 +146,7 @@ a. EKB operations
   $ekb->print($filepath); # writes EKB to file
   $ekb->normalize(); # normalizes EKB
   $ekb->crop($uttnum); # crops EKB to content derived from a given utterance
-  $ekb->save(); # saves EKB (writes it to the save file it was read from)
+  $ekb->save(); # saves EKB (writes it to the same file it was read from)
 
 b. Search
 
@@ -331,7 +339,7 @@ sub new {
   }
   # add a timestamp, if it doesn't have one
   unless ($self->get_attr('timestamp')) {
-    $self->set_attr('timestamp', _timestamp());
+    $self->set_timestamp;
   }
   return $self;
 }
@@ -379,6 +387,11 @@ Returns the XML document backing up this EKB.
 sub get_document {
   my $self = shift;
   return $self->{document};
+}
+
+sub set_timestamp {
+  my $self = shift;
+  $self->set_attr('timestamp', _timestamp());
 }
 
 =head1 METHODS
@@ -547,7 +560,7 @@ sub save {
   $self->print($self->{file});
 }
 
-=head2 normalize( )
+=head2 normalize( $opts )
 
 Normalizes the EKB. Specifically, it modifies the EKB so that:
 
@@ -555,7 +568,7 @@ Normalizes the EKB. Specifically, it modifies the EKB so that:
 
 =item - uttnums start at 1;
 
-=item - lisp code is removed;
+=item - lisp code is removed, unless given the option {keep_lisp => 1} ;
 
 =item - duplicative information is removed from event arguments.
 
@@ -566,7 +579,7 @@ Normalizes the EKB. Specifically, it modifies the EKB so that:
 =cut
 
 sub normalize {
-  my $self = shift;
+  my ($self, $opts) = @_;
 
   DEBUG 2, "Normalizing...";
   
@@ -588,7 +601,7 @@ sub normalize {
     }
   }
   # cleanup assertions
-  map { $self->clean_assertion($_) } @assertions;
+  map { $self->clean_assertion($_, $opts) } @assertions;
 }
 
 # check if EKB input document is "article"
@@ -755,9 +768,10 @@ Generic filter for removing paragraphs and/or sentences and related assertions.
 Unlike crop(), this method does not attempt to keep frame numbers valid after
 paragraphs are removed. 
 
-$options is a reference to a hash. The only keys handled are C<paragraphs> and
-C<sentences>. The value for each such key is a reference to a list of ids. The
-result of the filter is such that only the paragraphs and/or sentences
+$options is a reference to a hash. The only keys handled are C<files>, 
+C<paragraphs> and C<sentences>. The value for each such key is a reference to 
+a list of file names for the first case and a list of ids for the other two cases. 
+The result of the filter is such that only the paragraphs and/or sentences
 indicated are kept. 
 
 Caveat: The way this method works when both paragraphs and sentences are
@@ -772,6 +786,19 @@ sub filter {
 
   return unless (defined($opts) and ref($opts) eq 'HASH');
 
+  if (exists $opts->{files} ) {
+    my @to_keep = @{ $opts->{files} };
+    if (scalar(@to_keep)) {
+      DEBUG 2, "Will keep paragraphs for file: %s", Dumper(\@to_keep);
+      foreach my $p ($self->get_paragraphs) {
+	my $p_file = $p->getAttribute('file');	
+	my $p_id = $p->getAttribute('id');	
+	next if grep { $p_file eq $_ } @to_keep;
+	DEBUG 2, "Removing paragraph: %s", $p_id;
+	$self->remove_paragraph($p_id);
+      }
+    }
+  }
   if (exists $opts->{paragraphs} ) {
     my @to_keep = @{ $opts->{paragraphs} };
     if (scalar(@to_keep)) {
@@ -797,6 +824,13 @@ sub filter {
     }
   }
 }
+
+=head2 remove_paragraph( $pid )
+
+Removes the paragraph with the id $pid, all its sentences and all assertions 
+derived from it.
+
+=cut
 
 sub remove_paragraph {
   my ($self, $pid) = @_;
@@ -835,6 +869,7 @@ sub remove_sentence {
     $self->remove_paragraph($pid);
   }
 }
+
 
 # 4. EKB getters and setters
 
@@ -1032,6 +1067,15 @@ sub get_assertion {
   return $result;
 }
 
+# N.B. currently $query can only be a structure expression that can be used
+# by match_structure!
+# example: { type => "ONT::THING" }
+sub query_assertions {
+  my ($self, $query) = @_;
+  return grep { match_structure($_, $query) } $self->get_assertions();
+}
+
+
 # find assertions referencing another one
 # optionally, restrict assertions to a given type
 sub find_referrers {
@@ -1185,16 +1229,18 @@ sub clone_assertion {
   $a;
 }
 
-=head2 clean_assertion( $assertion )
+=head2 clean_assertion( $assertion, $opts )
 
 Removes unnecessary attributes and content from the assertion.
+Use { keep_lisp => } to keep lisp representation.
 
 =cut
 
 sub clean_assertion {
-  my ($self, $a) = @_;
+  my ($self, $a, $opts) = @_;
   # remove unnecessary attributes
-  $a->removeAttribute('lisp');
+  $a->removeAttribute('lisp')
+    unless ($opts && $opts->{keep_lisp});
 
   DEBUG 2, "Cleaning up: %s", $a;
   # remove unnecessary stuff from args & pseudoargs

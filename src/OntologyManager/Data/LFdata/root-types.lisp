@@ -52,8 +52,9 @@
      :comment "Events that involve change or force: should ahve an AGENT or AFFECTED role"
      :arguments ((:optional  ONT::agent ((? cau4 F::situation F::Abstr-obj f::phys-obj)))
 		 (:optional  ONT::affected ((? cau3a F::situation F::abstr-obj f::phys-obj) (F::tangible +)))
-		 (:optional  ONT::result ((? cau2 F::situation F::Abstr-obj f::phys-obj) (:default (F::type (? !t ont::position-reln)))))
-		 (:optional ONT::beneficiary ((? cau1 f::phys-obj))))
+		 (:optional  ONT::result (F::Abstr-obj (:default (F::tangible -) (F::type (? !t ont::position-reln)))))
+		 ;;(:optional ONT::beneficiary ((? cau1 f::phys-obj))))
+		 )
      :sem (F::Situation (F::aspect F::dynamic))
      )
 
@@ -169,7 +170,7 @@
 (define-type ont::domain-property
     :parent ont::abstract-object
     :comment "these are modifiers that characterize an object/event with respect to a scale/domain (in ONT::DOMAIN)"
-    :sem (F::abstr-obj )
+    :sem (F::abstr-obj (F::Scale ont::domain))
     :arguments ((:REQUIRED ONT::FIGURE)
 		(:ESSENTIAL ONT::GROUND)
 		(:ESSENTIAL ONT::SCALE)

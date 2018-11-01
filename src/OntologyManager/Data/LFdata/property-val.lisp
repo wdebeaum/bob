@@ -25,9 +25,10 @@
 
 ;; higher-level type for evaluation
 (define-type ont::evaluation-attribute-val
- :parent ont::property-val 
- :comment "properties which need an observer to be recognized -- subjective to the observer"
-)
+    :parent ont::property-val
+    :arguments ((:REQUIRED ONT::FIGURE (?any (F::tangible +))))
+    :comment "properties which need an observer to be recognized -- subjective to the observer"
+    )
 
 ;; fresh, stale
 (define-type ont::freshness-val
@@ -900,6 +901,11 @@
  :comment "properties regarding the configuration, arrangement, or layout of elements"
 )
 
+(define-type ont::equipped-val
+ :wordnet-sense-keys ("equipped%3:00:00" "equipped%3:00:02" "equipped%5:00:00:prepared:00" "armed%3:00:01")
+ :parent ont::configuration-property-val 
+)
+
 ;; flexible vs. rigid
 (define-type ont::flexibility-val
  :parent ont::configuration-property-val 
@@ -1274,10 +1280,11 @@
 ;; loud, soft, quiet
 (define-type ont::loudness-val
  :parent ont::audibility-val 
- :arguments ((:required ont::FIGURE ((? lof f::phys-obj f::situation )))) ;; an event can be loud, e.g. barking
+ :arguments ((:required ont::FIGURE ((? lof f::phys-obj f::abstr-obj f::situation ) (f::type (? !t ont::body-part ont::material))))) ;; an event can be loud, e.g. barking; abstr-obj: music; phys-obj: room
  :sem (F::Abstr-obj (F::MEasure-function F::VALUE ))
 )
 
+; loud concert/music/voice/room/floorboard/chair
 (define-type ont::noisy
  :parent ont::loudness-val 
  :wordnet-sense-keys ("noisy%3:00:00" "loud%3:00:00" )
@@ -1366,6 +1373,7 @@
  :sem (F::Abstr-obj (F::scale ONT::hardness*1--07--00 ))
 )
 
+; soft skin/cloth/body/tissue/bed/seat/chair
 (define-type ont::soft-val
  :parent ont::hardness-val 
  :wordnet-sense-keys ("soft%3:00:01" "fluffy%5:00:00:soft:01" )

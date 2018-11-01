@@ -453,8 +453,8 @@ ONT::INTERACT
 	  )
 
 	 (transition
-	  :description "green; the green block; How about me?"
-	  :pattern '((ONT::SPEECHACT ?!sa (? t ONT::ANSWER ONT::IDENTIFY ONT::REQUEST-COMMENT) :what ?!ans)
+	  :description "green; the green block; How about me?; to the right"
+	  :pattern '((ONT::SPEECHACT ?!sa (? t ONT::ANSWER ONT::IDENTIFY ONT::REQUEST-COMMENT ONT::FRAGMENT) :what ?!ans)
 		     ;(?!spec ?!ans (? !t ONT::SITUATION-ROOT)) 
 		     (?!spec ?!ans (? !t ONT::EVENT-OF-CHANGE)) ; allow EVENT-TYPE but exclude commands 
 		     (ont::eval (find-attr :result ?!query :feature QUERY-ON-TABLE)) ; must have an outstanding query
@@ -1536,6 +1536,17 @@ ONT::INTERACT
 	  :destination 'what-next-initiative-on-new-goal)  ;;  wondering if we should be waiting to see how user responds to the answer??
 
 	 (transition
+	  :description "acknowledge"
+	  :pattern '((BA-RESPONSE X PERFORM :psact (?! x  ACK))
+		     -acknowledge1>
+		     (GENERATE :content (ONT::ACK))
+					;(GENERATE :content (ONT::REQUEST :content (ONT::PROPOSE-GOAL :agent ONT::USER)))
+		     (nop)
+		     )
+	  :destination 'segmentend
+	  )
+
+	  (transition
 	  :description "default: do nothing, just wait"
 	  :pattern '((?!spec ?sa ?t)
 		     -default6

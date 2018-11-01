@@ -104,6 +104,28 @@
    )
 ))
 
+(define-words :pos W::n
+:words (
+ (w::PMID
+   (SENSES
+    ((LF-PARENT ONT::identification)
+     (TEMPL other-reln-templ)
+     )
+    )
+   )
+))
+
+(define-words :pos W::n
+:words (
+ (w::PMCID
+   (SENSES
+    ((LF-PARENT ONT::identification)
+     (TEMPL other-reln-templ)
+     )
+    )
+   )
+))
+
 ;;;;;;;;;;;;;;;;;;;;;;;;
 ; for paper 1
 ;;;;;;;;;;;;;;;;;;;;;;;;

@@ -889,6 +889,12 @@
 		(:essential ont::formal)   ;; stay in motion, stay happy, ...
 		)
     )
+
+(define-type ont::confine
+ :wordnet-sense-keys ("confine%2:41:00" "confine%2:35:01" "confinement%1:04:00" "confinement%1:04:01")
+  :parent ont::located-move-state
+  )
+
 #||
 (define-type ONT::STOP-MOVE
  :wordnet-sense-keys ("park%2:35:00")
@@ -1039,7 +1045,7 @@
     :parent ONT::change-state
     :comment "an AFFECTED undergoes a change of physical or chemical state that affects its integrity, e.g., thaw. Allows but does not require an AGENT"
     :sem (F::Situation (F::Trajectory -))
-    :arguments ((:OPTIONAL ONT::Result (F::Phys-obj))
+    :arguments ((:OPTIONAL ONT::Result (F::abstr-obj (F::TYPE ont::resulting-state)))
 		)
     )
 
@@ -1455,7 +1461,8 @@
     )
 
 (define-type ont::kill
-    :wordnet-sense-keys ("kill%2:35:00" "kill%2:35:01" "kill%2:35:02" "destroy%2:35:01")
+    :wordnet-sense-keys ("kill%2:35:00" "kill%2:35:01" "kill%2:35:02" "destroy%2:35:01"
+					"killing%1:04:00")
     :comment "killing a living being"
     ;;:definitions ((cause-effect :agent (R :agent) :formal (ont::die :affected (R :affected))))
     :arguments ((:ESSENTIAL ONT::affected (F::phys-obj (F::type ont::organism) (F::origin F::living))))
@@ -2119,7 +2126,7 @@
  :parent ont::awareness ;; 20120529 GUM change
  ;;:parent ONT::SALIENCE + args
  :arguments ((:REQUIRED ONT::Formal)
-             (:OPTIONAL ONT::Neutral (F::phys-obj (F::intentional +)))  ; how about "I know the city/the lines (of the play) very well"?
+             (:OPTIONAL ONT::Neutral (F::phys-obj (F::origin f::human) (F::intentional +)))  ; how about "I know this dog/the city/the lines (of the play) very well"?
 	     (:OPTIONAL ONT::neutral1)  ;; thing known
              ;;; Ground/ Loc-Perc
 ;             (:OPTIONAL ONT::Place)
@@ -2382,7 +2389,7 @@
  :parent ONT::giving
  :sem (F::Situation (F::Cause F::Agentive))
  :arguments ((:REQUIRED ONT::agent  ((? ag f::phys-obj f::abstr-obj) (f::intentional +)))
-	     (:REQUIRED ont::result (f::phys-obj (f::intentional +)))
+	     ;;(:REQUIRED ont::result (f::phys-obj (f::intentional +)))
 	     ;; a medication, a regime ...
 	     (:essential ont::formal ((? tt f::phys-obj f::abstr-obj) (f::intentional -)))
              )
@@ -3963,11 +3970,12 @@
 )
 
 (define-type ont::governing
-    :parent ont::control-manage
-    :arguments ((:REQUIRED ONT::Agent ((? aff F::situation F::phys-obj)))
-		(:required ont::affected ((? aff F::situation F::phys-obj)
-					  (F::type (? typ ont::device ont::located-event ont::molecular-part)))))
-    :comment "control, influence, or regulate a process"
+    :parent ont::managing
+    ;:parent ont::control-manage
+    ;:arguments ((:REQUIRED ONT::Agent ((? aff F::situation F::phys-obj)))
+		;(:required ont::affected ((? aff F::situation F::phys-obj) ; also abstr-obj: signaling pathway
+		;			  (F::type (? typ ont::device ont::located-event ont::molecular-part)))))
+    ;:comment "control, influence, or regulate a process"
     )
 
 ;; for configure, arrange X (into Y) e.g. he arranged them into groups of three
@@ -4222,7 +4230,7 @@
   :sem (F::Situation (F::Aspect F::Stage-level))
   :arguments ((:REQUIRED ONT::neutral ((? them F::Phys-obj F::abstr-obj F::situation))) ;; the figure
 	      (:optional ont::neutral1)
-	      (:OPTIONAL ont::result (F::phys-obj))  ;; for the causal form: face the statue wowards the water
+	      ;(:OPTIONAL ont::result (F::phys-obj))  ;; for the causal form: face the statue wowards the water
 	      )
  )
 
@@ -4299,8 +4307,6 @@
 ;  :parent ont::manipulate
   :parent ont::control-manage
   )
-
-
 
 ;; 20120524 GUM change new type
 (define-type ont::cope-deal
