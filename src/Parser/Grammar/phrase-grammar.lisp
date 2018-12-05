@@ -697,16 +697,32 @@
 	 (gap ?gap)
       (subcat ?!subcat)
       )
-     -N1-reln3>
+     -N1-reln-scale>
      (head (n (sort reln) (lf ?lf) (RESTR ?r)
 	      (subcat ?!subcat)
 	      (subcat (% ?scat (var ?v1) (sem ?ssem) (lf ?lf2) (gap ?gap) )) ;;(sort (? srt pred individual set comparative reln))))
-	      (SEM ($ ?type (f::scale ?sc)))
+	      (SEM ($ F::ABSTR-OBJ (f::scale ?sc)))
 	      (subcat-map ?smap)))
      ?!subcat
      (add-to-conjunct (val (?smap ?v1)) (old ?r) (new ?con1))
      (add-to-conjunct (val (scale ?sc)) (old ?con1) (new ?con))
      )
+
+   ;; relational non-scale nouns with filled PP-of complements  e.g. top of the box
+   ((N1 (sort pred) (var ?v) (class ?lf) (qual -) (COMPLEX +)
+     (RESTR ?con) ;(restr (& (?smap ?v1) (scale ?sc)))
+     (gap ?gap)
+     (subcat ?!subcat)
+     )
+    -N1-reln-parts>
+    (head (n (sort reln) (lf ?lf) (RESTR ?r)
+	     (subcat ?!subcat)
+	     (subcat (% ?scat (var ?v1) (sem ?ssem) (lf ?lf2) (gap ?gap) )) ;;(sort (? srt pred individual set comparative reln))))
+	     (SEM ($ F::PHYS-OBJ))
+	     (subcat-map ?smap)))
+    ?!subcat
+    (add-to-conjunct (val (?smap ?v1)) (old ?r) (new ?con1))
+    )
 
    ;; there are a few relational nouns with two complements  e.g., ratio of the length to the height
    ;; the intersection of acorn with booth
@@ -1866,10 +1882,13 @@
     ;; e.g., the mountain route, the truck plan, the security zone, ...
    ;;   such as "The small car lot"    
     ((N1 (RESTR ?new) (SORT ?sort) (sem ?sem) (class ?c) ;(class (? c ONT::REFERENTIAL-SEM))
-      (N-N-MOD +) (QUAL -) (relc -) (subcat ?subcat) (gap ?gap))
+	 (N-N-MOD +) (QUAL -) (relc -) (subcat ?subcat) (gap ?gap)
+	 (complex +) ; to prevent "the X, Y and Z boxes" to make "Z boxes" one of the conjuncts in n1-conj1
+	 )
       
      -n-sing-n1-> 0.98 ;; prevent this from happening too often
-     (n1 (AGR 3s) (abbrev -) (generated -)
+     (n1 ;(AGR 3s) ; agr could be 3p for "the dog and cat boxes"
+	 (abbrev -) (generated -) (lex ?lex)
         (var ?v1) (restr ?modr)  (gerund -)   ;; we expect gerunds as modifiers to be adjectives, not N1
 	;;  removed this to handle things like "computing services"
 	;; we reinstated "gerund -" as "computing" should be an adjective (and we need to exclude "... via phosphorylating Raf"
@@ -1877,7 +1896,8 @@
       (CLASS ?modc) (PRO -) (N-N-MOD -) ;(COMPLEX -)   ;;  can't require COMPLEX - any more -- e.g., "p53 expression levels"  -- now we can!! This goes through nom-rate instead.
       ; set two-n1-conjunct to complex - so that e.g., <trade and migration> route, can go through this rule
       ; removed "COMPLEX -" again: "water treatment plant" (added complex + back to two-n1-conjunct)
-      (SUBCAT ?ignore) (GAP -) (kr-type ?kr-type)
+      (SUBCAT (% -)) ;(SUBCAT ?ignore)
+      (GAP -) (kr-type ?kr-type)
       (postadvbl -) (post-subcat -) 
       )
      (head (N1 (VAR ?v2) (QUAL -) (subcat ?subcat) (sort ?sort) (one -) ; exclude the referential-sem w::one
@@ -1891,7 +1911,7 @@
 	    (abbrev -)
 	       ))
      (add-to-conjunct 
-      (val (ASSOC-WITH (% *PRO* (status ont::kind) (var ?v1) (class ?modc) (constraint ?modr) (sem ?n-sem) (kr-type ?kr-type)))) 
+      (val (ASSOC-WITH (% *PRO* (status ont::kind) (var ?v1) (class ?modc) (constraint ?modr) (sem ?n-sem) (kr-type ?kr-type) (lex ?lex)))) 
       (old ?r) (new ?new)))
 
     ;; n-n mods with hyphen  -- this allows us to override our otherwise strict requirement to attach on the right
@@ -2394,26 +2414,26 @@
 	 (add-to-conjunct (val (?subcat-map ?sc-var)) (old ?r) (new ?newr))
 	 (append-conjuncts (conj1 ?spec-restr) (conj2 ?newr) (new ?con1))
 	 )
-	
+#||	
         ;; e.g., (two/some) more/less eggs
 	((N1 (VAR ?v) (SORT PRED) (CLASS ?c) (MASS ?m)
 	     (KIND -) (agr ?agr) (RESTR ?restr1) (rate-activity-nom -)
 	     (agent-nom -)
-	     (sem ?sem) (transform ?transform)
+	     (sem ?sem) (transform ?transform) (subcat ?subcat) (subcat-map ?smap) (lex ?lex)
              (CASE (? case SUB OBJ))
 	  )
 	 -n1-card-more> ;.97 ;.95 ;; prefer to attach to NP
-	 (QUAN (COMPARATIVE +) (VAR ?av) (LF ?cmp) (QCOMP ?qcomp))
+	 (QUAN (COMPARATIVE +) (VAR ?av) (LF ?cmp) (QCOMP ?qcomp) (lex ?qlex))
 	 (head (N1 (VAR ?v) (SORT PRED) (CLASS ?c) (MASS ?m)
 		(KIND -) (agr ?agr) (RESTR ?r) (rate-activity-nom -)
 		(agent-nom -)   ;;  this rule can't apply to agent nominalizations directly (they must modified first using rule -agentnom1>
-		(sem ?sem) (transform ?transform)
+		(sem ?sem) (transform ?transform) (subcat ?subcat) (subcat-map ?smap) (lex ?lex)
 		))
-	 (add-to-conjunct (val (MOD (% *PRO* (status ont::f) (class ?cmp) (VAR *)
+	 (add-to-conjunct (val (MOD (% *PRO* (status ont::f) (class ?cmp) (VAR *) (lex ?qlex)
 		       (constraint (& (figure ?v) (ground (% *PRO* (var **) (class ?c))) ))))) ;(val (quan ?cmp))
 			  (old ?r) (new ?restr1))
 	 )
-
+||#
 	
 	;; quantifier with post N1 complement , e.g. more trains than that,
 	
@@ -2691,11 +2711,11 @@
 	     (simple +)
 	     )
          -protein-name-constructor> 0.995
-         (head (N1 (SORT PRED) (MASS  count) (gerund -) (complex -) 
+         (head (N (SORT PRED) (MASS  count) (gerund -) (complex -) 
 		   (name-or-bare ?nob) (lex ?lex)
 		   (derived-from-name -)  ;; names already can become NPs by simpler derivations
 		   (AGR 3s) (VAR ?v)
-		   (CLASS (? c ONT::GENE-PROTEIN)) (CLASS (? !c ONT::REFERENTIAL-SEM))
+		   (LF (? c ONT::GENE-PROTEIN)) ;;(CLASS (? !c ONT::REFERENTIAL-SEM))
 		   (RESTR ?r) (rate-activity-nom -) (agent-nom -)
 		(sem ?sem) (transform ?transform) (headless -) ; exclude missing-heads
 		(sem ($ (? x F::PHYS-OBJ) (F::KR-TYPE ?kr)))
@@ -3444,7 +3464,8 @@
 
 
     ; TEST: the quickly loaded truck ; the quickly computer generated truck
-     ;; Myrosia 11/26/01 we only allow those phrases before the verbs. After the verbs, they should be treated as reduced relative clauses
+    ;; Myrosia 11/26/01 we only allow those phrases before the verbs. After the verbs, they should be treated as reduced relative clauses
+    
      ((ADJP (ARG ?arg) (VAR ?v) (sem ?sem) (class ?lf)
 	    (subcatmap ?subjmap) ;(SUBCATMAP (? x ont::affected ont::affected-result ont::neutral))
 	    (ARGUMENT ?subj)
@@ -3602,6 +3623,7 @@
               (VAR ?v) (transform ?transform)
 	      (SEM ($ F::situation (f::type ont::event-of-action)))
 	      (COMP3-map -)
+	      (dobj-map -)  ;; seems right, but maybe too strong?   JFA 11/18
 ;	      (prefix ?prefix)
 	      (restr ?prefix)
 	      (part (% -))
@@ -3692,13 +3714,13 @@
 
     ;; This constructs an NP to stand for the implicit object introduced
     ;;  by the pp-word, e.g., for "why" it is a REASON, for "HOW" it is a METHOD, etc
-    ((NP (PP-WORD +) (SORT PRED) (VAR ?v) (SEM ?s) (lex ?lex) 
-         (WH Q) (WH-VAR ?v) (CASE ?case) (pred ?lf) 
-         (LF (% Description (status WH) (var ?v) (Class ?lf) (SORT (?agr -))
+    ((NP (PP-WORD +) (SORT PRED) (VAR ?v) (SEM ?sem) (lex ?lex) 
+         (WH Q) (WH-VAR ?v) (CASE ?case) (class ?lf) ;(pred ?lf)
+         (LF (% Description (status WH) (var ?v) (Class ?lf) (SORT PRED) ;(SORT (?agr -))
                 (Lex ?lex) (sem ?sem) (transform ?transform) (constraint (% & (proform ?lex)))
                 )))
      -np-pp-word1>
-     (head (n (SORT PP-WORD) (SEM ?s) (AGR ?agr) (SORT ?sort)
+     (head (n (SORT PP-WORD) (AGR ?agr) (SORT ?sort)
               (LF ?lf) (sem ?sem)
               (LEX ?lex) (VAR ?v) (WH Q)
               (transform ?transform)
@@ -3707,13 +3729,13 @@
     ;; why not e.g., I don't know why not
     ((NP (PP-WORD +) (SORT PRED) (VAR ?v) (SEM ?s) (lex why) 
          (WH Q) (CASE ?case) (pred ?lf)
-         (LF (% Description (status WH) (var ?v) (Class ?lf) (SORT (?agr -))
+         (LF (% Description (status WH) (var ?v) (Class ?lf) (SORT PRED) ;(SORT (?agr -))
                 (lex why) (sem ?sem) (transform ?transform)
                 )))
      -np-pp-word-why-not>
      (head (n (SORT PP-WORD) (lex why) (SEM ?s) (AGR ?agr) (SORT ?sort)
               (LF ?lf) (sem ?sem)
-              (VAR ?v) (WH Q)`
+              (VAR ?v) (WH Q)
               (transform ?transform)
               ))
      (word (lex not))
@@ -3722,7 +3744,7 @@
     ;;  e.g., what else
     ((NP (PP-WORD +) (SORT pred) (VAR ?v) (SEM ?s) (lex ?lex) 
          (WH Q) (WH-VAR ?v) (CASE ?case) (pred ?lf)
-         (LF (% Description (status WH) (var ?v) (Class ?lf) (SORT (?agr -))
+         (LF (% Description (status WH) (var ?v) (Class ?lf) (SORT PRED) ;(SORT (?agr -))
                 (Lex ?lex) (sem ?sem) 
 		(constraint (& (MODS ?else-v)))
 			     ;;(?ELSE-LF (% *PRO* (var *) (class ?lf) (sem ?sem) (constraint (& (proform ?else-lex)))))))
@@ -3740,13 +3762,14 @@
     
     ;;  Words like there, here, tomorrow (no WH terms) are treated as PRO forms
 
-    ((NP (PP-WORD +) (PRO +) (SORT (? srt pred set)) (VAR ?v) (SEM ?s) (lex ?lex)
-         (role ?lf) (agr (? agr 3s 3p -)) (case ?case)
-         (LF (% Description (status ont::pRO) (var ?v) (Class ?lf) (SORT (?agr -))
+    ((NP ;(PP-WORD +) ; so that this can be the np in -s1>
+	 (PRO +) (SORT (? srt pred set)) (VAR ?v) (SEM ?sem) (lex ?lex)
+         (role ?lf) (agr (? agr 3s 3p -)) (case ?case) (class ?lf)
+         (LF (% Description (status ont::pRO) (var ?v) (Class ?lf) (SORT (? srt pred set)) ;(SORT (?agr -))
                 (Lex ?lex) (sem ?sem) (transform ?transform) (constraint (% & (proform ?lex)))
                 )))
      -np-pp-word2>
-     (head (N (SEM ?s) (AGR ?agr) (SORT PP-WORD)
+     (head (N (AGR ?agr) (SORT PP-WORD)
               (LEX ?lex) (VAR ?v) (WH -)
               (lf ?lf)
               (sem ?sem) (transform ?transform)
@@ -3851,7 +3874,7 @@
       (var ?v) 
       (LF (% PROP (VAR ?v) (CLASS ?reln) 
 	     (CONSTRAINT (& (?!submap (% *PRO*
-					 (VAR *) (CLASS ?pro-class)
+					 (VAR *) (CLASS ?!pro-class)
 					 (SEM ?subcatsem) (CONSTRAINT (& (proform ?lex)))))
 			    ;;(suchthat ?v)))))
 			    (?!argmap ?argvar)))
@@ -3860,7 +3883,7 @@
       (role ?reln)
              )
      -advbl-pp-word>     
-     (head (adv (SORT PP-WORD) (wh -) (IMPRO-CLASS ?pro-class)
+     (head (adv (SORT PP-WORD) (wh -) (IMPRO-CLASS ?!pro-class)
 		(argument ?argument)
 	        (ARGUMENT (% ?argcat (var ?argvar)))
 	        (SUBCAT (% ?x (SEM ?subcatsem))) 
@@ -3929,6 +3952,7 @@
      (Advbl (sort else) (var ?else-v) (arg ?v)))
      
     ;; Special construction only for relative clause advbls - we need this only to build the right semantic form
+    ;;  e.g., the box WHERE we stood
     ((ADVBL-R  (ARG ?argvar) (SUBCATSEM ?subcatsem) (ARG2 ?arg2var)
              (FOCUS *) 
              (var ?v) 
@@ -3939,8 +3963,8 @@
              (gap -) (pp-word +)
              (role ?reln)
              )
-     -advbl-r-word>     
-     (head (adv (SORT PP-WORD) (wh Q)
+     -advbl-rel-pro>     
+     (head (adv (SORT PP-WORD) (wh R)
 	        (ARGUMENT (% ?argcat (var ?argvar)))
 	        (SUBCAT (% ?x (SEM ?subcatsem))) 
 	        (subcat-map ?!submap)
@@ -3949,8 +3973,34 @@
 	        (sem ?sem) (transform ?trans)
 	        ))
      )
+    ))
 
-))    
+(parser::augment-grammar 
+  '((headfeatures
+     (ADVBL-R VAR SEM LEX ATYPE argument lex headcat transform))
+    ;;   e.g., the box ON WHICH we stood
+    ((ADVBL-R  (ARG ?argvar) (SUBCATSEM ?subcatsem) (ARG2 ?arg2var)
+             (FOCUS *) 
+             (var ?v) (WH R)
+             (LF (% PROP (VAR ?v) (CLASS ?reln) 
+	            (CONSTRAINT (& (?!submap ?arg2var)
+			           (?!argmap ?argvar)))
+	            (sem ?sem) (transform ?trans)))
+             (gap -) (pp-word +)
+             (role ?reln)
+             )
+     -advbl-rel-advbl-which>     
+     (head (adv (SORT BINARY-CONSTRAINT)
+	        (ARGUMENT (% ?argcat (var ?argvar)))
+	        (SUBCAT (% ?x (SEM ?subcatsem))) 
+	        (subcat-map ?!submap)
+	        (argument-map ?!argmap)
+	        (LF (? reln ont::position-reln ont::temporal-relation)) (lex ?lex)
+	        (sem ?sem) (transform ?trans)
+	        ))
+     (pro (lex w::which) (wh R))
+     )
+    ))
     
 ; nominalizations
 ; pass up subcat
@@ -4528,7 +4578,8 @@
 ;;(cl:setq *grammar-CONJ*
 (parser::augment-grammar	 
   '((headfeatures
-     (NP NAME PRO Changeagr lex headcat transform refl)
+     (NP ;;NAME   -- putting it in the NP-NAME rule 
+      PRO Changeagr lex headcat transform refl)
      (NPSEQ CASE MASS NAME PRO lex headcat transform)
      (NSEQ CASE MASS NAME lex headcat transform)
      (N1 sem lf lex headcat transform set-restr refl abbrev rate-activity-nom); agent-nom)
@@ -4575,24 +4626,26 @@
     ;; NP -> NAME
     ;; Myrosia 5/19/00 Changed the rule to apply only to "true" names
     ;; "generated" names get status "GNAME" in the next rule
-    ((NP (SORT PRED)
+    ((NP (SORT ?sort)
          (var ?v) (Class ?lf) (sem ?sem) (agr ?agr) (case (? cas sub obj -))
-         (LF (% Description (Status Ont::definite) (var ?v) (Sort Individual)
+         (LF (% Description (Status ?newspec) (var ?v) (Sort Individual)
                 (class ?lf) (lex ?l) (sem ?sem) 
                 (transform ?transform)  (generated ?gen)
 		(constraint ?con)
                 ))
-         (mass count) (name +) (simple +) (time-converted ?tc) (generated ?gen)
-	 (postadvbl ?gen) ;; swift -- setting postadvl to gen as part of eliminating gname rule but still allowing e.g. truck 1
-         )
+      (mass count) (name +) (simple +) (time-converted ?tc) (generated ?gen)
+      (postadvbl ?gen) ;; swift -- setting postadvl to gen as part of eliminating gname rule but still allowing e.g. truck 1
+      )
      -np-name> 0.995
      (head (name (lex ?l) (sem ?sem) (var ?v) (agr ?agr) (lf ?lf) (class ?class)
-	    (full-name ?fname) (time-converted ?tc)
-	    ;; swift 11/28/2007 removing gname rule & passing up generated feature (instead of restriction (generated -))
-	    (generated ?gen)  (transform ?transform) (title -)
-	    (restr ?restr)
-	    ))
-     (add-to-conjunct (val (:name-of ?l)) (old ?restr) (new ?con)))
+		 (sort ?sort)
+		 (full-name ?fname) (time-converted ?tc)
+		 ;; swift 11/28/2007 removing gname rule & passing up generated feature (instead of restriction (generated -))
+		 (generated ?gen)  (transform ?transform) (title -)
+		 (restr ?restr)
+		 ))
+     (add-to-conjunct (val (:name-of ?l)) (old ?restr) (new ?con))
+     (recompute-spec (spec ont::definite) (agr ?agr) (result ?newspec)))
 
     
     ;; number or number-and-letter sequences
@@ -4627,7 +4680,7 @@
 	     ))
       (postadvbl +)
       )
-     -NP-adj-missing-head> .97 ; .96
+     -NP-adj-missing-head> .981  ;; just a hair above the PLUR forms to set the defaulr
      (head (spec  (poss -) (restr ?restr) (wh-var ?whv)
 		  (WH -)   ;;tentatively eliminating WH terms  -- is there an example like "show me which large?"
 		  ;(restr (& (proform -)))  ;; prevent this and that, which should be pronouns
@@ -5427,7 +5480,7 @@
      )||#
 
     ((NPSEQ  (SEM  ?sem) (LF ?newlf) (AGR 3s) (CASE ?case) (mass ?m) (class ?class)
-      (generated ?gen) (time-conevn1-from-rted ?tc1) (separator (? p w::punc-comma w::punc-slash w::punc-colon w::punc-minus w::punc-en-dash w::punc-minus))
+      (generated ?gen) (time-converted ?tc1) (separator (? p w::punc-comma w::punc-slash w::punc-colon w::punc-minus w::punc-en-dash w::punc-minus))
       )
      npseq-add-next-comma> 1.02 
      (head (NPSEQ  (SEM ?s1) (LF ?lf) (MASS ?m) (class ?c1) (CASE ?case)
@@ -5444,7 +5497,7 @@
 
 
     ((NPSEQ  (SEM  ?sem) (LF ?newlf) (AGR 3s) (CASE ?case) (mass ?m) (class ?class)
-      (generated ?gen) (time-conevn1-from-rted ?tc1) (separator (? p w::punc-slash w::punc-colon w::punc-minus w::punc-en-dash  w::punc-minus))
+      (generated ?gen) (time-converted ?tc1) (separator (? p w::punc-slash w::punc-colon w::punc-minus w::punc-en-dash  w::punc-minus))
       )
      npseq-add-next> 1.02 
      (head (NPSEQ  (SEM ?s1) (LF ?lf) (MASS ?m) (class ?c1) (CASE ?case)
@@ -5713,7 +5766,104 @@
      (combine-status (in1 ?status) (in2 ?status2) (out ?status-out))
      (recompute-agr (in1 ?agr) (in2 ?agr1) (out ?agr-out))
      )
+    
+    ;; 
+    ((N1SEQ  (SEM ?sem) ;(LF (?v1 ?v2))
+	     (restr (& ;(operator ?op)
+		(sequence ((% *PRO* (status ?status-out) (var ?v1) (class ?c1) (constraint ?con) (sem ?s1) (lex ?lex1))
+			   (% *PRO* (status ?status-out) (var ?v2) (class ?c2) (constraint ?con2) (sem ?s2) (lex ?lex2))))))
+	     (AGR ?agr-out) (mass ?m) (class ?class) (case ?c) (status ?status-out)
+      (generated ?gen)  (time-converted ?tc1) (separator w::punc-comma)
+      )
+     -n1seq-initial-sequence-comma> 1.01
+     (head (N1 (SEM ?s1) (VAR ?v1) (agr ?agr) ;;(agr ?agr)   ;; AGR is not reliably determined for proper names
+	       (complex -) (headless -) (expletive -) ;;(bare-np ?bnp)
+	    (generated ?gen1)  (time-converted ?tc1)
+	    ;; (bare-sequence -)
+	    (class ?c1) ;(LF (% ?sort (class ?c1)))
+	    (CASE ?c) (restr ?con) (mass ?m) (status ?status) (lex ?lex1)
+	    (sort (? !sort unit-measure)) ;; no unit measure here since they form sub-NPs [500 mb] & we want the top-level [500 mb of ram] 	    
+	    ))
+     (punc (lex w::punc-comma))
+     (N1 (SEM ?s2) (VAR ?v2) (agr ?agr1) ;;(agr ?agr)  
+      (complex -) (headless -) (expletive -) ;;(bare-np ?bnp)
+	    (generated ?gen2)  (time-converted ?tc1)
+	    ;; (bare-sequence -)
+	    (class ?c2) ;(LF (% ?sort (class ?c2)))
+	    (CASE ?c) (restr ?con2) (mass ?m) (status ?status2) (lex ?lex2)
+	    (sort (? !sort unit-measure)))
+     (sem-least-upper-bound (in1 ?s1) (in2 ?s2) (out ?sem))
+     (class-least-upper-bound (in1 ?c1) (in2 ?c2) (out ?class))
+     (logical-and (in1 ?gen1) (in2 ?gen2) (out ?gen))
+     (combine-status (in1 ?status) (in2 ?status2) (out ?status-out))
+     (recompute-agr (in1 ?agr) (in2 ?agr1) (out ?agr-out))
+     )
 
+    ;;
+    ((N1SEQ  (SEM  ?sem) ;(LF ?newlf)
+	     (agr ?agr-out) ;(AGR 3s)
+	     (CASE ?case) (mass ?m) (class ?class) (status ?status-out)
+	     (generated ?gen) (time-coverted ?tc1) (separator (? p w::punc-comma w::punc-slash w::punc-colon w::punc-minus w::punc-en-dash w::punc-minus))
+	     (restr (& (sequence ?members)))
+	     (COMPLEX +) (SORT PRED)	     
+      )
+     n1seq-add-next-comma> 1.02 
+     (head (N1SEQ  (SEM ?s1) (restr (& (sequence ?seq))) ;(LF ?lf)
+		   (MASS ?m) (class ?c1) (CASE ?case) (agr ?agr) (status ?status)
+	    (generated ?gen1) (time-converted ?tc1) (separator (? p w::punc-comma w::punc-slash w::punc-colon w::punc-minus w::punc-en-dash w::punc-minus))
+	    )) 
+     (punc  (lex w::punc-comma))
+     (N1 (SEM ?s2) (VAR ?v2) (MASS ?m) (COMPLEX -) (name-mod -) (bare-sequence -) (class ?c2) (CASE ?case) (expletive -)
+	 (agr ?agr1) (status ?status2) (restr ?con) (lex ?lex2) (sort (? !sort unit-measure)) (complex -)
+      (generated ?gen2)  (time-converted ?tc1)) ;; MD 2008/03/06 Introduced restriction that only items with the same time-converted status can combine - i.e. don't mix number notation for times or non-times. 
+     (sem-least-upper-bound (in1 ?s1) (in2 ?s2) (out ?sem))
+     (class-least-upper-bound (in1 ?c1) (in2 ?c2) (out ?class))
+     (logical-and (in1 ?gen1) (in2 ?gen2) (out ?gen))
+     (combine-status (in1 ?status) (in2 ?status2) (out ?status-out))
+     (recompute-agr (in1 ?agr) (in2 ?agr1) (out ?agr-out))
+     (simple-cons1 (in1 (% *PRO* (status ?status-out) (var ?v2) (class ?c2) (constraint ?con) (sem ?s2) (lex ?lex2)))
+		   (in2 ?seq) (out ?members))
+     )
+    
+    ;;  X and Y,  A, Y and Z
+    ((N1 (ATTACH ?a) (var ?v) (agr ?agr-out) ;(agr 3p)
+	 (SEM ?sem) (class ?class) (status status-out) (mass ?m1) (case ?case) (lex ?op)
+	 #|
+      (LF (% Description (Status ?status) (var ?v) 
+	     (class ?class)
+	     (constraint (& (operator ?op) (sequence ?members)))
+	     (sem ?sem) (CASE ?case1)
+	     (mass ?m1) 
+	     ))
+	 |#
+	 (restr (& (operator ?op)
+		(sequence ?members)))
+	 (COMPLEX +) (SORT PRED)
+      (generated ?generated)
+      )
+     n1-conj1> 
+     (N1SEQ (var ?v1) (SEM ?s1) ;(lf ?lf1)
+	    (class ?c1) (CASE ?case) (mass ?m1) (status ?status) (restr (& (sequence ?seq)))
+      (generated ?generated1) (separator W::punc-comma) (agr ?agr)
+      (time-converted ?tc1) ;; MD 2008/03/06 Introduced restriction that only items with the same time-converted status can combine - i.e. don't mix number notation for times or non-times. 
+      )
+     (conj (SEQ +) (LF ?op) (SUBCAT NP) (var ?v)) ;; (status ?status))
+     (head (N1 (VAR ?v2) (SEM ?s2) (ATTACH ?a) (agr ?agr1) ;(lf ?lf2)
+	       (class ?c2) (status ?status2) ;(LF (% ?d (class ?c2) (status ?status)))
+	       (CASE ?case2) (mass ?m2) (restr ?con)
+	    (generated ?generated2) (lex ?lex2)
+	    (sort (? !sort unit-measure)) ;; no unit-measure here since they form sub-NPs & we want the whole one
+	    (time-converted ?tc1)
+	    (complex -)
+	    ))
+     (sem-least-upper-bound (in1 ?s1) (in2 ?s2) (out ?sem))
+     (class-least-upper-bound (in1 ?c1) (in2 ?c2) (out ?class))
+     (logical-and (in1 ?generated1) (in2 ?generated2) (out ?generated))
+     (combine-status (in1 ?status) (in2 ?status2) (out ?status-out))
+     (recompute-agr (in1 ?agr) (in2 ?agr1) (out ?agr-out))
+     (simple-cons1 (in1 (% *PRO* (status ?status-out) (var ?v2) (class ?c2) (constraint ?con) (sem ?s2) (lex ?lex2)))
+		   (in2 ?seq) (out ?members))
+     )    
     
      
     ))
@@ -5833,14 +5983,14 @@
    ;; numbers (only -- number sequences use np-sequenc1e>
    ((NP (SORT PRED)
      (var ?v) (class ONT::NUMBER) ;(Class ONT::ANY-SEM) 
-     (sem ($ (? ft f::abstr-obj) (f::container -) ;(F::scale ont::number-scale)
+     (sem ($ (? ft f::abstr-obj) (f::container -) (F::scale ont::number-scale)
 	     (F::tangible -) (f::type ont::number))) ;;(sem ($ (? ft f::phys-obj f::abstr-obj))) 
      (case (? cas sub obj -))
      (LF (% Description (status ont::number) (var ?v) (Sort Individual) ;(lex ?lf)
 	    (CLASS ONT::NUMBER) ;;(Class ONT::REFERENTIAL-SEM) 
 	    (constraint ?restr) 
 	    (lex ?l) (val ?val)
-	    (sem ($ (? ft f::abstr-obj) (f::container -) ;(F::scale ont::number-scale)
+	    (sem ($ (? ft f::abstr-obj) (f::container -) (F::scale ont::number-scale)
 		    (F::tangible -) (f::type ont::number))) ; "container -" to discourage it from being used by IN-LOC for "in 2019"
 	    ;; (sem ($ (? ft f::phys-obj f::abstr-obj))) 
 	    (transform ?transform)
@@ -6136,7 +6286,7 @@
 
 	((puncpause (skip +) (lex ?lex)) ;; (? lex w::punc-comma w::punc-colon W::semi-colon W::punc-hashmark)))
 	 -skip-punc1>
-	 (head (W::punc (skip -) (lex (? lex w::punc-comma w::punc-colon W::semi-colon W::punc-hashmark w::punc-quotemark)))))
+	 (head (W::punc (skip -) (lex (? lex w::punc-comma w::punc-colon W::punc-semicolon W::punc-hashmark w::punc-quotemark)))))
 
 	))
 

@@ -2665,11 +2665,12 @@
     ;;  note, utterances like "not avon, bath" are now treated as two speech acts
      
 
-;;;    ;;  e.g., not avon
-;;;    ((utt (var *) (lf (% speechact (var *) (class ont::sa_reject) (constraint (& (content ?v1))))))
-;;;     -reject-np>
-;;;     (word (lex not))
-;;;     (head ((? cat np) (var ?v1))))
+    ;;  e.g., not avon
+    ((utt (var *) (lf (% speechact (var *) (class ont::sa_reject) (constraint (& (content ?v1))))))
+     -reject-np>
+     (word (lex not))
+     (head ((? cat np) (var ?v1))))
+    
 ;;;
 ;;;    ;;  not via bath
 ;;;    ((utt (var **) (lf (% speechact (var ?nv) (class ont::sa_reject) (constraint (& (content ?v))))))   
@@ -2971,21 +2972,24 @@
  ;; test: yes
  ;; test: maybe
  ;; test: no
-   ((utt (var *) (sem ($ f::proposition)) (uttword +)
+    ((utt (var *) ;(sem ($ f::proposition))
+	  (uttword +)
          ;(lf (% speechact (var *) (class ?sa) (constraint (& (content (?lf :content ?lex))))))
          (lf (% speechact (var *) (class ?sa) (constraint (& (content ?lf)))))
          (punctype (? x decl imp)))
     -utt4a>
     (head (uttword (lf (?lf)) (lex ?lex) (var ?v) (sa ?sa))))
 
-    ((utt (var *) (sem ($ f::proposition)) (uttword +)
+    ((utt (var *) ;(sem ($ f::proposition))
+	  (uttword +)
       (lf (% speechact (var *) (class  ont::sa_apologize) (constraint (& (content ?reason)))))
       (punctype (? x decl imp)))
      -utt-sa-cp>
      (head (uttword (lf (?lf)) (lex ?lex) (var ?v) (sa ont::sa_apologize)))
      (cp (var ?reason)))
 
-    ((utt (var *) (sem ($ f::proposition)) (uttword +)
+    ((utt (var *) ;(sem ($ f::proposition))
+	  (uttword +)
       (lf (% speechact (var *) (class (? sa ont::sa_apologize ont::sa_thank)) (constraint (& (reason ?reason)))))
       (punctype (? x decl imp)))
      -utt-sa-for>
@@ -3089,7 +3093,44 @@
       )
      (append-conjuncts (conj1 (& (tense pres))) (conj2 ?tma) (new ?newtma))
      )
-     
+
+    ;; test: let's not chase the cat.
+    ((s (stype imp) 
+	(lf (% prop (var ?v) (class ?c) (constraint ?con)
+	    (sem ?sem) (tma ?newtma)
+	    (transform ?transform)
+	    ))
+	)
+     -lets-not-imp> 1.0 ;; get let's to go through this rule instead of command-imp2
+     (word (lex let))
+     ;(np (lex us) (var ?npvar))
+     (word (lex ^s))
+     (word (lex not))
+     (head (vp (gap  -) (sem ?sem)
+	       (sem ($ f::situation (f::aspect (? aspc f::dynamic f::stage-level))))
+	       (var ?v) (aux -) (tma ?tma)
+	       (constraint ?con)
+	       ;(subj (% np (var ?npvar)
+			;(sem ?subjsem)))
+	       ;(subjvar ?npvar)
+	       (subj (% np (var (% *pro* (status ont::pro-set) (class ont::person) (var *) (sem ?subjsem) (constraint (& (proform w::us)))
+				))
+			(sem ($ f::phys-obj (f::form f::solid-object) (f::spatial-abstraction f::spatial-point)
+				(f::information -) (f::trajectory -) (f::container -) (f::group -)
+				(f::mobility f::self-moving) (f::origin f::human) (f::intentional +)))
+			(sem ?subjsem)))
+	       (subjvar (% *pro* (status ont::pro-set) (class ont::person) (var *) (constraint (& (proform w::us)))
+			   (sem ?subjsem)))
+	       (class ?c)
+	       (vform base) (postadvbl ?pa) (main ?ma)
+	    (transform ?transform)
+	    (advbl-needed -)
+	    )
+      )
+     ;(append-conjuncts (conj1 (& (tense pres))) (conj2 ?tma) (new ?newtma))
+     (change-feature-values (old ?tma) (new ?newtma) (newvalues ((tense pres) (negation +)))) 
+     )    
+    
     ;; negative commands, e.g., don't tell me the plan
     ;; test: don't bark.
     ;; test: don't chase the cat.
@@ -3150,7 +3191,7 @@
       (punctype (? x imp decl)))
      -evaluate1>
      (head (adjp (wh -) (var ?v) (arg (% *pro* (var *) (class ont::any-sem))) ;; changing this from ont::situation, which is too restrictive for cardiac domain
-      (lf (% prop (class ont::acceptability-val))) (gap -))))
+      (lf (% prop (class (? xx ont::acceptability-val ont::polarity-val)))) (gap -))))
 
    ;; test: good,
    ;; test: ok,
@@ -3160,7 +3201,7 @@
 	 (punctype (? x imp decl)))
     -evaluate1b>
     (head (adjp (wh -) (var ?v) (arg (% *pro* (var *) (class ont::any-sem))) ;; changing this from ont::situation, which is too restrictive for cardiac domain
-	   (lf (% prop (class ont::acceptability-val))) (gap -)))
+	   (lf (% prop (class (? xx ont::acceptability-val ont::polarity-val)))) (gap -)))
     (punc (lex punc-comma) (var ?v1)))
    
    
@@ -3720,18 +3761,22 @@
      (class ?class) (sem ?sem)  (lex ?lex)
      (constraint (&  (OPERATOR ?lx) 
 		     (SEQUENCE 
-		      ((% *PRO* (var ?v1) (status ont::f) (class ?c1) (tma ?tma1) (sem ?sem1) (lex ?lex1) (constraint ?con1))
-		       (% *PRO* (var ?v2) (status ont::f) (class ?c2) (tma ?tma2) (sem ?sem2) (lex ?lex2) (constraint ?con2)))))))
-     
+		      ((% *PRO* (var ?v1) (status ont::f) (class ?c1) (tma ?tma1) (sem ?sem1) (lex ?lex1) (constraint ?constraint1))
+		       (% *PRO* (var ?v2) (status ont::f) (class ?c2) (tma ?tma2) (sem ?sem2) (lex ?lex2) (constraint ?constraint2)))))))
     -vbar-conj>
-    (head (vp- (vform ?vf) (subjvar ?subj)  (subj ?subject) (var ?v1) (seq -)  (agr ?agr) (gap ?gap)
-	      (lex ?lex1) (advbl-needed -) (class ?c1) (constraint ?con1) (tma ?tma1) (sem ?sem1) (subj-map ?subjmap)
+
+    (head (vp- (vform ?vf) (subjvar ?subj)  (subj ?subject) (var ?v1) (seq -)  (agr ?agr) (gap ?gap) (lex ?lex1)
+	       (advbl-needed -) (class ?c1) (constraint ?con1) (tma ?tma1) (sem ?sem1) (subj-map ?subjmap)
 	   ))
     (CONJ (lf ?lx) (lex ?lex) (but-not -)) ;;(? lx or but however plus otherwise so and)))
+
     (vp- (vform ?vf) (var ?v2) (subjvar ?subj) (subj ?subject) (agr ?agr) (gap ?gap)
      (lex ?lex2) (Advbl-needed -) (class ?c2) (constraint ?con2)  (tma ?tma2) (sem ?sem2))
+
     (sem-least-upper-bound (in1 ?sem1) (in2 ?sem2) (out ?sem))
     (class-least-upper-bound (in1 ?c1) (in2 ?c2) (out ?class))
+    (add-to-conjunct (old ?con1) (new (lex ?lex1)) (new ?constraint1))
+    (add-to-conjunct (old ?con2) (new (lex ?lex2)) (new ?constraint2))
     
     )
 
@@ -3740,19 +3785,20 @@
      (class ?class) (sem ?sem)  (lex ?lex)
      (constraint (&  (OPERATOR ?lx) 
 		     (SEQUENCE 
-		      ((% *PRO* (var ?v1) (status ont::f) (class ?c1) (tma ?tma1) (sem ?sem1) (constraint ?con1))
-		       (% *PRO* (var ?v2) (status ont::f) (class ?c2) (tma ?tma2) (sem ?sem2) (constraint ?con2)))))))
+		      ((% *PRO* (var ?v1) (status ont::f) (class ?c1) (tma ?tma1) (sem ?sem1) (constraint ?constraint1))
+		       (% *PRO* (var ?v2) (status ont::f) (class ?c2) (tma ?tma2) (sem ?sem2) (constraint ?constraint2)))))))
      
     -vbar-conj-dobj>
-    (head (vp- (vform ?vf) (subjvar ?subj)  (subj ?subject) (var ?v1) (seq -)  (agr ?agr) (gap ?!dobj)
+    (head (vp- (vform ?vf) (subjvar ?subj)  (subj ?subject) (var ?v1) (seq -)  (agr ?agr) (gap ?!dobj) (lex ?lex1)
 	       (advbl-needed -) (class ?c1) (constraint ?con1) (tma ?tma1) (sem ?sem1) (subj-map ?subjmap)
 	   ))
     (CONJ (lf ?lx)  (lex ?lex) (but-not -)) ;;(? lx or but however plus otherwise so and)))
-    (vp- (vform ?vf) (var ?v2) (subjvar ?subj) (subj ?subject) (agr ?agr) (gap -) (dobj ?!dobj)
+    (vp- (vform ?vf) (var ?v2) (subjvar ?subj) (subj ?subject) (agr ?agr) (gap -) (dobj ?!dobj) (lex ?lex2)
      (Advbl-needed -) (class ?c2) (constraint ?con2)  (tma ?tma2) (sem ?sem2))
     (sem-least-upper-bound (in1 ?sem1) (in2 ?sem2) (out ?sem))
     (class-least-upper-bound (in1 ?c1) (in2 ?c2) (out ?class))
-    
+    (add-to-conjunct (old ?con1) (new (lex ?lex1)) (new ?constraint1))
+    (add-to-conjunct (old ?con2) (new (lex ?lex2)) (new ?constraint2))
     )
    
    ;; they had come, seen and conquered
@@ -3761,17 +3807,20 @@
      (class ?class) (sem ?sem)
      (constraint (& 
 		     (SEQUENCE 
-		      ((% *PRO* (var ?v1) (status ont::f) (class ?c1) (tma ?tma1) (constraint ?con1))
-		       (% *PRO* (var ?v2) (status ont::f) (class ?c2) (tma ?tma2) (constraint ?con2)))))))
+		      ((% *PRO* (var ?v1) (status ont::f) (class ?c1) (tma ?tma1) (constraint ?constraint1))
+		       (% *PRO* (var ?v2) (status ont::f) (class ?c2) (tma ?tma2) (constraint ?constraint2)))))))
     -vbar-conj-seq1>
     (head (vp- (vform ?vf) (subjvar ?subj) (subj ?subject) (var ?v1) (seq -) (gap ?gap) (agr ?agr)
-	       (advbl-needed -) (class ?c1) (constraint ?con1) (tma ?tma1) (sem ?s1)
+	       (advbl-needed -) (class ?c1) (constraint ?con1) (tma ?tma1) (sem ?s1) (lex ?lex1)
 	   ))
     (punc (lex (? x W::punc-comma)))
-    (vp- (vform ?vf) (var ?v2) (seq -) (subjvar ?subj)  (subj ?subject)  (gap ?gap) (agr ?agr)
+    (vp- (vform ?vf) (var ?v2) (seq -) (subjvar ?subj)  (subj ?subject)  (gap ?gap) (agr ?agr) (lex ?lex2)
      (advbl-needed -) (class ?c2) (constraint ?con2)  (tma ?tma2) (sem ?s2))
     (sem-least-upper-bound (in1 ?s1) (in2 ?s2) (out ?sem))
     (class-least-upper-bound (in1 ?c1) (in2 ?c2) (out ?class))
+    (add-to-conjunct (old ?con1) (new (lex ?lex1)) (new ?constraint1))
+    (add-to-conjunct (old ?con2) (new (lex ?lex2)) (new ?constraint2))
+    
     )
     
     ;; extending the VBARSEQ
@@ -3784,12 +3833,13 @@
 		   (vform ?vf) (punc ?punc)
 		   ))
     (punc (lex ?punc))
-    (vp- (vform ?vf) (var ?v2) (seq -)  (gap ?gap)  (agr ?agr) (sem ?s2)
+    (vp- (vform ?vf) (var ?v2) (seq -)  (gap ?gap)  (agr ?agr) (sem ?s2) (lex ?lex1)
      (advbl-needed -) (subjvar ?subj) (subj ?subject) (class ?c2) (constraint ?con2) (tma ?tma2))
     (sem-least-upper-bound (in1 ?s1) (in2 ?s2) (out ?sem))
     (class-least-upper-bound (in1 ?c1) (in2 ?c2) (out ?class))
+    (add-to-conjunct (old ?con2) (new (lex ?lex1)) (new ?constraint))
     (add-to-end-of-list (list ?lf) 
-     (val (% *PRO* (var ?v2) (class ?c2) (constraint ?con2) (tma ?tma2))) (newlist ?newlf))
+     (val (% *PRO* (var ?v2) (class ?c2) (constraint ?constraint) (tma ?tma2))) (newlist ?newlf))
    )
 
    ;; ending the VBARSEQ 

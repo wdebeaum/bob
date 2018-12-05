@@ -92,7 +92,7 @@
  :comment "activity that involves transfer of information between agents"
  :sem (F::Situation (F::Cause F::agentive) (F::Trajectory -));  (F::Aspect F::bounded) (F::Time-span F::extended))
  :arguments ((:ESSENTIAL ONT::Affected ((? adr F::Phys-obj f::abstr-obj)))
-	     (:OPTIONAL ONT::Formal ((? th21 F::Abstr-obj F::Situation F::Proposition)))
+	     (:OPTIONAL ONT::Formal ((? th21 F::Abstr-obj F::Situation)))
 	     (:OPTIONAL ONT::NEUTRAL ((? n1 F::Phys-obj f::abstr-obj))); (F::information F::information-content)))
 	     (:optional ont::norole)
 	     (:optional ont::location ((? cg2 f::abstr-obj F::Phys-obj)))
@@ -695,15 +695,22 @@
  :parent ONT::event-of-causation
  :sem (F::Situation (:required (F::trajectory -))(:default (F::Cause F::agentive) (F::aspect F::dynamic) (F::time-span F::extended)))
  :arguments ((:REQUIRED ONT::Agent (F::Phys-obj (f::origin f::living)))
-             ;;; Formal changed to comestible, although probably too strong
-	     ;; form substance is also too strong.
-             (:REQUIRED ONT::Affected (F::Phys-obj (F::mobility F::movable) (F::form F::substance) (f::object-function f::comestible)))
-	     ;; This is eat with a spoon/fork etc.
-;             (:OPTIONAL ONT::Instrument (F::Phys-obj (F::mobility F::movable) (F::intentional -) (f::form f::solid-object) (f::information -)))
-	     ;;; Myrosia added accompaniment to account for frequent usages of "take/eat it with food/milk etc
-	     ;;(:OPTIONAL ONT::Assoc-with (F::Phys-obj (F::Form F::substance) (F::mobility F::movable)))
+             (:REQUIRED ONT::Affected (F::Phys-obj (F::mobility F::movable) (F::form F::substance) (f::object-function f::comestible)))   
              )
  )
+
+(define-type ONT::drink
+ :wordnet-sense-keys ("drink%2:34:00" "drink%2:34:12")
+ :parent ONT::consume
+  :arguments ((:REQUIRED ONT::Affected (F::Phys-obj (F::Form f::liquid))))
+ )
+
+(define-type ONT::eat
+ :wordnet-sense-keys ("eat%2:34:00" "eat%2:34:02")
+ :parent ONT::consume
+  :arguments ((:REQUIRED ONT::Affected (F::Phys-obj (F::Form f::solid))))
+ )
+
 
 (define-type ONT::AUX
  :parent ONT::SITUATION-ROOT
@@ -890,8 +897,8 @@
   :wordnet-sense-keys ("resemble%2:42:00" "match%2:42:00" "coordinate%2:30:01")
  :parent ONT::event-of-state
  :sem (F::Situation (F::Trajectory -))
- :arguments ((:REQUIRED ONT::NEUTRAL ((? oc F::Phys-obj F::Abstr-obj F::Situation F::time F::proposition)))
-             (:REQUIRED ONT::neutral1 ((? oc1 F::Phys-obj F::Abstr-obj F::Situation F::time F::proposition)))
+ :arguments ((:REQUIRED ONT::NEUTRAL ((? oc F::Phys-obj F::Abstr-obj F::Situation F::time)))
+             (:REQUIRED ONT::neutral1 ((? oc1 F::Phys-obj F::Abstr-obj F::Situation F::time)))
              )
  )
 

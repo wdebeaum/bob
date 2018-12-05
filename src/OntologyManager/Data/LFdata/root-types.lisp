@@ -23,7 +23,7 @@
  :wordnet-sense-keys ("entity%1:03:00")
  :comment "The root type for all things that can be referred to: abstract meaning for THIS and IT"
  :parent ONT::ANY-SEM
- :sem ((? rst F::phys-obj F::abstr-obj F::situation F::proposition))
+ :sem ((? rst F::phys-obj F::abstr-obj F::situation))
 )
 
 
@@ -37,7 +37,7 @@
 (define-type ONT::situation-root
   :parent ont::referential-sem 
   :comment "root for all events, whether verbal or nominal"
-  :sem (F::Situation (F::Intentional -) (F::information F::mental-construct) (F::container -))
+  :sem (F::Situation (F::Intentional -) (F::information F::mental-construct) (F::container -) (f::tangible +))
   :arguments (;;(:optional ont::arg0)  ;; abstract role for robust processing
 	      ;;(:optional ont::arg1)   ;; abstract role for robust processing
 ;	      (:optional ont::norole)

@@ -8,6 +8,7 @@
 ;;; declares all features as arbibtary vars to override default - features
 (define-type ONT::FACT
  :parent ONT::ABSTRACT-OBJECT-nontemporal
+ :sem (F::Abstr-obj (f::tangible +)) ; facts shouldn't be tangible, but we have it here so that we can add/remove facts (from a graph)
  :arguments ((:optional ONT::formal)
 	     )
  )
@@ -102,7 +103,8 @@
 
 (define-type ONT::grouping
     :comment "a  classification, category, variety of things. Not a set of objects!"
-    :parent ONT::version
+    ;:parent ONT::version
+    :parent ont::kind
     )
 
 (define-type ONT::FUNCTION-OBJECT
@@ -763,7 +765,8 @@
 (define-type ONT::message
      :wordnet-sense-keys ("message%1:10:01")
      :parent ont::information-function-object
-     :arguments ((:optional ONT::formal (F::prop)))
+     ;:arguments ((:optional ONT::formal (F::prop)))
+     :arguments ((:optional ONT::formal (F::situation)))
 )
 
 (define-type ONT::composition
@@ -776,7 +779,8 @@
 (define-type ONT::information
  :wordnet-sense-keys ("information%1:09:00" "information%1:10:00" "info%1:10:00" "indication%1:10:00")
  :parent ONT::information-function-object
- :arguments ((:optional ONT::formal (F::prop))) ; copied from ONT::MESSAGE
+ ;:arguments ((:optional ONT::formal (F::prop))) ; copied from ONT::MESSAGE
+ :arguments ((:optional ONT::formal (F::situation))) ; copied from ONT::MESSAGE
  )
 
 ;; create an ont::communication-object
@@ -1001,7 +1005,6 @@
 
 ;; idea
 (define-type ONT::mental-object
- :wordnet-sense-keys ("cognition%1:03:00" "noesis%1:03:00" "grounds%1:10:00" "reason%1:10:00")
  :parent ONT::mental-construction
 ;; :sem (F::Abstr-obj (F::container +))
  :arguments ((:OPTIONAL ONT::FIGURE) ;(f::situation (f::information f::mental-construct) (f::cause f::mental)))
@@ -1062,7 +1065,7 @@
 
 ;; reason, motivation
 (define-type ONT::motive
-  :wordnet-sense-keys ("motivation%1:03:00")
+  :wordnet-sense-keys ("motivation%1:03:00" "reason%1:10:00")
  :parent ONT::mental-object
  :arguments (
 ;	     (:optional ONT::Associated-information)
@@ -1116,7 +1119,7 @@
  )
 
 (define-type ONT::method
-     :wordnet-sense-keys ("manner%1:07:01" "method%1:09:00")
+     :wordnet-sense-keys ("manner%1:07:01" "method%1:09:00" "way%1:04:01")
      :parent ONT::ps-object
      )
 

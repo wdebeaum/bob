@@ -611,17 +611,27 @@
   :parent ont::measure-scale
  )
 
-(define-type ont::age-scale
- :parent ont::time-measure-scale
- :wordnet-sense-keys ("age%1:28:00" "age%1:07:00")
-)
-
 (define-type ont::duration-scale
   :parent ont::time-measure-scale
 )
 
+(define-type ont::age-scale
+ ;:parent ont::time-measure-scale
+ :parent ont::duration-scale
+ :wordnet-sense-keys ("age%1:28:00" "age%1:07:00")
+)
+
+(define-type ont::time-loc-scale
+  :parent ont::time-measure-scale
+)
+
+(define-type ont::number-scale
+  :parent ont::measure-scale
+)
+
 (define-type ont::total-scale
- :parent ont::measure-scale
+; :parent ont::measure-scale
+ :parent ont::number-scale
  :wordnet-sense-keys ("total%1:06:00" "count%1:23:00")
  ;; WORDS: aggregate, total, count
 )
@@ -1070,6 +1080,11 @@
 
 (define-type ont::negative-body-condition-scale
  :parent ont::body-condition-scale
+)
+
+(define-type ont::not-well-nourished-scale
+ :parent ont::negative-body-condition-scale
+ :wordnet-sense-keys ("hunger%1:26:00" "thirst%1:26:00")
 )
 
 (define-type ont::illness-scale

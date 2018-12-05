@@ -618,7 +618,7 @@
 
 (define-type ont::actuality-val
  :parent ont::real-vs-fake-val 
- :arguments ((:REQUIRED ONT::FIGURE (F::proposition (F::information F::mental-construct )))) 
+ ;:arguments ((:REQUIRED ONT::FIGURE (F::proposition (F::information F::mental-construct )))) 
  :comment "existing or occuring in fact vs. imagined or supposed"
 )
 
@@ -2078,7 +2078,7 @@
 ;; persistence
 (define-type ont::persistence-val
  :parent ont::temporal-occurrence-val 
- :sem (F::Abstr-obj (F::scale ONT::TIME-MEASURE-SCALE )(F::TIME-SCALE F::INTERVAL ))
+ :sem (F::Abstr-obj (F::scale ONT::TIME-MEASURE-SCALE ));(F::TIME-SCALE F::INTERVAL ))
 )
 
 (define-type ont::persistent
@@ -4249,7 +4249,7 @@
              )
  )
 
-(define-type ONT::relative-quantity-val
+(define-type ONT::additional-val
  :parent ONT::quantity-related-property-val
  )
 

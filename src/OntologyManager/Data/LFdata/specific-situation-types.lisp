@@ -275,6 +275,7 @@
 					       ;(:default (F::Mobility F::Self-Moving))))
 ;             (:OPTIONAL ONT::purpose (F::Situation (F::Cause F::Agentive) (F::Aspect F::Dynamic)))
 	     (:OPTIONAL ONT::REASON (F::Situation (F::Cause F::Agentive) (F::Aspect F::Dynamic)))
+	     (:essential ont::scale (F::abstr-obj  (F::scale ont::domain)))
              )
  )
 
@@ -450,6 +451,11 @@
 					       (:default (F::Mobility F::Self-Moving))))
 	     (:optional ont::neutral (F::phys-obj (f::type ont::geo-object))  ;; the path, road, as in "walk the path, walk the hills"
              )))
+
+(define-type ont::locomote-up
+    :wordnet-sense-keys ("climb%2:38:00" "climb%2:38:01" "ascend%2:38:02")
+    :parent ONT::self-locomote
+    )
 
 (define-type ONT::swim
  :wordnet-sense-keys ("float%2:38:01" "swim%2:38:01")
@@ -1511,14 +1517,14 @@
 (define-type ONT::READ
  :wordnet-sense-keys ("translate%2:31:00" "interpret%2:31:02" "read%2:31:04" "understand%2:31:03" "read%2:31:01" "read%2:31:00")
  :parent ONT::acquire-belief
- :arguments ((:ESSENTIAL ONT::FORMAL ((? tt F::phys-obj F::abstr-obj F::proposition) (F::information F::information-content)))
+ :arguments ((:ESSENTIAL ONT::FORMAL ((? tt F::phys-obj F::abstr-obj f::situation) (F::information F::information-content)))
              )
  )
 
 (define-type ONT::decide
  :wordnet-sense-keys ("decide%2:31:00" "decide%2:31:02")
  :parent ONT::acquire-belief
- :arguments ((:ESSENTIAL ONT::FORMAL ((? tt F::phys-obj F::abstr-obj F::proposition f::situation) (F::information F::information-content)))
+ :arguments ((:ESSENTIAL ONT::FORMAL ((? tt F::phys-obj F::abstr-obj f::situation) (F::information F::information-content)))
              )
  )
 
@@ -2161,7 +2167,7 @@
  :parent ONT::conversing
  :comment "extended communicative interaction, FORMAL is the topic of discussion"
  :sem (F::Situation (F::Cause F::agentive) (F::Time-span F::extended))
- :arguments ((:ESSENTIAL ONT::formal ((? th20 F::Abstr-obj F::Situation F::Proposition f::phys-obj)))
+ :arguments ((:ESSENTIAL ONT::formal ((? th20 F::Abstr-obj F::Situation f::phys-obj)))
              )
  )
 
@@ -2766,7 +2772,7 @@
   :sem (F::Situation (F::Aspect F::Dynamic))
  :arguments ( ;; run the script/program
 	     (:essential ont::agent (F::PHYS-OBJ (f::intentional +) (F::origin F::human)))
-	     (:optional ont::neutral ((? thm f::abstr-obj f::situation) (f::type (? tt ONT::PROCEDURE ONT::EVENT-OF-ACTION ))))
+	     (:optional ont::neutral ((? thm f::abstr-obj f::situation) (f::type (? tt ONT::PROCEDURE)))) ;; ONT::EVENT-OF-ACTION ))))
 	     (:optional ont::result ((? res1 F::SITUATION F::ABSTR-OBJ))) ; copied from CAUSE-EFFECT
 	     (:optional ont::formal ((? res2 F::SITUATION F::ABSTR-OBJ)
 				     (F::type (? ftype ONT::SITUATION-ROOT ONT::PROPERTY-VAL));; ONT::POSITION-RELN)) ;; here for now while we decide the FORMAL/RESULT issue
@@ -3011,8 +3017,7 @@
 
 (define-type ONT::parts-removed
   :wordnet-sense-keys ("precipitate%2:30:00")
-; :parent ONT::come-from
- :parent ONT::cause-out-of
+  :parent ONT::cause-out-of
   :comment "the part removed is the good part"
   :arguments ((:OPTIONAL ONT::Agent)
 	      (:OPTIONAL ONT::AFFECTED1)
@@ -3020,7 +3025,7 @@
  )
 
 (define-type ONT::take-in
-    :wordnet-sense-keys ("absorb%2:35:00" "absorb%2:43:00")
+    :wordnet-sense-keys ("absorb%2:35:00" "absorb%2:43:00" "suck%2:34:04" "suck%2:38:00" "suck%2:35:00")
     :parent ONT::event-of-causation
     :arguments ((:REQUIRED ONT::Agent)
 		(:REQUIRED ONT::affected)
@@ -4265,6 +4270,8 @@
  :wordnet-sense-keys ("belong%2:42:03" "go%2:42:04" "belong%2:42:06")
  :parent ONT::be-at
  :sem (F::Situation (F::aspect F::stage-level))
+ :arguments ((:ESSENTIAL ONT::neutral (F::Phys-obj (F::intentional -))) 
+             )
  )
 
 ;; this fits here
