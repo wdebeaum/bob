@@ -19,7 +19,8 @@
  :arguments (;(:ESSENTIAL ONT::OF ((? of F::Phys-obj F::Situation f::abstr-obj)))
 	     ;(:ESSENTIAL ONT::val ((? val F::Phys-obj F::Situation f::abstr-obj)))
 	     (:ESSENTIAL ONT::FIGURE ((? fig F::Phys-obj F::Situation f::abstr-obj)))
-	     (:ESSENTIAL ONT::GROUND ((? grd F::Phys-obj F::Situation f::abstr-obj) (f::scale (? !t ONT::TIME-MEASURE-SCALE)))
+	     (:ESSENTIAL ONT::GROUND ((? grd F::Phys-obj F::Situation f::abstr-obj)
+				      (f::scale (? !sc ONT::TIME-MEASURE-SCALE)))
              ))
  )
 
@@ -182,7 +183,8 @@
 ; figure is related by inherent orientation of ground
 (define-type ont::oriented-loc-reln
     :comment "FIGURE is located by a directional relationship with the GROUND"
-    :arguments ((:ESSENTIAL ONT::GROUND ((? grd F::Phys-obj f::abstr-obj) (f::type (? !t ONT::TIME-MEASURE-SCALE)))))
+    :arguments ((:ESSENTIAL ONT::GROUND ((? grd F::Phys-obj f::abstr-obj)
+					 (f::type (? !t ONT::TIME-MEASURE-SCALE)))))
     :parent ont::position-as-point-reln
     )
 
@@ -863,6 +865,7 @@
 #|
 (define-type ONT::LONG
  :parent ONT::event-duration-modifier
+
  :wordnet-sense-keys ("permanent%3:00:00" "lasting%5:00:00:long:02")
  :arguments ((:ESSENTIAL ONT::FIGURE ((? of f::situation f::time)))
              (:essential ont::GROUND (f::abstr-obj (F::Scale F::duration-scale)))
@@ -993,7 +996,7 @@
      )
 
 (define-type ONT::now
-     :wordnet-sense-keys ("now%4:02:05" "now%4:02:01" "presently%04:02:00")
+     :wordnet-sense-keys ("now%4:02:05" "now%4:02:01" "presently%4:02:00")
      :parent ONT::event-time-wrt-now
      )
 
@@ -1151,7 +1154,8 @@
 ;;  direct reference to times (e.g. now, then, ...)
 ;;  this type is also constructed by the grammar for dates, times of day, etc.
 (define-type ONT::TIME-LOC
- :parent ONT::time-object)
+    :wordnet-sense-keys ("date%1:28:03")
+    :parent ONT::time-object)
 
 (define-type ONT::recurring-time-of-day
     :comment "recurring moments of the day, defined by some event"
@@ -1211,12 +1215,13 @@
              )
  )
 
+#||
 (define-type ONT::date-object
  :wordnet-sense-keys ("date%1:28:03" "time%1:03:00")
  :comment "classification of time intervals with respect to some conceptual organization (e.g., calendar)"
  :parent ONT::TIME-Object
  :sem (F::time (F::time-function F::time-of-year)) ;(f::time-scale f::interval))
- )
+ )||#
 
 (define-type ont::date-object-on
     :comment "date objects that use ON - e.g., on Monday, on my birthday"
@@ -1231,20 +1236,17 @@
 
 (define-type ONT::today
      :wordnet-sense-keys ("today%4:02:00" "today%1:28:01")
-     ;:parent ONT::time-loc
-     :parent ONT::date-object
-     )
+     :parent ONT::time-loc
+         )
 
 (define-type ONT::yesterday
      :wordnet-sense-keys ("yesterday%4:02:00" "yesterday%1:28:01")
-     ;:parent ONT::time-loc
-     :parent ONT::date-object
+     :parent ONT::time-loc
      )
 
 (define-type ONT::tomorrow
      :wordnet-sense-keys ("tomorrow%4:02:00" "tomorrow%1:28:01")
-     ;:parent ONT::time-loc
-     :parent ONT::date-object
+     :parent ONT::time-loc
      )
 
 ;;; future, past

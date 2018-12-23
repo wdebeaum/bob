@@ -336,6 +336,7 @@
 	   -explicit-ref1-mseq>
 	   100
 	   (ONT::TERM ?!obj ?!type
+	    :name ?word ; (not really the right parse but) this is so that "serine/threonine kinases" would retain the word "kinases" instead of just the type ONT::GENE-PROTEIN
 	    ;:name ?!w
 	    ;:BASE ?!name  
 	    ;:drum ?code    
@@ -402,6 +403,7 @@
 	   -explicit-ref1-lseq>
 	   100
 	   (ONT::TERM ?!obj ?!type
+	    :name ?word ; (not really the right parse but) this is so that "serine and threonine kinases" would retain the word "kinases" instead of just the type ONT::GENE-PROTEIN
 	    ;:name ?!w
 	    ;:BASE ?!name  
 	    ;:drum ?code    

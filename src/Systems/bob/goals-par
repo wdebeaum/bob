@@ -8,8 +8,13 @@ ONT::FIND-TREATMENT =>
 ONT::LEARN =>
 ONT::QUERY-MODEL => ONT::BUILD-MODEL
 
-# show me: 
+# show [me], describe, explain: 
 ONT::SHOW =>
+ONT::DESCRIBE =>
+ONT::EXPLAIN =>
+
+# remove
+ONT::CAUSE-COME-FROM => ONT::BUILD-MODEL
 
 # find stuff: could be restricted to => ONT::BUILD-MODEL,ONT::FIND-TREATMENT
 ONT::DETERMINE => 

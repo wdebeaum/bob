@@ -318,7 +318,10 @@
 
 ;; takes a typed feature list in the format type <feature list>
 ;; and makes it into a structure
-(defun make-typed-sem (tsem)
+;; Note there are two input forms: one is (<type> (<feat> <val>)*)
+;;  and the other is (<type> :required (<feat> <val>)* :optional (<feat> <val>)*)
+;;p  if RENAME-VARS is non null, we generte a new var name to make sure its unique
+(defun make-typed-sem (tsem &optional rename-vars)
   (when tsem
     (let* ((type (make-var-unique (car tsem)))
 	   (flist (cdr tsem))
@@ -332,19 +335,32 @@
       (setq required flist))
     (make-feature-list
      :type type
-     :features required
-     :defaults default)
+     :features (if rename-vars (mapcar #'(lambda (x)
+					   (list (car x) (make-var-unique (cadr x))))
+				       required)
+		   required)
+     :defaults (if rename-vars
+		   (mapcar #'(lambda (x)
+			       (list (car x) (make-var-unique (cadr x))))
+			   default)
+		   default)
+     )
     )))
 
 (defun make-var-unique (class)
-  (if (and (consp class)
-	   (eq (car class) '?))
-      (list* '? (make-name-unique (cadr class)) (cddr class))
-      class))
+  (cond ((and (consp class)
+	      (eq (car class) '?))
+	 (list* '? (make-name-unique (cadr class)) (cddr class)))
+	((is-variable-name class)
+	 (make-name-unique class))
+	(t
+	 class)))
 
 (defun make-name-unique (id)
-  (gensym (symbol-name id)))
-  
+  (intern (symbol-name (gensym (symbol-name id))) *ont-package*))
+
+(defun strip-first-char (id)
+  (intern (string-trim '(#\?) (symbol-name id))))
 
 ;; takes an untyped feature list in the format type <feature list>
 ;; and makes it into a structure with variable type

@@ -2050,11 +2050,13 @@
     ;; I have a job to do, an option to suggest
   ((N1 (RESTR ?con) (gap -)
       (CLASS ?c) (SORT ?sort) (QUAL ?qual) (COMPLEX +)
-      (subcat -) (post-subcat -)
+      (subcat (% - (W::VAR -))) ;(subcat -)
+      (post-subcat -)
       )
      -n1-inf> .92
      (head (N1 (VAR ?v) (RESTR ?r) (SEM ?sem) (CLASS ?c) (SORT ?sort) (QUAL ?qual)
-	    (subcat -) (post-subcat -)
+	       (subcat (% - (W::VAR -))) ;(subcat -)
+	       (post-subcat -)
 	    (no-postmodifiers -) ;; exclude "the same path as the battery I saw" and cp attaching to "path"
 	    ))
      (cp (ctype s-to) (VAR ?tov) (subj ?subj)   (gap (% np (sem ?sem) (var ?v)))
@@ -2065,6 +2067,7 @@
   ;; e.g., anything else, what else
     ((NP (SORT PRED)
          (VAR ?v) (SEM ?sem) (lex ?hl) (headcat ?hc) (Class ?c) (AGR ?agr) (WH ?wh) (PRO INDEF)(case ?case)
+	 (wh-var ?v) ; "anything" shouldn't really have wh-var, but its WH would be - (wh-var is needed to instantiate :focus in questions)
          (LF (% Description (status ?status) (var ?v) (Class ?c) (SORT individual)
                 (Lex ?lex)
                 (sem ?sem) 
@@ -2162,24 +2165,27 @@
     ;;   simple appositives,
     ;;  e.g., city avon, as in "the city avon"
     ;;
-    ((N1 (RESTR ?con) (CLASS ?c) (SORT ?sort) (QUAL ?qual) (COMPLEX +)
-      (subcat -) (post-subcat -)
+    ((N1 (RESTR ?con) (CLASS ?c) (SORT ?sort) (QUAL ?qual) ;(COMPLEX +)  ; took out complex + so this will go through two-np-conjunct
+	 (subcat (% - (W::VAR -))) ;(subcat -)
+	 (post-subcat -)
       )
      -N1-appos1> .98
      (head (N1 (VAR ?v1) (RESTR ?r) (CLASS ?c) (sort (? !sort unit-measure)) ;(SORT ?sort) 
 	       (QUAL ?qual) (relc -) (sem ?sem)
-	    (subcat -) (post-subcat -) (complex -) (derived-from-name -) (time-converted -)
+	       (subcat (% - (W::VAR -))) ;(subcat -)
+	       (post-subcat -) (complex -) (derived-from-name -) (time-converted -)
 	    )      
       )
      (np (name +) (generated -) (sem ?sem) (class ?lf) (VAR ?v2) (time-converted -))
      (add-to-conjunct (val (IDENTIFIED-AS ?v2)) (old ?r) (new ?con)))
 	
    ;; same with comma  the city, avon
-    ((N1 (RESTR ?con) (CLASS ?c) (SORT ?sort) (QUAL ?qual) (COMPLEX +) 
-      (subcat -))
+    ((N1 (RESTR ?con) (CLASS ?c) (SORT ?sort) (QUAL ?qual) ;(COMPLEX +) 
+      (subcat (% - (W::VAR -)))) ;(subcat -))
      -N1-appos2>
      (head (N1 (VAR ?v1) (RESTR ?r) (CLASS ?c) (SORT ?sort) (QUAL ?qual) (relc -)
-	    (subcat -) (post-subcat -) (sem ?sem)
+	       (subcat (% - (W::VAR -))) ;(subcat -)
+	       (post-subcat -) (sem ?sem)
 	    ))
      (punc (lex w::punc-comma))
      (np (name +) (generated -) (CLASS ?c) (sem ?sem) (VAR ?v2))
@@ -2584,7 +2590,7 @@
         ;;  NP with SPECS that subcategorize for NP's
         ;;   all/both/half the boys
         
-        ((NP (LF (% description (STATUS ?spec) (VAR ?specvar) (CLASS ?c) (CONSTRAINT ?newr)
+        ((NP (LF (% description (STATUS ?spec) (VAR ?specvar) (CLASS ?c) (constraint ?r1) ;(CONSTRAINT ?newr) ; don't pass up ?r from the NP so that the mods stay with the refset.  We need this to be the case for -can-indirect-request-b2> in IMRules (e.g., Can you tell me all the cats chased by the dog?)
 		    (sem ?sem)  (transform ?transform)
 		    ))
              (SORT PRED) (VAR ?specvar) (WH ?w));; must move WH feature up by hand here as it is explicitly specified in a daughter.
@@ -2598,9 +2604,10 @@
 		           (transform ?transform)
 		           ))))
 	 (add-to-conjunct (val (refset ?v)) (old ?restr) (new ?r1))
-	 (append-conjuncts (conj1 ?r1) (conj2 ?r) (new ?newr)))
+	 ;(append-conjuncts (conj1 ?r1) (conj2 ?r) (new ?newr))
+	 )
 
-	((NP (LF (% description (STATUS ?spec) (VAR ?specvar) (CLASS ?c) (CONSTRAINT ?newr)
+	((NP (LF (% description (STATUS ?spec) (VAR ?specvar) (CLASS ?c) (constraint ?r1) ;(CONSTRAINT ?newr)
 		    (sem ?sem)  (transform ?transform)
 		    ))
              (SORT PRED) (VAR ?specvar) (WH ?w));; must move WH feature up by hand here as it is explicitly specified in a daughter.
@@ -2614,7 +2621,8 @@
 		           (transform ?transform)
 		           ))))
 	 (add-to-conjunct (val (refset ?v)) (old ?restr) (new ?r1))
-	 (append-conjuncts (conj1 ?r1) (conj2 ?r) (new ?newr)))
+	 ;(append-conjuncts (conj1 ?r1) (conj2 ?r) (new ?newr))
+	 )
 
         ;;  BARE PLURALS  ---> KINDS
 
@@ -3796,10 +3804,10 @@
 			    (?!argmap ?argvar)))
 	     (sem ?sem) (transform ?trans)))
       (gap -) (pp-word +)
-      (role ?reln)
+      (role ?reln) (how ?how) 
       )
      -advbl-wh-word> 
-     (head (adv (SORT PP-WORD) (wh Q) (IMPRO-CLASS ?pro-class)
+     (head (adv (SORT PP-WORD) (wh Q) (IMPRO-CLASS ?pro-class) (how ?how)
 	    (argument ?argument)
 	    (ARGUMENT (% ?argcat (var ?argvar)))
 	    (SUBCAT (% ?x (SEM ?subcatsem))) 
@@ -5336,6 +5344,7 @@
      (logical-and (in1 ?gen1) (in2 ?gen2) (out ?gen))
      )
 
+     ; 20181213: changed head from the first NP to conj in the next four rules so that we can pass on its lex
      ;;  simple conjuncts/disjunct of NPS, e.g., the dog and the cat, the horse or the cow
      ((NP (ATTACH ?a) (var ?v) (agr ?agr-out) ;(agr 3p) ; the ice and the fire could be 3s or 3p
 	  (SEM ?sem) (gerund ?ger) (mass ?m1) ; should really be some combination of m1 and m2
@@ -5350,13 +5359,13 @@
       (generated ?generated)
        )
      -two-np-conjunct> 
-     (head (NP (SEM ?s1) (VAR ?v1) (agr ?agr)  (complex -) (expletive -) ;;(bare-np ?bnp)
+     (NP (SEM ?s1) (VAR ?v1) (agr ?agr)  (complex -) (expletive -) ;;(bare-np ?bnp)
 	    (generated ?gen1)  (time-converted ?tc1) (gerund ?ger) (wh ?wh); ok: which cats and which dogs; ok: which <cats and dogs> (use -two-n1-conjunct>); not ok: <which cat> and dog 
 	    ;; (bare-sequence -)
 	    (LF (% ?sort (class ?c1) (status ?status))) (CASE ?c) (constraint ?con) (mass ?m2) ;; allowing mismatch on mass
 	    (sort (? !sort unit-measure)) ;; no unit measure here since they form sub-NPs [500 mb] & we want the top-level [500 mb of ram] 	    
-	    ))
-      (conj (SEQ +) (LF ?op) (var ?v) ) ;;(status ?status))
+	    )
+      (head (conj (SEQ +) (LF ?op) (var ?v) )) ;;(status ?status))
       (NP (SEM ?s2) (VAR ?v2) (agr ?agr1)  (complex -) (expletive -)
        (bare-np -)  ;; bare-NP should go through N!-conjunct, not NP-conjunct
        (generated ?gen2)  (time-converted ?tc1)  (gerund ?ger) (wh ?wh)
@@ -5383,13 +5392,13 @@
       (generated ?generated)  (time-converted ?tc1) 
        )
      -np-but-not-conjunct> 
-     (head (NP (SEM ?s1) (VAR ?v1) (agr ?agr)  (complex -) (expletive -) ;;(bare-np ?bnp)
+     (NP (SEM ?s1) (VAR ?v1) (agr ?agr)  (complex -) (expletive -) ;;(bare-np ?bnp)
 	    (generated ?generated)  (time-converted ?tc1) (gerund ?ger)
 	    ;; (bare-sequence -)
 	    (LF (% ?sort (class ?c1) (status ?status))) (CASE ?c) (constraint ?con) (mass ?m2) ;; allowing mismatch on mass
 	    (sort (? !sort unit-measure)) ;; no unit measure here since they form sub-NPs [500 mb] & we want the top-level [500 mb of ram] 	    
-	    ))
-      (conj (but-not +) (var ?v))
+	    )
+      (head (conj (but-not +) (var ?v)))
       (np (var ?exception))
       )
 ;;  But not construction, e,g,. apples but not pears, apples not pears, 
@@ -5404,14 +5413,14 @@
       (generated ?generated)  (time-converted ?tc1) 
        )
      -np-but-not-conjunct-with-comma> 
-     (head (NP (SEM ?s1) (VAR ?v1) (agr ?agr)  (complex -) (expletive -) ;;(bare-np ?bnp)
+     (NP (SEM ?s1) (VAR ?v1) (agr ?agr)  (complex -) (expletive -) ;;(bare-np ?bnp)
 	    (generated ?generated)  (time-converted ?tc1) (gerund ?ger)
 	    ;; (bare-sequence -)
 	    (LF (% ?sort (class ?c1) (status ?status))) (CASE ?c) (constraint ?con) (mass ?m2) ;; allowing mismatch on mass
 	    (sort (? !sort unit-measure)) ;; no unit measure here since they form sub-NPs [500 mb] & we want the top-level [500 mb of ram] 	    
-	    ))
+	    )
       (punc  (lex w::punc-comma))
-      (conj (but-not +) (var ?v))
+      (head (conj (but-not +) (var ?v)))
       (np (var ?exception))
       )
 
@@ -5427,14 +5436,14 @@
       (generated ?generated)
        )
      -two-np-conjunct-with-exceptions> 
-      (head (NP (SEM ?s1) (VAR ?v1) (agr ?agr)  (complex -) (expletive -) ;;(bare-np ?bnp)
+      (NP (SEM ?s1) (VAR ?v1) (agr ?agr)  (complex -) (expletive -) ;;(bare-np ?bnp)
 	       (generated ?gen1)  (time-converted ?tc1) (gerund ?ger)
 	    ;; (bare-sequence -)
 	    (LF (% ?sort (class ?c1) (status ?status))) (CASE ?c) (constraint ?con) (mass ?m2) ;; allowing mismatch on mass
 	    (sort (? !sort unit-measure)) ;; no unit measure here since they form sub-NPs [500 mb] & we want the top-level [500 mb of ram] 	    
-	    ))
+	    )
       
-      (conj (SEQ +) (LF ?op) (var ?v) ) ;;(status ?status))
+      (head (conj (SEQ +) (LF ?op) (var ?v) )) ;;(status ?status))
       (NP (SEM ?s2) (VAR ?v2) (agr ?agr1)  (complex -) (expletive -) ;;(bare-np ?bnp)
 	    (generated ?gen2)  (time-converted ?tc1)  (gerund ?ger)
 	    ;; (bare-sequence -)
@@ -5737,7 +5746,7 @@
 	 (SEM ?sem) (gerund ?ger) 
       (Status ?status-out)
       (class ?class)
-      (restr (& (operator ?op)
+      (restr (& (operator ?op) (lex ?lex)
 		(sequence ((% *PRO* (status ?status-out) (var ?v1) (class ?c1) (constraint ?con) (sem ?s1) (lex ?lex1))
 			   (% *PRO* (status ?status-out) (var ?v2) (class ?c2) (constraint ?con2) (sem ?s2) (lex ?lex2))))))
       (CASE ?c)
@@ -5745,7 +5754,7 @@
       (COMPLEX +) 
       (sort (? !sort unit-measure)) ;(SORT PRED)
       (generated ?generated)
-      (lex ?op)
+      (lex ?lex) ;(lex ?op)
       )
      -two-n1-conjunct> 
      (head (N1 (SEM ?s1) (VAR ?v1) (agr ?agr)  (complex -) (expletive -) ;;(bare-np ?bnp)
@@ -5754,7 +5763,7 @@
 	    (class ?c1) (status ?status) (CASE ?c) (restr ?con) (mass ?m2) ;; allowing mismatch on mass
 	    (sort (? !sort unit-measure)) ;; no unit measure here since they form sub-NPs [500 mb] & we want the top-level [500 mb of ram]
 	    ))
-     (conj (SEQ +) (LF ?op) (var ?v) ) ;;(status ?status))
+     (conj (SEQ +) (LF ?op) (lex ?lex) (var ?v) ) ;;(status ?status))
      (N1 (SEM ?s2) (VAR ?v2) (agr ?agr1)  (complex -) (expletive -) ;;(bare-np ?bnp)
 	    (generated ?gen2)  (time-converted ?tc1)  (gerund ?ger)
 	     (lex ?lex2)
