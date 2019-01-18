@@ -697,7 +697,7 @@
 	 (gap ?gap)
       (subcat ?!subcat)
       )
-     -N1-reln-scale>
+     -N1-reln-scale> 
      (head (n (sort reln) (lf ?lf) (RESTR ?r)
 	      (subcat ?!subcat)
 	      (subcat (% ?scat (var ?v1) (sem ?ssem) (lf ?lf2) (gap ?gap) )) ;;(sort (? srt pred individual set comparative reln))))
@@ -714,11 +714,11 @@
      (gap ?gap)
      (subcat ?!subcat)
      )
-    -N1-reln-parts>
+    -N1-reln-parts> 
     (head (n (sort reln) (lf ?lf) (RESTR ?r)
 	     (subcat ?!subcat)
 	     (subcat (% ?scat (var ?v1) (sem ?ssem) (lf ?lf2) (gap ?gap) )) ;;(sort (? srt pred individual set comparative reln))))
-	     (SEM ($ F::PHYS-OBJ))
+	     (SEM ($ ?sem (f::scale -))) ;(SEM ($ F::PHYS-OBJ))
 	     (subcat-map ?smap)))
     ?!subcat
     (add-to-conjunct (val (?smap ?v1)) (old ?r) (new ?con1))
@@ -1889,9 +1889,9 @@
      -n-sing-n1-> 0.98 ;; prevent this from happening too often
      (n1 ;(AGR 3s) ; agr could be 3p for "the dog and cat boxes"
 	 (abbrev -) (generated -) (lex ?lex)
-        (var ?v1) (restr ?modr)  (gerund -)   ;; we expect gerunds as modifiers to be adjectives, not N1
-	;;  removed this to handle things like "computing services"
-	;; we reinstated "gerund -" as "computing" should be an adjective (and we need to exclude "... via phosphorylating Raf"
+      (var ?v1) (restr ?modr)  (gerund -)   ;; we expect gerunds as modifiers to be adjectives, not N1
+      ;;  removed this to handle things like "computing services"
+      ;; we reinstated "gerund -" as "computing" should be an adjective (and we need to exclude "... via phosphorylating Raf"
       (sem ?n-sem) (derived-from-name -) ; names go through -name-n1>
       (CLASS ?modc) (PRO -) (N-N-MOD -) ;(COMPLEX -)   ;;  can't require COMPLEX - any more -- e.g., "p53 expression levels"  -- now we can!! This goes through nom-rate instead.
       ; set two-n1-conjunct to complex - so that e.g., <trade and migration> route, can go through this rule
@@ -2214,9 +2214,9 @@
      ;(sem ?sem)
      )
     -adj-pred-scale> 
-    (head (ADJ1 (LF ?lf) (SUBCAT2 -) (post-subcat -)(VAR ?v) (comparative ?comp)
+    (head (ADJ1 (LF ?lf) (post-subcat -)(VAR ?v) (comparative ?comp)
 	       (ARGUMENT-MAP ?argmap) (prefix -) 
-	       (subcat ?subcat) (subcat-map ?subm) (subcat2 ?subcat2) (subcat2-map ?subm2)
+	       (subcat ?subcat) (subcat-map ?subm) (subcat2 ?subcat2) (SUBCAT2 (% - (W::VAR -))) (subcat2-map ?subm2)
 	       (SORT PRED) (constraint ?con)
 	       (sem ?sem) (sem ($ F::ABSTR-OBJ (f::scale ?scale1) (F::intensity ?ints) (F::orientation ?orient)))
 	       (transform ?transform)
@@ -2238,11 +2238,12 @@
      (sem ?sem)
      )
     -adj-standard> 
-    (head (ADJ1 (LF ?lf) (SUBCAT2 -) (post-subcat -)(VAR ?v) (comparative -) ;(comparative ?comp)
+    (head (ADJ1 (LF ?lf) (post-subcat -)(VAR ?v) (comparative -) ;(comparative ?comp)
 		(ARGUMENT-MAP ?argmap) (prefix -)
 		(ARGUMENT (% ?x (sem ?argsem) (lex ?arglex)))
 	       ;(subcat ?subcat) (subcat-map ?subm)
-	       (SORT PRED) (constraint ?con)
+		(subcat2 ?subcat2) (SUBCAT2 (% - (W::VAR -)))
+		(SORT PRED) (constraint ?con)
 	       (sem ?sem) ;(sem ($ F::ABSTR-OBJ (f::scale ?scale1) (F::intensity ?ints) (F::orientation ?orient)))
 	       (transform ?transform)
 	       (FUNCTN -)
@@ -2377,6 +2378,33 @@
 ;;        In singular NPs, the two constraints are simply combined
 ;;        In plural NPs, the SET-CONSTRAINT apply to the set, and 
 ;;        the CONSTRAINT to individuals in the set
+
+
+(parser::augment-grammar 
+      '((headfeatures
+         (NP CASE MASS NAME agr SEM PRO CLASS Changeagr ARGUMENT argument-map SUBCAT role lex headcat transform postadvbl refl gerund abbrev derived-from-name
+	  subj dobj subcat-map comp3-map)) ; no gap
+
+	;;  special rule for proteins that are tagged as common nouns but used as names
+	((NP (LF (% Description (STATUS ONT::definite) (VAR ?v) (SORT INDIVIDUAL)
+	            (CLASS ?c) (CONSTRAINT ?constraint) (sem ?sem) (transform ?transform)))
+             (SORT PRED) (VAR ?v)
+             (BARE-NP +) (name-or-bare ?nob)
+	     (simple +)
+	     )
+         -protein-name-constructor> 0.995
+         (head (N (SORT PRED) (MASS  count) (gerund -) (complex -) 
+		   (name-or-bare ?nob) (lex ?lex)
+		   (derived-from-name -)  ;; names already can become NPs by simpler derivations
+		   (AGR 3s) (VAR ?v)
+		   (LF (? c ONT::GENE-PROTEIN)) ;;(CLASS (? !c ONT::REFERENTIAL-SEM))
+		   (RESTR ?r) (rate-activity-nom -) (agent-nom -)
+		(sem ?sem) (transform ?transform) (headless -) ; exclude missing-heads
+		(sem ($ (? x F::PHYS-OBJ) (F::KR-TYPE ?kr)))
+		))
+	 (unify (pattern ?!xx) (value ?kr))  ;; we do this because checking this in the SEM, even though it fails, would be ignored!
+	 (add-to-conjunct (val (:name-of ?lex)) (old ?r) (new ?constraint)))
+))
 
 ;;(cl:setq *grammar-NP*
 (parser::augment-grammar 
@@ -2710,26 +2738,6 @@
 		(subcat-map ?subcat-map) (subcat (% ?xx (var ?sc-var))
 		)))
 	 (add-to-conjunct (old ?r) (val (?subcat-map ?sc-var)) (new ?newr)))
-
-	;;  special rule for proteins that are tagged as common nouns but used as names
-	((NP (LF (% Description (STATUS ONT::definite) (VAR ?v) (SORT INDIVIDUAL)
-	            (CLASS ?c) (CONSTRAINT ?constraint) (sem ?sem) (transform ?transform)))
-             (SORT PRED) (VAR ?v)
-             (BARE-NP +) (name-or-bare ?nob)
-	     (simple +)
-	     )
-         -protein-name-constructor> 0.995
-         (head (N (SORT PRED) (MASS  count) (gerund -) (complex -) 
-		   (name-or-bare ?nob) (lex ?lex)
-		   (derived-from-name -)  ;; names already can become NPs by simpler derivations
-		   (AGR 3s) (VAR ?v)
-		   (LF (? c ONT::GENE-PROTEIN)) ;;(CLASS (? !c ONT::REFERENTIAL-SEM))
-		   (RESTR ?r) (rate-activity-nom -) (agent-nom -)
-		(sem ?sem) (transform ?transform) (headless -) ; exclude missing-heads
-		(sem ($ (? x F::PHYS-OBJ) (F::KR-TYPE ?kr)))
-		))
-	 (unify (pattern ?!xx) (value ?kr))  ;; we do this because checking this in the SEM, even though it fails, would be ignored!
-	 (add-to-conjunct (val (:name-of ?lex)) (old ?r) (new ?constraint)))
 
 	#|
         ;;  COMMAS
@@ -3487,12 +3495,16 @@
 	   (SUBJ ?subj) ;; more general to ask for SUBJ to be AFFECTED role, includes
  	                                         ;; the passive as well as unaccusative cases
 	                ;; also neutral/formal: the expected result
+	   (subjvar ?arg)
 	   (gap -) ;;  no gap in the VP
 	   (vform (? pp passive pastpart))
 	   (complex -)
            (advbl-needed -)
 	   (dobj (% -))  ;; we can't say "the cooked the steak meat" but "the cooked meat" is fine.
+	   ;(comp3 (% -))  ;; sacrificing "the broken by the hammer window"
+	   (comp3 (% ?comp3 (var ?compvar)))  
            ))
+     (not-bound (arg1 ?compvar)) ; optional but unbound
      ;(append-conjuncts (conj1 ?cons) (conj2 (& (ont::affected ?arg))) (new ?newc))
      (append-conjuncts (conj1 ?cons) (conj2 (& (?subjmap ?arg))) (new ?newc))
      )
@@ -4884,15 +4896,16 @@
     ;; e.g., (I know) when/where the train arrived
     ((np (sort wh-desc)  (gap -) (mass bare) (case (? case SUB OBJ))
             (sem ?s-sem) ;; (sem ?advsem)
-         (var ?npvar) 
-         (lf (% description (status *wh-term*) (VAR ?npvar) 
-                (class ?impro-class) (constraint (& (suchthat ?s-v))) (sort individual)
+         (var ?xx) 
+         (lf (% description (status *wh-term*) (var ?xx)
+                (class ?impro-class)
+		(constraint (& (suchthat ?newlf))) (sort individual)
                 (sem ?advsem)
                 )
              ))
      -wh-desc1a-norole> 0.98
      (head (advbl (pp-word +) 
-                  (var ?npvar) 
+                  (var ?advblvar) 
 		  (how -) (how-advbl -) ;; how ADJ/ADVBL constructions need their own rule
 		  ;;(argument (% S (sem ($ f::situation (f::type F::EVENTUALITY)))))
 	    (argument (% S (sem ?argsem)))
@@ -4901,11 +4914,14 @@
             (subcatsem ?advsem)
             (focus ?foc) (arg ?s-v) (wh Q) (lf ?lf1)
             ))
-     (s (stype decl) (sem ?argsem) (var ?s-v) (lf ?lf-s) (gap -) ;; no gap here because locations are treated as adjuncts in grammar (except for pred BE!)
+     (s (stype decl) (sem ?argsem) (var ?s-v)
+      (lf ?lf-s)
+      (gap -) ;; no gap here because locations are treated as adjuncts in grammar (except for pred BE!)
       (advbl-needed -) 
       (preadvbl -)   ;; we eliminate preadvbl constructs as they are at best awkward -- e.g., where quickly did you run, and lead to bad parses for how quickly did you run
       )
-     )
+     (add-constraints-to-lf (lf ?lf-s) (new ((MOD ?advblvar))) (result ?newlf)
+     ))
     
     ;;    e.g., (I know) where the dogs are.
     ;; this is the only case where we have a gap
@@ -4981,7 +4997,7 @@
      (cp (ctype s-to) (sem ?argsem) (var ?s-v) (lf ?lf-s) (gap -)
       (lf (% Prop (transform ?transform) (sem ?argsem) (class ?c) (constraint ?con)))
       )
-     (add-to-conjunct (val (suchthat ?advvar))(old ?con) (new ?constraint))
+     (add-to-conjunct (val (suchthat ?advvar)) (old ?con) (new ?constraint))
      )
     
 

@@ -51,6 +51,19 @@
    )
 ))
 
+#|
+(define-words :pos W::N
+  :words (
+	  ((W::TRANSCRIPTION W::PUNC-MINUS W::FACTOR)
+	   (SENSES
+	    ((lf-parent ONT::PROTEIN)
+	     (LF-FORM W::transcription-factor)
+	     (TEMPL count-pred-templ)
+	     )))
+	  )
+  )
+|#
+	     
 ;;;;;;;;;;;;;;;;;;;;;;;;
 ; TFTA
 ;;;;;;;;;;;;;;;;;;;;;;;;
@@ -124,7 +137,27 @@
      )
     )
    )
+ ))
+
+;;;;;;;;;;;;;;;;;;;
+; in common to
+;;;;;;;;;;;;;;;;;;;
+(define-words :pos W::adj
+ :tags (:base500)
+ :words (
+  ((w::in w::common)
+  (senses
+   ((lf-parent ont::typical-val)
+    (TEMPL  adj-co-theme-templ (xp (% w::pp (w::PTYPE (? pt w::to)))))
+    (sem (f::gradability +) (f::intensity ont::med) (f::orientation ont::more))
+    (meta-data :origin bob :entry-date 20181228 :change-date 20181229 :comments nil)
+    )
+   )
+)
 ))
+
+
+
 
 ;;;;;;;;;;;;;;;;;;;;;;;;
 ; for paper 1
