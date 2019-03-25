@@ -18,6 +18,5 @@
 	(W::CELL ONT::CELL)
 	;; "clear the model"
 	(W::CLEAR ONT::EMPTY)
+	(W::HGF ONT::GENE-PROTEIN)
 	))
-
-
