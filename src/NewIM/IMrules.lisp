@@ -113,6 +113,16 @@
     ;(?!spec ?!n ?!t :suchthat ?!m)
     )
 
+   ;; are there any inhibitors?
+   ((ONT::SPEECHACT ?v ONT::SA_YN-QUESTION :CONTENT ?!v1)
+    (ONT::F ?!v1 ONT::EXISTS :neutral ?!n) 
+    (?!spec ?!n ?!t) ;:suchthat ?!m)
+    ;(ONT::F ?!m ?!t2)
+    -yes-no-question-suchthat2>
+    (ONT::ASK-WHAT-IS :who *user* :to *ME* :what ?!n) ;:suchthat ?!m)
+    ;(?!spec ?!n ?!t :suchthat ?!m)
+    )
+   
    ;; Do you know any good books?
    ;; Do you know any drugs for BRAF?
    ((ONT::SPEECHACT ?v ONT::SA_YN-QUESTION :CONTENT ?!v1)
@@ -201,18 +211,22 @@
       (ONT::ASK-WHAT-IS :who *user* :to *ME* :what ?!n :suchthat ?!m)
       )
 
-   ;; e.g., Show/Look up the evidence/information that... (no :suchthat)
+     ;; e.g., Show/Look up the evidence/information that... (no :suchthat) (formal)
+    ;; e.g., Show/Look up the evidence/information.     
+     ;; e.g., Show/Look up the evidence/information we generated. (mod)     
    ((ONT::SPEECHACT ?x ONT::SA_REQUEST :CONTENT ?!theme)
     (ONT::F ?!theme (? t3 ONT::SHOW ONT::NAMING ONT::LISTING ONT::TELL ONT::LOOK-UP) :NEUTRAL ?!n :force (? f ONT::TRUE ONT::ALLOWED ONT::FUTURE ONT::POSSIBLE)) 
-    (?!spec ?!n (? t2 ONT::INFORMATION) :formal ?!X) ; e.g., evidence that, information, data 
+    ;(?!spec ?!n (? t2 ONT::INFORMATION) :formal ?!X) ; e.g., evidence that, information, data 
+    (?!spec ?!n (? t2 ont::information-function-object ont::mental-construction))
     -request-show-evidence-to-identify>
     (ONT::ASK-WHAT-IS :who *user* :to *ME* :what ?!n) ;:suchthat ?!X)
     )
 
-    ;; e.g., Give me the evidence/information that... (no :suchthat)
+   ;; e.g., Give me the evidence/information/plan/definition that... (no :suchthat) (formal/mod/none)
    ((ONT::SPEECHACT ?x ONT::SA_REQUEST :CONTENT ?!theme)
     (ONT::F ?!theme (? t3 ONT::GIVING) :AFFECTED ?!n :force (? f ONT::TRUE ONT::ALLOWED ONT::FUTURE ONT::POSSIBLE)) 
-    (?!spec ?!n (? t2 ONT::INFORMATION) :formal ?!X) ; e.g., evidence that, information, data 
+    ;(?!spec ?!n (? t2 ONT::INFORMATION) :formal ?!X) ; e.g., evidence that, information, data 
+    (?!spec ?!n (? t2 ont::information-function-object ont::mental-construction))
     -request-give-evidence-to-identify>
     (ONT::ASK-WHAT-IS :who *user* :to *ME* :what ?!n) ;:suchthat ?!X)
     )
@@ -275,7 +289,8 @@
 
      ;; e.g., Are any of those...
      ((ONT::SPEECHACT ?x (? sa ONT::SA_YN-QUESTION) :CONTENT ?!theme)
-      (?reln ?!theme ?type) ; beats -ynq1>
+      ;(?reln ?!theme ?type) ; beats -ynq1>
+      (?reln ?!theme ONT::BE :NOROLE -) ; beats -ynq1> ; excludes "are there any..."
       (?reln1 ?!t ONT::REFERENTIAL-SEM :QUAN ONT::ANY)
       -request-to-identify3c>
       (ONT::ASK-WHAT-IS :who *user* :to *ME* :what ?!t :suchthat ?!theme)
@@ -293,6 +308,15 @@
     (ONT::ASK-IF :who *user* :to *ME* :what ?!c)
     )
 
+   ;; e.g., I want to learn/find out how...
+   ((ONT::SPEECHACT ?x (? sa ONT::SA_REQUEST ONT::SA_TELL) :CONTENT ?!theme)
+    (ONT::F ?!theme (? t3 ONT::WANT ) :FORMAL ?!n :force (? f ONT::TRUE ONT::ALLOWED ONT::FUTURE ONT::POSSIBLE))
+    (ONT::F ?!n (? t4 ONT::COGITATION) :FORMAL ?!wh-var)
+    ((? spec ONT::WH-TERM ONT::WH-TERM-SET) ?!wh-var ONT::METHOD :suchthat ?!st)
+    -request-to-identify-which-b> 
+    (ONT::PROPOSE :who *user* :to *ME* :what ?!n :as ONT::GOAL)
+    )   
+   
    ;; e.g., Tell me/Let me know which/what blocks are red.
    ((ONT::SPEECHACT ?x (? sa ONT::SA_REQUEST ONT::SA_TELL) :CONTENT ?!theme)
     (ONT::F ?!theme (? t3 ONT::TELL ONT::ALLOW ONT::WANT ONT::LOOK-UP) :FORMAL ?!n :force (? f ONT::TRUE ONT::ALLOWED ONT::FUTURE ONT::POSSIBLE))
@@ -464,7 +488,7 @@
       ;; e.g., What budget are we using?
 
    ((ONT::SPEECHACT ?!a ONT::SA_WH-QUESTION :FOCUS ?!ff :CONTENT ?!rr)
-       ((? spec ONT::WH-TERM ONT::WH-TERM-SET) ?!ff ?!type)
+       ;((? spec ONT::WH-TERM ONT::WH-TERM-SET) ?!ff ?!type)
        -standardQ>
        (ONT::ASK-WHAT-IS :who *USER* :to *ME* :what ?!ff :suchthat ?!rr)
 	)

@@ -16,6 +16,8 @@
 	(W::FDA ONT::PROFESSIONAL-ORGANIZATION) ; as opposed to PROTEIN
 	(W::MODEL ONT::REPRESENTATION)
 	(W::CELL ONT::CELL)
+	;; "clear the model"
+	(W::CLEAR ONT::EMPTY)
 	))
 
 

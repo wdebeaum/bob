@@ -191,11 +191,12 @@
  )
 
 (define-type ont::group-object-abstr
- :wordnet-sense-keys ("mathematical_group%1:09:00" "group%1:09:00" "chemical_group%1:27:00" "radical%1:27:00" "group%1:27:00" "group%1:03:00" "grouping%1:03:00")
-  :parent ont::abstract-object-nontemporal
-;  :sem (F::Abstr-obj (f::group +)) ; group feature not defined for abstract objects
-  :arguments ((:OPTIONAL ONT::FIGURE)
-              )
+    :wordnet-sense-keys ("mathematical_group%1:09:00")
+    :comment "a formal concept of a group of objects, e.g., mathematical"
+    :parent ont::abstract-object-nontemporal
+					;  :sem (F::Abstr-obj (f::group +)) ; group feature not defined for abstract objects
+    :arguments ((:OPTIONAL ONT::FIGURE)
+		)
   )
 
 (define-type ONT::system-abstr
@@ -701,7 +702,6 @@
 
 ;; percent
 (define-type ONT::percent
- :wordnet-sense-keys ("percent%1:24:00" "per_centum%1:24:00" "pct%1:24:00")
 ; :parent ONT::quantitative-relation
  :parent ONT::FORMAL-UNIT
  :sem (F::Abstr-obj (F::Scale Ont::percent-scale))
@@ -858,7 +858,7 @@
   )
 
 (define-type  ONT::event-defined-by-activity
- :wordnet-sense-keys ("event%1:03:00" "time_period%1:28:00" "period_of_time%1:28:00" "period%1:28:00")
+ :wordnet-sense-keys ("event%1:03:00")
  :parent ONT::EVENT-TYPE
  :sem (F::Situation (F::aspect F::dynamic))
  :arguments ((:OPTIONAL ONT::FIGURE)

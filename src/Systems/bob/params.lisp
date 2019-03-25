@@ -36,8 +36,8 @@
 	(parser::*no-positions-in-lf* nil)
 	;;
 
-;	(parser::*beam-pruning-on* nil)   ; no pruning
-	(parser::*beam-pruning-on* t)
+	(parser::*beam-pruning-on* nil)   ; no pruning  ; 2019/02/04
+	;(parser::*beam-pruning-on* t)
 
 	;;
 ;	(parser::*pruning-frequency* 500)
@@ -51,6 +51,9 @@
 	((parser::setmaxchartsize 8000))
 	;;
 	(parser::*kr-type-info-desired* '(:WNsense :DRUM :wordnet))
+	;; add spell-corrected lex and original lex
+	(parser::*add-lex-to-lf* t)
+	(parser::*add-orig-lex-to-lf* t)
 	;;
 	((setf (parser::flexible-semantic-matching parser::*chart*) t))
 	;; boost content words that have domain specific info attached
@@ -131,7 +134,8 @@
 ;; don't use wordnet if we have TRIPS entries  
 (setq  lxm::*use-trips-and-wf-senses* nil) 
 ;; lower bound
-(setq lxm::*domain-score-lower-bound* 0.94)
+;(setq lxm::*domain-score-lower-bound* 0.94)
+(setq lxm::*domain-score-lower-bound* 0.95) ; 2019/01/31
 
 ;;;; LOGGING options
 (setq logging::*logging-enabled* nil)

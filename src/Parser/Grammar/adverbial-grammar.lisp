@@ -9,7 +9,7 @@
 	 ;;lex headcat removed --me
      (PP KIND MASS NAME agr SEM SORT PRO SPEC CLASS transform gap gerund)
      ;;(ADVBLS FOCUS VAR SEM SORT ATYPE ARG SEM ARGUMENT NEG TO QTYPE lex transform)
-     (ADVBL VAR SORT ARGSORT SEM ARGUMENT ARG lex headcat transform neg result-only))
+     (ADVBL VAR SORT ARGSORT SEM ARGUMENT ARG lex orig-lex headcat transform neg result-only))
 
     ;;  ADJ -> ADVBL -- location adjective phrases can be used as adverbials e.g., put it right of the door
 
@@ -32,8 +32,8 @@
 	 ;;lex headcat removed --me
      (PP KIND MASS NAME agr SEM SORT PRO SPEC CLASS transform gap gerund)
      ;;(ADVBLS FOCUS VAR SEM SORT ATYPE ARG SEM ARGUMENT NEG TO QTYPE lex transform)
-     (ADVBL VAR SORT ARGSORT ATYPE SEM ARGUMENT lex headcat transform neg result-only)
-     (ADV SORT ATYPE CONSTRAINT SA-ID PRED NEG TO LEX HEADCAT SEM ARGUMENT SUBCAT IGNORE transform)
+     (ADVBL VAR SORT ARGSORT ATYPE SEM ARGUMENT lex orig-lex headcat transform neg result-only)
+     (ADV SORT ATYPE CONSTRAINT SA-ID PRED NEG TO LEX orig-lex HEADCAT SEM ARGUMENT SUBCAT IGNORE transform)
      )	       	       
 
     ;;   GENERAL RULES FOR ADVERBIAL PHRASES
@@ -492,21 +492,21 @@
 
 (parser::augment-grammar
   '((headfeatures
-     (ADJ VAR ATYPE SORT ARG PRED ARGUMENT lex headcat transform)
+     (ADJ VAR ATYPE SORT ARG PRED ARGUMENT lex orig-lex headcat transform)
      ;; MD 2008/07/17 added post-subcat as a head feature so that it doesn't lead to overgeneration
-     (ADJP VAR ATYPE SORT ARG COMP-OP PRED ARGUMENT lex headcat transform post-subcat sem) 
-     (NUMBER VAR AGR lex headcat transform)
-     (VP vform var agr neg sem subj iobj dobj comp3 part cont gap class subjvar lex headcat transform subj-map tma aux template)
-     (VP- vform var agr neg sem subj iobj dobj dobjvar comp3 part cont gap class subjvar lex headcat transform subj-map tma aux passive passive-map template result)
-     (S vform neg cont stype gap sem subjvar dobjvar var  lex headcat transform subj)
-     (N1 case VAR AGR MASS SEM Changeagr class reln sort lex headcat transform set-restr result rate-activity-nom agent-nom subcat subcat-map) ;added features for nominalizations
-     (NP case VAR AGR MASS SEM Changeagr class reln sort lex headcat transform status subcat subcat-map)
-     (ADVBL SORT ATYPE CONSTRAINT SA-ID PRED NEG TO LEX HEADCAT SEM ARGUMENT SUBCAT IGNORE transform neg)
-     (ADV VAR ATYPE SORT ARG PRED ARGUMENT lex headcat transform)
-     (UTT headcat lex ended subjvar)
-     (quanp headcat lex)
-     (cardinality headcat lex nobarespec)
-     (number headcat lex nobarespec)
+     (ADJP VAR ATYPE SORT ARG COMP-OP PRED ARGUMENT lex orig-lex headcat transform post-subcat sem) 
+     (NUMBER VAR AGR lex orig-lex headcat transform)
+     (VP vform var agr neg sem subj iobj dobj comp3 part cont gap class subjvar lex orig-lex headcat transform subj-map tma aux template)
+     (VP- vform var agr neg sem subj iobj dobj dobjvar comp3 part cont gap class subjvar lex orig-lex headcat transform subj-map tma aux passive passive-map template result)
+     (S vform neg cont stype gap sem subjvar dobjvar var  lex orig-lex headcat transform subj)
+     (N1 case VAR AGR MASS SEM Changeagr class reln sort lex orig-lex headcat transform set-restr result rate-activity-nom agent-nom subcat subcat-map) ;added features for nominalizations
+     (NP case VAR AGR MASS SEM Changeagr class reln sort lex orig-lex headcat transform status subcat subcat-map)
+     (ADVBL SORT ATYPE CONSTRAINT SA-ID PRED NEG TO LEX orig-lex HEADCAT SEM ARGUMENT SUBCAT IGNORE transform neg)
+     (ADV VAR ATYPE SORT ARG PRED ARGUMENT lex orig-lex headcat transform)
+     (UTT headcat lex orig-lex ended subjvar)
+     (quanp headcat lex orig-lex)
+     (cardinality headcat lex orig-lex nobarespec)
+     (number headcat lex orig-lex nobarespec)
      )	       		   
     
     ;;   PRED-VAL and BINARY-CONSTRAINT adverbs become CONSTRAINT advbls.
@@ -749,9 +749,12 @@
 		(ellipsis -)
 		(result (? advsem ($ f::abstr-obj
 				     ;(F::type (? ttt ont::position-reln ont::resulting-object ont::path))
-				     (F::type (? ttt ont::path ont::conventional-position-reln ont::direction ont::complex-ground-reln ont::back ont::front ont::left-of ont::off ont::orients-to ont::right-of ;ont::pos-as-containment-reln ; we allowed "in" for some reason, but I don't remember the example!
+				     (F::type (? ttt ont::path ont::conventional-position-reln ont::direction ont::complex-ground-reln ont::back ont::front ont::left-of ont::off ont::orients-to ont::right-of
+					;ont::pos-as-containment-reln ; we allowed "in" for some reason, but I don't remember the example! (ah: Put this in the corner)
+						 ont::outside ; take this out of the box; move this outside
 						 ont::pos-directional-reln ont::pos-distance ;ont::pos-wrt-speaker-reln
-						 ont::resulting-object))
+						 ont::resulting-object
+						 ))
 				     )))
 #|
 ;; do not remove this!  We can't have both (? ttt ...) and (? !ttt1 ...) but these are the types we want and don't want here.
@@ -1564,10 +1567,10 @@
 
 (parser::augment-grammar
  '((headfeatures
-    (VP vform var agr neg sem subj iobj dobj comp3 part cont class subjvar lex headcat transform tma subj-map template)
-    (VP- vform var agr neg sem subj iobj dobj comp3 part cont class subjvar lex headcat transform subj-map tma aux passive passive-map template result) ; does not pass up gap
-    (pp headcat lex)
-    (advbl gap headcat lex neg)
+    (VP vform var agr neg sem subj iobj dobj comp3 part cont class subjvar lex orig-lex headcat transform tma subj-map template)
+    (VP- vform var agr neg sem subj iobj dobj comp3 part cont class subjvar lex orig-lex headcat transform subj-map tma aux passive passive-map template result) ; does not pass up gap
+    (pp headcat lex orig-lex)
+    (advbl gap headcat lex orig-lex neg)
     )
 
    ; whom can I take the box to?

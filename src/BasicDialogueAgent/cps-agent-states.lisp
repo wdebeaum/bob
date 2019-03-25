@@ -67,7 +67,7 @@
 	 (transition
 	  :description "ask-wh. eg: what drug should we use?"
 	  :pattern '((ONT::SPEECHACT ?!sa (? s-act ONT::ASK-WHAT-IS) :what ?!what :suchthat ?!st)
-		     (?!spec ?!what ?!object-type)
+		     ;(?!spec ?!what ?!object-type) ; ?!what could be a sequence
 		     (ont::eval (generate-AKRL-context :what ?!st :result ?akrl-context))  ; note: ?!st instead of ?!what
 		     (ont::eval (find-attr :result ?goal :feature ACTIVE-GOAL))
 		     -propose-goal-via-question>
@@ -84,7 +84,7 @@
 	 (transition
 	  :description "ask-wh. eg: what drug should we use?"
 	  :pattern '((ONT::SPEECHACT ?!sa (? s-act ONT::ASK-WHAT-IS) :what ?!what :suchthat -)
-		     (?!spec ?!what ?!object-type)
+		     ;(?!spec ?!what ?!object-type)
 		     (ont::eval (generate-AKRL-context :what ?!what :result ?akrl-context))  ; note: ?!what instead of ?!st because there is no :suchthat
 		     (ont::eval (find-attr :result ?goal :feature ACTIVE-GOAL))
 		     -propose-goal-via-question-no-suchthat>
@@ -102,7 +102,7 @@
 	 (transition
 	  :description "ask-if. eg: Does the BRAF-NRAS complex vanish?"
 	  :pattern '((ONT::SPEECHACT ?!sa (? s-act ONT::ASK-IF) :what ?!what)
-		     (?!spec ?!what ?!type)
+		     ;(?!spec ?!what ?!type)
 		     (ont::eval (generate-AKRL-context :what ?!what :result ?akrl-context))  
 		     (ont::eval (find-attr :result ?goal :feature ACTIVE-GOAL))
 		     -ask-question>
@@ -579,29 +579,6 @@ ONT::INTERACT
 	  :destination 'propose-cps-act-response
 	  )
 
-	 (transition
-	  :description "CSM returns a successful proposal interpretation"
-	  :pattern '((BA-RESPONSE X REPORT
-		      :psact (? act ADOPT ASSERTION ASSERT ASK-WH ASK-IF SELECT)
-		      :id ?!goal :as ?as 
-		      :content ?content :context ?new-akrl :alternative ?alt-as)
-		     ;;(BA-RESPONSE X ?!X :content ((? act ADOPT ASSERTION) :what ?!goal :as ?as :alternative ?alt-as) :context ?new-akrl)
-		     (ont::eval (find-attr :result nil :feature possible-goal))
-		     -successful-interp1>
-		     (UPDATE-CSM (PROPOSED :content ?content
-				  :context ?new-akrl))
-		     (RECORD PROPOSAL-ON-TABLE (ONT::PROPOSE-GOAL
-						:content ?content
-						:context ?new-akrl))
-		     (RECORD ACTIVE-GOAL ?!goal)
-		     (RECORD ALT-AS ?alt-as)
-		     (RECORD ACTIVE-CONTEXT ?new-akrl)
-		     (INVOKE-BA :msg (EVALUATE 
-				      :content ?content
-				      :context ?new-akrl))
-		     )
-	  :destination 'propose-cps-act-response
-	  )
 
 
 	 (transition
@@ -629,6 +606,34 @@ ONT::INTERACT
 		     )
 	  :destination 'confirm-goal-with-BA
 	  )
+
+	 (transition
+	  :description "CSM returns a successful proposal interpretation"
+	  :pattern '((BA-RESPONSE X REPORT
+		      :psact (? act ADOPT ASSERTION ASSERT ASK-WH ASK-IF SELECT)
+		      :id ?!goal :as ?as 
+		      :content ?content :context ?new-akrl :alternative ?alt-as)
+		     ;;(BA-RESPONSE X ?!X :content ((? act ADOPT ASSERTION) :what ?!goal :as ?as :alternative ?alt-as) :context ?new-akrl)
+		     ;(ont::eval (find-attr :result nil :feature possible-goal))
+		     -successful-interp1>
+		     (UPDATE-CSM (PROPOSED :content ?content
+				  :context ?new-akrl))
+		     (RECORD PROPOSAL-ON-TABLE (ONT::PROPOSE-GOAL
+						:content ?content
+						:context ?new-akrl))
+		     (RECORD POSSIBLE-GOAL nil)
+		     (RECORD POSSIBLE-GOAL-ID nil)
+		     (RECORD POSSIBLE-GOAL-CONTEXT nil)
+		     (RECORD ACTIVE-GOAL ?!goal)
+		     (RECORD ALT-AS ?alt-as)
+		     (RECORD ACTIVE-CONTEXT ?new-akrl)
+		     (INVOKE-BA :msg (EVALUATE 
+				      :content ?content
+				      :context ?new-akrl))
+		     )
+	  :destination 'propose-cps-act-response
+	  )
+
 	 
 	 (transition
 	  :description "CSM returns a successful ANSWER interpretation"  
@@ -1149,7 +1154,7 @@ ONT::INTERACT
 	))
 
 (add-state 'clarify-abandon
- (state :action '(GENERATE :content (ONT::CLARIFY-ABANDON :content (V abandon-id) :context (V possible-res-context))) ; "do you still want to do abandon-id?
+ (state :action '(GENERATE :content (ONT::CLARIFY-ABANDON :content (V abandon-id)) :context (V possible-res-context)) ; "do you still want to do abandon-id?
 	:preprocessing-ids '(yes-no)
 	:implicit-confirm t
 	:transitions

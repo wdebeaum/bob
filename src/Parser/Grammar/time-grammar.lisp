@@ -22,10 +22,10 @@
 ;;(cl:setq *grammar-time-Values*
 (parser::augment-grammar
   '((headfeatures
-     (NP VAR KIND NAME PRO SPEC ATTACH Changeagr transform lex headcat)
-     (PP VAR KIND CASE MASS NAME agr SEM PRO SPEC QUANT ATTACH transform lex headcat)
-     (ADVBL SEM transform lex headcat)
-     (VALUE VAR transform lex headcat)
+     (NP VAR KIND NAME PRO SPEC ATTACH Changeagr transform lex orig-lex headcat)
+     (PP VAR KIND CASE MASS NAME agr SEM PRO SPEC QUANT ATTACH transform lex orig-lex headcat)
+     (ADVBL SEM transform lex orig-lex headcat)
+     (VALUE VAR transform lex orig-lex headcat)
      (time-value var transform headcat)
      )			
 
@@ -369,8 +369,12 @@
       ))
 
 
-     ;; m/s = meters per second
-      ((np (LF (% description (var ?v) (class ont::rate) (status indefinite) (constraint (& (repeats ?v1) (over-period ?per)))))
+    ;; m/s = meters per second
+    ;; added kg/ha etc
+    ((np (LF (% description (var ?v) (class ont::rate) (status indefinite)
+		(constraint (& (repeats ?v1)
+			       (over-unit ?per) ;(over-period ?per)
+			       ))))
             (var ?v) (case (? case sub obj)) (SORT UNIT-MEASURE) (AGR 3s)
             (time-converted +)
             (sem ($ f::abstr-obj (f::intentional -) (f::information -) (f::mobility -)
@@ -383,8 +387,11 @@
 		 (sem ?sem1)
 	          ))
        (punc (lex (? l slash punc-slash)))
-       (n (w::agr w::3s) (var ?v)	(LF ?per) (mass count)
-	(sem ($ f::time (f::scale ont::duration-scale))) (sem ?sem2)
+       (n (w::agr (? agr w::3s w::3p))  ; km is 3p: e.g., 5km
+	  (var ?v)	(LF ?per) (mass count)
+	  ;(sem ($ f::time (f::scale ont::duration-scale)))
+	  (sem ($ (? t f::time f::abstr-obj) (f::scale ont::measure-scale)))
+	  (sem ?sem2)
 	))
   
     ;; e.g., the gdp / gtp ratio
@@ -430,7 +437,7 @@
 ;;(cl:setq *grammar-TIME-LOC*
 (parser::augment-grammar
   '((headfeatures
-     (advbl headcat lex)
+     (advbl headcat lex orig-lex)
      (np pred  Changeagr transform headcat))
 
     
@@ -669,13 +676,13 @@
 (parser::augment-grammar
   '((headfeatures 
      (name var agr transform headcat)
-     (N1 var lex transform sem quantity subcat argument indef-only headcat)
-     (N var lex transform lf sem agr headcat)
-     (NP headcat lex)
-     (number-sequence headcat lex)
-     (mixed-sequence headcat lex)
+     (N1 var lex orig-lex transform sem quantity subcat argument indef-only headcat)
+     (N var lex orig-lex transform lf sem agr headcat)
+     (NP headcat lex orig-lex)
+     (number-sequence headcat lex orig-lex)
+     (mixed-sequence headcat lex orig-lex)
      (nname headcat)
-     (rnumber headcat lex restr var)
+     (rnumber headcat lex orig-lex restr var)
      (number headcat)
      )    
 
@@ -1309,8 +1316,8 @@
 
 (parser::augment-grammar
   '((headfeatures 
-     (DATE lex headcat agr)
-     (number ntype var lex headcat)
+     (DATE lex orig-lex headcat agr)
+     (number ntype var lex orig-lex headcat)
      )
 ;; Monday
     ((DATE (INT +) (LF ONT::DAY-NAME) (DOW ?var) (var *)
@@ -1326,8 +1333,8 @@
 ;; lex and headcat added for aug-trips
 (parser::augment-grammar
   '((headfeatures 
-     (DATE var lex headcat agr)
-     (number ntype var lex headcat)
+     (DATE var lex orig-lex headcat agr)
+     (number ntype var lex orig-lex headcat)
      )
 
   ;; 2004
