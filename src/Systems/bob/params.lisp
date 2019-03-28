@@ -52,7 +52,7 @@
 	;;
 	(parser::*kr-type-info-desired* '(:WNsense :DRUM :wordnet))
 	;; add spell-corrected lex and original lex
-	(parser::*add-lex-to-lf* t)
+	;(parser::*add-lex-to-lf* t)
 	(parser::*add-orig-lex-to-lf* t)
 	;;
 	((setf (parser::flexible-semantic-matching parser::*chart*) t))
