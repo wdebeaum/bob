@@ -738,7 +738,8 @@
 	    (:* ?!type (? word W::PROTEIN W::GENE W::DRUG W::KINASE W::SITE W::POSITION W::MOLECULE W::DOMAIN W::PROMOTER W::MRNA W::TRANSCRIPT W::RECEPTOR-TYROSINE-KINASE W::PATHWAY W::COMPLEX W::PROTEINS W::GENES W::DRUGS W::KINASES W::SITES W::POSITIONS W::MOLECULES W::DOMAINS W::PROMOTERS W::MRNAS W::TRANSCRIPTS W::RECEPTOR-TYROSINE-KINASES W::PATHWAYS W::COMPLEXES))
 	    :ASSOC-WITHS (?!name))
 ;	   (?reln1 ?!name (:* (? type1 ONT::REFERENTIAL-SEM) ?w) :NAME-OF ?!name1 :DRUM ?code)
-	   (?reln1 ?!name (:* (? type1 ONT::REFERENTIAL-SEM) ?!w)
+	   ;(?reln1 ?!name (:* (? type1 ONT::REFERENTIAL-SEM) ?!w)
+	   (?reln1 ?!name (:* (? !type1 ONT::ABSTRACT-OBJECT ONT::PART ONT::PHYS-OBJECT ONT::SITUATION-ROOT ONT::SPEECH-ACT ONT::ANY-TIME-OBJECT) ?!w)
 		   ;:NAME-OF ?!name1
 		   :DRUM -   ;; make sure it is not a known term; no :DRUM info
 		   :wnsense -)  ;; make sure it is not in WordNet
