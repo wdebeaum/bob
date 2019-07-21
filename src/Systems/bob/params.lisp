@@ -46,7 +46,8 @@
 	(parser::*beam-width* 20)
 	;; max number of constituents built before stopping
 ;	((parser::setmaxnumberentries 2000))
-	((parser::setmaxnumberentries 6000))
+;	((parser::setmaxnumberentries 6000))
+	((parser::setmaxnumberentries 8000))
 	;;
 	((parser::setmaxchartsize 8000))
 	;;

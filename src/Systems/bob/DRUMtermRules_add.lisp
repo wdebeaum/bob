@@ -623,7 +623,8 @@ ONT::INHIBIT-EFFECT ONT::CAUSE-COME-FROM ONT::REMOVE-FROM ONT::RENDER-INEFFECTIV
 	    :LOC ?!modBP
 	    :rule -location6-gd
 	    ))
-	  
+
+	  #| perhaps good for drum but not for bob
 	  ; Ras is active
           ((;(? reln0  ONT::F ONT::QUANTIFIER ONT::KIND ONT::A ONT::INDEF-PLURAL ONT::THE ONT::THE-SET ONT::INDEF-SET ONT::BARE ONT::SM ONT::PRO ONT::PRO-SET) ?ev
 	    ?reln0 ?ev
@@ -651,6 +652,7 @@ ONT::INHIBIT-EFFECT ONT::CAUSE-COME-FROM ONT::REMOVE-FROM ONT::RENDER-INEFFECTIV
 	    :active ONT::FALSE
 	    :rule -active4
 	    ))
+	  |#
 
 	  #|
 	  ; conserved domain
