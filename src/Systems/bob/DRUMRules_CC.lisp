@@ -72,7 +72,7 @@
            -inevent3a>
            100
 	   (?reln ?ev ?type
-	    :rule -inevent2
+	    :rule -inevent3a
 	    :INEVENT ?!ev2
 	    )
           )
@@ -83,7 +83,7 @@
            -inevent3b>
            100
 	   (?reln ?ev ?type
-	    :rule -inevent2
+	    :rule -inevent3b
 	    :INEVENT ?!ev2
 	    )
           )
@@ -93,7 +93,7 @@
            -inevent3c>
            100
 	   (?reln ?ev ?type
-	    :rule -inevent2
+	    :rule -inevent3c
 	    :INEVENT ?!ev2
 	    )
           )
@@ -103,7 +103,7 @@
            -inevent3d>
            100
 	   (?reln ?ev ?type
-	    :rule -inevent2
+	    :rule -inevent3d
 	    :INEVENT ?!ev2
 	    )
           )
@@ -113,7 +113,7 @@
            -inevent3e>
            100
 	   (?reln ?ev ?type
-	    :rule -inevent2
+	    :rule -inevent3e
 	    :INEVENT ?!ev2
 	    )
           )
@@ -123,7 +123,7 @@
            -inevent3f>
            100
 	   (?reln ?ev ?type
-	    :rule -inevent2
+	    :rule -inevent3f
 	    :INEVENT ?!ev2
 	    )
           )
@@ -133,7 +133,7 @@
            -inevent3g>
            100
 	   (?reln ?ev ?type
-	    :rule -inevent2
+	    :rule -inevent3g
 	    :INEVENT ?!ev2
 	    )
           )
