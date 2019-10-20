@@ -19,3 +19,5 @@ ONT::CAUSE-COME-FROM => ONT::BUILD-MODEL
 # find stuff: could be restricted to => ONT::BUILD-MODEL,ONT::FIND-TREATMENT
 ONT::DETERMINE => 
 
+# for SIFT/Tufts read-file kludge
+ONT::READ =>
