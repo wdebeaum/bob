@@ -163,15 +163,21 @@ the file, with dashes. No need to unpack it.</li>
 
 <p>TextTagger also requires the following dependencies (you might already have them, though):</p>
 <ul>
-<li><a href="http://xmlsoft.org/XSLT/xsltproc2.html">xsltproc</a> (used to process the XML output of MetaMap)</li>
 <li><a href="http://www.perl.org/">Perl</a> &gt;= 5.6?</li>
-<li><a href="http://www.java.com/">Java</a> &gt;= 1.5 (used for the Stanford components)</li>
-<li>A C compiler (e.g. <a href="http://gcc.gnu.org">GCC</a>) (used for the Terms tagger)</li>
 <li><a href="http://www.gnu.org/software/make/">GNU Make</a> (other versions of make might work too)</li>
 <li><a href="http://www.gnu.org/software/bash/">Bash</a></li>
-<li><a href="http://aspell.net/">GNU Aspell</a> (used for the Misspellings tagger)</li>
 <li>Other common UNIX tools like cut, sort, uniq, iconv, unzip, etc.</li>
 <li>Other parts of TRIPS, including KQML, TripsModule, and the Facilitator. TextTagger also makes symlinks to a couple of Perl libraries that live in TextPP.</li>
+</ul>
+
+<p>And it often requires these common dependencies, depending on which taggers are included:</p>
+<ul>
+<li><a href="http://xmlsoft.org/XSLT/xsltproc2.html">xsltproc</a> (used to process the XML output of MetaMap and StanfordCoreNLP)</li>
+<li><a href="http://www.java.com/">Java</a> &gt;= 1.5 (used for the Stanford components)</li>
+<li>A C/C++ compiler (e.g. <a href="http://gcc.gnu.org">GCC</a>) (used for compiling terms.c and/or terms2.cpp, which are used by Asma, Countries, Drum, NamesFromFile, PersonalNames, PlaceNames, PseudoMetaMap, Specialist, TermsFromFile, Terms, and WordNet)</li>
+<li>The <a href="http://site.icu-project.org/home">ICU</a> C++ library (used in terms2.cpp, which is used by Countries, Drum, PlaceNames, Specialist, TermsFromFile; in this case your C++ compiler must support the C++11 standard, specifically the <code>char16_t</code> type)</li>
+<li><a href="https://www.freedesktop.org/wiki/Software/pkg-config/">pkg-config</a> (used to find ICU)</li>
+<li><a href="http://aspell.net/">GNU Aspell</a> (used for the Misspellings tagger)</li>
 </ul>
 
 </div>
@@ -241,7 +247,7 @@ that when <code>utterance</code>s are sent in rapid succession, relying on
 <code>utterance</code> is error-prone because you might get a
 <code>started-speaking</code> for the next utterance/sentence from the original
 sender before the <code>utterance</code> for the previous utterance from
-TextTagger.)</p>
+TextTagger. See the section on <a href="#sec-4.1.3.">splitting utterances</a>.)</p>
 </div>
 
 <div class="section">
@@ -497,7 +503,7 @@ output it.</p>
 
 <p>For example, if you wanted to get all part of speech tags except those produced by minipar, you would use <code>:type (and (type pos) (not (source minipar)))</code></p>
 
-<p>In general, you don't need to worry about the order of taggers/tag types in the <code>:type</code> argument. Each tagger has lists of tag types that it requires as input, that it may optionally use as input, and that it may output. TextTagger uses this information to select taggers that output types required by already-selected taggers, and to sort the final list of taggers to be run so that each tagger has all the input tags it needs when it runs. There are no cycles in the dependency graph formed by all the taggers and types in TextTagger, except that some taggers output some of the same tag types that they optionally take as input. These loopy taggers are sorted after other taggers outputting that type and before other taggers inputting that type.</p>
+<p>In general, you don't need to worry about the order of taggers/tag types in the <code>:type</code> argument. Each tagger has lists of tag types that it requires as input, that it may optionally use as input, and that it may output. TextTagger uses this information to select taggers that output types required by already-selected taggers, and to sort the final list of taggers to be run so that each tagger has all the input tags it needs when it runs. There are no cycles in the <a href="#sec-5.4.">dependency graph</a> formed by all the taggers and types in TextTagger, except that some taggers output some of the same tag types that they optionally take as input. These loopy taggers are sorted after other taggers outputting that type and before other taggers inputting that type.</p>
 </div>
 
 <div class="section">
@@ -511,32 +517,33 @@ output it.</p>
 <div class="section">
 <h4>:imitate-keyboard-manager</h4>
 <p><code>:imitate-keyboard-manager <var>boolean</var></code> (default nil)</p>
-<p>Send the same kinds of messages that KeyboardManager would send, sending both the whole utterance and each word (tag) individually in its own message. Reply with a message like <code>(tell :content (ok :uttnums <var>list-of-utterance-numbers</var>))</code>, giving all the utterance numbers output for this request.</p>
+<p>Send the same kinds of messages that KeyboardManager would send, sending both the whole utterance and each word (tag) individually in its own message. Reply with a message like <code>(reply :content (ok :uttnums <var>list-of-utterance-numbers</var>))</code>, giving all the utterance numbers output for this request.</p>
 <p><code>sentence</code> tags are required in order to make uttnums. If <code>:type</code> doesn't already have a source of <code>sentence</code> tags (Sentences, OneSentencePerLine, or StanfordCoreNLP), the Sentences tagger will be selected by mapping <code>:type <var>type</var></code> to <code>:type (or sentences <var>type</var>)</code>. Note that using both dedicated sentence taggers at the same time will lead to bad results. But if StanfordCoreNLP and another sentence tagger are selected, StanfordCoreNLP will consume rather than produce sentence tags, so there will be no conflict.</p>
+<p>See also <a href="#sec-4.1.3.">splitting utterances</a>.</p>
 </div>
 
 <div class="section">
 <h4>:split-clauses</h4>
 <p><code>:split-clauses <var>boolean</var></code> (default nil)</p>
-<p>(implies that <code>:type</code> includes <code>clauses</code>) Treat each clause from the Clauses tagger as its own utterance. Note that while other taggers may produce clause tags, only those from the Clauses tagger are used, since it in turn uses the clauses from other taggers to filter its clause boundaries. When used without <code>:imitate-keyboard-manager t</code>, this still adds uttnums and some of the extra messages that that option would, but the messages are packed into the reply rather than sent individually.</p>
+<p>(implies that <code>:type</code> includes <code>clauses</code>) Treat each clause from the Clauses tagger as its own utterance. Note that while other taggers may produce clause tags, only those from the Clauses tagger are used, since it in turn uses the clauses from other taggers to filter its clause boundaries. When used without <code>:imitate-keyboard-manager t</code>, this still adds uttnums and some of the extra messages that that option would, but the messages are packed into the reply rather than sent individually. See also <a href="#sec-4.1.3.">splitting utterances</a>.</p>
 </div>
 
 <div class="section">
 <h4>:split-sentences</h4>
 <p><code>:split-sentences <var>boolean</var></code> (default nil)</p>
-<p>Treat each sentence as its own utterance. When used without <code>:imitate-keyboard-manager t</code>, this still adds uttnums and some of the extra messages that that option would, but the messages are packed into the reply rather than sent individually.</p>
+<p>Treat each sentence as its own utterance. When used without <code>:imitate-keyboard-manager t</code>, this still adds uttnums and some of the extra messages that that option would, but the messages are packed into the reply rather than sent individually. See also <a href="#sec-4.1.3.">splitting utterances</a>.</p>
 </div>
 
 <div class="section">
 <h4>:paragraph</h4>
 <p><code>:paragraph <var>boolean</var></code> (default t if :split-* is t and :imitate-keyboard-manager is t, nil otherwise)</p>
-<p>Treat the text as a paragraph. That is, send <code>start-</code> and <code>end-paragraph</code> messages before and after the rest of the messages, respectively. It's useful to set e.g. <code>:split-clauses t :paragraph nil</code> if you're sending the sentences in a paragraph individually through TextTagger, and you want to send <code>start-</code> and <code>end-paragraph</code> yourself.</p>
+<p>Treat the text as a paragraph. That is, send <code>start-</code> and <code>end-paragraph</code> messages before and after the rest of the messages, respectively. It's useful to set e.g. <code>:split-clauses t :paragraph nil</code> if you're sending the sentences in a paragraph individually through TextTagger, and you want to send <code>start-</code> and <code>end-paragraph</code> yourself. See also <a href="#sec-4.1.3.">splitting utterances</a>.</p>
 </div>
 
 <div class="section">
 <h4>:next-uttnum</h4>
 <p><code>:next-uttnum <var>integer</var></code> (default 1 + the last uttnum output, or 0 if :paragraph was t last time)</p>
-<p>Use the given number for the next :uttnum in the output. You can set this to 0 for the first in a sequence of <code>:paragraph nil</code> requests representing a paragraph, and the following requests will use the automatically incremented value.</p>
+<p>Use the given number for the next :uttnum in the output. You can set this to 0 for the first in a sequence of <code>:paragraph nil</code> requests representing a paragraph, and the following requests will use the automatically incremented value. See also <a href="#sec-4.1.3.">splitting utterances</a>.</p>
 </div>
 
 <div class="section">
@@ -635,7 +642,7 @@ sentences <var>foo</var>)</code> (see
 <code>:split-clauses</code> is <code>t</code>, sentence and clause tags are not
 output, but without it, they are. This includes the case
 <code>:imitate-keyboard-manager t :split-clauses nil</code>, where you'll get
-sentence tags even if you didn't explicitly ask for them.</p>
+sentence tags even if you didn't explicitly ask for them. See also <a href="#sec-4.1.3.">splitting utterances</a>.</p>
 </div>
 
 <div class="section">
@@ -809,11 +816,65 @@ fake KQML message using <code>receive_request</code>. The taggers in the <a href
 <div class="section">
 <h4>Combining tags</h4>
 <p>For lattice format only, TextTagger combines tags that are for the same span of text. These may come from different taggers, or the same tagger may output multiple different tags representing different options for interpreting the text, or representing different kinds of information. For the gory details on how this combination is done, see <a href="../Perl/TextTagger/CombineTags.pm"><code>CombineTags.pm</code></a>. But the general strategy is described here.</p>
-<p>There are a couple things to note before we get to combining tags for the same span, which involve combining tags for different spans. First, if we have a sense tag for a span with no POS information at all, it usually means it's a sense tag for a multi-word expression that was never itself POS-tagged. But the individual words might have been. So we look at POS tags for spans contained within the sense tag's span, and using some simple heuristics, we try to guess the POS for the whole span. Failing that, we guess that it's a noun of some kind and print a warning. (This part is in <a href="../Perl/TextTagger/ExtraArgs.pm"><code>ExtraArgs.pm</code></a>.)</p>
-<p>Second, we remove phrase tags that overlap with other phrase tags without nesting. For example, if the input is "A B C", and we get phrase tags covering "A B", "B C", and "A B C", the first two will be removed. We always do this; it's not affected by the <a href="#sec-3.1.15."><code>-parsers-must-agree</code></a> option.</p>
+<p>There are a few things to note before we get to combining tags for the same span, which involve combining tags for different spans:</p>
+<ul>
+ <li>If there are quotation tags, we use them to adjust any sentence and clause tags such that: quotations are always completely within a single sentence, any sentences within quotations are converted to clauses, and clauses are always completely within or completely outside quotations. (This part is in <a href="../Perl/TextTagger/Tags2Trips.pm"><code>Tags2Trips.pm</code></a>.)</li>
+ <li>If we have a sense tag for a span with no POS information at all, it usually means it's a sense tag for a multi-word expression that was never itself POS-tagged. But the individual words might have been. So we look at POS tags for spans contained within the sense tag's span, and using some simple heuristics, we try to guess the POS for the whole span. Failing that, we guess that it's a noun of some kind and print a warning. (This part is in <a href="../Perl/TextTagger/ExtraArgs.pm"><code>ExtraArgs.pm</code></a>.)</li>
+ <li>We remove phrase tags that overlap with other phrase tags without nesting. For example, if the input is "A B C", and we get phrase tags covering "A B", "B C", and "A B C", the first two will be removed. We always do this; it's not affected by the <a href="#sec-3.1.15."><code>-parsers-must-agree</code></a> option.</li>
+</ul>
 <p>Now we come back to combining tags for the same span. We divide the set of tags into POS (with no sense), sense (with optional POS), phrase, and other tags. We also collect the set of alternate spellings (strings not tags). We discard the other tags (which are things like clause, quotation, and spaced-chunk tags that don't fit in the word/prefix/prefer messages), and if the <a href="#sec-3.1.15."><code>-parsers-must-agree true</code></a> option was given we keep a phrase tag only if all phrase taggers (parsers) that tagged the current text at all agree on it (otherwise we keep all phrase tags). We combine sense tags for the same set of senses (and parts of speech if they have them) and take the union of their <code>:domain-specific-info</code>s. Sense tags without <code>:domain-specific-info</code> are combined even if their sense sets differ, by taking the union of the sets. Any alternate spellings are added only to the senses that matched them; any left over are used to form a new sense option (though at this point it has no actual sense information, just the spelling). As a special case, if we have exactly one sense tag from any of the input taggers (Input, TermsFromFile, TermsInput, or XMLInput), we use that and discard the rest. POS tags are more complicated.</p>
 <p>Each POS tag may contain a set of multiple parts of speech. We divide the set of POS tags for a span into "intersected", "unioned", and "fallback" sets, based on which tagger they came from. We take the union of the unioned tags, and try to intersect that union with all of the intersected tags. Then we try to combine those POS tags with the sense tags that already have POS tags, again by taking the intersection with each sense's POS tags (if some senses have an empty intersection but others don't, the empty ones are eliminated). In several stages I won't go into here, we weaken this whole intersection process until we actually get some information out. Any sense tags that didn't start out with POS information get the set of POS tags we had before we intersected it with any of the other sense tags. If at the end we still don't have any POS tags, we just use the union of the fallback tags. The <code>:domain-specific-info</code> from any POS tags that have it is added to each combined POS tag if the combined tag has a (non-strict) subset of the set of parts of speech from the tag with the <code>:domain-specific-info</code>.</p>
 <p>Currently, POS tags from the Specialist tagger are the only fallback tags, and POS tags from the following taggers are unioned tags (the rest are intersected): POS (stanford-pos), StanfordParser, StanfordCoreNLP, CJParser, Enju, and the input taggers listed above. POS tags for multi-word expressions that were added as described above are also unioned.</p>
+</div>
+
+<div class="section">
+<h4>Splitting the message sequence into utterances</h4>
+<p>When using the output of the <a href="#sec-3.5."><code>tag</code></a> request as input to the Parser, you should use <a href="#sec-3.5.4."><code>:imitate-keyboard-manager t</code></a>. This will result in a sequence of messages like this, in general:</p>
+<blockquote><samp>
+(tell :content (start-paragraph :id <var>paragraph-id</var>))
+
+(tell :content (started-speaking <var>extra-tag-args</var> :uttnum <var>uttnum-1</var>))
+(tell :content (stopped-speaking <var>extra-tag-args</var> :uttnum <var>uttnum-1</var>))
+[word, prefix, and prefer messages for sentence 1, clause 1, with <var>extra-tag-args</var> and :uttnum <var>uttnum-1</var>]
+(tell :content (utterance <var>extra-tag-args</var> :uttnum <var>uttnum-1</var> :text "<var>sentence-1-clause-1-text</var>"))
+
+(tell :content (started-speaking <var>extra-tag-args</var> :uttnum <var>uttnum-1</var>))
+(tell :content (stopped-speaking <var>extra-tag-args</var> :uttnum <var>uttnum-1</var>))
+[word, prefix, and prefer messages for sentence 1, clause 2, with <var>extra-tag-args</var> and :uttnum <var>uttnum-1</var>]
+(tell :content (utterance <var>extra-tag-args</var> :uttnum <var>uttnum-1</var> :text "<var>sentence-1-clause-2-text</var>"))
+
+(tell :content (started-speaking <var>extra-tag-args</var> :uttnum <var>uttnum-2</var>))
+(tell :content (stopped-speaking <var>extra-tag-args</var> :uttnum <var>uttnum-2</var>))
+[word, prefix, and prefer messages for sentence 2, clause 1, with <var>extra-tag-args</var> and :uttnum <var>uttnum-2</var>]
+(tell :content (utterance <var>extra-tag-args</var> :uttnum <var>uttnum-2</var> :text "<var>sentence-2-clause-1-text</var>"))
+
+...
+
+(tell :content (end-paragraph :id <var>paragraph-id</var>))
+(reply :content (ok :uttnums (<var>uttnum-1</var> <var>uttnum-2</var> ...)))
+</samp></blockquote>
+<p>There are several things to note about this, though:</p>
+<ul>
+ <li>A chunk of messages starting with <code>started-speaking</code> and ending with <code>utterance</code> represents an "utterance".</li>
+ <li>With <a href="#sec-3.5.5."><code>:split-clauses t</code></a>, utterances correspond to clauses, but <code>:uttnum</code> counts sentences, so you can have multiple utterances with the same <code>:uttnum</code>.</li>
+ <li>With only <a href="#sec-3.5.6."><code>:split-sentences t</code></a>, utterances correspond to sentences, so in this case utterances and <code>:uttnum</code>s are 1:1.</li>
+ <li>With neither (the default, <code>:split-clauses nil :split-sentences nil</code>), you will only get one utterance and one <code>:uttnum</code> for the whole input text.</li>
+ <li>Using <a href="#sec-3.1.5."><code>-process-input-utterances yes</code></a> and the actual KeyboardManager will have a similar effect (no splitting).</li>
+ <li>The <code>UTT</code> structures that come out of the Parser mostly correspond to utterances, not <code>:uttnum</code>s (though they can be further fragmented in <code>COMPOUND-COMMUNICATION-ACT</code>s). Yes, the naming is confusing.</li>
+ <li>You will only get the <code>start/end-paragraph</code> messages with <a href="#sec-3.5.7.">:paragraph t</a> (which is the default when splitting utterances and imitating KeyboardManager; otherwise it's <code>nil</code>).</li>
+ <li>The <var>extra-tag-args</var> come from the <a href="#sec-3.5.14."><code>:extra-tag-args</code></a> argument (or the input <code>utterance</code> message), and will usually be something like <code>:channel Desktop :direction input</code>; specifying <code>:imitate-keyboard-manager t</code> will add those arguments if they're not already specified with <code>:extra-tag-args</code>.</li>
+</ul>
+
+<p>When utterance splitting is requested (<code>:split-clauses t</code> or <code>:split-sentences t</code>), TextTagger will ensure the appropriate tags are produced by modifying the <a href="#sec-3.5.2."><code>:type</code></a> argument if necessary. If no sentence tags would otherwise be produced (not counting those produced by the input taggers, which might produce any type of tag), the <code>sentences</code> tagger will be added to the <code>:type</code>. If clause splitting is requested, the <code>clauses</code> tagger will be added (even if other clause tags might be produced, e.g. by CoreNLP).</p>
+
+<p>However, merely specifying a <code>:type</code> (or <a href="#sec-3.1.4."><code>-default-type</code></a>) that would produce sentence or clause tags is not sufficient to turn on sentence or clause splitting. You must also use <code>:split-clauses t</code> or <code>:split-sentences t</code> as appropriate, if you want multiple utterances as in the above sample message sequence.</p>
+
+<p>Specifying <code>:imitate-keyboard-manager t</code> without splitting will also ensure that sentence tags are produced (in the same way as <code>:split-sentences t</code>), but they will then merely become <code>prefer</code> messages.</p>
+
+<p>Note that there are no corresponding <a href="#sec-3.1.">command-line</a> (or <a href="#sec-3.1.1.">config-file</a>) parameters for <code>:split-clauses</code> and <code>:split-sentences</code>, and you can't set them with <a href="#sec-3.2."><code>set-parameters</code></a>. You can only use them directly with a <code>tag</code> request. This is because they affect not just which tags are output or what is in each tag, but the overall structure of the sequence of output tags/messages. Whatever TRIPS module is sending input to TextTagger (and presumably expecting corresponding output from the Parser or IM) needs to know about that structure.</p>
+
+<p>If you're using the Lisp functions defined in <code><var>$TRIPS_BASE</var>/src/Systems/core/test.lisp</code> to send input through TextTagger to the Parser, you can select how you want utterances to be split by setting the Lisp variable <code>*texttagger-split-mode*</code> to <code>:split-clauses</code> or <code>:split-sentences</code>. Setting it to <code>nil</code> disables utterance splitting. The <code>*use-texttagger*</code> Lisp variable must also be set to <code>t</code> for these functions to send input via TextTagger at all (if it's <code>nil</code>, the input goes directly to the Parser instead). This <em>only</em> applies to input sent using these functions, not input sent via other modules such as KeyboardManager, SpeechIn, WebParser (including <code>batch.rb</code>), or DrumGUI, nor input sent using the <code>p</code> function defined in the Parser itself.</p>
+
 </div>
 
 </div>
@@ -962,7 +1023,7 @@ named-entity with LF type <code>REFERENTIAL-SEM</code>.</td>
 <td></td>
 <td></td>
 <td>Splits sentences into clauses at certain punctuation (e.g. commas), as long
-as the clauses end up long enough, and they agree with other sources of clause tags if enabled.</td>
+as the clauses end up long enough, and they agree with other sources of clause tags if enabled. Only clauses from this tagger are used for <a href="#sec-3.5.5."><code>:split-clauses t</code></a> mode. See also <a href="#sec-4.1.3.">splitting utterances</a>.</td>
 </tr><tr>
 <td>Countries</td>
 <td>named-entity</td>
@@ -1049,13 +1110,19 @@ a real KQML connection to talk to the Minipar TRIPS module.</td>
 <td>sentence</td>
 <td></td>
 <td></td>
-<td>Tags nonempty lines as sentences.</td>
+<td>Tags nonempty lines as sentences. See also <a href="#sec-4.1.3.">splitting utterances</a>.</td>
 </tr><tr>
 <td>PersonalNames</td>
 <td>named-entity</td>
 <td>X</td>
 <td></td>
 <td>Uses the <a href="https://www.ssa.gov/oact/babynames/limits.html">SSA names list</a> to tag personal names, with their gender if it's not too ambiguous.</td>
+</tr><tr>
+<td>PlaceNames</td>
+<td>named-entity</td>
+<td>X</td>
+<td>X</td>
+<td>Looks up place names from several resources (including those of the Countries and Terms taggers, among others), in a similar way to the Drum tagger.</td>
 </tr><tr>
 <td>POS (stanford-pos)</td>
 <td>pos</td>
@@ -1086,7 +1153,7 @@ in the string.</td>
 <td>quotation</td>
 <td></td>
 <td></td>
-<td>Tag double-quoted strings.</td>
+<td>Tag double-quoted strings. These quotation tags aren't directly output in <a href="#sec-4.1.">lattice format</a>, but instead <a href="#sec-4.1.2.">affect sentence and clause tags</a>.</td>
 </tr><tr>
 <td>RomanNumerals</td>
 <td>number</td>
@@ -1099,7 +1166,7 @@ in the string.</td>
 <td></td>
 <td></td>
 <td>Uses the <a href="http://search.cpan.org/~shlomoy/Lingua-EN-Sentence-0.25/lib/Lingua/EN/Sentence.pm"><code>Lingua::EN::Sentence</code></a>
-Perl module to split the string into sentences.</td>
+Perl module to split the string into sentences. See also <a href="#sec-4.1.3.">splitting utterances</a>.</td>
 </tr><tr>
 <td>SpacedChunks</td>
 <td>spaced-chunk</td>
@@ -1153,6 +1220,12 @@ named-entity with LF type <code>GEOGRAPHIC-REGION</code>.</td>
 <td></td>
 <td></td>
 <td>Tags anything matching the <a href="#sec-4.2."><code>:lex</code> (or <code>:text</code>) argument</a> of any of the tags from the input terms list with a copy of the matching tag(s). See <a href="#sec-3.6.">the load-, add-, get-, and clear-input-terms requests</a> and <a href="#sec-3.5.12.">the <code>:input-terms</code> argument</a> to <a href="#sec-3.5.">the tag request</a>. Matching is done case-insensitively, and allows the insertion of various kinds of dash.</td>
+</tr><tr>
+<td>Units</td>
+<td>sense</td>
+<td>X</td>
+<td></td>
+<td>Tags units of measure as nouns with lftypes under <code>MEASURE-UNIT</code> according to their dimensions. Uses the installed <code>units</code> program (e.g. <a href="https://www.gnu.org/software/units/">GNU Units</a>) for its unit definitions. The <code>:units</code> fields of the <code>:domain-specific-info</code> structures produced by the Units tagger may be fed directly to the UnitConverter2 TRIPS module's <code>convert-units</code> request.</td>
 </tr><tr>
 <td>VariantLists</td>
 <td>alternate-spelling</td>
@@ -1209,7 +1282,7 @@ foo BarBaz don't 123,456 12EA56
 <tr><td>punctuation</td><td>Punctuation, StanfordCoreNLP</td></tr>
 <tr><td>quotation</td><td>Quotations</td></tr>
 <tr><td>sentence</td><td>OneSentencePerLine, Sentences, StanfordCoreNLP</td></tr>
-<tr><td>sense</td><td>ChemicalFormulae, Disambiguator, Drum, Gold, MetaMap, Music, WordNet</td></tr>
+<tr><td>sense</td><td>ChemicalFormulae, Disambiguator, Drum, Gold, MetaMap, Music, Units, WordNet</td></tr>
 <tr><td>spaced-chunk</td><td>SpacedChunks</td></tr>
 <tr><td>street-address</td><td>StreetAddresses</td></tr>
 <tr><td>subnumber</td><td>Words</td></tr>
@@ -1244,6 +1317,7 @@ to the tag request. Sense tags emitted by the Disambiguator tagger may also have
 <tr><td>LOCATION-ID</td><td>StreetAddresses</td></tr>
 <tr><td>LONG-TERM-CONTROL-DRUG</td><td>Asma</td></tr>
 <tr><td>MALE-PERSON</td><td>PersonalNames</td></tr>
+<tr><td>MEASURE-UNIT</td><td>Units (also uses subtypes)</td></tr>
 <tr><td>NATIONALITY</td><td>Countries</td></tr>
 <tr><td>NATIONALITY-VAL</td><td>Countries</td></tr>
 <tr><td>ORGANIZATION</td><td>NamedEntities, StanfordCoreNLP</td></tr>
@@ -1292,7 +1366,7 @@ to the tag request. Sense tags emitted by the Disambiguator tagger may also have
 <h4>Scoring</h4>
 <p>The result of the table lookup has both the unnormalized form of the term constructed from the lattice entries, and the unnormalized form of each matching term from one of our data sources. These two forms are not in general the same, but they do normalize to the same string. We count the ways in which they differ (which can only involve letter case and the presence or absence of dashes; we ignore the specific type of dash used, and the amount of whitespace), and that contributes to a match score, along with the status of the term in the data source it came from, and whether a depluralized or spelling-corrected lattice entry contributed to the match. Higher scores are better (i.e. they are not costs, but benefits).</p>
 
-<p>The status score is a simple hand-built ranking of the status annotations from all of the data sources, ranging from 0 to 5 (except that we add 1 for terms from the BioEntities (BE) source, so it's really 0 to 6):</p>
+<p>The status score is a simple hand-built ranking of the status annotations from all of the data sources, ranging from 0 to 5 (except that we add 1 for terms from the FamPlex (FPLX) source, so it's really 0 to 6):</p>
 <table>
 <tr><th>score</th><th>meaning</th><th>status annotations</th></tr>
 <tr><td>5</td><td>the most official name or abbreviation</td>
@@ -1314,12 +1388,12 @@ to the tag request. Sense tags emitted by the Disambiguator tagger may also have
 
 <p>The depluralization score is basically 2 if no depluralization was necessary to match the term, 1 if only one word in the term was depluralized, and 0 if more than one word was depluralized. But we also add the worst (i.e. minimum) score of any depluralized word in the term, which is between 0 and 1. That comes from the Specialist tagger, and it uses only the case/dash match score, because the other two components are not available to it. In total, the depluralization score is still between 0 and 2, because when the base score is 2 there is no worst score for a depluralized word, because there is no depluralized word.</p>
 
-<pre>depluralization_score =
+<blockquote><pre>depluralization_score =
     _
    |  2 <b>if</b> 0 lattice entries were depluralized
   &lt;   1 + (the score of the depluralized entry) <b>if</b> 1 lattice entry was depluralized
    |_ (the minimum score of all depluralized entries) <b>otherwise</b>
-</pre>
+</pre></blockquote>
 
 <p>The case/dash match score has several components, which are mostly based on counting the number of places in which the two unnormalized forms of the term differ in particular ways. So first we need to characterize those differences. Call the form derived from the input text A, and the form derived from the data source B. We align A and B so that the corresponding letters line up, and split them into the same sequence of words, such that if there is a dash in either A or B, it will split the word it is in in both A and B. We also count the dashes in A that aren't in B (<code>dash-no-dash</code>) and vice versa (<code>no-dash-dash</code>). (As a special case, we discard matches that involve such dash mismatches between digits.) Then we check whether each word matches exactly in A and B (<code>exact</code>), and if they don't, we characterize the case patterns of A's version and B's version and count that pairing of characterizations. The possible case pattern characterizations are:</p>
 <dl>
@@ -1359,7 +1433,7 @@ to the tag request. Sense tags emitted by the Disambiguator tagger may also have
 </dl>
 
 <p>These subcomponents are combined as if they were digits in a number. The base depends on which place the digit is in, since the subcomponents are integers with different ranges. This ensures that the smallest possible change in a more-important subcomponent has a larger effect on the case/dash score than the largest possible change in a less-important subcomponent. The number is then divided by the product of the "bases", minus one. This ensures that the case/dash score is between 0 and 1. The final formula (formatted to emphasize the digits-in-a-number interpretation) is:</p>
-<pre>case_dash_score =
+<blockquote><pre>case_dash_score =
   (((((((0
   ) * 2 + short_abbr
   ) * 3 + mixed
@@ -1368,23 +1442,23 @@ to the tag request. Sense tags emitted by the Disambiguator tagger may also have
   ) * 5 + combo
   ) * 3 + dash
   ) / 539
-</pre>
+</pre></blockquote>
 
 <p>Finally, the status score, spelling correction score, depluralization score, and case/dash score are themselves combined in a similar way:</p>
-<pre>final_score =
+<blockquote><pre>final_score =
   (((((0
   ) * 7 + status_score
   ) * 2 + spelling_correction_score
   ) * 3 + depluralization_score
   ) * 2 + case_dash_score
   ) / 83
-</pre>
+</pre></blockquote>
 </div>
 
 <div class="section">
 <h4>Ontology mapping</h4>
 
-<p>Most of our data sources have is-a hierarchies, or something similar. When we look up a term and get an ID belonging to one of these data sources, we travel up the hierarchy until we reach an ID with a mapping into the TRIPS ontology. These mappings are defined in <code>drum-mappings.lisp</code> (except for BE which defines its own TRIPS mappings). Traversal of the hierarchy, as well as caching, are handled separately from TextTagger by the DeepSemLex TRIPS module. Some data sources use multiple inheritance, so this can result in multiple mappings to different ONT types. If a traversal yields no TRIPS mappings for a match, the match is discarded.</p>
+<p>Most of our data sources have is-a hierarchies, or something similar. When we look up a term and get an ID belonging to one of these data sources, we travel up the hierarchy until we reach an ID with a mapping into the TRIPS ontology. These mappings are defined in <code>drum-mappings.lisp</code>. Traversal of the hierarchy, as well as caching, are handled separately from TextTagger by the DeepSemLex TRIPS module. Some data sources use multiple inheritance, so this can result in multiple mappings to different ONT types. If a traversal yields no TRIPS mappings for a match, the match is discarded.</p>
 
 <p>For other data sources (and certain parts of those with hierarchies), we have a few ad hoc mapping rules depending on which data source the ID is from:</p>
 
@@ -1463,16 +1537,9 @@ to the tag request. Sense tags emitted by the Disambiguator tagger may also have
 <table>
 <tr><th>data source name/link</th><th>ID prefix</th><th>file format</th><th>maps to TRIPS types</th><th>description</th></tr>
 <tr>
- <td><a href="https://github.com/sorgerlab/bioentities">Bioentities</a></td>
- <td>BE</td>
- <td><a href="http://owlcollab.github.io/oboformat/doc/GO.format.obo-1_2.html">OBO</a></td>
- <td>PROTEIN-FAMILY (possibly more in the future)</td>
- <td>"Bioentities is a collection of resources for grounding biological entities from text and describing their hierarchical relationships. Resources were developed by manual curation for use by natural language processing and biological modeling teams in the DARPA Big Mechanism and Communicating with Computers programs."</td>
-</tr>
-<tr>
  <td><a href="http://www.brenda-enzymes.info/">BRENDA</a> Tissue Ontology</td>
  <td>BTO</td>
- <td>OBO</td>
+ <td><a href="http://owlcollab.github.io/oboformat/doc/GO.format.obo-1_2.html">OBO</a></td>
  <td>CELL, CELL-LINE, INTERNAL-BODY-PART</td>
  <td>"A structured controlled vocabulary for the source of an enzyme. It comprises terms of tissues, cell lines, cell types and cell cultures from uni- and multicellular organisms."</td>
 </tr>
@@ -1498,6 +1565,13 @@ to the tag request. Sense tags emitted by the Disambiguator tagger may also have
  <td>"a controlled vocabulary of cell lines"</td>
 </tr>
 <tr>
+ <td>databases</td>
+ <td>DB</td>
+ <td>TSV</td>
+ <td>DATABASE</td>
+ <td>This is our own list of databases that might be mentioned in the bio domain.</td>
+</tr>
+<tr>
  <td><a href="http://www.ebi.ac.uk/efo/">Experimental Factor Ontology</a></td>
  <td>EFO</td>
  <td>OBO</td>
@@ -1510,6 +1584,13 @@ to the tag request. Sense tags emitted by the Disambiguator tagger may also have
  <td>EMBL?</td>
  <td>PROTEIN-FAMILY</td>
  <td>Protein families from neXtProt's <code>cv_family.txt</code>. "Developed in collaboration between the SIB Swiss Institute of Bioinformatics and Geneva Bioinformatics (GeneBio) SA, neXtProt will be a comprehensive human-centric discovery platform, offering its users a seamless integration of and navigation through protein-related data."</td>
+</tr>
+<tr>
+ <td><a href="https://github.com/sorgerlab/famplex">FamPlex</a> (formerly Bioentities)</td>
+ <td>FPLX</td>
+ <td>OBO</td>
+ <td>PROTEIN-FAMILY (possibly more in the future)</td>
+ <td>"FamPlex is a collection of resources for grounding biological entities from text and describing their hierarchical relationships. Resources were developed by manual curation for use by natural language processing and biological modeling teams in the DARPA Big Mechanism and Communicating with Computers programs."</td>
 </tr>
 <tr>
  <td><a href="http://www.genenames.org/">HUGO Gene Nomenclature Committee</a></td>
@@ -1581,6 +1662,166 @@ to the tag request. Sense tags emitted by the Disambiguator tagger may also have
  <td>PROTEIN-FAMILY</td>
  <td>"The Pfam database is a large collection of protein families, each represented by multiple sequence alignments and hidden Markov models (HMMs). ... There are two components to Pfam: Pfam-A and Pfam-B. Pfam-A entries are high quality, manually curated families."</td>
 </tr>
+</table>
+</div>
+
+</div>
+
+<div class="section">
+<h3>The PlaceNames tagger</h3>
+<p>The PlaceNames tagger looks up names of places, and is similar to the Drum tagger described above, so it also deserves its own section.</p>
+
+<div class="section">
+<h4>Building</h4>
+<p>At build time, we fetch a number of data sources (see the table at the end of this section) and use them to build one big table mapping place names to the relevant information from those data sources (<code>place-names.tsv</code>). That information includes IDs and general categories for the places, as well as information about the status of the specific names for the places (e.g. whether it's the official name or an alternative name). The names are normalized in the same way as the Drum terms are (see <a href="#sec-5.7.1.">the corresponding section about the Drum tagger</a>).</p>
+
+<p>Unlike <code>drum-terms.tsv</code>, the non-name information in <code>place-names.tsv</code> is already packaged as a <code>:domain-specific-info</code> structure, one of the following types.</p>
+
+<p>For everything except <code>countries.json</code>:</p>
+<blockquote><code><pre>(place
+  :id <var>id</var>
+  :class <var>feature-class</var>
+  :source "<var>filename</var> [ row <var>row-number</var> ]"
+  [ :status <var>status</var> ]
+  [ :code <var>feature-code</var> ]
+  )
+</pre></code></blockquote>
+
+<p>For <code>countries.json</code> (same as the Countries tagger):</p>
+<blockquote><code><pre>(country
+  :code <var>id</var>
+  :name "<var>official-name</var>"
+  :status "<var>status</var>"
+  )
+
+(capital :country <var>country-id</var> :status name)
+
+({ region | subregion | demonym }
+  :countries (<var>country-id-1</var> <var>country-id-2</var> ...)
+  :status name
+  )
+</pre></code></blockquote>
+
+<p>The country IDs used are ISO 3166-1 alpha-2 codes.</p>
+
+<p>At run time, the PlaceNames tagger adds a <code>:matches</code> field similar to Drum's. It moves the <code>:source</code> and <code>:status</code> fields into the matches, and collapses DSIs that are otherwise identical, since the same input can match the same place ID via different sources. This also simplifies the scoring mechanism.</p>
+
+<p>A subset of data sources to be used can be specified using the <code>$PLACE_NAME_SOURCES</code> environment variable at build time. For example, if you only wanted to use GNO, GADM, and mledoze/countries, you would run:</p>
+<blockquote><pre>PLACE_NAME_SOURCES="GNO GADM countries" make &amp;&amp; make install</pre></blockquote>
+</div>
+
+<div class="section">
+<h4>Lookup</h4>
+<p>At run time, the PlaceNames tagger mainly uses the original text as input (unlike the Drum tagger). It can also use sentence tags to affect the scoring and filtering of potential names at the beginning of sentences. Otherwise place name lookup is done similarly to <a href="#sec-5.7.2.">Drum term lookup</a>.</p>
+</div>
+
+<div class="section">
+<h4>Filtering</h4>
+<p>The PlaceNames tagger does some of the same filtering of bad matches that <a href="#sec-5.7.2.">the Drum tagger does</a>, but it also has its own additional filters. It skips:</p>
+<ul>
+ <li>Matches from a stoplist that includes things like closed-class temporal names (e.g. month names), cardinal direction names (e.g. "Northeast"), and some important classes of English words that could appear capitalized at the beginning of a sentence or in title case, such as determiners and quantifiers, pronouns, question words, and auxiliary verbs.</li>
+ <li>Matches starting or ending with a dash, e.g. "- The".</li>
+ <li>Single words in the TRIPS lexicon (without WordNet) that are either short and at the beginning of a sentence, or uncapitalized.</li>
+ <li>Matches of the form "the &lt;word&gt;", where &lt;word&gt; is in the TRIPS lexicon, and "the" is either lowercase or at the beginning of a sentence (e.g. "The River" → New Brunswick, NJ).</li>
+ <li>Short names that don't match exactly (different case or dashes).</li>
+ <li>Matches from GNIS that involve capitalizing a word, or are a single capitalized word at the beginning of a sentence.</li>
+</ul>
+</div>
+
+<div class="section">
+<h4>Scoring</h4>
+<p>The PlaceNames tagger scores matches using a tiered scoring formula similar to <a href="#sec-5.7.3.">the one used by the Drum tagger</a>, and in fact uses the same <code>case_dash_score</code>. It also has a <code>status_score</code> with the following levels:</p>
+<table>
+<tr><th>score</th><th>meaning</th><th>status annotations</th></tr>
+<tr><td>3</td><td>official/approved name</td><td><code>name</code>, <code>N</code>, <code>NS</code>, <code>official</code></td></tr>
+<tr><td>2</td><td>conventional name or encoding variant</td><td><code>ascii</code>, <code>ref</code>, <code>C</code> <code>VA</code>, <code>common</code></td></tr>
+<tr><td>1</td><td>alternative name</td><td><code>alternate</code>, <code>alt</code>, <code>alt1</code>, <code>alt2</code>, <code>V</code>, <code>VS</code></td></tr>
+<tr><td>0</td><td>unverified name or unknown status</td><td><code>D</code>, <code>P</code>, <code>DS</code>, <code>undef</code></td></tr>
+</table>
+<p>And it has a <code>source_score</code> with the following levels:</p>
+<table>
+<tr><th>score</th><th>meaning</th><th>data source files</th></tr>
+<tr><td rowspan="5">3</td><td rowspan="5">specific to Ethiopia</td>
+     <td><code>gadm_woredas.txt</code> (GADM)</td></tr>
+ <tr><td><code>eth_pop_adm3.csv</code>, <code>eth_populatedplaces_tabulardata.csv</code> (HDX)</td></tr>
+ <tr><td><code>ET.txt</code> (GNO)</td></tr>
+ <tr><td><code>et.txt</code> (GNS)</td></tr>
+ <tr><td><code>eth_bnd_adm2_wfpco.csv</code>, <code>Ethiopia_bnd_adm2_woreda.csv</code> (WFP)</td></tr>
+<tr><td rowspan="4">2</td><td rowspan="4">specific to South Sudan</td>
+     <td><code>ssd_populatedplaces_tabulardata.csv</code> (HDX)</td></tr>
+ <tr><td><code>SS.txt</code> (GNO)</td></tr>
+ <tr><td><code>od.txt</code> (GNS)</td></tr>
+ <tr><td><code>ssd_ica_mainsettlements_geonode_feb2016.csv</code>, <code>ssd_ica_predlhz_geonode_feb2016.csv</code> (WFP)</td></tr>
+<tr><td rowspan="2">1</td><td rowspan="2">unspecific (whole world)</td>
+     <td><code>countries.json</code> (mledoze/countries)</td></tr>
+ <tr><td><code>admin1CodesASCII.txt</code>, <code>admin2Codes.txt</code>, <code>cities50000.txt</code> (GNO)</td></tr>
+<tr><td>0</td><td>specific to USA</td><td><code>NationalFile.txt</code> (GNIS)</td></tr>
+</table>
+<p>The final scoring formula is:</p>
+<blockquote><pre>final_score =
+  ((((0
+  ) * 4 + source_score
+  ) * 4 + status_score
+  ) * 2 + case_dash_score
+  ) / 31
+</pre></blockquote>
+</div>
+
+<div class="section">
+<h4>Ontology mapping</h4>
+<p>The ontology mappings for the PlaceNames tagger are mostly defined in <code>cwms-mappings.lisp</code>, which is loaded for the DeepSemLex TRIPS module to use. This is analogous to <a href="#sec-5.7.4."><code>drum-mappings.lisp</code> for the Drum tagger</a>, except that the GNO and GNIS hierarchies (such as they are) are also defined here, rather than in separate files under <code>cwms-dsl/</code>. And instead of mapping from the individual place IDs, we start from their categories.</p>
+
+<p>The GNO, GADM, and GNS data sources use a common <a href="https://www.geonames.org/export/codes.html">two-level type hierarchy</a>, and while building <code>place-names.tsv</code> we also assign these codes to information we get from HDX and WFP. We use these codes to map place names from all five of those sources. GNIS has its own single level of types (feature classes) which we map separately. <code>countries.json</code> just uses a hash table defined in <code>PlaceNames.pm</code>, <code>%countries_dsi_type2ont_type</code>, which maps each <code>:domain-specific-info</code> type to a TRIPS type (the DSI type is in turn derived from which field in <code>countries.json</code> we got the name from).</p>
+</div>
+
+<div class="section">
+<h4>Table of data sources and files</h4>
+<table>
+<tr><th>data source name/links</th><th>ID prefix</th><th>file</th><th>maps to TRIPS types</th><th>description</th></tr>
+<tr><td><a href="https://github.com/mledoze/countries">mledoze/countries</a></td><td>(none)</td><td><code>countries.json</code></td><td>CITY, COUNTRY, GEOGRAPHIC-REGION, NATIONALITY, NATIONALITY-VAL</td><td>"This repository contains a list of world countries, as defined by ISO Standard 3166-1" (This is the same data used by the Countries tagger.)</td></tr>
+<tr><td>
+ <a href="http://www.arizona.edu/">University of Arizona</a><br/>
+ <a href="http://clulab.cs.arizona.edu/">Computational Language Understanding (CLU) Lab</a><br/>
+ supplementary file for GNO derived from<br/>
+ <a href="https://gadm.org/">the Database of Global Administrative Areas (GADM)</a>
+</td><td>GADM</td><td><code>gadm_woredas.txt</code></td><td>DISTRICT</td><td>"Eidos has provided a supplementary text file that contains woredas from GADM that are not found in the [GNO] allcountries.zip"<br/>"GADM, the Database of Global Administrative Areas, is a high-resolution database of country administrative areas, with a goal of 'all countries, at all levels, at any time period.'"</td></tr>
+<tr><td>
+ <a href="https://www.usgs.gov/">United States Geological Survey (USGS)</a><br/>
+ <a href="https://www.usgs.gov/core-science-systems/ngp/board-on-geographic-names">Board on Geographic Names (BGN)</a><br/>
+ <a href="https://www.usgs.gov/core-science-systems/ngp/board-on-geographic-names/domestic-names">Geographic Names Information System (GNIS)</a>
+</td><td>GNIS</td><td><code>NationalFile.txt</code></td><td>various, mostly under GEOGRAPHIC-REGION and GEO-FORMATION</td><td>"The GNIS contains information about physical and cultural geographic features of all types in the United States, associated areas, and Antarctica, current and historical, but not including roads and highways." (This is the same data used by the Terms tagger.)</td></tr>
+<tr>
+ <td rowspan="5"><a href="https://www.geonames.org/">GeoNames.org</a></td>
+ <td rowspan="5">GNO</td>
+ <td></td>
+ <td></td>
+ <td>"The GeoNames geographical database covers all countries and contains over eleven million placenames that are available for download free of charge."</td>
+</tr>
+ <tr><td><code>admin1CodesASCII.txt</code></td><td>STATE</td><td>"names in English for admin divisions."</td></tr>
+ <tr><td><code>admin2Codes.txt</code></td><td>COUNTY</td><td>"names for administrative subdivision 'admin2 code'"</td></tr>
+ <tr><td><code>cities50000.txt</code></td><td>CITY, DISTRICT</td><td>all cities with a population &gt; 50,000 (derived from <code>cities15000.txt</code>)</td></tr>
+ <tr><td><code>ET.txt</code>, <code>SS.txt</code></td><td>various, mostly under GEOGRAPHIC-REGION and GEO-FORMATION</td><td>"features for country with iso code XX" (ET=Ethiopia, SS=South Sudan)</td></tr>
+<tr><td>
+ <a href="https://www.nga.mil/">National Geospatial-intelligence Agency (NGA)</a><br/>
+ <a href="http://geonames.nga.mil/gns/html/index.html">GEONet Names Server (GNS)</a>
+</td><td>GNS</td><td><code>et.txt</code>, <code>od.txt</code></td><td>various, mostly under GEOGRAPHIC-REGION and GEO-FORMATION</td><td>"The GEOnet Names Server (GNS) is the official repository of standard spellings of all foreign geographic names, sanctioned by the United States Board on Geographic Names (US BGN)." (et=Ethiopia, od=South Sudan)</td></tr>
+<tr>
+ <td rowspan="3"><a href="https://data.humdata.org/">Humanitarian Data Exchange (HDX)</a></td>
+ <td rowspan="3">HDX</td>
+ <td><code>eth_pop_adm3.csv</code></td><td>DISTRICT</td>
+ <td rowspan="3">"Find, share and use humanitarian data all in one place" (eth=Ethiopia, ssd=South Sudan)</td>
+</tr>
+ <tr><td><code>eth_populatedplaces_tabulardata.csv</code></td><td>CITY</td></tr>
+ <tr><td><code>ssd_populatedplaces_tabulardata.csv</code></td><td>CITY</td></tr>
+<tr>
+ <td rowspan="4"><a href="https://www.wfp.org/">World Food Programme (WFP)</a> <a href="https://geonode.wfp.org/">GeoNode</a></td>
+ <td rowspan="4">WFP</td>
+ <td><code>eth_bnd_adm2_wfpco.csv</code></td><td>COUNTY</td>
+ <td rowspan="4">(eth=Ethiopia, ssd=South Sudan)</td>
+</tr>
+ <tr><td><code>Ethiopia_bnd_adm2_woreda.csv</code></td><td>DISTRICT</td></tr>
+ <tr><td><code>ssd_ica_mainsettlements_geonode_feb2016.csv</code></td><td>CITY</td></tr>
+ <tr><td><code>ssd_ica_predlhz_geonode_feb2016.csv</code></td><td>COUNTY</td></tr>
 </table>
 </div>
 

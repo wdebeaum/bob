@@ -20,7 +20,7 @@
 |#
 
 (define-type ONT::referential-sem
- :wordnet-sense-keys ("entity%1:03:00")
+ :wordnet-sense-keys ("entity%1:03:00" "one%1:09:00")
  :comment "The root type for all things that can be referred to: abstract meaning for THIS and IT"
  :parent ONT::ANY-SEM
  :sem ((? rst F::phys-obj F::abstr-obj F::situation))
@@ -52,7 +52,7 @@
      :parent ONT::SITUATION-ROOT
      :comment "Events that involve change or force: should have an AGENT or AFFECTED role"
      :arguments ((:optional  ONT::agent ((? cau4 F::situation F::Abstr-obj f::phys-obj)))
-		 (:optional  ONT::affected ((? cau3a F::situation F::abstr-obj f::phys-obj) (F::tangible +)))
+		 (:optional  ONT::affected ((? cau3a F::situation F::abstr-obj f::phys-obj) (F::tangible +))) 
 		 (:optional  ONT::result (F::Abstr-obj (:default (F::tangible -) (F::type (? !t ont::position-reln)))))
 		 ;;(:optional ONT::beneficiary ((? cau1 f::phys-obj))))
 		 )
@@ -64,8 +64,16 @@
      :wordnet-sense-keys ("come%2:30:01" "come%2:42:13" "come_about%2:30:00" "fall_out%2:30:00" "go%2:42:03" "go%2:42:12" "go_on%2:30:00" "hap%2:30:00" "happen%2:30:00" "happening%1:11:00" "natural_event%1:11:00" "occur%2:30:00" "occurrence%1:11:00" "occurrent%1:11:00" "pass%2:30:00" "pass_off%2:30:00" "play%2:42:00" "set_in%2:30:00" "take_place%2:30:00")
      :parent ONT::SITUATION-ROOT
      :comment "event occurrence - e.g., an explosion happened"
-     :arguments ((:essential ONT::neutral (f::situation (F::aspect F::dynamic)))
-		 (:optional ONT::affected ((? t F::situation F::Abstr-obj f::phys-obj) (F::tangible +))))
+     :arguments ((:essential ONT::neutral ((? xx f::situation F::time)))
+		 (:optional ONT::affected (f::phys-obj)))
+     :sem (F::Situation (F::aspect F::dynamic)))
+
+
+(define-type ont::time-elapse
+     :wordnet-sense-keys ("pass%2:38:03")
+     :parent ONT::occurring
+     :comment "time occurrence - e.g., time passed by, the winter went on, ..."
+     :arguments ((:essential ONT::neutral (F::time)))
      :sem (F::Situation (F::aspect F::dynamic)))
 
 (define-type ont::event-of-action 
@@ -74,7 +82,9 @@
      :definitions ((ont::cause-effect :agent ?agent
 				     :formal (ont::event-of-change)))
      :sem (F::Situation (F::cause F::force))
-     :arguments ((:essential ONT::agent ((? cau2a F::situation F::Abstr-obj f::phys-obj)))))
+     :arguments ((:essential ONT::agent ((? cau2a F::situation F::Abstr-obj f::phys-obj)))
+		 (:optional  ONT::affected ((? cau3a F::situation F::abstr-obj f::phys-obj) (F::tangible +)))
+		 ))
 
 #||(define-type ont::event-of-agent-interaction 
      :parent ONT::event-of-action
@@ -87,7 +97,8 @@
      :parent ONT::event-of-change
      :comment "Events involving changing or mental state or awareness"
      :sem (F::Situation) 
-     :arguments ((:essential ONT::formal ((? cau4 F::situation F::Abstr-obj)))))
+     :arguments ((:optional  ONT::affected ((? cau3a F::situation F::abstr-obj f::phys-obj) (F::tangible +))) 
+		 (:essential ONT::formal ((? cau4 F::situation F::Abstr-obj)))))
 
 
 (define-type ont::event-of-undergoing-action
@@ -170,6 +181,7 @@
     :parent ont::abstract-object
     :comment "names of units in various scales/domains"
     :sem (F::abstr-obj)
+    :wordnet-sense-keys ("definite_quantity%1:23:00")
    )
 
 (define-type ont::mental-construction
@@ -178,8 +190,25 @@
     :sem (F::abstr-obj (f::information f::mental-construct))
    )
 
+;;; This is a catch-all for things that are relations between multiple
+;;; objects: identity, distance, whatever. Will need better sorting at
+;;; a future data
+(define-type ONT::relation
+    :comment "All types that denote relations. This is the root of terms under abstract objects that take the ONT::F specifier"
+    :wordnet-sense-keys ("relation%1:03:00" "amount%2:42:03")
+    :parent ONT::abstract-object
+    :arguments ((:REQUIRED ONT::FIGURE)
+		(:REQUIRED ONT::GROUND)
+		(:optional ont::neutral)
+		(:optional ont::neutral1)  ;; some relations based on verbs use this
+		(:optional ont::norole)
+		(:OPTIONAL ONT::COMPAR))
+    )
+ 
+ 
+	     
 (define-type ont::domain-property
-    :parent ont::abstract-object
+    :parent ont::RELATION
     :comment "these are modifiers that characterize an object/event with respect to a scale/domain (in ONT::DOMAIN)"
     :sem (F::abstr-obj (F::Scale ont::domain))
     :arguments ((:REQUIRED ONT::FIGURE)

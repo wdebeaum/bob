@@ -139,7 +139,7 @@ apply first.")
 		 "interface-helper")    
     :depends-on (:ontology-code-lf :ontology-code-kr))
 
-(mk:defsystem :ontology-manager-overhead
+#|(mk:defsystem :ontology-manager-overhead
     :source-pathname #!TRIPS"src;OntologyManager;"
     :components ("macros"
 		 "messages")
@@ -157,7 +157,25 @@ apply first.")
 		 :ontology-manager-overhead
 		 :ontology-code-lf
 		 :ontology-code-kr
-		 ))
+		 ))|#
+
+(dfc::defcomponent :om
+    :use (:util :common-lisp)
+    :nicknames (:ontologymanager)
+    :system (
+	     
+	     :depends-on (:comm :logging :util :simplekb
+				:transform-overhead :transform-code
+				:ontology-manager-interface
+			;;	:ontology-manager-overhead
+				:ontology-code-lf
+			;;	:ontology-code-kr
+				)
+	     :components ("macros"
+			  "messages")
+	     )
+    )
+
 
 (defun initialize-ontology (&key (kr t) (lf t))
   "loads the data into the ontologies *lf-ontology* and *kr-ontology*"      
@@ -179,6 +197,12 @@ apply first.")
       ;; add the base hierarchy to the KR
       (add-kr-ontology-to-hierarchy *kr-ontology* type-hierarchy)
       )))
+
+(defun recompile-ontology ()
+  "when new types are added dynamically, we must recompile in order to enable subsumption"
+  (let ((type-hierarchy (new-type-hierarchy)))
+      ;; add the base hierarchy to the LF
+      (add-ling-ontology-to-hierarchy *lf-ontology* type-hierarchy)))
 
 (defmethod mk:operate-on-system :after ((name (eql :om)) (operation (eql :load)) &rest args)
     (declare (ignore args))

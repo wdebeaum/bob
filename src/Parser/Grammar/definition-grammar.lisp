@@ -1,7 +1,7 @@
 ;;;;
 ;;;; robust.lisp
 ;;;;
-;;;; Time-stamp: <Wed May 29 13:06:38 EDT 2019 james>
+;;;; Time-stamp: <Wed Nov 13 12:42:03 EST 2019 james>
 ;;;;
 
 (in-package :W)
@@ -17,7 +17,7 @@
     
     ;; CP with no GAP to have a dream
     ((definition (var ?v)  (lf ?lf))
-      -defn-no-gap> .97
+      -defn-no-gap> .985
      (head (cp (var ?v) (lf ?lf) (subj-map (? !s ONT::NOROLE)) (ctype (? x w::s-to)) ;; make sure there's a subj-map (avoid parses for "there is" etc)
 	       (subj (% ?xx (sem ?subjsem)))
       (subjvar (% *PRO* (var *) (class ont::ROLE-REF) (sem ?subjsem) (constraint (& (:context-rel :lsubj)))))
@@ -31,7 +31,7 @@
 	       (subj (% ?xx (sem ?subjsem)))
 	       (dobj (% ?yy (sem ?dobjsem)))
 	       (subjvar (% *PRO* (var *) (class ont::ROLE-REF) (sem ?subjsem) (constraint (& (:context-rel :lsubj)))))
-	       (gap (% NP (gap -)
+	       (gap (% (? x NP PP) (gap -)
 			(var (% *PRO* (var **) (class ont::ROLE-REF) (sem ?dobjsem)
 				(constraint (& (:context-rel :dobj)))))))
 		)))
@@ -44,7 +44,7 @@
 	       (dobjvar -)
 	       (subjvar (% *PRO* (var *) (class ont::ROLE-REF) (sem ?subjsem) (constraint (& (:context-rel :lsubj)))))
 	       (comp3 (% ?comp3 (sem ?compsem)))
-	       (gap (% NP (gap -)
+	       (gap (% (? xx NP PP) (gap -)
 			(var (% *PRO* (var **) (class ont::ROLE-REF) (sem ?compsem)
 				(constraint (& (:context-rel :lcomp)))))))
 	       (passive +)
@@ -209,7 +209,8 @@
 		(SUBCAT -)
 		(transform ?transform)
 		))
-      (prep (lex ?ptp))
+      ;(prep (lex ?ptp))
+      (prep (lex (? ptp w::of)))
       (add-to-conjunct  (val (:figure ?gapvar)) (old ?con) (new ?new))
       )
 

@@ -192,7 +192,7 @@ separate instances of the chart/parser.")
       as often happens in LFs with several MOD functions"
   (or (constit-match rhs c)
       (progn
-	;;(format t "~%constit-match failed on ~S and ~S" rhs c)
+	(trace-msg 2 "~%constit-match failed on ~S and ~S" rhs c)
 	nil)))
 
 (defun getsubconstitnames (n constit)
@@ -485,7 +485,7 @@ separate instances of the chart/parser.")
 (defvar *semantic-skeleton-map* nil)
 (defvar *var-type-map* nil)
 (defvar *semantic-skeleton-score-factor* .1)
-(defvar *essential-roles* '(ont::agent ont::agent1 ont::affected ont::affected1 ont::neutral ont::neutral1 ont::formal ont::result ont::affected-result ont::of ont::val ont::figure ont::ground ont::experiencer ont::source ont::transient-result))
+(defvar *essential-roles* '(ont::agent ont::agent1 ont::affected ont::affected1 ont::neutral ont::neutral1 ont::formal ont::result ont::affected-result ont::of ont::val ont::figure ont::ground ont::experiencer ont::source ont::transient-result ont::orientation))
 
 ;; set this variable to a set of scored skeleton debugging
 (defvar *debug-skeleton-info* 
@@ -879,7 +879,8 @@ separate instances of the chart/parser.")
 					 :first-cat (arc-first-cat arc)
 					 )))
 		     )))
-            restList new-bndgsList))))
+	      restList new-bndgsList)))
+  )
 
 
 ;; Checks the foot features of the new subconstituent

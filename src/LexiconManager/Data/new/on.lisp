@@ -193,3 +193,38 @@
    )
 ))
 )||#
+
+(define-words :pos W::ADV
+ :words (
+    ((w::on w::the w::other w::hand)
+     (senses
+     ((LF-PARENT ONT::CONTRASTIVE)
+     (TEMPL BINARY-CONSTRAINT-S-TEMPL)
+     (example "on the other hand, Kim volunteered")
+     )
+    )
+  )
+))
+
+
+(define-words :pos W::ADJ
+ :words (
+  ((W::on w::the w::right)
+   (SENSES
+    ((LF-PARENT ONT::right)
+     (TEMPL ADJ-CO-THEME-TEMPL (XP (% W::PP (W::PTYPE (? p W::of)))))
+     )
+    )
+   )
+))
+
+(define-words :pos W::ADJ
+ :words (
+  ((W::on w::the w::left)
+   (SENSES
+    ((LF-PARENT ONT::left)
+     (TEMPL ADJ-CO-THEME-TEMPL (XP (% W::PP (W::PTYPE (? p W::of)))))
+     )
+    )
+   )
+))

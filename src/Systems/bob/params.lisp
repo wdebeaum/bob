@@ -69,6 +69,8 @@
 	(parser::*filter-and-preparse-input* t)   ;; enable preparsing (e.g., for sequences)
 	;; required for WebParser
 	(parser::*include-parse-tree-in-messages* '(w::lex))
+	(parser::*rules-to-suppress* '(w::-vp-pastprt-adjp-attributive> w::-vp-pastprt-adjp-> ; state-resulting-from
+									w::-noun-nname2>)) ; ELK12 or ELK 12 (prefer REFERENTIAL-SEM)
 	((parser::customize-cost-table 
 	  '((ont::SA_QUERY 1.2) 
 	     (ont::SA_IDENTIFY 1.3) 
@@ -128,8 +130,8 @@
 ;;;; LxM options
 ;; use WordFinder?
 (setq lxm::*use-wordfinder* t)
-;; we are trying to really depend on the Stanford parser (for now!)
-(setq lxm::*use-tagged-senses-only* t)
+;; allow normal senses as well as the TT senses
+(setq lxm::*use-tagged-senses-only* nil)
 ;; don't use wordnet if we have domain-specific info from TextTagger
 (setq lxm::*no-wf-senses-for-words-tagged-with-ont-types* t)
 ;; don't use wordnet if we have TRIPS entries  

@@ -44,11 +44,13 @@
 	  (W::TO
 					;(wordfeats (w::result-only +))
 	   (SENSES
+	    #|
 	    ((LF-PARENT ONT::orients-to)
 	     (TEMPL BINARY-CONSTRAINT-NP-TEMPL)
 	     (example "I see the building to my right")
 	     (preference 0.97)
 	     )
+	    |#
 	    ((LF-PARENT ONT::until)
 	     (example "the meeting should go to five pm")
 	     (TEMPL BINARY-CONSTRAINT-S-or-NP-TEMPL)
@@ -67,6 +69,13 @@
 	    (meta-data :origin medadvisor :entry-date 20011126 :change-date nil :comments nil)
 	    (TEMPL BINARY-CONSTRAINT-S-VPbase-TEMPL)
 	    )
+
+           ((LF-PARENT ONT::ATTRIBUTED-TO)
+            (TEMPL binary-constraint-S-templ)
+            (EXAMPLE "he seems honest to me")
+	    (PREFERENCE 0.97)
+           ) 
+
 	   ))
   ))
 
@@ -88,6 +97,7 @@
      )
 
     ((LF-PARENT ONT::RESULTING-STATE)
+     (preference .985)
      (example "change to a waking state")
      (TEMPL BINARY-CONSTRAINT-NP-TEMPL)
      )
@@ -117,3 +127,24 @@
    )
 ))
 
+(define-words :pos W::ADJ
+ :words (
+  ((W::to w::the w::left)
+   (SENSES
+    ((LF-PARENT ONT::left)
+     (TEMPL ADJ-CO-THEME-TEMPL (XP (% W::PP (W::PTYPE (? p W::of)))))
+     )
+    )
+   )
+))
+
+(define-words :pos W::ADJ
+ :words (
+  ((W::to w::the w::right)
+   (SENSES
+    ((LF-PARENT ONT::right)
+     (TEMPL ADJ-CO-THEME-TEMPL (XP (% W::PP (W::PTYPE (? p W::of)))))
+     )
+    )
+   )
+))

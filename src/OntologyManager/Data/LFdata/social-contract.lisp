@@ -14,6 +14,7 @@
 
 (define-type ont::social-contract
     :arguments ((:OPTIONAL ONT::FIGURE (f::situation)))
+    :sem (F::abstr-obj (f::spatial-abstraction -))
     :parent ont::mental-construction
     :wordnet-sense-keys ("social_contract%1:26:00")
 )
@@ -32,12 +33,14 @@
   )
 
 (define-type ont::right-permission
-  :parent ont::social-contract
-  :wordnet-sense-keys ("right%1:07:00" "permission%1:10:00")
-)
+    :parent ont::social-contract
+    :arguments ((:essential ont::figure (F::situation)))
+    :wordnet-sense-keys ("right%1:07:00" "permission%1:10:00")
+    )
 
 (define-type ont::social-judgement
   :parent ont::social-imperative
+  :wordnet-sense-keys ("approve%2:32:00" "sanction%2:32:02")
 )
 
 ;; Maybe there is too much overlap between children in governing-principle and
@@ -48,7 +51,7 @@
 
 (define-type ont::essential-contract
   :parent ont::social-imperative
-  :wordnet-sense-keys ("right%1:07:00" "absolute%1:09:00" "absolute%5:00:00:inalienable:00")
+  :wordnet-sense-keys ("absolute%1:09:00" "absolute%5:00:00:inalienable:00")
 )
 
 

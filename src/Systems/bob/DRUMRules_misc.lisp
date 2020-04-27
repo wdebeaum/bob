@@ -33,6 +33,7 @@
           )
 
 	  ; change REFERENTIAL-SEM-TMP back to REFERENTIAL-SEM
+	  ; note that the :name slot is preserved if it's there (from -refSem2>)
           ((ONT::TERM ?ev ONT::REFERENTIAL-SEM-TMP :spec ?!spec :word ?!w)
            -refSem-rev2>
            100

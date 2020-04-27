@@ -31,8 +31,8 @@
 (defmacro define-list-of-words (&rest args)
   `(apply #'lexicon-define-list-of-words ',args))
 
-(defun lexicon-define-words (&key pos templ boost-word tags words)
-  (define-words-in-db pos templ boost-word tags words *lexicon-data*)
+(defun lexicon-define-words (&key pos templ boost-word tags words wnsense)
+  (define-words-in-db (convert-to-package pos :w)  templ boost-word tags words *lexicon-data*)
   )
 
 (defun lexicon-define-list-of-words (&key boost-word pos senses words tags)

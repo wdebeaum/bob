@@ -25,7 +25,31 @@
       )))
 
     ))
-     
+
+
+(parser::augment-grammar
+  '((headfeatures
+	 ;;lex headcat removed --me
+     (PP KIND MASS NAME agr SEM SORT PRO SPEC CLASS transform gap gerund)
+     ;;(ADVBLS FOCUS VAR SEM SORT ATYPE ARG SEM ARGUMENT NEG TO QTYPE lex transform)
+     (ADVBL VAR SORT ARGSORT ATYPE SEM lex orig-lex headcat transform neg result-only)
+     )
+    ;;  simple adverbials- used is the lexical entry does not specify an argument-map
+    ;;  we have iot by itself here as we need to create a non null ARGUMENT value, so it can't be a head feature
+    ((ADVBL (ARG ?arg) (LF (% PROP (CLASS ?lf) (VAR ?v) (CONSTRAINT (& (FIGURE ?arg) (scale ?scale)))
+                              (sem ?sem) (transform ?transform)))
+            ;;(SORT CONSTRAINT)
+      (role ?lf) (scale ?scale)
+      (argument (% ?argument (var ?arg)))
+      (comparative -)
+      )
+     -advbl-simple-no-argmap>
+     (head (adv (WH -) (sem ?sem) (ARGUMENT-MAP -) ;;(Sort PRED) 
+	    (VAR ?v) (SUBCAT -) (LF ?lf) (implicit-arg -) (prefix -)
+	    (comparative -) (scale ?scale)
+	    ))      
+     )
+    ))
 
 (parser::augment-grammar
   '((headfeatures
@@ -63,19 +87,7 @@
 		       (new ?newc))
      )
    
-     ;;  simple adverbials- used is the lexical entry does not specify an argument-map
-    ((ADVBL (ARG ?arg) (LF (% PROP (CLASS ?lf) (VAR ?v) (CONSTRAINT (& (FIGURE ?arg)))
-                              (sem ?sem) (transform ?transform)))
-            ;;(SORT CONSTRAINT)
-      (role ?lf)
-      (comparative -)
-      )
-     -advbl-simple-no-argmap>
-     (head (adv (WH -) (sem ?sem) (ARGUMENT-MAP -) ;;(Sort PRED) 
-	    (VAR ?v) (SUBCAT -) (LF ?lf) (implicit-arg -) (prefix -)
-	    (comparative -)
-	    ))      
-     )
+    
 
     ;; advbl plus explicit scale
 
@@ -299,7 +311,7 @@
     ;;  Gapped ADVBLs with entire subcat gone, this one for NP subcats only
     ;; TEST: The store the cat was from.
     ((ADVBL (ARG ?arg) 
-            (GAP (% NP (var ?gapv) (SEM ?gapsem) (gap -)
+            (GAP (% NP (var ?gapv) (SEM ?gapsem) (gap -) (status ?status) ;status is matched in wh-q2
 	            (agr ?gapagr) (case (? case obj -))))       
             (FOCUS ?var)
             (LF (% PROP (VAR ?v) (CLASS ?lf) (CONSTRAINT (& (?submap ?gapv) (?argmap ?arg)))
@@ -493,6 +505,202 @@
 
 (parser::augment-grammar
   '((headfeatures
+     (VP- vform var agr neg sem subj iobj dobj dobjvar comp3 part cont class subjvar lex orig-lex headcat transform subj-map tma aux passive passive-map template result) ; no gap
+     )	       		   
+
+    ;;  resultative construction using adjectives with intransitives: e.g., the water froze solid
+    ((vp- (constraint ?new) (tma ?tma) (class (? class ONT::EVENT-OF-CAUSATION)) (var ?v)
+         ;;(LF (% PROP (constraint ?new) (class ?class) (sem ?sem) (var ?v) (tma ?tma)))
+      (SUBJ (% NP (Var ?npvar) (LEX ?LEX) (agr ?agr) (sem ?sem)))
+      (advbl-needed -) (complex +) (result-present +) (subjvar ?subjvar)(GAP ?gap)
+      )
+     -vp-result-with-intransitive> .98   ;;  want to prefer explicitly subcategorized attachments
+     (head (vp- (VAR ?v) 
+		(seq -)  ;;  post mods to conjoined VPs is very rare
+		;(DOBJVAR -)  ; This doesn't work because it could unify with a dobjvar not yet instantiated
+		;(dobj (% -)) ; cannot use (dobj -) because dobj is (% - (W::VAR -))
+		(dobj (% ?xx (var ?dobjvar))) ; check that this is not bound below
+		(comp3 (% -)) ; for arguments as complements
+		(SUBJ (% NP (Var ?npvar) (LEX ?LEX)  (agr ?agr)(sem ?sem)))
+		(constraint ?con) (tma ?tma) (result-present -)
+		;;(subjvar ?subjvar)
+		;;(aux -)   c.f., It had gone bad
+		(gap -)
+		(ellipsis -)
+		(result ?resultsem)
+		))
+     (adjp (ARGUMENT (% NP (sem ?sem) (var ?npvar))) 
+;      (SEM ($ f::abstr-obj (F::type (? ttt ONT::path))))
+      ;(SEM ($ f::abstr-obj (F::type (? ttt ont::position-reln ont::domain-property))))
+      (SEM ($ f::abstr-obj (F::type (? ttt ont::domain-property))))
+      (sem ?resultsem)
+      (GAP ?gap)
+      ;; (subjvar ?subjvar)
+      (SET-MODIFIER -)  ;; mainly eliminate numbers 
+      (ARG ?npvar) (VAR ?mod)
+      ;;(role ?advrole) 
+      )
+     (not-bound (arg1 ?dobjvar)) ; accounts for both intransitive case and unbounded optional dobj case
+     (add-to-conjunct (val (RESULT ?mod)) (old ?con) (new ?new))
+     )
+
+     
+    ;;  resultative construction using adverbs: e.g., I walked to the store
+    ;; (not any more 2020/02/18: it seems this is also used for passive transitives, e.g., The box was moved to the corner )
+    ((vp- (constraint ?new) (tma ?tma) (class (? class ONT::EVENT-OF-CAUSATION)) (var ?v)
+				       ;(class (? class ONT::EVENT-OF-CHANGE)) (var ?v) ; it leaked from the roof ; I arrived into the house; but we need to exclude e.g, used/expressed in the liver (yes, passive)
+         ;;(LF (% PROP (constraint ?new) (class ?class) (sem ?sem) (var ?v) (tma ?tma)))
+;      (advbl-needed -) (complex +) (result-present +) (GAP ?gap)
+      (SUBJ (% NP (Var ?npvar) (sem ?sem) (agr ?agr) (lex ?lex) (case ?case)))
+      (subjvar ?npvar) ;(result-present +)
+      (advbl-needed -) (complex +) (GAP ?gap)
+      )
+     -vp-result-advbl-intransitive>  
+     (head (vp- (VAR ?v) (vform (? !vform passive)) ; exclude passives
+		(seq -)  ;;  post mods to conjoined VPs is very rare
+		;(DOBJVAR -)  ; This doesn't work because it could unify with a dobjvar not yet instantiated
+		;(dobj (% -)) ; cannot use (dobj -) because dobj is (% - (W::VAR -))
+		(dobj (% ?xx (var ?dobjvar))) ; check that this is not bound below
+		(comp3 (% -)) ; for arguments as complements
+		(SUBJ (% NP (Var ?npvar) (agr ?agr) (sem ?sem) (lex ?lex) (case ?case)))  
+		(subjvar ?npvar)
+		(constraint ?con) (tma ?tma) ;(result-present -)
+		;;(aux -) 
+		(gap -) ; intransitive
+		(ellipsis -)
+		(result ?asem)
+		))
+
+     (advbl (ARGUMENT (% NP ;; (? xxx NP S)  ;; we want to eliminate V adverbials, he move quickly  vs he moved into the dorm
+			 (sem ?sem) (var ?npvar)))
+      (GAP ?gap)
+      ;; (subjvar ?subjvar)
+      (sem ?advblsem)
+      (SEM ($ f::abstr-obj (F::type (? ttt ont::path ont::position-reln)))) ;(F::type (? !ttt1 ont::position-as-extent-reln ont::position-w-trajectory-reln ))))
+;      (SEM ($ f::abstr-obj (F::type (? ttt ont::position-reln ont::goal-reln ont::direction-reln))))
+      (SET-MODIFIER -)  ;; mainly eliminate numbers 
+      (ARG ?npvar) (VAR ?mod)
+      ;;(role ?advrole) 
+      )
+     (unify-but-dont-bind (pattern ?asem) (value ?advblsem))
+     (not-bound (arg1 ?dobjvar)) ; accounts for both intransitive case and unbounded optional dobj case
+     (add-to-conjunct (val (result ?mod)) (old ?con) (new ?new))  ; The RESULT will be remapped to TRANSIENT-RESULT
+     )
+))
+
+
+(parser::augment-grammar
+  '((headfeatures
+     ;; MD 2008/07/17 added post-subcat as a head feature so that it doesn't lead to overgeneration
+     ;(ADJP ATYPE SORT ARG COMP-OP PRED ARGUMENT headcat transform post-subcat) ; no var, lex, orig-lex, sem
+     (ADJP ATYPE SORT COMP-OP PRED headcat transform post-subcat) ; no var, lex, orig-lex, sem
+     (ADVBL VAR ATYPE headcat transform neg) ; no lex, orig-lex, sem
+     )	       		   
+
+    #|
+     ; how tall is he?
+    ((ADJP (LF (% PROP (CLASS ?c2) (VAR ?advbv) (CONSTRAINT ?newc) (sem ?newsem)))
+           (val ?val) (agr ?agr) (mass ?mass) (var ?advbv) (ARG ?arg) (gap ?gap)
+       (argument ?argmt) (premod +) (sem ?newsem) (lex ?lex) (orig-lex ?orig-lex)
+      )
+     -how-adj-pre>
+     (advbl (ATYPE PRE) (VAR ?advbv) (ARG ?v) ;;(SORT OPERATOR)
+            (argument (% ADJP (sem ?sem)))
+            (gap -) (complex -) (HOW +)
+        (lf (% PROP (CLASS ?c2) (VAR ?advbv)
+           (CONSTRAINT (% & (ONT::GROUND ?grd)))))
+        (lex ?lex) (orig-lex ?orig-lex)
+      )
+     (head (ADJP (lf (% PROP (CLASS ?c) (VAR ?v) (CONSTRAINT ?con) (sem ?sem)))
+        (val ?val) (agr ?agr) (mass ?mass) (argument ?argmt) (arg ?arg)
+        (gap ?gap) (premod -) (sem ?sem) (sem ($ f::abstr-obj (f::scale ?!sc)))
+        ))
+     (add-to-conjunct (val (ONT::GROUND ?grd)) (old ?con) (new ?newc))
+     (compute-sem-features (lf ONT::AT-SCALE-VALUE) (sem ?newsem))
+     )
+    |#
+
+     ; how tall is he?
+    ((ADJP (LF (% PROP (CLASS ONT::AT-SCALE-VALUE) (VAR ?v) (CONSTRAINT ?newc) (sem ?newsem)))
+           (val ?val) (agr ?agr) (mass ?mass) (var ?v) (ARG ?arg) (gap ?gap) 
+	   (argument ?argmt) (premod +) (sem ?newsem) (lex how) (orig-lex how)
+	   (WH Q) (WH-VAR *)
+      )
+     -how-adj-pre>
+     (word (lex w::how))
+     (head (ADJP (lf (% PROP (CLASS ?c) (VAR ?v) (CONSTRAINT ?con) (sem ?sem))) 
+	    (val ?val) (agr ?agr) (mass ?mass) (argument ?argmt) (arg ?arg)
+	    (gap ?gap) (premod -) (sem ?sem) (sem ($ f::abstr-obj (f::type ONT::PROPERTY-VAL))) ;(f::scale ?sc)))
+	    ))
+     (append-conjuncts (conj1 ?con)
+		       (conj2 (& (ONT::GROUND (% *PRO* (status *wh-term*) (VAR *) (CLASS ONT::LEVEL)
+					 (SEM ?newsem) (CONSTRAINT (& (proform how)
+								   (suchthat ?v)))))
+				 ;(ONT::FIGURE ?arg)
+				 ))
+		       (new ?newc))
+     (compute-sem-features (lf ONT::AT-SCALE-VALUE) (sem ?newsem))
+     )
+
+     ;; how adv  e.g., how quickly did he walk?
+    ((ADVBL  (ARG ?argvar) (SUBCATSEM ?subcatsem)
+      (wh-var *) (WH Q) (SORT PP-WORD) (how-advbl +)
+      (var ?adjv) (atype ?atype) 
+      (LF (% PROP (VAR ?adjv) (CLASS ont::AT-SCALE-VALUE) 
+	     (CONSTRAINT ?newc)
+	     (sem ?newsem) (transform ?trans)))
+      (gap -) (pp-word +) (argument ?argu)
+      (role ?reln) (lex how) (orig-lex how) (sem ?newsem)
+      )
+     -how-advbl>     
+     (word (lex w::how))
+     (head (advbl (var ?adjv) (atype ?atype) (arg ?argvar)  (argument ?argu) (sort pred) ; to rule out "how about..."
+		  (LF (% PROP (class ?reln) (constraint ?con))) (sem ($ f::abstr-obj (f::type ONT::PROCESS-VAL)))))
+     (append-conjuncts (conj1 ?con) 
+		       (conj2 (& (ONT::ground (% *PRO* (status *wh-term*) (VAR *) (CLASS ont::LEVEL)
+					    (SEM ?newsem) (CONSTRAINT (& (proform how) (suchthat ?adjv)))))))
+		       (new ?newc))
+     (compute-sem-features (lf ONT::AT-SCALE-VALUE) (sem ?newsem))
+     )
+    
+    
+    ))
+
+(parser::augment-grammar
+  '((headfeatures
+     ;; MD 2008/07/17 added post-subcat as a head feature so that it doesn't lead to overgeneration
+     (ADJP COMP-OP PRED headcat transform post-subcat) ; no var, lex, orig-lex, atype, argument, arg, sort, sem
+     )	       		   
+
+    ; what color is it?
+    ((ADJP (LF (% PROP (CLASS ONT::AT-SCALE-VALUE) (VAR ?v) (CONSTRAINT ?newc) (sem ?newsem)))
+           (agr ?agr) (mass ?mass) (var ?v) (ARG ?arg) (gap ?gap) 
+	   (argument (% NP (var ?arg) (lex ?lex))) ; need to have lex here so it can be match in the subj of -S1>
+	   (premod +) (sem ?newsem) (lex what) (orig-lex what)
+	   (ATYPE PREDICATIVE-ONLY)
+	   (SORT PRED) (WH Q) (WH-VAR *)
+      )
+     -what-adj-pre> 1.02
+     (word (lex w::what))
+     (head (N1 (sem ?sem) (sem ($ f::abstr-obj (f::scale ?!sc) (f::type ONT::DOMAIN))) (RESTR ?restr)
+	       (var ?v) (agr ?agr) (mass ?mass) (gap ?gap)
+	       (class (? x ONT::DOMAIN)) ; fails, not just penalized, if not ONT::DOMAIN
+	 ))
+     (append-conjuncts (conj1 ?restr)
+		       (conj2 (& (ONT::GROUND (% *PRO* (status *wh-term*) (VAR *) (CLASS ONT::LEVEL)
+					 (SEM ?newsem) (CONSTRAINT (& (proform what)
+								   (suchthat ?v)))))
+				 (ONT::FIGURE ?arg)
+				 ))
+		       (new ?newc))
+     (compute-sem-features (lf ONT::AT-SCALE-VALUE) (sem ?newsem))
+    )
+
+    
+))
+    
+(parser::augment-grammar
+  '((headfeatures
      (ADJ VAR ATYPE SORT ARG PRED ARGUMENT lex orig-lex headcat transform)
      ;; MD 2008/07/17 added post-subcat as a head feature so that it doesn't lead to overgeneration
      (ADJP VAR ATYPE SORT ARG COMP-OP PRED ARGUMENT lex orig-lex headcat transform post-subcat sem) 
@@ -571,7 +779,6 @@
       )
      (add-to-conjunct (val (MODS ?mod)) (old ?con) (new ?new)))
    
-    
 
     ((vp- (constraint ?new) (tma ?tma) (class ?class) (sem ?sem) (var ?v)
       (advbl-needed -) (complex +) (subjvar ?subjvar)
@@ -662,107 +869,35 @@
       (ARG ?npvar) (VAR ?mod)
       ;;(role ?advrole) 
       )
+     (bound (arg1 ?npvar)) ; make sure this is not an unbounded optional argument
      (add-to-conjunct (val (RESULT ?mod)) (old ?con) (new ?new))
-     )
-
-    ;;  resultative construction using adjectives with intransitives: e.g., the water froze solid
-    ((vp- (constraint ?new) (tma ?tma) (class (? class ONT::EVENT-OF-CAUSATION)) (var ?v)
-         ;;(LF (% PROP (constraint ?new) (class ?class) (sem ?sem) (var ?v) (tma ?tma)))
-      (SUBJ (% NP (Var ?npvar) (LEX ?LEX) (agr ?agr) (sem ?sem)))
-      (advbl-needed -) (complex +) (result-present +) (subjvar ?subjvar)(GAP ?gap)
-      )
-     -vp-result-with-intransitive> .98   ;;  want to prefer explicitly subcategorized attachments
-     (head (vp- (VAR ?v) 
-		(seq -)  ;;  post mods to conjoined VPs is very rare
-		;(DOBJVAR -)  ; This doesn't work because it could unify with a dobjvar not yet instantiated
-		(dobj (% -)) ; cannot use (dobj -) because dobj is (% - (W::VAR -))
-		(comp3 (% -)) ; for arguments as complements
-		(SUBJ (% NP (Var ?npvar) (LEX ?LEX)  (agr ?agr)(sem ?sem)))
-		(constraint ?con) (tma ?tma) (result-present -)
-		;;(subjvar ?subjvar)
-		;;(aux -)   c.f., It had gone bad
-		(gap ?gap)
-		(ellipsis -)
-		(result ?resultsem)
-		))
-     (adjp (ARGUMENT (% NP (sem ?sem))) 
-;      (SEM ($ f::abstr-obj (F::type (? ttt ONT::path))))
-      ;(SEM ($ f::abstr-obj (F::type (? ttt ont::position-reln ont::domain-property))))
-      (SEM ($ f::abstr-obj (F::type (? ttt ont::domain-property))))
-      (sem ?resultsem)
-      (GAP -)
-      ;; (subjvar ?subjvar)
-      (SET-MODIFIER -)  ;; mainly eliminate numbers 
-      (ARG ?npvar) (VAR ?mod)
-      ;;(role ?advrole) 
-      )
-     (add-to-conjunct (val (RESULT ?mod)) (old ?con) (new ?new))
-     )
-
-     
-    ;;  resultative construction using adverbs: e.g., I walked to the store
-    ;; it seems this is also used for passive transitives, e.g., The box was moved to the corner
-    ((vp- (constraint ?new) (tma ?tma) (class (? class ONT::EVENT-OF-CAUSATION)) (var ?v)
-				       ;(class (? class ONT::EVENT-OF-CHANGE)) (var ?v) ; it leaked from the roof ; I arrived into the house; but we need to exclude e.g, used/expressed in the liver (yes, passive)
-         ;;(LF (% PROP (constraint ?new) (class ?class) (sem ?sem) (var ?v) (tma ?tma)))
-;      (advbl-needed -) (complex +) (result-present +) (GAP ?gap)
-      (SUBJ (% NP (Var ?npvar) (sem ?sem) (agr ?agr) (lex ?lex) (case ?case)))
-      (subjvar ?npvar) (result-present +)
-      (advbl-needed -) (complex +) (GAP ?gap)
-      )
-     -vp-result-advbl-intransitive>  
-     (head (vp- (VAR ?v) 
-		(seq -)  ;;  post mods to conjoined VPs is very rare
-		;(DOBJVAR -)  ; This doesn't work because it could unify with a dobjvar not yet instantiated
-		(dobj (% -)) ; cannot use (dobj -) because dobj is (% - (W::VAR -))
-		(comp3 (% -)) ; for arguments as complements
-		(SUBJ (% NP (Var ?npvar) (agr ?agr) (sem ?sem) (lex ?lex) (case ?case)))  
-		(subjvar ?npvar)
-		(constraint ?con) (tma ?tma) (result-present -)
-		;;(aux -) 
-		(gap ?gap)
-		(ellipsis -)
-		(result ?asem)
-		))
-
-     (advbl (ARGUMENT (% NP ;; (? xxx NP S)  ;; we want to eliminate V adverbials, he move quickly  vs he moved into the dorm
-			 (sem ?sem) (var ?npvar)))
-      (GAP -)
-      ;; (subjvar ?subjvar)
-      (sem ?asem)
-      (SEM ($ f::abstr-obj (F::type (? ttt ont::path ont::position-reln)))) ;(F::type (? !ttt1 ont::position-as-extent-reln ont::position-w-trajectory-reln ))))
-;      (SEM ($ f::abstr-obj (F::type (? ttt ont::position-reln ont::goal-reln ont::direction-reln))))
-      (SET-MODIFIER -)  ;; mainly eliminate numbers 
-      (ARG ?npvar) (VAR ?mod)
-      ;;(role ?advrole) 
-      )
-     (add-to-conjunct (val (result ?mod)) (old ?con) (new ?new))  ; The RESULT will be remapped to TRANSIENT-RESULT
      )
     
     ;;  resultative construction using adverbs: e.g., sweep the dust into the corner
-    ;; only allow one of these
+    ;; only allow one of these ; 2019/09/20: now we allow more than one of these
     ((vp- (constraint ?new) (tma ?tma) (class (? class ONT::EVENT-OF-CAUSATION)) (var ?v)
          ;;(LF (% PROP (constraint ?new) (class ?class) (sem ?sem) (var ?v) (tma ?tma)))
 ;      (advbl-needed -) (complex +) (result-present +) (GAP ?gap)
-      (advbl-needed -) (complex +) (GAP ?gap) (result-present +)
+      (advbl-needed -) (complex +) (GAP ?gap) ;(result-present +)
       )
      -vp-result-advbl-no-particle>  
      (head (vp- (VAR ?v) 
 		(seq -)  ;;  post mods to conjoined VPs is very rare
 		(DOBJ (% NP (Var ?npvar) (sem ?sem)))
 		(COMP3 (% -))
-		(constraint ?con) (tma ?tma) (result-present -)
+		(constraint ?con) (tma ?tma) ;(result-present -)
 		;;(subjvar ?subjvar)
 		;;(aux -) 
 		(gap ?gap)
 		(ellipsis -)
-		(result (? advsem ($ f::abstr-obj
+		(result (? asem ($ f::abstr-obj
 				     ;(F::type (? ttt ont::position-reln ont::resulting-object ont::path))
 				     (F::type (? ttt ont::path ont::conventional-position-reln ont::direction ont::complex-ground-reln ont::back ont::front ont::left-of ont::off ont::orients-to ont::right-of
 					;ont::pos-as-containment-reln ; we allowed "in" for some reason, but I don't remember the example! (ah: Put this in the corner)
 						 ont::outside ; take this out of the box; move this outside
 						 ont::pos-directional-reln ont::pos-distance ;ont::pos-wrt-speaker-reln
 						 ont::resulting-object
+						 ont::resulting-state
 						 ))
 				     )))
 #|
@@ -778,18 +913,21 @@
 
      (advbl (ARGUMENT (% NP ;; (? xxx NP S)  ;; we want to eliminate V adverbials, he move quickly  vs he moved into the dorm
 			 (sem ?sem)))
-      (GAP -) (particle -)
-      (sem ?advsem)
+      (GAP -) ;(particle -) ; merged with -vp-result-advbl-particle>
+      (sem ?advblsem)
       ;; (subjvar ?subjvar)
       (SET-MODIFIER -)  ;; mainly eliminate numbers 
       (ARG ?npvar) (VAR ?mod)
       ;;(role ?advrole) 
       )
+     (unify-but-dont-bind (pattern ?asem) (value ?advblsem))
+     (bound (arg1 ?npvar)) ; make sure this is not an unbounded optional argument
      (add-to-conjunct (val (result ?mod)) (old ?con) (new ?new))  ; The RESULT will be remapped to TRANSIENT-RESULT
      )
 
+    #|
     ;; put the box down in the corner
-    ;;  we can allow two RESULTS if the first one is a particle
+    ;;  we can allow two RESULTS if the first one is a particle (but there can be two particles even though there shouldn't be?  e.g., push the window down up?)
      ((vp- (constraint ?new) (tma ?tma) (class (? class ONT::EVENT-OF-CAUSATION)) (var ?v)
          ;;(LF (% PROP (constraint ?new) (class ?class) (sem ?sem) (var ?v) (tma ?tma)))
 ;      (advbl-needed -) (complex +) (result-present +) (GAP ?gap)
@@ -822,6 +960,7 @@
       )
      (add-to-conjunct (val (RESULT ?mod)) (old ?con) (new ?new))
      )
+    |#
 
     ;; to kill by immersing in water
     ((vp- (constraint ?new) (tma ?tma) (class ?class) (sem ?sem) (var ?v)
@@ -987,6 +1126,7 @@
 	    (no-postmodifiers -) ;; exclude "the same path as the battery" and advbl attaching to "path"
 	    (rate-activity-nom -)
 	    (agent-nom -)
+	    (gap -) ; to prevent losing the gap with two successive adv-np-post applications (where the gap moved from the advbl to the n1 after the first application) ; TODO: pass on the gap from the N1
 	    ))
      (advbl (ATYPE POST) 
       (result-only -)  ;; only allow adverbials that may be interpreted as something other than a result
@@ -1161,7 +1301,7 @@
      -advbl-adj-pre>
      (advbl (ATYPE PRE) (VAR ?advbv) (ARG ?v) ;;(SORT OPERATOR) 
             (argument (% ADJP (sem ?sem)))
-            (gap -)
+            (gap -) (complex -) (WH -) ; not "how" or "what"
       )
      (head (ADJP (lf (% PROP (CLASS ?c) (VAR ?v) (CONSTRAINT ?con) (sem ?sem))) 
 	    (val ?val) (agr ?agr) (mass ?mass) (argument ?argmt) (arg ?arg)
@@ -1180,7 +1320,7 @@
      -advbl-hyphen-adj-pre> 1 
      (advbl (ATYPE PRE) (VAR ?advbv) (ARG ?v) ;;(SORT OPERATOR) 
             (argument (% ADJP (sem ?sem)))
-            (gap -) (complex -)
+            (gap -) (complex -) (WH -) ; not "how" or "what"
       )
       (word (lex w::punc-minus))
       (head (ADJP (lf (% PROP (CLASS ?c) (VAR ?v) (CONSTRAINT ?con) (sem ?sem))) 
@@ -1190,7 +1330,7 @@
       (add-to-conjunct (val (MODS ?advbv)) (old ?con) (new ?newc))
      
       )
-
+     
     ;;  as ADJ as-PP
     ((ADJP (LF (% PROP (CLASS (:* ONT::AS-MUCH-AS ?w)) (VAR ?v) (CONSTRAINT ?newc) (sem ?sem)))
       (val ?val) (agr ?agr) (mass ?mass) (var ?v) (ARG ?arg) (gap ?gap) 
@@ -1248,7 +1388,7 @@
      (word (lex W::as))
      (head (ADVBL (lf (% PROP (CLASS (:* ?c ?w)) (VAR ?v) (CONSTRAINT ?con) (sem ?sem)))
 	    (val ?val) (agr ?agr) (mass ?mass) (argument ?argmt) (arg ?arg)
-	    (gap ?gap) (premod -) 
+	    (gap ?gap) (premod -)
                  ))
      (word (lex w::as))
      (S (var ?sv) (gap -))
@@ -1262,7 +1402,7 @@
       )
      -so-adj-that>
      (word (lex W::so))
-     (head ((? cat ADJP ADVBL)
+     (head (ADJP
 	    (lf (% PROP (CLASS (:* ?c ?w)) (VAR ?v) (CONSTRAINT ?con) (sem ?sem))) 
 	    (val ?val) (agr ?agr) (mass ?mass) (argument ?argmt) (arg ?arg)
 	    (gap ?gap) (premod -) 
@@ -1271,6 +1411,23 @@
      (cp (var ?vs) (gap -) (ctype (? ctype W::S-THAT-MISSING W::S-THAT-OVERT)))
      (add-to-conjunct (val (standard ?vs)) (old ?con) (new ?newc))
      )
+
+     ((ADVBL (LF (% PROP (CLASS (:* ONT::SO-MUCH-THAT ?w)) (VAR ?v) (CONSTRAINT ?newc) (sem ?sem)))
+           (val ?val) (agr ?agr) (mass ?mass) (var ?v) (ARG ?arg) (gap ?gap) 
+      (argument ?argmt) (premod +) 
+      )
+     -so-adv-that>
+     (word (lex W::so))
+     (head (ADVBL
+	    (lf (% PROP (CLASS (:* ?c ?w)) (VAR ?v) (CONSTRAINT ?con) (sem ?sem))) 
+	    (val ?val) (agr ?agr) (mass ?mass) (argument ?argmt) (arg ?arg)
+	    (gap ?gap) (premod -) 
+                 ))
+     ;;(word (lex w::that))
+     (cp (var ?vs) (gap -) (ctype (? ctype W::S-THAT-MISSING W::S-THAT-OVERT)))
+     (add-to-conjunct (val (standard ?vs)) (old ?con) (new ?newc))
+     )
+     
 #||
     ;; so ADV that ...
      ((ADVBL (LF (% PROP (CLASS (:* ONT::SO-MUCH-THAT ?w)) (VAR ?v) (CONSTRAINT ?newc) (sem ?sem)))
@@ -1548,7 +1705,7 @@
      ;; but this is necessary for making things work in cases like "is this true as well"?
      (advbl (sort DISC) (ATYPE POST) (SA-ID -) (arg ?v) (var ?advv) (gap -) (ing -) (ARGUMENT (% UTT)))
      (add-to-conjunct (val (MODS ?advv)) (old ?adv1) (new ?adv)))
-     
+
     ))
 
 
@@ -1649,7 +1806,8 @@
 		(lex ?pt) (headcat ?hc)
 		(sem ?somesem) ;(sem ($ ?somesem))
 		(var ?gapvar) (agr ?agr)     
-     (gap (% np (lf ?lf) (var ?gapvar) (gap -) (sort (? sort pred descr wh-desc)) (case (? case obj -)) (agr ?agr) (sem ?somesem)))
+		(gap (% np (lf ?lf) (var ?gapvar) (gap -) (sort (? sort pred descr wh-desc))
+			(case (? case obj -)) (agr ?agr) (sem ?somesem) (status ?status))) ; status is matched in wh-q2
      )					; I set the case here to a var, in order to allow -np-spec-of-pp> to work. Otherwise, CASE is not used in PPs
     -pp1-gap> 0.98
     (head (prep (LEX ?pt) (headcat ?hc)))
@@ -1681,7 +1839,7 @@
 	      ;(lf (% description (constraint (& (scale ?scale)))))
 	      (lf (% description (constraint ?con)))
 	      (sem ($ f::abstr-obj (f::scale (? sc ont::scale ont::measure-scale)))) ;ont::measure-domain))))
-	      (class  ont::quantity);;(? lft ont::angle-unit ont::length-unit ont::percent ont::distance))
+	      (class  ont::quantity-abstr);;(? lft ont::angle-unit ont::length-unit ont::percent ont::distance))
 	      ;; well, 'he walked miles before he reached water'; 'he crawled inches to the next exit' ...; and this restriction prevents the non-unit NPs so if it's reinstated we need two rules
 ;	      (lf (% description (sort set))) ;; this restriction is needed to prevent bare measure units as adverbials
 	      ))

@@ -30,6 +30,7 @@
 )
 ))
 
+
 (define-words :pos W::adj :templ CENTRAL-ADJ-TEMPL
  :words (
    ((W::back w::breaking)
@@ -49,18 +50,22 @@
 ))
 
 (define-words :pos W::ADV
- :tags (:base500)
- :words (
-  (W::BACK
-   (SENSES
-    ((LF-PARENT ONT::DIRECTION-backward)
-     ;(TEMPL PRED-S-POST-TEMPL)
-     (TEMPL PRED-S-VP-templ)
-     (example "move back")
-     )
-    )
-   )
-))
+  :tags (:base500)
+  :words (
+	  (W::BACK
+	   (SENSES
+	    ((LF-PARENT ONT::DIRECTION-backward)
+	     (TEMPL PRED-S-OR-NP-POST-TEMPL)
+	     ;;(TEMPL PRED-S-VP-templ)
+	     (example "move back")
+	     )
+	    ((LF-PARENT ONT::to-prior-loc)
+	     (TEMPL PARTICLE-TEMPL)
+	     (example "bring it back")
+	     )
+	    )
+	   )
+	  ))
 
 (define-words :pos W::ADV
  :words (

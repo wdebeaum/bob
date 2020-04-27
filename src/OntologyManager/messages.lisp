@@ -16,7 +16,9 @@
 ;;    reply function to swap around sender/receiver and reply-with: etc.
 
 (in-package "ONTOLOGYMANAGER")
+(in-component :om)
 
+#|
 (defvar *module-name* 'ontologymanager
   "Name under which to register this module when we startup. This is also
 used to find the package we should be in runtime when reading messages,
@@ -69,6 +71,7 @@ message in reply to MSG."
   (let ((msg (COMM:recv *module-name*)))
     (LOGGING:log-message-received msg)
     msg))
+
 
 (defun receive-message (msg)
   "Dispatches message MSG for processing."
@@ -412,3 +415,166 @@ returns : function return value"
   (load "../OntologyManager/messages.lisp")
   )
 
+|#
+
+(format *error-output* "~%~%LOADING MESSAGES~%~%")
+
+(defcomponent-handler
+    '(request &key :content (define-type . *))
+    #'(lambda (msg args)
+	(reply-to-msg msg 'reply
+		      :content (when user::*build-ontology*
+				 (if (apply #'add-new-type args) T))))
+  :subscribe t)
+#|
+(defcomponent-handler
+    '(tell &key :content (define-type . *))
+    #'(lambda (msg args)
+	(when user::*build-ontology* (apply #'add-new-type args)))
+  :subscribe t)|#
+
+
+(defmacro tell (&rest args)
+  `(apply #'additional ',args))
+
+(defun additional (&key content)
+  (apply #'add-new-type (cdr content)))
+
+(defmacro preliminary-define-type (&rest args)
+  `(apply #'add-new-type ',args))
+
+(defun add-new-type (&key (wnsense nil) (trips-type nil) (comment nil)
+		       (wordnet-sense-keys nil) (parent nil)
+		       (definitions nil) (arguments nil))
+  (if (not (lf-sem trips-type))
+      ;;  A new type, add the full definition
+      (progn
+	(lfontology-define-type trips-type :parent parent :wordnet-sense-keys wordnet-sense-keys
+			      :comment comment
+			      :arguments (mapcar #'(lambda (a)
+						     (cons :required a)) arguments)
+			      :definitions definitions
+			      )
+	(format t "~%Defined type: ~S" trips-type)
+	(recompile-ontology))
+      ;;  An existing type, we want to augment the existing definition with the axioms and comments
+      (add-definition-to-existing-type trips-type definitions comment wnsense)
+      ))
+
+(defun add-definition-to-existing-type (type def comment wnsense)
+  (let ((type-record (gethash type (ling-ontology-lf-table *lf-ontology*)))
+	(simplified-def (simplify-def def type))
+	(WNnewsense (symbol-name wnsense)))
+    (when (and type-record simplified-def)
+      (let ((new-definition (combine-defns def (lf-description-definitions type-record)))
+	    (new-comment (if (lf-description-comment type-record)
+			     (if comment
+				 (concatenate 'string (lf-description-comment type-record)
+					  ";;"
+					  comment))
+			     comment)))
+	(print `(add-definition-to-existing-type :type ,type
+						    :wnsense ,wnsense
+						    :def ,simplified-def))
+	#|	(send-msg `(request :content (add-definition-to-existing-type :type ,type
+								      :wnsense ,wnsense
+								      :def ,simplified-def)))|#
+	(setf (lf-description-definitions type-record)
+	      new-definition)
+	(when (and WNnewsense (not (member WNnewsense (lf-description-wordnet-sense-keys type-record) :test #'equal)))
+	    (setf (lf-description-wordnet-sense-keys type-record)
+		  (cons WNnewsense (lf-description-wordnet-sense-keys type-record))))
+	(when new-comment
+	  (setf (lf-description-comment type-record)
+		new-comment)))
+      T)))
+
+(defun simplify-def (def type)
+  "check that we have non redundant content in the def before processing it"
+  (cond ((eq (car def) 'ont::OR)
+	 (let ((newdef (cons 'ONT::OR
+			     (mapcar #'(lambda (x) (simplify-def x type)) (cdr def)))))
+	   newdef))
+     #| ;; check for redundant def
+      (if (or (eq (car def) 'ont::and)
+	      (member :formal def))|#
+	((eq (car def) type)
+	  (progn
+	    (format t "~%Rejecting definition for type as redundant ~S:  ~S" type def)
+	    nil))
+	((and (eq (car def) 'ont::and)
+	     (consp (cadr def))
+	     (eq (caadr def) :*))
+	 (cdr def))
+	(t (simplify-def1 def)
+	  
+	   )))
+
+(defun simplify-def1 (olddef)
+  "remove WNsense and force"
+  (when olddef
+    (cond ((symbolp olddef)
+	   olddef)
+	  ((member (car olddef) '(ont::and ont::or))
+	   (cons (car olddef)
+		 (remove-if #'null (mapcar #'simplify-def1 (cdr olddef)))))
+	  ((member (car olddef) '(ont::predicate))
+	   nil)
+	  ((consp olddef)
+	   (cons (car olddef) (simplify-roles (cdr olddef))))
+	  (t olddef))))
+
+(defun simplify-roles (args)
+  (cond ((member (car args) '(:wnsense :force))
+	 (simplify-roles (cddr args)))
+	((eq (car args) :formal)
+	 ;;(format t "~% result is ~S" (simplify-def (cadr args)))
+	 (list* :formal (simplify-def1 (cadr args))
+		(simplify-roles (cddr args))))
+	(args
+	 (list* (car args) (cadr args) (simplify-roles (cddr args))))))
+	  
+
+(defun combine-defns (newdef olddef)
+  (if (and newdef olddef)
+      (let* ((newdefpreds (if (eq (car newdef) 'ont::or)
+			      (cdr newdef)
+			      (list newdef)))
+	     (olddefpreds (if (eq (car olddef) 'ont::or)
+			      (cdr olddef)
+			      (list olddef)))
+	     (reallynewpreds (remove-if #'(lambda (x) (defn-already-in-list x olddefpreds)) newdefpreds)))
+	;;(format t "~%new=~S old=~S" newdefpreds olddefpreds)
+       
+	(if reallynewpreds
+	    (cons 'ont::OR (append olddefpreds reallynewpreds))
+	    olddef))
+      (or newdef
+	  olddef)))
+
+(defun defn-already-in-list (newdefn olddefns)
+  (some #'(lambda (x) (defn-match newdefn x nil)) olddefns))
+
+(defun defn-match (x y bndgs)
+   "True is they are identical modulo variable naming"
+   (cond ((equal x y)
+	  (or bndgs '((nil))))
+	 ((or (null x) (null y))
+	  NIL)
+	 ((isvar x)
+	  (let ((bound-value (cdr (assoc x bndgs))))
+	    (if bound-value
+		(defn-match bound-value y bndgs)
+		(cons (cons x y) bndgs))))
+	 ((and (consp x) (consp y))
+	  (let ((newbndgs (defn-match (car x) (car y) bndgs)))
+	    (if newbndgs
+		(defn-match (cdr x) (cdr y) newbndgs))))
+	 (t
+	  nil)
+	  ))
+
+(defun isvar (x)
+  (and x (symbolp x)
+       (eq (first (coerce (symbol-name x) 'list))
+	   #\?)))

@@ -16,7 +16,9 @@
 	(W::FDA ONT::PROFESSIONAL-ORGANIZATION) ; as opposed to PROTEIN
 	(W::MODEL ONT::REPRESENTATION)
 	(W::CELL ONT::CELL)
-	;; "clear the model"
-	(W::CLEAR ONT::EMPTY)
+	(W::CLEAR ONT::EMPTY) ;; "clear the model"
 	(W::HGF ONT::GENE-PROTEIN)
+	;((W::NF 1) ONT::GENE-PROTEIN) ; "NF1"
+	(W::NF-1 ONT::GENE-PROTEIN) ; "NF1"
+	(W::GO ONT::DATABASE)
 	))

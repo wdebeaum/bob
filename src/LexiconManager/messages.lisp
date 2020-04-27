@@ -89,6 +89,15 @@
 	       :comment (format nil "wrong number of arguments")))))
   :subscribe t)
 
+;; adding new words definitions (Gloss)
+
+(defcomponent-handler
+    '(request &key :content (define-words . *))
+    #'(lambda (msg args)
+	(reply-to-msg msg 'reply
+		      :content (when user::*build-ontology* (apply #'lexicon-define-words args))))
+  :subscribe t)
+
 ;; the lexicon-interface functions, not via API interface (so the arguments aren't quoted)
 (defun handle-using-lexicon-interface-function (msg args)
     (declare (ignore args))

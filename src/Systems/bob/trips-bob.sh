@@ -25,6 +25,10 @@ TRIPS_PORT_DEFAULT=6200
 TRIPS_SYSNAME=bob
 TRIPS_SYSNAME_ALLCAPS=`echo $TRIPS_SYSNAME | tr "[:lower:]" "[:upper:]"`
 
+# test mode?
+if  test ! -z "$TRIPS_TEST_MODE"; then
+    echo "Running in test mode."
+fi
 
 #############################################################################
 #
@@ -272,6 +276,11 @@ fi
 (sleep 5; \
  $TRIPS_BASE/bin/Graphviz $port_opt -display-enabled $graphviz_display \
  2>&1 | tee Graphviz.err) &
+
+# GraphMatcher
+if test -n "$TRIPS_TEST_MODE" ; then
+    (sleep 5; $TRIPS_BASE/bin/GraphMatcher >GraphMatcher.err 2>&1) &
+fi
 
 # set display option for facilitator
 if test -n "$nouser"; then

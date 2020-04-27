@@ -166,8 +166,8 @@ sub read_from_terms2 {
       # the left)
       if ($end - $start < 3 and
 	  (not grep { $listed_variant_entries{$_} } @used_entries) and (
-	    $lex ne $matched_variant or	      # FIXME? \pL vvv
-	    ($start > 0 and substr($str, $start-1, 1) =~ /[a-z-]/i) or
+	    $lex ne $matched_variant or
+	    ($start > 0 and substr($str, $start-1, 1) =~ /[\p{L}-]/i) or
 	    ($end < length($str) and substr($str, $end, 1) =~ /[\w-]/)
 	  )) {
 	$skip = 1;
@@ -290,6 +290,9 @@ sub read_from_terms2 {
 	  $lftypes = ['MEDICAL-DISORDERS-AND-CONDITIONS'];
 	} elsif ($id =~ /^PC:/) { # everything (that we get) is a drug
 	  $lftypes = ['PHARMACOLOGIC-SUBSTANCE'];
+	} elsif ($id =~ /^DB:/) { # everything is a database
+	  $lftypes = ['DATABASE'];
+	  # TODO? force penn-pos = NNP
 	}
 	if (defined($lftypes)) {
 	  my @old_terms = grep {
@@ -575,11 +578,11 @@ sub tag_drum_terms {
     }
     $plural or $singular or die "Neither plural nor singular!";
     # compute proper/common feature
-    my $proper = ($tag->{lex} =~ /[A-Z0-9]/);
+    my $proper = ($tag->{lex} =~ /[\p{Lu}\d]/);
     my $common = (
       (not $proper) or
       # just sentence-initial-capitalized
-      ($tag->{lex} =~ /^[A-Za-z](?:[a-z\s]|$dash_re)+$/ and
+      ($tag->{lex} =~ /^\p{L}(?:[\p{Ll}\s]|$dash_re)+$/ and
        $sentence_starts{$tag->{start}})
     );
     # encode as Penn POS
@@ -1256,8 +1259,8 @@ sub score_match {
   } else {
     die "Unrecognized term status: $m->{status}";
   }
-  # we really like famplex
-  if ($pkg eq 'FPLX') {
+  # we really like famplex and db
+  if ($pkg eq 'FPLX' or $pkg eq 'DB') {
     $status_score++;
   }
 

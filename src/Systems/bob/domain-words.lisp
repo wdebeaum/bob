@@ -7,10 +7,8 @@
     ((LF-PARENT ONT::NATURAL)
      (LF-FORM W::WILDTYPE)
      (TEMPL central-adj-templ)
-     )
-    )
-   )
-))
+     )))
+ ))
 
 (define-words :pos W::n 
 :words (
@@ -19,10 +17,8 @@
     ((LF-PARENT ONT::WILDTYPE-OBJ)
      (LF-FORM W::WILDTYPE)
      (TEMPL count-pred-templ)
-     )
-    )
-   )
-))
+     )))
+ ))
 
 (define-words :pos W::v 
  :words (
@@ -33,10 +29,8 @@
      (EXAMPLE "protein targeting")
      ;(TEMPL agent-affected-GOAL-templ (xp (% W::ADVBL (w::lf (% w::prop (w::class (? x ont::goal-reln ont::source-reln)))))))
      (TEMPL AGENT-AFFECTED-RESULT-ADVBL-OBJCONTROL-TEMPL (xp (% W::ADVBL (w::lf (% w::prop (w::class (? x ont::goal-reln ont::source-reln)))))))
-     )
-    )
-   )
-))
+     )))
+  ))
 
 (define-words :pos W::v 
  :words (
@@ -47,11 +41,8 @@
      ;(TEMPL agent-affected-xp-templ)
      ;(TEMPL agent-affected-GOAL-templ (xp (% W::ADVBL (w::lf (% w::prop (w::class (? x ont::goal-reln ont::source-reln)))))))
      (TEMPL AGENT-AFFECTED-RESULT-ADVBL-OBJCONTROL-TEMPL (xp (% W::ADVBL (w::lf (% w::prop (w::class (? x ont::goal-reln ont::source-reln)))))))
-     )
-
-    )
-   )
-))
+     )))
+  ))
 
 #|
 (define-words :pos W::N
@@ -65,32 +56,101 @@
 	  )
   )
 |#
-	     
+
+#| these are now in src/TextTagger/db-terms.tsv
 ;;;;;;;;;;;;;;;;;;;;;;;;
-; TFTA
+; TFTA: Databases
 ;;;;;;;;;;;;;;;;;;;;;;;;
 
 (define-words :pos W::name
 :words (
- (w::Reactome
+ (W::Reactome
    (SENSES
     ((LF-PARENT ONT::DATABASE)
      (TEMPL name-templ)
-     )
-    )
-   )
-))
-
-(define-words :pos W::name
-:words (
- (w::KEGG
+     )))
+ (W::KEGG
    (SENSES
     ((LF-PARENT ONT::DATABASE)
      (TEMPL name-templ)
-     )
-    )
-   )
-))
+     )))
+ (W::HGNC
+   (SENSES
+    ((LF-PARENT ONT::DATABASE)
+     (TEMPL name-templ)
+     )))
+ ((W::Gene W::Ontology)
+   (SENSES
+    ((LF-PARENT ONT::DATABASE)
+     (TEMPL name-templ)
+     )))
+ (W::WikiPathways
+   (SENSES
+    ((LF-PARENT ONT::DATABASE)
+     (TEMPL name-templ)
+     )))
+ (W::HumanCyc
+   (SENSES
+    ((LF-PARENT ONT::DATABASE)
+     (TEMPL name-templ)
+     )))
+ (W::DisGeNET
+   (SENSES
+    ((LF-PARENT ONT::DATABASE)
+     (TEMPL name-templ)
+     )))
+ ((W::Small W::Molecule W::Pathway W::Database)
+   (SENSES
+    ((LF-PARENT ONT::DATABASE)
+     (TEMPL name-templ)
+     )))
+ (W::SMPDB
+   (SENSES
+    ((LF-PARENT ONT::DATABASE)
+     (TEMPL name-templ)
+     )))
+ (W::CTD
+   (SENSES
+    ((LF-PARENT ONT::DATABASE)
+     (TEMPL name-templ)
+     )))
+ ((W::Comparative W::Toxicogenomics W::Database)
+   (SENSES
+    ((LF-PARENT ONT::DATABASE)
+     (TEMPL name-templ)
+     )))
+ (W::MSigDB
+   (SENSES
+    ((LF-PARENT ONT::DATABASE)
+     (TEMPL name-templ)
+     )))
+ ((W::Molecular W::Signatures W::Database)
+   (SENSES
+    ((LF-PARENT ONT::DATABASE)
+     (TEMPL name-templ)
+     )))
+ (W::PharmGKB
+   (SENSES
+    ((LF-PARENT ONT::DATABASE)
+     (TEMPL name-templ)
+     )))
+ ((W::Pharmacogenomics W::Knowledgebase)
+   (SENSES
+    ((LF-PARENT ONT::DATABASE)
+     (TEMPL name-templ)
+     )))
+ (W::BioCarta
+   (SENSES
+    ((LF-PARENT ONT::DATABASE)
+     (TEMPL name-templ)
+     )))
+ ((W::GEO W::RNAI W::database)
+   (SENSES
+    ((LF-PARENT ONT::DATABASE)
+     (TEMPL name-templ)
+     )))
+ ))
+|#
 
 ;;;;;;;;;;;;;;;;;;;;;;;;
 ; BOB 
@@ -103,10 +163,8 @@
    (SENSES
     ((LF-PARENT ONT::predecessor)
      (TEMPL other-reln-templ)
-     )
-    )
-   )
-))
+     )))
+ ))
 
 (define-words :pos W::n
 :words (
@@ -114,10 +172,8 @@
    (SENSES
     ((LF-PARENT ONT::successor)
      (TEMPL other-reln-templ)
-     )
-    )
-   )
-))
+     )))
+ ))
 
 (define-words :pos W::n
 :words (
@@ -125,10 +181,8 @@
    (SENSES
     ((LF-PARENT ONT::identification)
      (TEMPL other-reln-templ)
-     )
-    )
-   )
-))
+     )))
+ ))
 
 (define-words :pos W::n
 :words (
@@ -136,9 +190,7 @@
    (SENSES
     ((LF-PARENT ONT::identification)
      (TEMPL other-reln-templ)
-     )
-    )
-   )
+     )))
  ))
 
 ;;;;;;;;;;;;;;;;;;;
@@ -153,11 +205,26 @@
     (TEMPL  adj-co-theme-templ (xp (% w::pp (w::PTYPE (? pt w::to)))))
     (sem (f::gradability +) (f::intensity ont::med) (f::orientation ont::more))
     (meta-data :origin bob :entry-date 20181228 :change-date 20181229 :comments nil)
-    )
-   )
-)
-))
+    )))
+  ))
 
+
+; The genes are enriched in these GO (Gene Ontology) terms
+(define-words :pos W::adj
+ :tags (:base500)
+ :words (
+  (w::enriched
+  (senses
+   ((lf-parent ont::abundant-val)
+    (TEMPL  adj-co-theme-templ (xp (% w::pp (w::PTYPE (? pt w::in w::with)))))
+    )
+   ((lf-parent ont::abundant-val)
+    (TEMPL  central-adj-templ)
+    (preference 1.02) ; What terms are enriched?
+    )
+
+   ))
+  ))
 
 
 
@@ -172,9 +239,7 @@
    (SENSES
     ((LF-PARENT ONT::PROTEIN)
      (TEMPL count-pred-templ)
-     )
-    )
-   )
+     )))
 ))
 
 ; put here because there should be a more principled way to handle adjectives
@@ -184,9 +249,7 @@
    (SENSES
     ((LF-PARENT ONT::SHORT)
      (TEMPL CENTRAL-ADJ-TEMPL)
-     )
-    )
-   )
+     )))
 ))
 
 ; copied from "resulting"
@@ -198,9 +261,7 @@
      (LF-PARENT ONT::outcome-val)
      (TEMPL CENTRAL-ADJ-TEMPL)
      (example "the ensuing chaos")  
-     )
-    )
-   )
+     )))
 ))
 
 |#

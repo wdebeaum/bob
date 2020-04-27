@@ -20,6 +20,11 @@
 	(unify-args args))
   )
 
+(define-predicate 'W::UNIFY-BUT-DONT-BIND
+    #'(lambda (args)
+	(unify-no-bind-args args))
+  )
+
 (define-predicate 'W::ROLE-UNIFY
     #'(lambda (args)
 	(unify-role-args args))
@@ -116,10 +121,15 @@
   )
 
 (defun unify-args (args)
-  ;;(let ((arg0 (get-fvalue args :arg0))) ;; (second (first args))))
-    (match-vals 'w::sem (get-fvalue args 'w::pattern) (get-fvalue args 'w::value))
-;;		arg0 
-    )
+  (match-vals 'w::sem (get-fvalue args 'w::pattern) (get-fvalue args 'w::value))
+  )
+
+(defun unify-no-bind-args (args)
+  (multiple-value-bind (bndgs score)
+      (match-vals 'w::sem (get-fvalue args 'w::pattern) (get-fvalue args 'w::value))
+    (if bndgs
+	(values *success* score)
+      )))
 
 (define-predicate 'w::GT
     #'(lambda (args)
@@ -235,8 +245,9 @@
 	(val (get-fvalue args 'w::val))
 	(result (get-fvalue args 'w::result))
 	)
-   	(match-vals nil RESULT (assoc feat val))
-	))
+    (when (consp val)
+      (match-vals nil RESULT (assoc feat val))
+      )))
 
 
 #|
@@ -324,22 +335,96 @@
 
 (defun add-new-constraint (args)
   "inserts a constraint into a new constraint structure and binds the third arg to it"
-  (let ((newval (second (assoc 'w::val args)))
-        (oldconstraint (second (assoc 'w::old args)))
-        (newconstraintvar (second (assoc 'w::new args))))
-    (cond
-     ((and (constit-p newval) (eql (constit-cat newval) '&))
-      ;; adding a complex constraint
-      (add-features-to-constraint (constit-feats newval) oldconstraint newconstraintvar))
-     ((consp newval) ;; we assume that our constraint is just 1 feature
-      (add-features-to-constraint (list newval) oldconstraint newconstraintvar))
-     ((null newval)
-      (match-vals nil newconstraintvar oldconstraint))
-     (t
-      ;; illegal value, print warning and fail
-      (parser-warn "Attempt to add an illegal constraint ~S. ~%   Constraints must be lists or & constituents" newval))))
-  )
+  (let* ((newval (second (assoc 'w::val args)))
+	 (oldconstraint (second (assoc 'w::old args)))
+	 (newconstraintvar (second (assoc 'w::new args)))
+	 (oldfeatures (get-features-from-val oldconstraint args))
+	 (newfeatures (get-features-from-val newval args))
+	 ;;  Now we can add the new features, but rename them if not unique
+	 (combined-features
+	  (add-feats-renaming-if-necessary newfeatures oldfeatures))
+	 )
+    (if combined-features
+	(match-vals nil newconstraintvar (make-constit :cat '& :feats combined-features))
+	(match-vals nil newconstraintvar oldconstraint)
+	)
+    ))
 
+(defun get-features-from-val (c args)
+  (let ((cleaned-feats
+	 (remove-if #'(lambda (x)
+			(and (consp x) (member '- x)))
+		    (cond ((eq c '-)
+			   nil)
+			  ((and (constit-p c) (eql (constit-cat c) '&))
+			   (constit-feats c))
+			  ((consp C)
+			   C)
+			  ((var-p c)
+			   ;(format t "~%Warning: found unexpected unbound variable in ADD-TO-CONJUNCT: ~S " args)
+			   nil)
+			  (t
+			   (format t "~%Warning: bad arg passed to add-to-conjunct: ~S" args)
+			   nil)))))
+    (if (every #'consp cleaned-feats)
+	cleaned-feats
+	(if (symbolp (car cleaned-feats))
+	    ;;  it is a single feat-value pair, make into a list
+	    (list cleaned-feats)
+	    ;; otherwise we give up (hope its nil!)
+	    nil))))
+	     
+  
+
+(defun add-feats-renaming-if-necessary (new old)
+  (if new
+    (let* ((next (car new))
+	   (featname (rename-if-necessary (car next) old)))
+      (add-feats-renaming-if-necessary (cdr new)
+				       (cons (list featname (cadr next)) old)))
+    old))
+
+(defun rename-if-necessary (name feats)
+  (if (and (member name '(w::assoc-with w::assoc-with1 w::assoc-with2 w::mod w::mod1 w::mod2 w::mod3 w::mod4 w::result w::result1 w::result2 w::mods)) ; not (ont::agent ont::affected ont::affected1 ont::neutral ont::neutral1 ont::formal ont::figure ont::figure1 ont::ground ont::ground1)
+	   (assoc name feats))
+      (gen-new-name name feats)
+      name))
+
+(defun gen-new-name (name feats)
+  (let ((newname
+	 (case name
+	   ;(ont::agent 'ont::agent1)
+	   ;(ont::affected 'ont::affected1)
+	   ;(ont::affected1 'ont::affected2)
+	   ;(ont::neutral 'ont::neutral1)
+	   ;(ont::neutral1 'ont::neutral2)
+	   ;(ont::formal 'ont::formal1)
+	   (w::mod 'w::mod1)
+	   (w::mod1 'w::mod2)
+	   (w::mod2 'w::mod3)
+	   (w::mod3 'w::mod4)
+	   (w::mod4 'w::mod5)
+	   (w::assoc-with 'w::assoc-with1)
+	   (w::assoc-with1 'w::assoc-with2)
+	   (w::assoc-with2 'w::assoc-with3)
+	   (w::assoc-with3 'w::assoc-with4)
+	   (w::assoc-with4 'w::assoc-with5)
+	   (w::result 'w::result1)
+	   (w::result1 'w::result2)
+	   ;(w::mods 'w::mods1)
+	   (w::mods 'w::mod)
+	   (otherwise 'w::mod1))))
+    (if (assoc newname feats)
+	(if (member newname '(w::mod5 w::assoc-with5 w::result2))
+	    (progn
+	      (format t "~%Warning (gen-new-name): need more names beyond ~S~%" newname)
+	      newname
+	      )
+	  (gen-new-name newname feats)
+	  )
+	newname)))
+	   
+	   
 (define-predicate 'w::compute-sem-features
   #'(lambda (args)
       (compute-sem args)))
@@ -371,20 +456,6 @@
     (format t "~% BEST LEF for sem ~S is ~S" sem newlf)
     (match-vals nil lf (or (;; finish when new SEM strctures are installed
 			    )))))
-
-(defun add-features-to-constraint (feats oldconstraint newconstraintvar)
-  "A helper to add-new-constraint. Given a list of features and an old constraint, creates a new constraint with features added to the old constraint. "
-  (cond
-   ((constit-p oldconstraint)
-    (match-vals nil newconstraintvar 
-		(make-constit :cat '& 
-			      :feats (append feats
-					     (remove-if #'(lambda (c) (eq (car c) '-))
-							(constit-feats oldconstraint))))))
-   ;;  oldconstraint is not specified
-   ((or (null oldconstraint) (eq oldconstraint '-) (var-p oldconstraint))
-    (match-vals nil newconstraintvar (make-constit :cat '& :feats feats))
-    )))
 
 (define-predicate 'w::add-constraints-to-lf
   #'(lambda (args)
@@ -561,12 +632,18 @@
     (cond ((and (not (intersection (list core-in1 core-in2) '(ont::referential-sem)))
 		(member lub '(ont::referential-sem ont::any-sem))) .9)
 	  ((equal core-in1 core-in2) 1)  
-	  ((and parents1 parents2) (+ 0.96 (/ 0.04 (adjust-lub-score (+ (if (position lub parents1)
+	  ((and parents1 parents2) #|(+ 0.96 (/ 0.04 (adjust-lub-score (+ (if (position lub parents1)
 									    (+ 1 (position lub parents1))
 									    0)
 									(if (position lub parents2)
 									    (+ 1 (position lub parents2))
-									    0))))))
+	   0))))))|#
+	   (- 1 (* .001 (adjust-lub-score (+ (if (position lub parents1)
+						 (+ 1 (position lub parents1))
+						 0)
+					     (if (position lub parents2)
+						 (+ 1 (position lub parents2))
+						 0))))))
 	  (t .96)))))
 
 (defun adjust-lub-score (x)
@@ -850,3 +927,16 @@
       )
 )))
 
+(define-predicate 'w::add-status
+    #'(lambda (args)
+	(add-status args))
+  )
+
+(defun add-status (args)
+  "pass on status if it is instantiated; otherwise make it a variable"
+  (let ((in1 (second (assoc 'w::in1 args)))
+	(out (second (assoc 'w::out args)))
+	)
+    (if (eq in1 '-) (match-vals nil out (make-var :name (gen-symbol 'status)))
+      (match-vals nil out in1))
+    ))
