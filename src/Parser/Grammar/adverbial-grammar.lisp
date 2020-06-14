@@ -9,18 +9,20 @@
 	 ;;lex headcat removed --me
      (PP KIND MASS NAME agr SEM SORT PRO SPEC CLASS transform gap gerund)
      ;;(ADVBLS FOCUS VAR SEM SORT ATYPE ARG SEM ARGUMENT NEG TO QTYPE lex transform)
-     (ADVBL VAR SORT ARGSORT SEM ARGUMENT ARG lex orig-lex headcat transform neg result-only))
+     (ADVBL ;;VAR
+      SORT ARGSORT SEM ARGUMENT ARG lex orig-lex headcat transform neg result-only))
 
-    ;;  ADJ -> ADVBL -- location adjective phrases can be used as adverbials e.g., put it right of the door
+    ;;  ADJ -> ADVBL -- relative location adjective phrases can be used as adverbials e.g., put it right of the door
 
-    ((ADVBL (ARG ?arg) (gap ?gap)
-      (LF ?lf)
+    ((ADVBL (ARG ?arg) (gap ?gap) (var *)
+      (LF (% PROP (CLASS ont::direction) (var *) (constraint (& (affected ?v)))))
       (sem ?sem) (atype post)
       )
      -advbl-adj>
-     (head (adjp (lf ?lf) (var ?v) (comparative -)  (gap ?gap) (atype predicative-only)
+     (head (adjp (lf ?lf) (var ?v) (comparative -)  ;;(gap ?gap) (atype predicative-only)
 		 (argument (% ?xxx (var ?arg)))
-		 (sem ?sem) (sem ($ f::ABSTR-OBJ (f::type ont::location-val)))
+		 (sem ?sem) (sem ($ f::ABSTR-OBJ (f::type ont::oriented-loc-reln)))
+		 (lf (% ?s (class ont::oriented-loc-reln)))
 		 
       )))
 
@@ -56,7 +58,7 @@
 	 ;;lex headcat removed --me
      (PP KIND MASS NAME agr SEM SORT PRO SPEC CLASS transform gap gerund)
      ;;(ADVBLS FOCUS VAR SEM SORT ATYPE ARG SEM ARGUMENT NEG TO QTYPE lex transform)
-     (ADVBL VAR SORT ARGSORT ATYPE SEM ARGUMENT lex orig-lex headcat transform neg result-only)
+     (ADVBL VAR SORT ARGSORT ATYPE SEM ARGUMENT lex orig-lex headcat transform neg result-only subcat)
      (ADV SORT ATYPE CONSTRAINT SA-ID PRED NEG TO LEX orig-lex HEADCAT SEM ARGUMENT SUBCAT IGNORE transform)
      )	       	       
 
@@ -128,7 +130,7 @@
     ;; These weren't picked up and the whole system prone to failure
     ;; Instead, I re-wrote it so that now pp adverbials place restriction on case (which is the only reason I can see it here)
     ;; TEST: instead of the house, from the store, due to drought
-    ((ADVBL (ARG ?arg) (FOCUS ?subv)
+    ((ADVBL (ARG ?arg) (FOCUS ?subv) (class ?lf)
             (LF (% PROP (VAR ?v) (CLASS ?lf) (CONSTRAINT (& (?submap ?subv) (?argmap ?arg)))
                    (sem ?sem) (transform ?trans)))
       (sem ?sem) (VAR ?v) (role ?lf) (subcatsem ?subcatsem) (gap ?gap)
@@ -293,14 +295,14 @@
 
        ;;  BINARY-CONSTRAINT adverbials that allow omitted objects, e.g., nearby, near, below, about, ...
     ;; TEST: The dog chased the cat below.
-    ((ADVBL (ARG ?arg) (QTYPE ?wh) (FOCUS ?var)
+    ((ADVBL (ARG ?arg) (QTYPE ?wh) (FOCUS ?var) (class ?lf)
 	    (LF (% PROP (VAR ?v) (CLASS ?lf) (CONSTRAINT (& (?submap (% *PRO* (var *) (CLASS ONT::ANY-SEM)
 									(SEM ?subcatsem))) (?argmap ?arg)))
                    (sem ?sem) (transform ?trans)))
       ;;(SORT CONSTRAINT)
       (role ?lf) (subcatsem ?subcatsem)
       )
-     -advbl-binary-deleted> .97
+     -advbl-binary-deleted> .985
      (head (adv (SUBCAT (% ?x (SEM ?subcatsem))) (VAR ?v)
 	    (sort (? !sort pp-word double-subcat))
 	    (subcat-map ?submap) (ARGUMENT-MAP ?argmap)
@@ -784,7 +786,7 @@
       (advbl-needed -) (complex +) (subjvar ?subjvar)
       (GAP ?gap)
       )
-     -adv-vp-post> .98   ;;  want to prefer explicitly subcategorized attachments
+     -adv-vp-post> .985   ;;  want to prefer explicitly subcategorized attachments
      (head (vp- (VAR ?v) 
 		(seq -)  ;;  post mods to conjoined VPs is very rare
 		(SEM ?sem) 
@@ -990,9 +992,9 @@
 	   (LF (% PROP (CLASS ?class) (VAR *) (sem ?sem) (CONSTRAINT (& (sequence (?v1 ?v2)) (operator ?conj))
 		  ))))
      -advbl-conj1>
-     (ADVBL (ARG ?arg) (LF (% PROP (CLASS ?lf1) (VAR ?v1)(sem ?sem1))) (gap ?g) (argument ?argmt))
+     (ADVBL (ARG ?arg) (LF (% PROP (CLASS ?lf1) (VAR ?v1)(sem ?sem1))) (gap ?g) (argument ?argmt) (gap -))
      (CONJ (LF ?conj) (but-not -) (but -))
-     (head (ADVBL (ARG ?arg) (LF (% PROP (CLASS ?lf2) (VAR ?v2) (sem ?sem2))) (gap ?g) (argument ?argmt)))
+     (head (ADVBL (ARG ?arg) (LF (% PROP (CLASS ?lf2) (VAR ?v2) (sem ?sem2))) (gap ?g) (argument ?argmt) (gap -)))
     (sem-least-upper-bound (in1 ?sem1) (in2 ?sem2) (out ?sem))
     (class-least-upper-bound (in1 ?lf1) (in2 ?lf2) (out ?class))
     )

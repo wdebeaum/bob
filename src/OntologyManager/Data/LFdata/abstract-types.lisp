@@ -392,7 +392,7 @@
 
 #||;;; ownership, property, etc.
 (define-type ONT::possession
- :wordnet-sense-keys ("possession%1:03:00")
+ :wordnet-sense-keys ();"possession%1:03:00")
  :parent ONT::RELATION
  :arguments ((:ESSENTIAL ONT::neutral (F::phys-obj (F::origin F::human) (F::intentional +)))
              (:ESSENTIAL ONT::neutral1 ((? cth f::phys-obj f::abstr-obj)))
@@ -461,7 +461,7 @@
  :wordnet-sense-keys ("unit_of_measurement%1:23:00" "unit%1:23:00")
  :parent ONT::unit
  :sem (F::abstr-obj (F::measure-function F::value) (F::CONTAINER -) (F::INFORMATION -)
-       (F::INTENTIONAL -))
+       (F::INTENTIONAL -) (F::SCALE ONT::MEASURE-SCALE))
  ;;; We define an argument here because we want to express selectional restrictions on what this unit can measure
  :arguments ((:ESSENTIAL ONT::FIGURE)
              )
@@ -499,7 +499,7 @@
     :parent ont::time-unit)
 
 (define-type ont::year-duration
-    :wordnet-sense-keys ("year%1:28:00")
+    :wordnet-sense-keys ("year%1:28:01") ;"year%1:28:00")
     :parent ont::time-unit)
 
 (define-type ont::week-duration
@@ -865,7 +865,7 @@
 
 ;; information
 (define-type ONT::information
- :wordnet-sense-keys ("information%1:09:00" "information%1:10:00" "info%1:10:00" "vital_sign%1:26:00")
+ :wordnet-sense-keys ("information%1:09:00" "information%1:10:00" "info%1:10:00" "vital_sign%1:26:00" "indicator%1:10:01")
  :parent ONT::information-function-object
  ;:arguments ((:optional ONT::formal (F::prop))) ; copied from ONT::MESSAGE
  :arguments ((:optional ONT::FIGURE)
@@ -983,7 +983,7 @@
  )
 
 (define-type ONT::commercial-activity
- :wordnet-sense-keys ("finance%1:04:00" "commerce%1:04:00" "deal%1:04:02")
+ :wordnet-sense-keys ("commerce%1:04:00" "deal%1:04:02" "finance%1:04:00" "shop%2:41:00")
  :parent ONT::activity
  :sem (F::situation (F::cause (? cause F::agentive F::force)))
  )
@@ -1096,7 +1096,7 @@
 
 ;; meeting, party, conference
 (define-type ont::gathering-event
-    :wordnet-sense-keys("gathering%1:14:00" "visit%1:04:02")
+    :wordnet-sense-keys("gathering%1:14:00"); "visit%1:04:02")
     :parent ont::located-event
   )
 
@@ -1187,7 +1187,7 @@
 )
 
 (define-type ONT::FEELING
-    :wordnet-sense-keys ("feeling%1:03:00" "mercy%1:07:00")
+    :wordnet-sense-keys ("feeling%1:03:00" "mercy%1:07:00" "psychological_state%1:26:00")
     :parent ONT::mental-construction
     :arguments ((:OPTIONAL ONT::FIGURE) ;(f::situation (f::information f::mental-construct) (f::cause f::mental)))
 		)
@@ -1247,6 +1247,7 @@
  :parent ONT::ps-object
  ;; CERNL hack:: adding verb roles for verbs tagged as ont::procedure
  :sem (F::Abstr-obj (F::intentional -) (F::container +))
+ :wordnet-sense-keys ("procedure%1:10:00" "procedure%1:04:00" "procedure%1:04:02")
  )
 
 (define-type ONT::method
@@ -1257,27 +1258,31 @@
 ;; recipe, procedure, plan
 (define-type ONT::recipe
  :parent ONT::procedure
+ :wordnet-sense-keys ("instruction%1:10:04")
  )
 
 ;; http, ssl, imap, etc.
 (define-type ont::protocol
  :parent ont::procedure ;; ont::standard
+ :wordnet-sense-keys ("protocol%1:10:01")
  )
 
 ;; policy
 (define-type ONT::policy
  :parent ONT::procedure
+ :wordnet-sense-keys ("policy%1:09:00")
  )
 
 ;; algorithm, program, keystone correction
 ;; note that there is ont::computer-program for specific software programs like VM
 (define-type ONT::algorithm
  :parent ONT::procedure
- )
+ :wordnet-sense-keys ("algorithm%1:09:00")
+)
 
 ;; process
 (define-type ONT::process
- :wordnet-sense-keys ("procedure%1:04:00" "process%1:04:00")
+ ;:wordnet-sense-keys ("procedure%1:04:00" "process%1:04:00")
  :parent ONT::procedure
  )
 
@@ -1297,6 +1302,7 @@
 (define-type ONT::proposal
  :parent ONT::ps-object
  :arguments ((:essential ONT::FIGURE))
+ :wordnet-sense-keys ("proposal%1:10:00")
  )
 
 ;; task-related things that one commits to
@@ -1307,7 +1313,7 @@
  )
 
 (define-type ONT::problem
-    :wordnet-sense-keys ("obstacle%1:09:00" "obstacle%1:06:00" "problem%1:26:00" "problem%1:09:00" "challenge%1:26:00" "woe%1:26:00")
+    :wordnet-sense-keys ("obstacle%1:09:00" "obstacle%1:06:00" "problem%1:10:00" "problem%1:26:00" "challenge%1:26:00" "woe%1:26:00");"problem%1:09:00"
     :parent ONT::ps-object
     )
 

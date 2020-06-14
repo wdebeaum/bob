@@ -61,7 +61,8 @@
 	     (meta-data :origin ralf :entry-date 20040803 :change-date nil :comments nil)
 	     (TEMPL BINARY-CONSTRAINT-NP-TEMPL)
 	     (example "the plane to rochester")
-	     (PREFERENCE 0.97))
+	     ;(PREFERENCE 0.97))
+	     (PREFERENCE 0.98)) ; make it higher than ATTRIBUTED-TO
 	    
 	   
 	   ((LF-PARENT ONT::PURPOSE)
@@ -127,6 +128,7 @@
    )
 ))
 
+#|
 (define-words :pos W::ADJ
  :words (
   ((W::to w::the w::left)
@@ -137,7 +139,9 @@
     )
    )
 ))
+|#
 
+#|
 (define-words :pos W::ADJ
  :words (
   ((W::to w::the w::right)
@@ -147,4 +151,4 @@
      )
     )
    )
-))
+))|#

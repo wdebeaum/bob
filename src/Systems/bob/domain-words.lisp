@@ -226,7 +226,14 @@
    ))
   ))
 
-
+(define-words :pos W::name
+:words (
+ (W::bob
+   (SENSES
+    ((LF-PARENT ONT::AGENT)
+     (TEMPL name-templ)
+     )))
+))
 
 ;;;;;;;;;;;;;;;;;;;;;;;;
 ; for paper 1

@@ -935,7 +935,7 @@
 
 (define-type ont::likely-val
  :parent ont::likelihood-val
- :wordnet-sense-keys ("expected%3:00:00::" "plausible%3:00:00::" "prospective%3:00:00::" "likely%3:00:00::" "likely%3:00:04" "probable%3:00:00" )
+ :wordnet-sense-keys ("expected%3:00:00::" "plausible%3:00:00::" "likely%3:00:00::" "likely%3:00:04" "probable%3:00:00" )
  :sem (F::abstr-obj (F::scale ont::likely-scale))
  )
 
@@ -1342,21 +1342,21 @@
  :wordnet-sense-keys ("nuclear%3:00:00")
 )
 
-;; 20111017 added for obtw demo (word for type)
-(define-type ont::electrical
- :parent ont::substantial-property-val 
-)
-
+#|
 ;; boneless, skinless
-(define-type ont::food-preparation
- :parent ont::substantial-property-val 
-  :wordnet-sense-keys ("boneless%3:00:00::")
+(define-type ont::food-property-val ;food-preparation
+ :parent ont::associated-with-food-val ;substantial-property-val 
+ :wordnet-sense-keys ("boneless%3:00:00::")
 )
+|#
 
+
+#|
 ;;; noisy (data, signal)
 (define-type ont::interference-val
  :parent ont::substantial-property-val 
 )
+|#
 
 ;; optical, magnetic, holographic
 (define-type ont::medium
@@ -1365,6 +1365,11 @@
  :arguments ((:OPTIONAL ONT::FIGURE )) 
  :sem (F::Abstr-obj (F::gradability - ))
  :comment "means of production and dissemination (c.f. ont::mode)"
+)
+
+;; 20111017 added for obtw demo (word for type)
+(define-type ont::electrical
+ :parent ont::medium ;substantial-property-val
 )
 
 (define-type ont::multimedia-val
@@ -2278,13 +2283,13 @@
 
 (define-type ont::asleep-val
     :parent ont::awakeness-val
-    :definitions (ont::not (ont::awake-val :figure ?neutral))
+    :definitions ((ont::not (ont::awake-val :figure ?neutral)))
     :wordnet-sense-keys ("asleep%3:00:00::" "unawakened%3:00:00::" "dormant%3:00:00::" "inactive%3:00:05::" "asleep%4:02:00" )
     )
 
 (define-type ont::awake-val
     :parent ont::awakeness-val
-    :definitions (ont::not (ont::asleep-val :figure ?neutral))
+    :definitions ((ont::not (ont::asleep-val :figure ?neutral)))
     :wordnet-sense-keys ("awake%3:00:00" )
     )
 
@@ -2296,7 +2301,7 @@
 
 ;; parallel to ont::medical-condition 
 (define-type ont::medical-condition-property-val
- :parent ont::physical-property-val
+ :parent ont::negative-body-condition-property-val ;physical-property-val
 )
 
 ;; mute, deaf, blind
@@ -2620,6 +2625,7 @@
  :wordnet-sense-keys ("cyclic%3:00:01::" "cyclical%3:00:00::" "continual%3:00:00")
 )
 
+#|
 (define-type ont::regularity-val
  :parent ont::frequency-val 
  :sem (F::abstr-obj (F::scale ont::regularity-scale))
@@ -2638,6 +2644,7 @@
  ; Words: (W::IRREGULAR)
  :sem (F::abstr-obj (F::scale ont::not-regular-scale))
 )
+|#
 
 (define-type ont::frequent
  :parent ont::frequency-val 
@@ -3317,6 +3324,8 @@
 (define-type ont::tall-val
     :sem (F::abstr-obj (F::scale ont::height-scale ))
     :parent ont::vertical-val 
+    :arguments ((:ESSENTIAL ONT::FIGURE ((? of f::phys-obj))) ; to distinguish between this and ONT::HIGH-VAL
+             )
     :wordnet-sense-keys ("high-rise%3:00:00::" "tall%3:00:00" )
 )
 
@@ -3537,9 +3546,10 @@
 
 ;; queen, king e.g. bed size
 (define-type ont::predefined-size-val
- :parent ont::predefined-measure-val 
- :wordnet-sense-keys("double%5:00:00:large:00")
-)
+    :arguments ((:essential ont::FIGURE (f::phys-obj (F::intentional -) (F::type ont::furnishings))))
+    :parent ont::predefined-measure-val 
+    :wordnet-sense-keys("double%5:00:00:large:00")
+    )
 
 ;; for foodkb
 ;; lean, nonfat, lowfat
@@ -3619,19 +3629,19 @@
 
 
 ;; relative, absolute
-(define-type ont::comparative-val
+(define-type ont::relational-val ;comparative-val
  :parent ont::relational-attribute-val 
 )
 
 (define-type ont::relative
- :parent ont::comparative-val 
+ :parent ont::relational-val ;comparative-val 
  :wordnet-sense-keys ("relative%3:00:00" "comparative%3:00:00" )
  ; Words: (W::RELATIVE W::COMPARATIVE)
  ; Antonym: NIL (W::ABSOLUTE)
 )
 
 (define-type ont::not-relative-val
- :parent ont::comparative-val 
+ :parent ont::relational-val ;comparative-val 
  :wordnet-sense-keys ("absolute%3:00:00" )
 )
 
@@ -3672,25 +3682,32 @@
 ;; consecutive, sequential, groups of ordered items
 ;; didn't use ordered-domain here because these words describe the ordered
 ;; nature of the objects, but not the domain itself
-(define-type ont::ordered-val
+(define-type ont::systematicity-val ;ordered-val
  :parent ont::relational-attribute-val 
  :comment "properties that deal with ordered nature of objects"
- :wordnet-sense-keys ("ordered%3:00:00")
+ ;:wordnet-sense-keys ("ordered%3:00:00")
+ :sem (F::abstr-obj (F::scale ont::systematicity-scale))
 )
+
+(define-type ont::systematic-val
+ :parent ont::systematicity-val
+ :wordnet-sense-keys ("systematic%3:00:00")
+)
+
+(define-type ONT::organized-val
+  :parent ONT::systematic-val ;orderly-val
+  :wordnet-sense-keys ("organized%3:00:02::" "organized%3:00:01::" "classified%3:00:01::" "structured%3:00:00::")
+  :comment "having category, organization and/or structure (organized)"
+  )
 
 (define-type ont::sequential-val
- :parent ont::ordered-val 
- :wordnet-sense-keys ("serial%3:01:00::" "sequential%5:00:00:ordered:00" "consecutive%5:00:00:ordered:00" "sequent%5:00:00:ordered:00" "successive%5:00:00:ordered:00" "serial%5:00:00:ordered:00" "progressive%5:00:00:ordered:00")
-)
-
-(define-type ont::random-val
- :parent ont::ordered-val 
- :wordnet-sense-keys ("arbitrary%3:00:00::" "random%3:00:00" "randomized%5:00:00:irregular:00")
+ :parent ont::systematic-val ;systematicity-val ;ordered-val 
+ :wordnet-sense-keys ("ordered%3:00:00" "serial%3:01:00::"); "sequential%5:00:00:ordered:00" "consecutive%5:00:00:ordered:00" "sequent%5:00:00:ordered:00" "successive%5:00:00:ordered:00" "serial%5:00:00:ordered:00" "progressive%5:00:00:ordered:00")
 )
 
 ;; next, previous, last, penultimate, etc.
 (define-type ont::sequence-val
- :parent ont::relational-attribute-val 
+ :parent ont::systematic-val ;systematicity-val ;relational-attribute-val 
  :arguments ((:optional ONT::GROUND )) 
  :sem (F::Abstr-obj (F::gradability - ))
  :comment "properties that deal with an object's location with respect to another object in an ordered sequence"
@@ -3724,6 +3741,36 @@
 (define-type ont::middle-val
  :parent ont::sequence-val 
  :wordnet-sense-keys ("halfway%5:00:00:intermediate:00" "intermediate%3:00:00" )
+)
+
+(define-type ont::regular
+ :parent ont::systematic-val ;regularity-val
+ :wordnet-sense-keys ("regular%5:00:00:steady:00" "regular%3:00:00")
+ ; Words: (W::REGULAR)
+ :sem (F::abstr-obj (F::scale ont::regular-scale))
+)
+
+(define-type ont::nonsystematic-val
+ :parent ont::systematicity-val
+ :wordnet-sense-keys ("unsystematic%3:00:00")
+)
+
+(define-type ONT::not-organized-val
+  :parent ONT::nonsystematic-val ;not-orderly-val
+  :wordnet-sense-keys ("disorganized%3:00:00::" "disorganised%3:00:00::" "unorganized%3:00:00::" "unorganised%3:00:00::" "unstructured%3:00:00::" "unclassified%3:00:01::" "unsystematic%3:00:00::")
+  :comment "lacking category, organization and/or structure (disorganized)"
+)
+
+(define-type ont::random-val
+ :parent ont::nonsystematic-val ;systematicity-val ;ordered-val 
+ :wordnet-sense-keys ("arbitrary%3:00:00::" "random%3:00:00" "randomized%5:00:00:irregular:00")
+)
+
+(define-type ont::irregular
+ :parent ont::nonsystematic-val ;regularity-val
+ :wordnet-sense-keys ("aperiodic%3:00:00::" "nonperiodic%3:00:00::" "sporadic%3:00:00" "irregular%5:00:00:sporadic:00" "casual%5:00:00:irregular:00" )
+ ; Words: (W::IRREGULAR)
+ :sem (F::abstr-obj (F::scale ont::not-regular-scale))
 )
 
 ;; old, young
@@ -4263,7 +4310,7 @@
  :wordnet-sense-keys ("disorienting%3:00:00::" "confusing%5:00:00:disorienting:00" )
 )
 
-(define-type ont::boring
+(define-type ont::boring-val
  :parent ont::evoking-neg-experience-property-val 
  :wordnet-sense-keys ("humorless%3:00:00::" "humourless%3:00:00::" "unhumorous%3:00:00::" "dull%3:00:03::" "uninteresting%3:00:00" "boring%5:00:00:uninteresting:00" "wearisome%5:00:00:uninteresting:00" "tiresome%5:00:00:uninteresting:00")
  ; Words: (W::DULL W::BORING W::UNINTERESTING)
@@ -5487,17 +5534,20 @@
 
 (define-type ONT::serving-as-connection-val
   :parent ONT::relational-attribute-val
+  :wordnet-sense-keys ("conjunctive%3:00:00::")
   :comment "(connecting, conjunctive)"
   )
 
+#|
 (define-type ONT::connecting-val
   :parent ONT::serving-as-connection-val
   :wordnet-sense-keys ("conjunctive%3:00:00::")
   :comment "(connecting, conjunctive)"
   )
+|#
 
 (define-type ONT::correspondence-val
-  :parent ONT::relational-attribute-val
+  :parent ONT::compatibility-val ;relational-attribute-val
   :comment "(commesurate, congruous)"
   )
 
@@ -5632,7 +5682,7 @@
   :wordnet-sense-keys ("unwholesome%3:00:00::" "unhealthful%3:00:00::" "unsanitary%3:00:00::" "insanitary%3:00:00::" "unhealthful%3:00:02::")
   :comment "(unhealthful)"
   )
-
+#|
 (define-type ONT::organized-val
   :parent ONT::orderly-val
   :wordnet-sense-keys ("organized%3:00:02::" "organized%3:00:01::" "classified%3:00:01::" "structured%3:00:00::")
@@ -5644,6 +5694,7 @@
   :wordnet-sense-keys ("disorganized%3:00:00::" "disorganised%3:00:00::" "unorganized%3:00:00::" "unorganised%3:00:00::" "unstructured%3:00:00::" "unclassified%3:00:01::" "unsystematic%3:00:00::")
   :comment "lacking category, organization and/or structure (disorganized)"
   )
+|#
 
 (define-type ONT::control-val
   :parent ONT::evaluation-attribute-val
@@ -6001,7 +6052,7 @@
   :comment "(integrated, united)"
   )
 
-(define-type ONT::having-constituent-parts-val
+#|(define-type ONT::having-constituent-parts-val
   :parent ONT::physical-property-val
   )
 
@@ -6021,6 +6072,7 @@
   :parent ONT::having-constituent-parts-val
   :wordnet-sense-keys ("patronized%3:00:00::" "patronised%3:00:00::")
   )
+|#
 
 (define-type ONT::containing-substance-val
   :parent ONT::substantial-property-val
@@ -7295,7 +7347,7 @@
 
 (define-type ONT::food-property-val
   :parent ONT::associated-with-food-val
-  :wordnet-sense-keys ("vinous%3:01:00::" "vinaceous%3:01:00::" "alimentative%3:01:00::" "carroty%3:01:00::" "vanilla%3:01:00::" "wheaten%3:01:00::" "whole-wheat%3:01:00::" "wholemeal%3:01:00::" "herbal%3:01:00::" "garlicky%3:01:00::" "oaten%3:01:00::")
+  :wordnet-sense-keys ("alimentative%3:01:00::" "boneless%3:00:00" "carroty%3:01:00::" "garlicky%3:01:00::" "herbal%3:01:00::" "oaten%3:01:00::" "vanilla%3:01:00::" "vinaceous%3:01:00::" "vinous%3:01:00::" "wheaten%3:01:00::" "wholemeal%3:01:00::" "whole-wheat%3:01:00::")
   )
 
 (define-type ONT::political-val

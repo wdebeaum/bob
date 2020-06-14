@@ -44,8 +44,9 @@
 (define-type ont::at-loc
     :comment "prototypical locating of a FIGURE wrt a point-like GROUND"
     :parent ont::position-as-point-reln
-    :arguments ((:ESSENTIAL ONT::GROUND ((? val f::phys-obj f::abstr-obj f::situation) (f::tangible +)
-					 (f::type (? typ ont::phys-object ont::tangible-abstract-object ont::event-type))
+    :arguments ((:ESSENTIAL ONT::GROUND ((? val f::phys-obj f::abstr-obj f::situation)
+					 ;(f::tangible +)
+					 (f::type (? typ ont::phys-object ont::tangible-abstract-object ont::event-type ont::scale-value-function)) ; scale-value-function: at a level of 5
 					 (f::scale (? !t ONT::TIME-MEASURE-SCALE ONT::RATE-SCALE ONT::MONEY-SCALE ONT::NUMBER-SCALE)) ; excludes "at four"
 				       )))
     )
@@ -69,7 +70,9 @@
     :comment "FIGURE is within or inside the GROUND"
   :arguments ((:ESSENTIAL ONT::GROUND ((? val f::phys-obj f::abstr-obj) ; measure (music)
 				       (f::intentional -) (f::container +) ; containers include corner and pathway
-				       )))
+				       ))
+	      ;(:essential ont::figure (?xx (F::type (? !x ont::event-of-experience))))
+	      )
   )
 
 #|
@@ -274,7 +277,7 @@
 
 ; figure is in front of the ground
 ; in front (of), ahead (of)
-(define-type ont::front
+(define-type ont::front-of
   :parent ont::oriented-loc-reln
   :wordnet-sense-keys ("front%3:00:00")
   )
@@ -583,7 +586,7 @@
 (define-type ont::source-as-loc
     :comment "a relation that indicates where an object was in the past: the person from Italy"
  :parent ont::from
- :arguments ((:ESSENTIAL ONT::FIGURE (F::phys-obj (F::mobility F::movable)))
+ :arguments ((:ESSENTIAL ONT::FIGURE ((? type F::Situation F::phys-obj F::abstr-obj))) ;(F::phys-obj (F::mobility F::movable))) ; abstr-obj: the idea from...; situation: it is bright from the sun, I fish from the pond
 	     (:ESSENTIAL ONT::GROUND (F::phys-obj
 				      ;;(F::mobility F::movable)) ; exclude "... arrive in country X from country Y"   Can't do this as it also eliminates the usual cases, doesn't it?  JFA 7/19
 				      )))
@@ -670,7 +673,7 @@
 
 	     ; copied from to-loc
 	     (:ESSENTIAL ONT::FIGURE ((? f F::PHYS-OBJ F::abstr-obj F::situation)))    ;; need to allow situation here as it can modoify events as well as objects in RESULT expressions
-	     (:ESSENTIAL ONT::GROUND ((? t F::Phys-obj F::abstr-obj) (f::spatial-abstraction ?!sa)
+	     (:ESSENTIAL ONT::GROUND ((? t F::Phys-obj F::abstr-obj) ;(f::spatial-abstraction ?!sa) ; from the database
 				     ;; (F::mobility F::movable) ; exclude "... arrive in country X from country Y"  JFA I removed the movable constraint to the figure 
 				      ) )  ; spatial-abstraction is not enough: many things have spatial-abstraction, e.g., a frog.  Another possibility is (F::object-function F::spatial-object)
 
@@ -1107,7 +1110,7 @@
      )
 
 (define-type ONT::in-future
-     :wordnet-sense-keys ("future%3:00:00")
+     :wordnet-sense-keys ("future%3:00:00" "prospective%3:00:00::")
      :parent ONT::event-time-wrt-now
      )
 
@@ -1122,7 +1125,7 @@
      )
 
 (define-type ont::occuring-now
-     :wordnet-sense-keys ("current%3:00:00")
+     :wordnet-sense-keys ("underway%5:00:00:current:00") ;"current%3:00:00")
      :parent ONT::event-time-wrt-now
      )
 
@@ -1405,7 +1408,7 @@
 
 (define-type ONT::year
     :parent ONT::DATE-OBJECT-IN
-    :wordnet-sense-keys ("year%1:28:00" "year%1:28:01" "year%1:28:02")
+    :wordnet-sense-keys ("year%1:28:00" "year%1:28:02");year%1:28:01
  :sem (F::time (f::time-function f::year-name))
  )
 

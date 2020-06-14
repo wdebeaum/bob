@@ -47,6 +47,7 @@
  :sem (F::ABSTR-OBJ) ;(:default (F::GRADABILITY +) (F::scale ont::other-scale) (f::intensity ont::hi))) ; this was probably for phys-modifier (which has been moved out)
  :arguments ((:ESSENTIAL ONT::FIGURE ((? tt F::PHYS-OBJ F::situation)))
              )
+ :comment "modifiers of events that state a property related to one of its arguments"
  )
 
 ; REMOVING. Redistributed to property-val (Jena 05.2017)
@@ -61,11 +62,12 @@
 ;;; will also modify physical objects involved in those situations:
 ;;; medical emergency / medical instrument
 (define-type ONT::situation-modifier
- :parent ONT::SITUATION-OBJECT-MODIFIER
+ :parent ONT::PREDICATE
  :arguments ((:ESSENTIAL ONT::FIGURE (F::situation))
              (:OPTIONAL ONT::GROUND)
 	     (:optional ont::norole)	     
              )
+ :comment "modifiers of events themselves (and not or an argument to the event)"
  )
 
 (define-type ONT::in-scale
@@ -123,7 +125,7 @@
     )
 
 (define-type ONT::DEGREE-MODIFIER-LOW
-    :wordnet-sense-keys ("almost%4:02:00" "barely%4:02:00" "barely%4:02:02" "barely%4:02:03" "comparatively%4:02:00" "relatively%4:02:00" "slightly%4:02:01"  "slightly%4:02:02" "somewhat%4:02:01")
+    :wordnet-sense-keys ("almost%4:02:00" "barely%4:02:00" "barely%4:02:01" "comparatively%4:02:00" "relatively%4:02:00" "slightly%4:02:01"  "slightly%4:02:02" "somewhat%4:02:01") ;WN 3.1 senses commented out for now: "barely%4:02:02" "barely%4:02:03"
     :parent ONT::DEGREE-MODIFIER
     )
 
@@ -186,7 +188,7 @@
 |#
 
 (define-type ONT::DEGREE-OF-BELIEF
- :parent ONT::SITUATION-MODIFIER
+ :parent ONT::SITUATION-OBJECT-MODIFIER
  :arguments ((:ESSENTIAL ONT::FIGURE (F::situation))
              )
  )
@@ -201,7 +203,7 @@
 ;;;; anything can be a reason -- do we really need to keep it here???
 ;; because (of), as, since
 (define-type ONT::reason
- :parent ONT::SITUATION-MODIFIER
+ :parent ONT::SITUATION-OBJECT-MODIFIER
  )
 
 ;; cause, 'cause
@@ -254,7 +256,7 @@
 ;;; swift 11/26/01 -- added the restriction (intentional +) for benefactive lf_val to prevent body parts from
 ;;; being parsed as beneficiaries
 (define-type ONT::BENEFICIARY
- :parent ONT::SITUATION-MODIFIER
+ :parent ONT::SITUATION-OBJECT-MODIFIER
  :arguments ((:ESSENTIAL ONT::FIGURE (F::Situation (F::aspect F::dynamic) (F::Cause F::agentive)))
              (:REQUIRED ONT::GROUND (F::Phys-obj (F::origin F::human) (F::intentional +)))
              )
@@ -301,7 +303,9 @@
  :parent ONT::PREDICATE
  :arguments ((:ESSENTIAL ONT::FIGURE (F::Situation (f::type ont::event-of-action)
 						   (f::aspect f::dynamic)))
-             (:REQUIRED ONT::GROUND (F::Phys-obj (F::origin F::artifact) (F::intentional -) (F::OBJECT-FUNCTION F::INSTRUMENT)))
+             (:REQUIRED ONT::GROUND (F::Phys-obj (F::origin F::artifact) (F::intentional -)
+						 ;;(F::OBJECT-FUNCTION F::INSTRUMENT)  ;; too restrictive to require it to eb explicitly defined as an INSTRUMENT!
+						 ))
              )
  )
 
@@ -384,6 +388,7 @@
              )
  )
 
+
 ;; This is for "by itself" tec. Unlike typical manner, it can apply to all situations, e.g.
 ;; the battery is in a closed path by itself
 ;; we are assuming that "by itself" modifies "is" because it's too complicated to figure out sensible rules to make it modify the subject NP
@@ -396,6 +401,12 @@
              (:REQUIRED ONT::GROUND (f::phys-obj))				 
              )
  )
+
+(define-type ONT::as-if-for
+ :parent ONT::MANNER
+ :comment "act performed in a way described by a purpose: Detailed instructions, as if for a military campaign"
+ )
+
 
 (define-type ONT::manner-undo
  :parent ONT::MANNER
@@ -418,7 +429,7 @@
 
 ;; in that event
 (define-type ONT::situated-in
- :parent ONT::SITUATION-OBJECT-MODIFIER
+ :parent ONT::SITUATION-MODIFIER
  :arguments ((:ESSENTIAL ONT::FIGURE ((? xxx F::Situation 
 					 F::PHYS-OBJ)))
 	   	     ;; SITUATED-IN shouldn't be used for scales!
@@ -472,7 +483,7 @@
 
 
 (define-type ONT::reason-for
- :parent ONT::SITUATION-MODIFIER
+ :parent ONT::SITUATION-OBJECT-MODIFIER
  :arguments ((:ESSENTIAL ONT::FIGURE (F::Situation))
              (:REQUIRED ONT::GROUND)
              )

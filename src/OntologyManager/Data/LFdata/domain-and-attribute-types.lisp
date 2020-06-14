@@ -163,7 +163,7 @@
 (define-type ont::polarity-scale
  :sem (F::abstr-obj (F::scale ONT::POLARITY-SCALE))
  :parent ont::physical-property-scale
- :wordnet-sense-keys ("polarity%1:24:01")
+ ;; :wordnet-sense-keys ("polarity%1:24:01")  There is no sense in WN for the scale
  ;; WORDS: polarity
 )
 
@@ -429,7 +429,7 @@
             )
  :sem (F::abstr-obj (F::scale ont::color-scale ))
  ;; WORDS: color, colour
- :wordnet-sense-keys ("colouring%1:07:00" "coloring%1:07:00" "colour%1:07:00" "color%1:07:00" "color%1:09:01" "colour%1:09:01")
+ :wordnet-sense-keys ("colouring%1:07:00" "coloring%1:07:00" "colour%1:07:00" "color%1:07:00" "color%1:09:01" "colour%1:09:01" "color%1:27:00")
 )
 
 (define-type ont::red-scale
@@ -1871,7 +1871,7 @@
 ;; size > volume scale
 (define-type ont::volume-scale
  :parent ont::size-scale 
- :wordnet-sense-keys ("volume%1:23:00")
+ :wordnet-sense-keys ("volume%1:07:03")
  :sem (F::Abstr-obj (F::Scale Ont::Volume-scale))
  :arguments ((:ESSENTIAL ONT::GROUND (F::Abstr-obj (F::Scale Ont::Volume-scale)))
              )
@@ -2208,6 +2208,18 @@
  ;; WORDS: compatibility
 )
 
+(define-type ont::dependence-scale
+ :sem (F::abstr-obj (F::scale ONT::DEPENDENCE-SCALE))
+ :parent ont::relational-property-scale
+ :wordnet-sense-keys ("dependence%1:26:00")
+)
+
+(define-type ont::reciprocity-scale
+ :sem (F::abstr-obj (F::scale ONT::RECIPROCITY-SCALE))
+ :parent ont::relational-property-scale
+ :wordnet-sense-keys ("reciprocity%1:24:00")
+)
+
 (define-type ont::similarity-scale
  :sem (F::abstr-obj (F::scale ONT::SIMILARITY-SCALE))
  :parent ont::relational-property-scale 
@@ -2237,9 +2249,30 @@
  :wordnet-sense-keys ("identity%1:07:02" "sameness%1:07:00")
 )
 
+(define-type ont::systematicity-scale
+ :sem (F::abstr-obj (F::scale ONT::SYSTEMATICITY-SCALE))
+ :parent ont::relational-property-scale
+)
 
+(define-type ont::regularity-scale
+  :sem (F::abstr-obj (F::scale ONT::REGULARITY-SCALE))
+  :parent ont::systematicity-scale ;temporal-occurrence-scale
+  ;; WORDS: irregularity, regularity
+)
 
-
+(define-type ont::regular-scale
+  :sem (F::abstr-obj (F::scale ONT::REGULAR-SCALE))
+  :parent ont::regularity-scale
+  :wordnet-sense-keys ("regularity%1:07:00")
+  ;; regularity
+)
+ 
+(define-type ont::not-regular-scale
+  :sem (F::abstr-obj (F::scale ONT::NOT-REGULAR-SCALE))
+  :parent ont::regularity-scale
+  :wordnet-sense-keys ("intermittence%1:07:00" "irregularity%1:07:00")
+  ;; irregularity
+)
 
 ;; STATUS SCALE
 
@@ -2295,7 +2328,7 @@
 ;; PSYCHOLOGICAL CONDITION SCALE
 (define-type ont::psychological-condition-scale
  :sem (F::abstr-obj (F::scale ONT::PSYCHOLOGICAL-CONDITION-SCALE))
-    :wordnet-sense-keys ("psychological_state%1:26:00")
+    :wordnet-sense-keys ("trait%1:07:00")
     :parent ont::ordered-domain 
     )
 
@@ -2633,12 +2666,14 @@
   :parent ont::temporal-scale ;process-property-scale
   ;; :wordnet-sense-keys ("incidence%1:24:00")
 )
- 
+
+#| 
 (define-type ont::regularity-scale
   :sem (F::abstr-obj (F::scale ONT::REGULARITY-SCALE))
   :parent ont::temporal-occurrence-scale
   ;; WORDS: irregularity, regularity
 )
+
  
 (define-type ont::regular-scale
   :sem (F::abstr-obj (F::scale ONT::REGULAR-SCALE))
@@ -2653,6 +2688,7 @@
   :wordnet-sense-keys ("intermittence%1:07:00" "irregularity%1:07:00")
   ;; irregularity
 )
+|#
 
 ;;;;;; UNORDERED DISCRETE DOMAIN
 (define-type ont::unordered-domain
@@ -2669,17 +2705,16 @@
 (define-type ont::gender-scale
  :sem (F::abstr-obj (F::scale ONT::GENDER-SCALE))
     :parent ont::unordered-domain
-    :wordnet-sense-keys ("sex%1:14:00")
- :arguments ((:REQUIRED ONT::FIGURE (F::Phys-obj))
-             )
- :wordnet-sense-keys ("gender%1:07:00")
- ;; WORDS: gender, sex
-)
+    :arguments ((:REQUIRED ONT::FIGURE (F::Phys-obj))
+		)
+    :wordnet-sense-keys ("gender%1:07:00")
+    ;; WORDS: gender, sex
+    )
 
 (define-type ont::truth-scale
  :sem (F::abstr-obj (F::scale ONT::TRUTH-SCALE))
  :parent ont::unordered-domain 
- :wordnet-sense-keys ("truth%1:09:00")
+ :wordnet-sense-keys ("truth%1:26:00")
  ;; WORDS: truth
 )
 

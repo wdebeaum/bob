@@ -1469,13 +1469,13 @@
 	(LSUBJ (% W::NP) ONT::AGENT)
 	(LOBJ  (:parameter xp (:default (% W::NP))) ONT::AGENT1)
 	))
-      
+      #| not used anymore
       (AGENT-RESULT-FORMAL-XP-OPTIONAL-TEMPL
        (ARGUMENTS
 	(LSUBJ (% W::NP) ONT::AGENT)
 	(LIOBJ (% W::NP) ONT::RESULT)
 	(LCOMP (:parameter xp (:default (% W::pp (W::ptype W::with)))) ONT::FORMAL OPTIONAL)
-	))
+	))|#
 
       (RESULT-TEMPL
        (ARGUMENTS
@@ -1879,12 +1879,13 @@
     (LIOBJ (% W::NP) ont::result optional)
     ))
 
+#| not used anymore
   (AGENT-RESULT-FORMAL-XP-TEMPL
    (ARGUMENTS
     (LSUBJ (% W::NP) ONT::AGENT)
     (LOBJ (% W::NP) ONT::RESULT)
     (LCOMP (:parameter xp (:default (% W::NP)))  ONT::FORMAL)
-    ))
+    ))|#
 
 ;; e.g., cc me on that
   (AGENT-AFFECTEDR-AFFECTED-XP-NP-TEMPL
@@ -2635,6 +2636,13 @@
 	   )
    (ARGUMENTS
     ))
+
+  (quan-cardinality-pl-convertable-templ
+   (SYNTAX (W::AGR w::3P) (W::CARDINALITY +) (W::convert-to-adj +)(W::MASS (? m1 W::count w::bare))
+	   (W::QOF (% W::PP (W::PTYPE W::OF) (w::agr W::3P) (w::mass (? m2 w::count w::bare)) ))   ;; cardinality in OF should be plural, right 
+	   )
+   (ARGUMENTS
+    ))  
   
   (quan-no-bare-templ
    (SYNTAX(W::NobareSpec +))
@@ -2649,6 +2657,13 @@
    (SYNTAX(W::SORT W::OPERATOR) (W::ATYPE W::PRE))
    (ARGUMENTS
     (ARGUMENT (% (? W::argcat ;;W::ADVBL   ;; what's an example of NO ADV?
+		    W::ADJP)  (w::set-modifier -) (W::sort ?sort)) ONT::FIGURE)
+    ))
+
+(ADJ-OR-ADV-OPERATOR-TEMPL
+   (SYNTAX(W::SORT W::OPERATOR) (W::ATYPE W::PRE))
+   (ARGUMENTS
+    (ARGUMENT (% (? W::argcat W::ADVBL  
 		    W::ADJP)  (w::set-modifier -) (W::sort ?sort)) ONT::FIGURE)
     ))
 

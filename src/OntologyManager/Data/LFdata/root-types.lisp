@@ -180,7 +180,7 @@
 (define-type ont::unit
     :parent ont::abstract-object
     :comment "names of units in various scales/domains"
-    :sem (F::abstr-obj)
+    :sem (F::abstr-obj (F::scale ONT::DOMAIN))
     :wordnet-sense-keys ("definite_quantity%1:23:00")
    )
 
@@ -204,9 +204,21 @@
 		(:optional ont::norole)
 		(:OPTIONAL ONT::COMPAR))
     )
- 
- 
-	     
+
+(define-type ont::part-reln
+ :parent ont::relation
+ :comment "Generalized relation between parts and whole"
+:arguments ((:ESSENTIAL ONT::FIGURE ((? fig F::Phys-obj F::Situation f::abstr-obj)))
+	    (:ESSENTIAL ONT::GROUND ((? grd F::Phys-obj F::Situation f::abstr-obj)
+				     (f::scale (? !sc ONT::TIME-MEASURE-SCALE)))
+			))
+)
+
+(define-type ont::member-reln
+ :parent ont::part-reln
+ :comment "membership in some group object"
+ )
+
 (define-type ont::domain-property
     :parent ont::RELATION
     :comment "these are modifiers that characterize an object/event with respect to a scale/domain (in ONT::DOMAIN)"

@@ -192,7 +192,7 @@
 
 (define-type ont::reaction-to-stimulus
     :wordnet-sense-keys ("reaction%1:04:00" "reaction%1:09:01" "reaction%1:19:00"
-					  "reaction%1:09:00"  )
+					  "reaction%1:09:00"  "react%2:31:00")
     :parent ont::event-of-action
     )
 
@@ -208,7 +208,7 @@
 
 
 (define-type ONT::Awareness
- :wordnet-sense-keys ("cogitate%2:31:00" "attention%1:09:00" "attention%1:09:01") ;"cerebrate%2:31:00" "think%2:31:00" 
+ :wordnet-sense-keys ("attention%1:09:00" "attention%1:09:01") ;"cogitate%2:31:00" "cerebrate%2:31:00" "think%2:31:00" 
  :parent ONT::event-of-experience
  :sem (F::Situation (F::Cause F::Mental) (F::Trajectory -))
  :comment "a state in which an EXPERIENCER holds some attitude towards a proposition"
@@ -404,7 +404,7 @@
 
 ;; cognizer evaluates something
 (define-type ONT::Scrutiny
-    :wordnet-sense-keys ("take%2:31:02" "read%2:31:05" "study%2:31:00" "learn%2:31:02" "inspect%2:31:00" "scrutinise%2:31:00" "scrutinize%2:31:00" "audit%2:31:01" "inspect%2:39:00" "try%2:41:06" "adjudicate%2:41:03" "judge%2:41:09" "measure%2:31:01" "evaluate%2:31:00" "valuate%2:31:00" "assess%2:31:00" "appraise%2:31:01" "value%2:31:00" "analyse%2:31:00" "analyse%2:31:01" "analyse%2:31:04" "check%2:42:09" "check_out%2:40:00" "follow%2:30:01" "follow%2:39:13" "experiment%2:41:02" "experiment%2:41:01" "surveillance%1:04:01")
+    :wordnet-sense-keys ("study%2:31:00" "inspect%2:31:00" "inspect%2:39:00" "judge%2:41:09" "appraise%2:31:01" "analyse%2:31:00" "analyse%2:31:01" "analyse%2:31:04" "check%2:42:09" "check_out%2:40:00" "follow%2:30:01" "follow%2:39:13" "experiment%2:41:02" "experiment%2:41:01" "surveillance%1:04:01" "experiment%1:04:00" "investigation%1:04:00")
     :parent ONT::cogitation
     :arguments ((:REQUIRED ONT::neutral ((? th6 f::phys-obj f::abstr-obj f::situation))) ;;Ground
 		(:OPTIONAL ONT::formal1 ((? cth f::phys-obj f::abstr-obj f::situation)))  ;;Phenomenon
@@ -420,7 +420,7 @@
 
 (define-type ont::evaluate
     :parent ont::scrutiny
-    :wordnet-sense-keys ("evaluate%2:31:01" "contrast%2:31:00")
+    :wordnet-sense-keys ("evaluate%2:31:01"); "contrast%2:31:00")
     :arguments ((:REQUIRED ONT::neutral1 ((? th7 f::phys-obj f::abstr-obj f::situation))))
     )
 
@@ -483,7 +483,7 @@
 
 
 (define-type ONT::Response
- :wordnet-sense-keys ("react%2:31:00" "respond%2:31:00")
+ ;:wordnet-sense-keys ( "respond%2:32:00")
  :parent ONT::communication
  :comment "Communicative act that is in direct response to a previous communicative act"
  )
@@ -514,8 +514,16 @@
  )
 |#
 
+(define-type ONT::invite
+ :wordnet-sense-keys ("invite%1:10:00" "invite%2:32:01" "invite%2:41:00" "receive%2:35:00")
+ :parent ONT::commissive
+ :arguments (;(:REQUIRED ont::result)
+             (:ESSENTIAL ont::formal)
+             )
+ )
+
 (define-type ONT::offer
- :wordnet-sense-keys ("volunteer%2:41:00" "volunteer%2:41:01")
+ :wordnet-sense-keys ("offer%1:10:00" "volunteer%2:41:00" "volunteer%2:41:01")
  :parent ONT::commissive
  :arguments (;(:REQUIRED ont::result)
              (:ESSENTIAL ont::formal)
@@ -648,7 +656,8 @@
 ;; for verbs that commonly allow non-physical and/or non-moveable formals, e.g.
 ;; put the title in the text box, put the city here, insert the text here
 (define-type ONT::put
- :wordnet-sense-keys ("base%2:42:04" "interpose%2:38:01" "lay%2:35:01" "locate%2:40:01" "place%2:35:00" "pose%2:35:02" "position%2:35:00" "put%2:35:00" "set%2:35:00")
+    :wordnet-sense-keys ("base%2:42:04" "interpose%2:38:01" "lay%2:35:01" "locate%2:40:01" "place%2:35:00" "pose%2:35:02" "position%2:35:00" "put%2:35:00" "set%2:35:00"
+					)
  :parent ont::event-of-causation
  :sem (F::Situation (F::trajectory +))
  :arguments ((:ESSENTIAL ONT::agent)
@@ -833,9 +842,9 @@
 ;;; WILL, SHALL
 ;;; carries no Aspect or Time-span features of its own
 (define-type ONT::FUTURE
- :parent ONT::AUX
- :sem (F::situation)
- )
+    :parent ONT::AUX
+    :sem (F::situation)
+    )
 
 ;;; WOULD, SHOULD
 (define-type ONT::CONDITIONAL
@@ -898,7 +907,7 @@
  :arguments ((:REQUIRED ONT::neutral )
 	     ;; this is still here until we decide what to do with the formal-pred mappings for be
 	     (:essential ONT::formal ((? formal F::Abstr-obj) ; F::situation) ; for ONT::MEMBERSHIP
-				      (f::type (? cbd ont::domain-property ont::position-reln ont::predicate ont::relation
+				      (f::type (? cbd ont::relation
 					;ONT::MEMBERSHIP ; ont::membership: It is a dog
 						  )))) ; ont::predicate: with, without, around; ont::relation: the same
 ;             (:ESSENTIAL ONT::PROPERTY ((? oc2 F::abstr-obj))) ;; only properties (preds) -- for event nouns use ont::have-experience or ont::participating
@@ -959,7 +968,7 @@
 	      )
   )
 
-;; membership -- specific for membership in organizations
+;; membership -- specific for membership
 (define-type ont::membership
  :wordnet-sense-keys ("belong%2:42:01" "belong%2:42:07")
   :parent ont::have
@@ -967,6 +976,7 @@
   :arguments ((:required ont::neutral (F::phys-obj (f::intentional +)))
 	      (:required ont::neutral1 (F::abstr-obj (f::type ont::group-object))) ;; e.g. clubs, companies, ...
 	      )
+  :definitions ((ONT::MEMBER-OF :figure ?neutral :ground ?neutral1))
   )
 
 (define-type ONT::wear

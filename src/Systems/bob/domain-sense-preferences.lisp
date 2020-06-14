@@ -21,4 +21,8 @@
 	;((W::NF 1) ONT::GENE-PROTEIN) ; "NF1"
 	(W::NF-1 ONT::GENE-PROTEIN) ; "NF1"
 	(W::GO ONT::DATABASE)
+	(w::high ont::high-val)
+	(w::highly ont::high-val)
+	(w::higher ont::high-val)
+	(w::low ont::low-val)
 	))
